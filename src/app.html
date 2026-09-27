@@ -1,0 +1,1061 @@
+<title>Hagefugler Oslo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Familjen+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#e1e8e0; --bg-hi:#f3f6f0; --ink:#15251e; --muted:#586a61; --line:#c6d2c8;
+  --surface:#f7f9f4; --surface-2:#e9efe8; --spruce:#0f4a36; --spruce-ink:#0f4a36; --on-spruce:#f3f8f2;
+  --gold:#eea914; --gold-ink:#8a5a00; --track:#cfdacf; --shadow:22,44,33; --scrim:rgba(12,26,20,.36);
+  --card-cream:#fdfcf3; --card-ink:#14231d; --card-teal:#d5eeee; --card-gold:#f4b41a; --card-green:#0f4a36; --pen:#1c3aa0;
+  --font:"Familjen Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --hand:"Caveat", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1712; --bg-hi:#18291f; --ink:#e3ebe5; --muted:#8fa298; --line:#26392f;
+    --surface:#122019; --surface-2:#1a2b22; --spruce:#1d6a4d; --spruce-ink:#8bd0aa; --on-spruce:#f3f8f2;
+    --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1712; --bg-hi:#18291f; --ink:#e3ebe5; --muted:#8fa298; --line:#26392f;
+  --surface:#122019; --surface-2:#1a2b22; --spruce:#1d6a4d; --spruce-ink:#8bd0aa; --on-spruce:#f3f8f2;
+  --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{height:100%;box-sizing:border-box}
+body{height:100%;margin:0;overflow:hidden;font-family:var(--font);color:var(--ink);
+  background:radial-gradient(ellipse 75% 58% at 50% 46%, var(--bg-hi), var(--bg) 72%) var(--bg);
+  -webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- shell ---------- */
+.app{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding-inline:16px;max-width:1100px;margin:0 auto}
+.top{display:flex;align-items:center;gap:8px;padding-block:12px 2px}
+.brand{flex:1;min-width:0}
+.brand h1{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.brand p{margin:2px 0 0;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);
+  background:color-mix(in srgb, var(--surface) 55%, transparent);transition:background .2s, transform .15s}
+.iconbtn:hover{background:var(--surface-2)}
+.iconbtn:active{transform:scale(.94)}
+.iconbtn svg{width:20px;height:20px}
+.ring{position:relative}
+.ring svg{width:34px;height:34px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:3}
+.ring .trk{stroke:var(--track)}
+.ring .arc{stroke:var(--gold);stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.2,.8,.2,1)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* ---------- deck ---------- */
+.stage{position:relative;min-height:0;container-type:size;display:grid;place-items:center;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.float{animation:bob 6.5s ease-in-out infinite alternate}
+@keyframes bob{from{transform:translateY(2px)}to{transform:translateY(-7px)}}
+.stage.dragging .float,.stage.holding .float,.stage.riffling .float{animation-play-state:paused}
+.deck{position:relative;width:min(100cqw - 10px, (100cqh - 58px) * .7143, 470px);aspect-ratio:1060/1484;margin-top:-16px;
+  transition:transform .3s ease-out}
+.card{position:absolute;inset:0;transform-origin:50% 88%;will-change:transform;perspective:1800px;container-type:inline-size;
+  transition:transform var(--dur,.46s) cubic-bezier(.2,.75,.2,1), opacity var(--dur,.35s) ease}
+.card.no-anim,.stage.dragging .card{transition:none}
+.stage.riffling .card{transition-timing-function:cubic-bezier(.25,.6,.3,1), ease}
+.card.is-top .front{touch-action:none;cursor:grab}
+.card.held .front{cursor:grabbing}
+.card.held .face{box-shadow:0 1cqw 2cqw rgba(var(--shadow),.18), 0 12cqw 22cqw -4cqw rgba(var(--shadow),.55)}
+.card:not(.is-top){pointer-events:none}
+.card .inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.3,.7,.15,1)}
+.card.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:3.6cqw;-webkit-backface-visibility:hidden;backface-visibility:hidden;
+  box-shadow:0 .4cqw 1.2cqw rgba(var(--shadow),.16), 0 5cqw 11cqw -3cqw rgba(var(--shadow),.42)}
+.front{background-image:var(--cardsprite);background-size:1000% 600%}
+.front img{display:block;width:100%;height:100%;border-radius:inherit;pointer-events:none;-webkit-user-drag:none}
+.card:not(.is-top) .face{box-shadow:0 .3cqw 1cqw rgba(var(--shadow),.14), 0 3cqw 7cqw -3cqw rgba(var(--shadow),.3)}
+
+/* pen marks on the printed SETT field */
+.tick{position:absolute;overflow:visible;pointer-events:none}
+.tick path{fill:none;stroke:var(--pen);stroke-width:8.5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset .38s cubic-bezier(.5,0,.3,1), opacity 0s linear .38s}
+.seen .tick path{stroke-dashoffset:0;opacity:1;transition:stroke-dashoffset .38s cubic-bezier(.5,0,.3,1), opacity 0s}
+.sett-hit{position:absolute;background:none;border:0;border-radius:2cqw;padding:0}
+.dato{position:absolute;display:block;cursor:pointer}
+.dato input,.b-date input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;margin:0;padding:0;-webkit-appearance:none;appearance:none}
+.hand{position:absolute;bottom:22%;font-family:var(--hand);font-weight:600;font-size:7cqw;line-height:1;color:var(--pen);
+  white-space:nowrap;transform:rotate(-2.5deg);transform-origin:0 100%;pointer-events:none;
+  clip-path:inset(-30% 100% -30% 0);transition:clip-path .55s steps(14, end) .12s}
+.seen .hand{clip-path:inset(-30% -10% -30% 0)}
+.dato:focus-within{outline:2px solid var(--pen);outline-offset:1px;border-radius:1.5cqw}
+
+/* back of the card: readable field notes */
+.back{transform:rotateY(180deg);background:var(--card-cream);color:var(--card-ink);border:1.3cqw solid var(--card-gold);
+  display:flex;flex-direction:column;overflow:hidden;font-size:4.2cqw;line-height:1.36}
+.b-head{display:flex;gap:3cqw;align-items:flex-start;margin:4cqw 4cqw 0;padding:3cqw 3.5cqw 3cqw 4.5cqw;background:var(--card-teal);
+  border-radius:2.2cqw;box-shadow:inset 1.8cqw 0 0 var(--card-green)}
+.b-head h2{margin:0;font-size:7.6cqw;line-height:1.02;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+.b-head .lat{margin:.6cqw 0 0;font-style:italic;font-size:4cqw;opacity:.85}
+.b-meta{margin-left:auto;text-align:right;display:grid;gap:.6cqw;justify-items:end;flex-shrink:0}
+.b-meta .no{font-weight:700;font-size:4.2cqw;font-variant-numeric:tabular-nums}
+.b-meta .st{font-size:2.9cqw;max-width:26cqw;line-height:1.2}
+.stars{display:inline-flex;gap:.2em;color:var(--card-gold)}
+.stars svg{width:1em;height:1em;fill:currentColor}
+.b-meta .stars{font-size:4.2cqw}
+.card.is-top .back{touch-action:none}
+.card:not(.flipped) .back,.card.flipped .front{pointer-events:none}
+.b-body{flex:1;overflow-y:auto;padding:3.5cqw 5cqw 2cqw;overscroll-behavior:contain;touch-action:pan-y}
+.b-body dl{margin:0;display:grid;gap:2.6cqw}
+.b-body dt{font-size:2.9cqw;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--card-green)}
+.b-body dd{margin:.3cqw 0 0}
+.b-kicker{margin:0 0 2.6cqw;font-size:2.9cqw;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6b5a1c}
+.b-when{margin:0 0 3.4cqw;padding:2.4cqw 2.8cqw 2cqw;background:#f4f1dd;border-radius:2cqw}
+.b-when .top{display:flex;justify-content:space-between;align-items:baseline;gap:2cqw;padding:0;margin-bottom:1.6cqw}
+.b-when .top > span{font-size:2.9cqw;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--card-green)}
+.b-when .top small{font-size:2.7cqw;color:#5d6a5f;display:flex;gap:2.4cqw;align-items:center}
+.b-when .top small i{display:inline-block;width:2.4cqw;height:2.4cqw;border-radius:.6cqw;margin-right:.8cqw;vertical-align:-.2cqw}
+.mstrip{display:grid;grid-template-columns:repeat(12,1fr);gap:.9cqw}
+.mstrip b{display:grid;gap:.8cqw;justify-items:center;font-size:2.6cqw;font-weight:600;color:#5d6a5f}
+.mstrip b::before{content:"";width:100%;height:3.4cqw;border-radius:.9cqw;background:var(--m0)}
+.mstrip b.m1::before,.b-when i.m1{background:var(--m1)}
+.mstrip b.m2::before,.b-when i.m2{background:var(--m2)}
+.mstrip b.now{color:var(--card-ink);font-weight:800}
+.mstrip b.now::before{box-shadow:0 0 0 .5cqw var(--card-cream), 0 0 0 .9cqw var(--card-ink)}
+.back{--m0:#e4e1cb;--m1:#f6d98a;--m2:#e9a40f}
+.b-foot{display:flex;gap:2.4cqw;align-items:stretch;padding:3cqw 4cqw 4cqw;border-top:.3cqw solid #e6e3cf;background:#f7f5e6}
+.b-sett{display:flex;align-items:center;gap:2.4cqw;border:0;background:none;padding:1.4cqw 2cqw 1.4cqw 1cqw;border-radius:2cqw;font-weight:700;font-size:4.6cqw;color:var(--card-ink)}
+.b-box{position:relative;width:8.4cqw;height:8.4cqw;border:.9cqw solid var(--card-green);border-radius:1.8cqw;background:#fff;flex-shrink:0}
+.b-box svg{position:absolute;left:-8%;top:-45%;width:150%;height:150%;overflow:visible}
+.b-date{position:relative;flex:1;display:flex;align-items:flex-end;padding-bottom:1cqw;justify-content:space-between;gap:2cqw;min-width:0;
+  border-bottom:.35cqw solid var(--card-ink);margin-block:1.2cqw;padding-inline:1cqw;cursor:pointer}
+.b-date .lbl{font-size:3.4cqw;color:#4a5d53;flex-shrink:0}
+.b-date .val{font-family:var(--hand);font-weight:600;font-size:6.4cqw;color:var(--pen);line-height:1;white-space:nowrap}
+.b-date .val.empty{font-family:var(--font);font-weight:500;font-size:3.4cqw;color:#7a8a82}
+
+/* desktop arrows */
+.nav{position:absolute;top:50%;width:46px;height:46px;margin-top:-41px;border-radius:50%;border:1px solid var(--line);display:none;place-items:center;
+  background:color-mix(in srgb, var(--surface) 70%, transparent);z-index:20}
+.nav svg{width:22px;height:22px}
+.nav:hover{background:var(--surface-2)}
+.nav.prev{left:max(0px, calc(50% - var(--dw, 300px)/2 - 86px))}
+.nav.next{right:max(0px, calc(50% - var(--dw, 300px)/2 - 86px))}
+@media (hover:hover) and (pointer:fine){.nav{display:grid}}
+@container (max-width: 640px){.nav{display:none}}
+
+/* the edges light up while a card is held; reach one and let go to change card */
+.edge{position:absolute;top:14%;bottom:14%;width:5px;border-radius:5px;pointer-events:none;z-index:30;opacity:0;
+  background:linear-gradient(transparent, var(--gold) 30%, var(--gold) 70%, transparent);transition:opacity .2s, width .2s, box-shadow .2s}
+.edge.l{left:-11px}
+.edge.r{right:-11px}
+.stage.dragging .edge{opacity:.3}
+.stage.dragging .edge.armed{opacity:1;width:8px;box-shadow:0 0 22px 6px color-mix(in srgb, var(--gold) 50%, transparent)}
+
+/* ---------- scrubber ---------- */
+.bottom{padding-block:4px 14px;display:grid;gap:8px;justify-items:center}
+.scrub{position:relative;width:100%;max-width:560px;height:34px;display:grid;grid-template-columns:repeat(60,1fr);gap:2px;align-items:end;
+  touch-action:none;cursor:pointer;padding-inline:2px}
+.scrub i{display:block;height:9px;border-radius:2px;background:var(--track);transition:height .25s, background .25s}
+.scrub i.x10{height:13px}
+.scrub i.s{background:var(--gold);height:16px}
+.scrub i.c{background:var(--ink);height:26px}
+.hint{margin:0;font-size:12.5px;color:var(--muted);transition:opacity .4s}
+.hint.gone{opacity:0}
+
+/* ---------- sheets ---------- */
+.scrim{position:fixed;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .3s;z-index:40}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;z-index:50;background:var(--surface);color:var(--ink);visibility:hidden;
+  transition:transform .38s cubic-bezier(.2,.8,.2,1), visibility 0s .38s;box-shadow:0 20px 60px -20px rgba(var(--shadow),.55)}
+.sheet.on{visibility:visible;transition:transform .38s cubic-bezier(.2,.8,.2,1)}
+.search{top:0;left:50%;width:min(640px,100%);max-height:88%;border-radius:0 0 22px 22px;transform:translate(-50%,-105%);
+  display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 10px}
+.search.on{transform:translate(-50%,0)}
+.qrow{display:flex;gap:8px;align-items:center}
+.qbox{flex:1;position:relative}
+.qbox svg{position:absolute;left:14px;top:50%;width:18px;height:18px;margin-top:-9px;color:var(--muted);pointer-events:none}
+.qbox input{width:100%;height:48px;border-radius:14px;border:1px solid var(--line);background:var(--bg-hi);padding:0 14px 0 42px;font-size:17px;outline:none}
+.qbox input:focus{border-color:var(--spruce-ink);box-shadow:0 0 0 3px color-mix(in srgb, var(--spruce-ink) 22%, transparent)}
+.textbtn{border:0;background:none;padding:10px 6px;font-weight:600;color:var(--spruce-ink)}
+.chips{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.chip{border:1px solid var(--line);background:none;border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--spruce);border-color:var(--spruce);color:var(--on-spruce)}
+.count{margin-left:auto;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.results{list-style:none;margin:10px -16px 0;padding:0 8px 6px;overflow-y:auto;overscroll-behavior:contain;min-height:0}
+.res{width:100%;display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;text-align:left;border:0;background:none;padding:8px;border-radius:14px}
+.res:hover,.res:focus-visible{background:var(--surface-2)}
+.ph{width:48px;height:48px;border-radius:12px;background-image:var(--photos);background-size:1000% 600%;background-color:var(--track)}
+.res .t{min-width:0}
+.res .n{display:block;font-weight:600;font-size:16px;line-height:1.2}
+.res .l{display:block;font-size:12.5px;font-style:italic;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.res .sn{display:block;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.res .sn em{font-style:normal;font-weight:600;color:var(--ink)}
+.res mark{background:color-mix(in srgb, var(--gold) 38%, transparent);color:inherit;border-radius:3px;padding:0 1px}
+.res .r{display:grid;justify-items:end;gap:4px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.res .stars{font-size:11px;color:var(--gold)}
+.okdot{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#1b1402}
+.okdot svg{width:12px;height:12px}
+.empty{padding:28px 8px;text-align:center;color:var(--muted);font-size:14px}
+
+.stats{top:0;right:0;bottom:0;width:min(440px,100%);transform:translateX(105%);overflow-y:auto;overscroll-behavior:contain;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
+.stats.on{transform:translateX(0)}
+.s-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.s-head h2{margin:0;font-size:20px;letter-spacing:-.01em}
+.s-sec{margin-top:26px}
+.s-sec h3{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.hero{display:flex;align-items:baseline;gap:10px;margin-top:18px}
+.hero .big{font-size:64px;font-weight:700;line-height:.9;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.hero .of{font-size:17px;color:var(--muted)}
+.bar{height:10px;border-radius:5px;background:var(--track);overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;border-radius:5px;background:var(--gold);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.kpi{border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.kpi b{display:block;font-size:22px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi span{font-size:12.5px;color:var(--muted);line-height:1.35;display:block;margin-top:2px}
+.rar{display:grid;gap:12px}
+.rrow{display:grid;grid-template-columns:78px 1fr 44px;gap:10px;align-items:center;font-size:14px}
+.rrow .stars{font-size:13px;color:var(--gold)}
+.rrow .lab{display:grid;gap:5px}
+.rrow .lab span{font-size:13px}
+.rrow .bar{margin:0;height:7px}
+.rrow .num{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px}
+.months{position:relative;display:grid;grid-template-columns:repeat(12,1fr);gap:4px;align-items:end;height:120px;padding-top:18px;border-bottom:1px solid var(--line)}
+.mcol{position:relative;height:100%;display:flex;align-items:flex-end;justify-content:center;border:0;background:none;padding:0}
+.mcol i{display:block;width:100%;max-width:22px;min-height:0;border-radius:4px 4px 0 0;background:var(--gold)}
+.mcol.zero i{height:2px!important;background:var(--track);border-radius:1px}
+.mcol .v{position:absolute;bottom:calc(var(--h) + 3px);left:0;right:0;text-align:center;font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
+.mlabels{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:6px;font-size:10.5px;color:var(--muted);text-align:center}
+.tip{position:absolute;z-index:3;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:5px 8px;border-radius:7px;white-space:nowrap;transform:translate(-50%,-100%);opacity:0;transition:opacity .15s}
+.tip.on{opacity:1}
+.cap{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+.recent{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.recent button{width:100%;display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;border:0;background:none;padding:6px;border-radius:12px;text-align:left}
+.recent button:hover{background:var(--surface-2)}
+.recent .ph{width:40px;height:40px;border-radius:10px}
+.recent .d{font-family:var(--hand);font-size:20px;color:var(--spruce-ink);font-weight:600;white-space:nowrap}
+.album{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.alb{position:relative;border:0;padding:0;background:none;aspect-ratio:150/210;border-radius:5px}
+.alb .th{position:absolute;inset:0;border-radius:5px;background-image:var(--cardsprite);background-size:1000% 600%;filter:grayscale(1);opacity:.35;transition:filter .3s, opacity .3s}
+.alb.s .th{filter:none;opacity:1;box-shadow:0 3px 8px -3px rgba(var(--shadow),.5)}
+.alb .nr{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.alb.s .nr{display:none}
+.alb .okdot{position:absolute;right:-4px;top:-4px;width:17px;height:17px;display:none}
+.alb.s .okdot{display:grid}
+.alb .okdot svg{width:10px;height:10px}
+.store{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.store i{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.store.sky i{background:#3aa66f}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 12px;font-size:13.5px;font-weight:600}
+.btn.pri{background:var(--spruce);border-color:var(--spruce);color:var(--on-spruce)}
+.restore{margin-top:10px;display:grid;gap:8px}
+.restore textarea{width:100%;min-height:90px;border-radius:10px;border:1px solid var(--line);background:var(--bg-hi);padding:10px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
+
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:60;
+  background:var(--ink);color:var(--bg);border-radius:14px;padding:10px 10px 10px 16px;font-size:14px;display:flex;gap:12px;align-items:center;
+  width:max-content;max-width:calc(100% - 32px);transition:opacity .25s, transform .25s}
+.toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{border:0;background:color-mix(in srgb, var(--bg) 18%, transparent);color:inherit;border-radius:9px;padding:7px 11px;font-weight:700}
+.toast button[hidden]{display:none}
+
+@media (prefers-reduced-motion: reduce){
+  .float{animation:none}
+  .card,.card .inner,.sheet,.scrim,.tick path,.hand{transition-duration:.01s!important}
+}
+</style>
+
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand">
+      <h1>Hagefugler Oslo</h1>
+      <p id="sub">Kort 001 av 060</p>
+    </div>
+    <button class="iconbtn" id="openSearch" aria-label="Søk etter fugl" title="Søk (/)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>
+    </button>
+    <button class="iconbtn ring" id="openStats" aria-label="Statistikk" title="Statistikk">
+      <svg viewBox="0 0 34 34" aria-hidden="true"><circle class="trk" cx="17" cy="17" r="14"/><circle class="arc" id="ringArc" cx="17" cy="17" r="14" stroke-dasharray="0 88"/></svg>
+      <b id="ringNum">0</b>
+    </button>
+  </header>
+
+  <main class="stage" id="stage" tabindex="-1" aria-roledescription="kortstokk" style="outline:none">
+    <button class="nav prev ctl" id="prevBtn" aria-label="Forrige kort"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button>
+    <div class="float"><div class="deck" id="deck"></div></div>
+    <button class="nav next ctl" id="nextBtn" aria-label="Neste kort"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg></button>
+    <div class="edge l" id="edgeL" aria-hidden="true"></div>
+    <div class="edge r" id="edgeR" aria-hidden="true"></div>
+    <p class="sr" id="live" aria-live="polite"></p>
+  </main>
+
+  <footer class="bottom">
+    <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="Bla i kortstokken" aria-valuemin="1" aria-valuemax="60" aria-valuenow="1"></div>
+    <p class="hint" id="hint">Dra til kanten · sveip fort · trykk for hagefakta</p>
+  </footer>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<section class="sheet search" id="searchSheet" role="dialog" aria-modal="true" aria-label="Søk">
+  <div class="qrow">
+    <div class="qbox">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>
+      <input id="q" type="search" placeholder="Navn eller kjennetegn, f.eks. «rødt bryst»" autocomplete="off" enterkeyhint="search" aria-label="Søk på navn eller kjennetegn">
+    </div>
+    <button class="textbtn" id="closeSearch">Lukk</button>
+  </div>
+  <div class="chips" role="group" aria-label="Filter">
+    <button class="chip" data-f="alle" aria-pressed="true">Alle</button>
+    <button class="chip" data-f="ikke" aria-pressed="false">Ikke sett</button>
+    <button class="chip" data-f="sett" aria-pressed="false">Sett</button>
+    <span class="count" id="count"></span>
+  </div>
+  <ul class="results" id="results"></ul>
+</section>
+
+<section class="sheet stats" id="statsSheet" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
+  <div class="s-head">
+    <h2 id="statsTitle">Min fugleliste</h2>
+    <button class="textbtn" id="closeStats">Lukk</button>
+  </div>
+  <div id="statsBody"></div>
+</section>
+
+<div class="toast" id="toast" role="status"><span id="toastMsg"></span><button id="toastBtn" hidden>Angre</button></div>
+
+<script type="application/json" id="kortdata">__CARDS_JSON__</script>
+<script>
+(() => {
+'use strict';
+const DATA = JSON.parse(document.getElementById('kortdata').textContent);
+const CARDS = DATA.kort;
+const N = CARDS.length;
+const RAR = DATA.sjeldenhet;
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mod = n => ((n % N) + N) % N;
+const pad3 = n => String(n).padStart(3, '0');
+const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.85 6 6.55.78-4.84 4.5 1.3 6.5L12 17.2l-5.86 3.18 1.3-6.5L2.6 9.38l6.55-.78z"/></svg>';
+const stars = n => `<span class="stars" aria-label="${n} av 5 stjerner">${STAR.repeat(n)}</span>`;
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+const PEN = '<path pathLength="1" d="M18 58 C 24 64, 31 73, 37 86 C 49 60, 65 33, 94 7"/>';
+const MND = ['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const fmtHand = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}.${m}.${y}`; };
+const fmtLong = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-').map(Number); return `${d}. ${MND[m-1]}. ${y}`; };
+document.documentElement.style.setProperty('--photos', 'url("sprites/photos.webp")');
+document.documentElement.style.setProperty('--cardsprite', 'url("sprites/cards.webp")');
+const MND_LANG = ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
+function monthText(m) {
+  const runs = lvl => { const out = []; let a = -1; for (let k = 0; k <= 12; k++) { const on = k < 12 && m[k] === lvl; if (on && a < 0) a = k; if (!on && a >= 0) { out.push(a === k - 1 ? MND_LANG[a] : `${MND_LANG[a]}–${MND_LANG[k - 1]}`); a = -1; } } return out.join(', '); };
+  const v = runs(2), s = runs(1);
+  return `Når i hagen. ${v ? 'Vanlig: ' + v + '.' : ''} ${s ? 'Av og til: ' + s + '.' : ''}`.trim();
+}
+const spritePos = i => `${(i % 10) / 9 * 100}% ${Math.floor(i / 10) / 5 * 100}%`;
+
+/* ================= Storage =================
+   One small adapter so the same page runs as a Claude artifact (shared db)
+   and as a standalone app (localStorage). Swap `connectRemote` for your own
+   backend when this becomes a separate app. */
+const Store = {
+  KEY: 'hagefugler-oslo:sett:v1',
+  data: {},             // "001" -> { date: "2026-09-26", ts: 1727… }
+  mode: 'lokal',
+  readOnly: false,
+  db: null,
+  subs: new Set(),
+  queue: {},
+  loadLocal() { try { this.data = JSON.parse(lsGet(this.KEY) || '{}') || {}; } catch (e) { this.data = {}; } },
+  saveLocal() { lsSet(this.KEY, JSON.stringify(this.data)); },
+  emit() { this.subs.forEach(fn => fn()); },
+  on(fn) { this.subs.add(fn); },
+  has(id) { return !!this.data[id]; },
+  get(id) { return this.data[id]; },
+  async connectRemote() {
+    const c = window.claude;
+    if (!c || typeof c.use !== 'function') return;
+    let db = null;
+    try { db = await c.use('db'); } catch (e) { db = null; }
+    if (!db) return;
+    this.db = db;
+    let settled = false;
+    db.collection('sett').onSnapshot(snap => {
+      const next = {};
+      snap.docs.forEach(d => { if (d.exists) { const v = d.data(); if (v && v.date) next[d.id] = { date: v.date, ts: v.ts || 0 }; } });
+      if (!settled && !snap.metadata.fromCache) {
+        settled = true;
+        // First real answer from an empty shared store: lift any sightings made on this device before.
+        if (snap.empty) Object.keys(this.data).forEach(id => { next[id] = this.data[id]; this.push(id); });
+      }
+      Object.keys(this.queue).forEach(id => { if (this.queue[id].busy || this.queue[id].again) { if (this.data[id]) next[id] = this.data[id]; else delete next[id]; } });
+      this.data = next;
+      this.mode = 'delt';
+      this.saveLocal();
+      this.emit();
+    }, () => { this.mode = 'lokal'; this.emit(); });
+  },
+  set(id, date) { this.data[id] = { date, ts: Date.now() }; this.saveLocal(); this.emit(); this.push(id); },
+  remove(id) { delete this.data[id]; this.saveLocal(); this.emit(); this.push(id); },
+  replaceAll(obj) { const prev = Object.keys(this.data); this.data = obj; this.saveLocal(); this.emit(); new Set([...prev, ...Object.keys(obj)]).forEach(id => this.push(id)); },
+  push(id) {
+    if (!this.db || this.readOnly) return;
+    const q = this.queue[id] || (this.queue[id] = { busy: false, again: false });
+    if (q.busy) { q.again = true; return; }
+    q.busy = true;
+    const run = async () => {
+      let tries = 0;
+      for (;;) {
+        q.again = false;
+        const v = this.data[id];
+        try {
+          const ref = this.db.doc('sett/' + id);
+          if (v) await ref.set({ nr: Number(id), date: v.date, ts: v.ts }); else await ref.delete();
+        } catch (e) {
+          if (e && (e.code === 'invalid_argument' || e.code === 'not_granted' || e.code === 'revoked')) {
+            this.readOnly = true; this.mode = 'lokal'; this.emit();
+            toast('Denne visningen kan ikke lagre i den delte lista. Avkrysningen ligger bare på denne enheten.');
+            break;
+          }
+          if (tries++ < 1) { await new Promise(r => setTimeout(r, 900 + Math.random() * 900)); q.again = true; }
+          else { toast('Fikk ikke lagret akkurat nå. Endringen ligger på denne enheten.'); }
+        }
+        if (!q.again) break;
+      }
+      q.busy = false;
+    };
+    run();
+  }
+};
+Store.loadLocal();
+
+/* ================= Search index ================= */
+function norm(s) {
+  let out = ''; const map = [];
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i].toLowerCase();
+    let rep = ch === 'æ' ? 'ae' : ch === 'ø' ? 'o' : ch === 'å' ? 'a' : /[–—]/.test(ch) ? '-' : ch.normalize('NFD').replace(/[̀-ͯ]/g, '');
+    for (const r of rep) { out += r; map.push(i); }
+  }
+  return { s: out, map };
+}
+CARDS.forEach(c => { c.h_hage = c.hage.i_hagen; c.h_brett = c.hage.brett; c.h_hekking = c.hage.hekking; c.h_lyd = c.hage.lyd; });
+const FIELDS = [['navn', 'Navn', 100], ['latin', 'Latin', 40], ['kjennetegn', 'Kjennetegn', 30], ['fakta', 'Fun fact', 12], ['mat', 'Mat', 12],
+  ['h_brett', 'Fuglebrettet', 11], ['h_hekking', 'Hekking', 10], ['h_hage', 'I hagen', 9], ['h_lyd', 'Hør etter', 8], ['nar', 'Når', 8], ['status', 'Status', 8], ['utbredelse', 'Utbredelse', 3]];
+const IDX = CARDS.map(c => Object.fromEntries(FIELDS.map(([k]) => [k, norm(c[k])])));
+
+/* ================= Deck ================= */
+const stage = $('#stage'), deckEl = $('#deck');
+let cur = Math.min(N - 1, Math.max(0, parseInt(lsGet('hagefugler-oslo:kort') || '0', 10) || 0));
+const hashNr = /^#k?(\d{1,3})$/.exec(location.hash || '');
+if (hashNr && +hashNr[1] >= 1 && +hashNr[1] <= N) cur = +hashNr[1] - 1;
+const pool = new Map();
+
+function makeCard(i) {
+  const c = CARDS[i];
+  const [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje;
+  const P = v => (v * 100).toFixed(3) + '%';
+  const dLeft = lx - 0.13, dW = lw + 0.15;
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.dataset.i = i;
+  el.setAttribute('role', 'group');
+  el.setAttribute('aria-label', `Kort ${c.id}: ${c.navn}`);
+  el.innerHTML = `
+  <div class="inner">
+    <div class="face front" style="background-position:${spritePos(i)}">
+      <img src="${esc(c.bilde)}" alt="Fuglekort ${c.id}: ${esc(c.navn)}, ${esc(c.latin)}. ${esc(c.status)}." draggable="false" decoding="async">
+      <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
+      <button class="ctl sett-hit" data-act="toggle" aria-pressed="false" aria-label="Sett ${esc(c.navn)}" style="left:${P(bx - 0.025)};top:${P(by - 0.012)};width:${P(bw + 0.22)};height:${P(bh + 0.024)}"></button>
+      <label class="ctl dato" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}">
+        <span class="hand" style="left:${P((lx - dLeft + 0.012) / dW)}"></span>
+        <input type="date" data-act="date" aria-label="Dato du så ${esc(c.navn)}">
+      </label>
+    </div>
+    <div class="face back">
+      <div class="b-head">
+        <div><h2>${esc(c.navn)}</h2><p class="lat">${esc(c.latin)}</p></div>
+        <div class="b-meta">${stars(c.stjerner)}<span class="st">${esc(c.status)}</span><span class="no">${c.id}/${pad3(N)}</span></div>
+      </div>
+      <div class="b-body">
+        <p class="b-kicker">Som hagefugl</p>
+        <div class="b-when">
+          <div class="top"><span>Når i hagen</span><small><span><i class="m2"></i>vanlig</span><span><i class="m1"></i>av og til</span></small></div>
+          <div class="mstrip" role="img" aria-label="${esc(monthText(c.hage.mnd))}">${c.hage.mnd.map((v, k) => `<b class="m${v}${k === new Date().getMonth() ? ' now' : ''}">${'JFMAMJJASOND'[k]}</b>`).join('')}</div>
+        </div>
+        <dl>
+          <div><dt>I hagen</dt><dd>${esc(c.hage.i_hagen)}</dd></div>
+          <div><dt>Fuglebrettet</dt><dd>${esc(c.hage.brett)}</dd></div>
+          <div><dt>Hekking</dt><dd>${esc(c.hage.hekking)}</dd></div>
+          <div><dt>Hør etter</dt><dd>${esc(c.hage.lyd)}</dd></div>
+        </dl>
+      </div>
+      <div class="b-foot">
+        <button class="ctl b-sett" data-act="toggle" aria-pressed="false"><span class="b-box"><svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="position:absolute;left:-8%;top:-45%;width:150%;height:150%">${PEN}</svg></span>Sett</button>
+        <label class="ctl b-date"><span class="lbl">Dato</span><span class="val empty">Velg dato</span><input type="date" data-act="date" aria-label="Dato du så ${esc(c.navn)}"></label>
+      </div>
+    </div>
+  </div>`;
+  paintCard(el);
+  return el;
+}
+
+function paintCard(el) {
+  const c = CARDS[+el.dataset.i];
+  const s = Store.get(c.id);
+  el.classList.toggle('seen', !!s);
+  el.querySelectorAll('[data-act="toggle"]').forEach(b => {
+    b.setAttribute('aria-pressed', s ? 'true' : 'false');
+    b.setAttribute('aria-label', s ? `${c.navn} er merket som sett ${fmtLong(s.date)}. Trykk for å fjerne` : `Merk ${c.navn} som sett i dag`);
+  });
+  el.querySelector('.hand').textContent = s ? fmtHand(s.date) : '';
+  const val = el.querySelector('.b-date .val');
+  val.textContent = s ? fmtHand(s.date) : 'Velg dato';
+  val.classList.toggle('empty', !s);
+  el.querySelectorAll('input[type="date"]').forEach(inp => { inp.value = s ? s.date : ''; inp.max = todayISO(); });
+}
+
+function metrics() {
+  const W = deckEl.offsetWidth || 300, SW = stage.offsetWidth || 360;
+  stage.style.setProperty('--dw', W + 'px');
+  return { W, SW };
+}
+/* Slots: -2 and -1 lie off to the left (cards already passed), 0 is the top card,
+   1–2 peek out below it, 3–4 wait invisibly at the bottom of the stack. */
+const SLOTS = [-2, -1, 0, 1, 2, 3, 4];
+function pose(slot, m) {
+  const { W, SW } = m;
+  const off = SW / 2 + W * 0.8;
+  switch (slot) {
+    case -2: return { x: -(off + W * 0.9), y: W * 0.1, r: -24, s: 1, o: 1, z: 11 };
+    case -1: return { x: -off, y: W * 0.05, r: -15, s: 1, o: 1, z: 12 };
+    case 0:  return { x: 0, y: 0, r: 0, s: 1, o: 1, z: 10 };
+    case 1:  return { x: W * 0.012, y: W * 0.046, r: 2.6, s: 0.955, o: 1, z: 9 };
+    case 2:  return { x: -W * 0.01, y: W * 0.088, r: -2.3, s: 0.91, o: 1, z: 8 };
+    case 3:  return { x: 0, y: W * 0.115, r: 0.4, s: 0.87, o: 0, z: 7 };
+    default: return { x: 0, y: W * 0.115, r: 0.4, s: 0.87, o: 0, z: 6 };
+  }
+}
+const lerp = (a, b, t) => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, r: a.r + (b.r - a.r) * t, s: a.s + (b.s - a.s) * t, o: a.o + (b.o - a.o) * t, z: t > .5 ? b.z : a.z });
+function apply(el, p) {
+  el.style.transform = `translate3d(${p.x.toFixed(1)}px,${p.y.toFixed(1)}px,0) rotate(${p.r.toFixed(2)}deg) scale(${p.s.toFixed(4)})`;
+  el.style.opacity = p.o;
+  el.style.zIndex = p.z;
+}
+function slotOf(i) { let d = mod(i - cur); if (d > N / 2) d -= N; return d >= -2 && d <= 4 ? d : null; }
+
+function sync(opts = {}) {
+  const m = metrics();
+  const need = SLOTS.map(d => mod(cur + d));
+  for (const [i, el] of pool) if (!need.includes(i)) { el.remove(); pool.delete(i); }
+  const fresh = [];
+  need.forEach(i => {
+    if (!pool.has(i)) {
+      const el = makeCard(i);
+      el.classList.add('no-anim');
+      const p = pose(slotOf(i), m);
+      if (opts.deal && slotOf(i) >= 0) apply(el, { ...p, y: p.y - m.W * 0.18, o: 0, r: p.r - 4 }); else apply(el, p);
+      deckEl.appendChild(el);
+      pool.set(i, el);
+      fresh.push(el);
+    }
+  });
+  if (fresh.length) void deckEl.offsetWidth;
+  fresh.forEach(el => el.classList.remove('no-anim'));
+  if (opts.instant) pool.forEach(el => el.classList.add('no-anim'));
+  pool.forEach((el, i) => {
+    const s = slotOf(i);
+    el.classList.toggle('is-top', s === 0);
+    el.classList.remove('held');
+    if (s !== 0) el.classList.remove('flipped');
+    el.setAttribute('aria-hidden', s === 0 ? 'false' : 'true');
+    el.inert = s !== 0;
+    apply(el, pose(s, m));
+  });
+  if (opts.instant) { void deckEl.offsetWidth; pool.forEach(el => el.classList.remove('no-anim')); }
+  lsSet('hagefugler-oslo:kort', String(cur));
+  paintChrome();
+}
+
+function go(dir, quiet) { cur = mod(cur + dir); sync(); if (!quiet) { announce(); nudgeHint(); } }
+function jump(i, how = 'deal') {
+  stopRiffle();
+  if (i === cur) { sync(); return; }
+  if (how !== 'instant' && Math.abs(i - cur) === 1) { go(i - cur); return; }
+  cur = i;
+  if (how === 'instant') { sync({ instant: true }); }
+  else { pool.forEach(el => el.remove()); pool.clear(); sync({ deal: true }); }
+  announce();
+}
+function flip() {
+  const el = pool.get(cur); if (!el) return;
+  el.classList.toggle('flipped');
+  if (el.classList.contains('flipped')) { const body = el.querySelector('.b-body'); if (body) body.scrollTop = 0; }
+  nudgeHint();
+}
+function announce() { const c = CARDS[cur]; $('#live').textContent = `Kort ${cur + 1} av ${N}: ${c.navn}${Store.has(c.id) ? ', sett' : ''}`; }
+const haptic = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
+
+/* ---- momentum: a fast swipe riffles through many cards, slowing down; a tap stops it ---- */
+let riffle = null;
+function startRiffle(dir, count) {
+  stopRiffle();
+  riffle = { dir, n: count, left: count, t: 0 };
+  stage.classList.add('riffling');
+  const step = () => {
+    if (!riffle) return;
+    const k = 1 - riffle.left / riffle.n;                 // 0 → 1 over the riffle
+    const gap = 55 + 320 * k * k;                          // time until the next card
+    stage.style.setProperty('--dur', Math.round(Math.min(460, Math.max(170, gap * 1.8))) + 'ms');
+    go(riffle.dir, true);
+    if (--riffle.left <= 0) { riffle.t = setTimeout(() => stopRiffle(), 420); return; }
+    riffle.t = setTimeout(step, gap);
+  };
+  step();
+}
+function stopRiffle() {
+  if (!riffle) return false;
+  clearTimeout(riffle.t);
+  riffle = null;
+  stage.classList.remove('riffling');
+  stage.style.removeProperty('--dur');
+  announce();
+  return true;
+}
+
+/* ---- hold, drag, reach the edge, let go ---- */
+// Tuning: a swipe starts a multi-card scroll only if it is both long and fast.
+const FLING = {
+  minSpeed: 1.8,        // px per ms over the last ~100 ms of the swipe
+  minDistance: 0.45,    // share of the card width the finger must travel (at least 140 px)
+  cardsPerSpeed: 8,     // how many extra cards per px/ms above minSpeed
+  maxCards: 30,
+  swipeSpeed: 0.4,      // a slower swipe of 45 px or more still moves one card
+};
+const edgeL = $('#edgeL'), edgeR = $('#edgeR');
+let drag = null;
+function lift() {
+  if (!drag || drag.held) return;
+  const el = pool.get(cur); if (!el) return;
+  drag.held = true;
+  el.classList.add('held');
+  stage.classList.add('holding');
+  if (!drag.moved) apply(el, { x: 0, y: -drag.m.W * 0.012, r: 0, s: 1.035, o: 1, z: 13 });
+  haptic(6);
+}
+function setArmed(a) {
+  if (!drag || drag.armed === a) return;
+  drag.armed = a;
+  edgeL.classList.toggle('armed', a === 1);
+  edgeR.classList.toggle('armed', a === -1);
+  if (a) haptic(14);
+}
+stage.addEventListener('pointerdown', e => {
+  if (e.button !== 0 || e.target.closest('.ctl')) return;
+  const stopped = stopRiffle();                           // a touch while riffling stops it
+  if (stopped) sync();
+  const top = pool.get(cur);
+  const onCard = !!e.target.closest('.card.is-top');
+  const r = top ? top.getBoundingClientRect() : { top: 0, height: 0 };
+  const now = performance.now();
+  drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, t0: now, dx: 0, dy: 0, moved: false, held: false, armed: 0,
+           stopped, onCard, upper: e.clientY < r.top + r.height / 2, inBody: !!e.target.closest('.b-body'),
+           hist: [[e.clientX, e.timeStamp || now]], m: metrics(), sr: stage.getBoundingClientRect() };
+  if (onCard) drag.holdT = setTimeout(lift, 120);
+});
+stage.addEventListener('pointermove', e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  drag.dx = e.clientX - drag.x0; drag.dy = e.clientY - drag.y0;
+  const now = e.timeStamp || performance.now();
+  drag.hist.push([e.clientX, now]);
+  while (drag.hist.length > 2 && now - drag.hist[0][1] > 100) drag.hist.shift();
+  if (!drag.moved) {
+    if (Math.hypot(drag.dx, drag.dy) < 7) return;
+    // on the back of the card, an upward/downward drag scrolls the text
+    if ((drag.inBody || !drag.onCard) && Math.abs(drag.dy) > Math.abs(drag.dx)) { cancelDrag(); return; }
+    drag.moved = true;
+    try { stage.setPointerCapture(drag.id); } catch (err) {}
+    stage.classList.add('dragging');
+    lift();
+  }
+  e.preventDefault();
+  const fx = e.clientX - drag.sr.left, SW = drag.sr.width, W = drag.m.W;
+  let armed = 0;
+  if ((fx < SW * 0.15 && drag.dx < -40) || drag.dx < -W * 0.62) armed = 1;
+  else if ((fx > SW * 0.85 && drag.dx > 40) || drag.dx > W * 0.62) armed = -1;
+  setArmed(armed);
+  renderDrag(drag);
+});
+function renderDrag(d) {
+  const m = d.m, W = m.W, dx = d.dx, dy = d.dy;
+  const get = k => pool.get(mod(cur + k));
+  // the held card follows the finger, tilting like a card pinched at the top or bottom
+  get(0) && apply(get(0), { x: dx, y: dy, r: dx / W * 15 * (d.upper ? 1 : -1), s: 1.035, o: 1, z: 13 });
+  if (dx <= 0) {
+    const t = Math.min(1, -dx / (W * 0.75));
+    [1, 2, 3].forEach(k => get(k) && apply(get(k), lerp(pose(k, m), pose(k - 1, m), t)));
+    get(-1) && apply(get(-1), pose(-1, m));
+  } else {
+    const t = Math.min(1, dx / (W * 0.75));
+    [1, 2, 3].forEach(k => get(k) && apply(get(k), pose(k, m)));
+    const pv = pose(-1, m);                               // the previous card peeks in from the left
+    get(-1) && apply(get(-1), { ...pv, x: pv.x * (1 - 0.42 * t), r: pv.r * (1 - 0.4 * t) });
+  }
+}
+function clearDragUi() {
+  stage.classList.remove('dragging', 'holding');
+  edgeL.classList.remove('armed'); edgeR.classList.remove('armed');
+  pool.forEach(el => el.classList.remove('held'));
+}
+function cancelDrag() { if (!drag) return; clearTimeout(drag.holdT); drag = null; clearDragUi(); sync(); }
+function endDrag(e, cancelled) {
+  if (!drag || (e && e.pointerId !== drag.id)) return;
+  const d = drag; drag = null;
+  clearTimeout(d.holdT);
+  clearDragUi();
+  if (!d.moved) {
+    const quick = performance.now() - d.t0 < 450;
+    if (!cancelled && !d.stopped && d.onCard && quick) { sync(); flip(); } else sync();
+    return;
+  }
+  const h = d.hist, a = h[0], b = h[h.length - 1];
+  const vx = (b[0] - a[0]) / Math.max(8, b[1] - a[1]);    // px per ms over the last ~100 ms
+  const fast = Math.abs(vx);
+  if (cancelled) { sync(); return; }
+  const longEnough = Math.abs(d.dx) >= Math.max(140, d.m.W * FLING.minDistance);
+  if (fast >= FLING.minSpeed && longEnough) {
+    const count = Math.max(3, Math.min(FLING.maxCards, Math.round(3 + (fast - FLING.minSpeed) * FLING.cardsPerSpeed)));
+    startRiffle(vx < 0 ? 1 : -1, count);
+  } else if (d.armed) {
+    go(d.armed);
+  } else if (fast > FLING.swipeSpeed && Math.abs(d.dx) > 45) {
+    go(vx < 0 ? 1 : -1);
+  } else {
+    sync();                                               // not at the edge: the card settles back on the stack
+  }
+}
+stage.addEventListener('pointerup', e => endDrag(e, false));
+stage.addEventListener('pointercancel', e => endDrag(e, true));
+stage.addEventListener('lostpointercapture', e => { if (e.target === stage && drag && drag.moved && e.pointerId === drag.id) endDrag(e, false); });
+
+let wheelAcc = 0, wheelLock = 0;
+stage.addEventListener('wheel', e => {
+  if (Math.abs(e.deltaX) < Math.abs(e.deltaY) || e.target.closest('.b-body')) return;
+  e.preventDefault();
+  if (performance.now() < wheelLock) return;
+  wheelAcc += e.deltaX;
+  if (Math.abs(wheelAcc) > 70) { stopRiffle(); go(wheelAcc > 0 ? 1 : -1); wheelAcc = 0; wheelLock = performance.now() + 380; }
+}, { passive: false });
+
+/* hover tilt on desktop: the deck floats a little toward the pointer */
+if (matchMedia('(hover:hover) and (pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  stage.addEventListener('pointermove', e => {
+    if ((drag && drag.moved) || riffle) { deckEl.style.transform = ''; return; }
+    const r = deckEl.getBoundingClientRect();
+    const px = (e.clientX - (r.left + r.width / 2)) / r.width, py = (e.clientY - (r.top + r.height / 2)) / r.height;
+    if (Math.abs(px) > 1.2 || Math.abs(py) > 1) { deckEl.style.transform = ''; return; }
+    deckEl.style.transform = `perspective(1400px) rotateY(${(px * 5).toFixed(2)}deg) rotateX(${(-py * 4).toFixed(2)}deg)`;
+  });
+  stage.addEventListener('pointerleave', () => { deckEl.style.transform = ''; });
+}
+
+/* controls on the card (front SETT box, date line, back footer) */
+deckEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-act="toggle"]'); if (!b) return;
+  const el = b.closest('.card'); if (!el || !el.classList.contains('is-top')) return;
+  e.stopPropagation();
+  toggleSeen(CARDS[+el.dataset.i]);
+});
+deckEl.addEventListener('click', e => {
+  const inp = e.target.closest('input[type="date"]'); if (!inp) return;
+  if (typeof inp.showPicker === 'function') { try { inp.showPicker(); } catch (err) {} }
+});
+deckEl.addEventListener('change', e => {
+  const inp = e.target.closest('input[type="date"]'); if (!inp) return;
+  const el = inp.closest('.card'); const c = CARDS[+el.dataset.i];
+  if (inp.value) { Store.set(c.id, inp.value); celebrate(c); }
+});
+
+function toggleSeen(c) {
+  const prev = Store.get(c.id);
+  if (prev) {
+    Store.remove(c.id);
+    toast(`${c.navn} er ikke lenger merket som sett.`, 'Angre', () => Store.set(c.id, prev.date));
+  } else {
+    Store.set(c.id, todayISO());
+    celebrate(c);
+  }
+}
+function celebrate(c) {
+  try { navigator.vibrate && navigator.vibrate(12); } catch (e) {}
+  const n = Object.keys(Store.data).length;
+  if (c.stjerner >= 4) toast(`${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i Oslo-hager. ${n} av ${N} sett.`);
+  else if (n === N) toast('Alle 60 kortene er krysset av. Hele kortstokken er komplett!');
+}
+
+/* keyboard */
+document.addEventListener('keydown', e => {
+  if (e.target.closest('input, textarea')) { if (e.key === 'Escape') closeSheets(); return; }
+  if (openSheet) { if (e.key === 'Escape') closeSheets(); return; }
+  if (e.key === 'ArrowRight') { e.preventDefault(); stopRiffle(); go(1); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); stopRiffle(); go(-1); }
+  else if (e.key === 'Escape') { stopRiffle(); }
+  else if ((e.key === ' ' || e.key === 'Enter') && !e.target.closest('button')) { e.preventDefault(); flip(); }
+  else if (e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) { e.preventDefault(); openSearch(); }
+  else if (e.key.toLowerCase() === 's' && !e.metaKey && !e.ctrlKey) { toggleSeen(CARDS[cur]); }
+});
+$('#prevBtn').addEventListener('click', () => { stopRiffle(); go(-1); });
+$('#nextBtn').addEventListener('click', () => { stopRiffle(); go(1); });
+
+/* ---- scrubber ---- */
+const scrub = $('#scrub');
+scrub.innerHTML = CARDS.map((c, i) => `<i class="${(i + 1) % 10 === 0 ? 'x10' : ''}"></i>`).join('');
+const ticks = [...scrub.children];
+const scrubIndex = e => { const r = scrub.getBoundingClientRect(); return Math.max(0, Math.min(N - 1, Math.floor((e.clientX - r.left) / r.width * N))); };
+let scrubbing = false;
+scrub.addEventListener('pointerdown', e => { stopRiffle(); scrubbing = true; try { scrub.setPointerCapture(e.pointerId); } catch (err) {} jump(scrubIndex(e), 'instant'); });
+scrub.addEventListener('pointermove', e => { if (scrubbing) { const i = scrubIndex(e); if (i !== cur) jump(i, 'instant'); } });
+scrub.addEventListener('pointerup', () => { scrubbing = false; nudgeHint(); });
+scrub.addEventListener('pointercancel', () => { scrubbing = false; });
+scrub.addEventListener('keydown', e => {
+  const map = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10 };
+  if (e.key in map) { e.preventDefault(); e.stopPropagation(); jump(Math.max(0, Math.min(N - 1, cur + map[e.key])), 'instant'); }
+  else if (e.key === 'Home') { e.preventDefault(); jump(0, 'instant'); }
+  else if (e.key === 'End') { e.preventDefault(); jump(N - 1, 'instant'); }
+});
+
+/* ---- header, ring, scrubber paint ---- */
+function paintChrome() {
+  const c = CARDS[cur];
+  const n = Object.keys(Store.data).length;
+  $('#sub').textContent = `Kort ${c.id} av ${pad3(N)} · ${n} sett`;
+  $('#ringNum').textContent = n;
+  const C = 2 * Math.PI * 14;
+  $('#ringArc').setAttribute('stroke-dasharray', `${(n / N * C).toFixed(2)} ${C.toFixed(2)}`);
+  $('#openStats').setAttribute('aria-label', `Statistikk: ${n} av ${N} sett`);
+  ticks.forEach((t, i) => { t.classList.toggle('s', Store.has(CARDS[i].id)); t.classList.toggle('c', i === cur); });
+  scrub.setAttribute('aria-valuenow', cur + 1);
+  scrub.setAttribute('aria-valuetext', `Kort ${cur + 1}: ${c.navn}`);
+}
+
+let hintCount = lsGet('hagefugler-oslo:hint') === 'ok' ? 99 : 0;
+if (hintCount > 3) $('#hint').classList.add('gone');
+function nudgeHint() { if (++hintCount === 4) { $('#hint').classList.add('gone'); lsSet('hagefugler-oslo:hint', 'ok'); } }
+
+/* ================= Sheets ================= */
+let openSheet = null, lastFocus = null;
+const app = $('#app'), scrim = $('#scrim');
+function showSheet(el) {
+  if (openSheet === el) return;
+  closeSheets(true);
+  lastFocus = document.activeElement;
+  openSheet = el;
+  el.classList.add('on'); scrim.classList.add('on'); app.inert = true;
+}
+function closeSheets(silent) {
+  if (!openSheet) return;
+  openSheet.classList.remove('on'); scrim.classList.remove('on'); app.inert = false;
+  openSheet = null;
+  if (!silent && lastFocus && lastFocus.focus) lastFocus.focus();
+}
+scrim.addEventListener('click', () => closeSheets());
+
+/* ---- search ---- */
+const qEl = $('#q'), resEl = $('#results');
+let filter = 'alle';
+function openSearch() { showSheet($('#searchSheet')); renderSearch(); setTimeout(() => qEl.focus(), 60); }
+$('#openSearch').addEventListener('click', openSearch);
+$('#closeSearch').addEventListener('click', () => closeSheets());
+qEl.addEventListener('input', renderSearch);
+qEl.addEventListener('keydown', e => { if (e.key === 'Enter') { const first = resEl.querySelector('.res'); if (first) first.click(); } });
+document.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', () => {
+  filter = ch.dataset.f;
+  document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === ch ? 'true' : 'false'));
+  renderSearch();
+}));
+function hl(orig, n, terms) {
+  const marks = new Array(orig.length).fill(false);
+  terms.forEach(t => { let p = n.s.indexOf(t); while (p !== -1) { for (let k = p; k < p + t.length; k++) marks[n.map[k]] = true; p = n.s.indexOf(t, p + 1); } });
+  let out = '', on = false;
+  for (let i = 0; i < orig.length; i++) {
+    if (marks[i] && !on) { out += '<mark>'; on = true; }
+    if (!marks[i] && on) { out += '</mark>'; on = false; }
+    out += esc(orig[i]);
+  }
+  return out + (on ? '</mark>' : '');
+}
+function snippet(orig, n, terms) {
+  const p = n.s.indexOf(terms[0]); const at = p < 0 ? 0 : n.map[p];
+  let a = Math.max(0, at - 38), b = Math.min(orig.length, at + 70);
+  if (a > 0) { const sp = orig.indexOf(' ', a); if (sp > -1 && sp < at) a = sp + 1; }
+  const part = orig.slice(a, b);
+  return (a > 0 ? '…' : '') + hl(part, norm(part), terms) + (b < orig.length ? '…' : '');
+}
+function renderSearch() {
+  const q = norm(qEl.value.trim()).s;
+  const terms = q.split(/\s+/).filter(Boolean);
+  const out = [];
+  CARDS.forEach((c, i) => {
+    const seen = Store.has(c.id);
+    if (filter === 'sett' && !seen) return;
+    if (filter === 'ikke' && seen) return;
+    if (!terms.length) { out.push({ i, score: 0 }); return; }
+    let score = 0, hit = null;
+    for (const t of terms) {
+      let best = 0, bestF = null;
+      for (const [k, , w] of FIELDS) {
+        const s = IDX[i][k].s; const p = s.indexOf(t);
+        if (p < 0) continue;
+        let sc = w + (p === 0 || s[p - 1] === ' ' ? w * 0.5 : 0);
+        if (k === 'navn' && p === 0) sc += 80;
+        if (sc > best) { best = sc; bestF = k; }
+      }
+      if (!best) return;
+      score += best;
+      if (bestF !== 'navn' && bestF !== 'latin' && !hit) hit = bestF;
+    }
+    out.push({ i, score, hit });
+  });
+  out.sort((a, b) => b.score - a.score || a.i - b.i);
+  $('#count').textContent = `${out.length} kort`;
+  if (!out.length) {
+    resEl.innerHTML = `<li class="empty">Ingen kort passer${qEl.value ? ` til «${esc(qEl.value)}»` : ''}. Prøv et annet ord, for eksempel en farge eller «hakkespett».</li>`;
+    return;
+  }
+  resEl.innerHTML = out.map(({ i, hit }) => {
+    const c = CARDS[i], s = Store.get(c.id);
+    const label = hit ? FIELDS.find(f => f[0] === hit)[1] : '';
+    return `<li><button class="res" data-i="${i}">
+      <span class="ph" style="background-position:${spritePos(i)}" aria-hidden="true"></span>
+      <span class="t"><span class="n">${terms.length ? hl(c.navn, IDX[i].navn, terms) : esc(c.navn)}</span>
+        <span class="l">${terms.length ? hl(c.latin, IDX[i].latin, terms) : esc(c.latin)}</span>
+        ${hit ? `<span class="sn"><em>${label}:</em> ${snippet(c[hit], IDX[i][hit], terms)}</span>` : ''}</span>
+      <span class="r">${s ? `<span class="okdot" title="Sett ${fmtLong(s.date)}">${CHECK}</span>` : `<span>${c.id}</span>`}${stars(c.stjerner)}</span>
+    </button></li>`;
+  }).join('');
+}
+resEl.addEventListener('click', e => {
+  const b = e.target.closest('.res'); if (!b) return;
+  closeSheets(true);
+  jump(+b.dataset.i);
+  stage.focus && stage.focus();
+});
+
+/* ---- stats ---- */
+const sb = $('#statsBody');
+function openStats() { showSheet($('#statsSheet')); renderStats(); setTimeout(() => $('#closeStats').focus(), 60); }
+$('#openStats').addEventListener('click', openStats);
+$('#closeStats').addEventListener('click', () => closeSheets());
+function renderStats() {
+  const ids = Object.keys(Store.data);
+  const n = ids.length;
+  const byRar = [1, 2, 3, 4, 5].map(r => ({ r, tot: CARDS.filter(c => c.stjerner === r).length, seen: CARDS.filter(c => c.stjerner === r && Store.has(c.id)).length }));
+  const ptsMax = CARDS.reduce((a, c) => a + c.stjerner, 0);
+  const pts = CARDS.reduce((a, c) => a + (Store.has(c.id) ? c.stjerner : 0), 0);
+  const rarest = CARDS.filter(c => Store.has(c.id)).sort((a, b) => b.stjerner - a.stjerner || a.nr - b.nr)[0];
+  // last 12 months
+  const now = new Date(); const months = [];
+  for (let k = 11; k >= 0; k--) { const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push({ y: d.getFullYear(), m: d.getMonth() + 1, n: 0 }); }
+  ids.forEach(id => { const [y, m] = Store.data[id].date.split('-').map(Number); const b = months.find(x => x.y === y && x.m === m); if (b) b.n++; });
+  const maxM = Math.max(1, ...months.map(x => x.n));
+  const inYear = months.reduce((a, x) => a + x.n, 0);
+  const recent = ids.map(id => ({ id, ...Store.data[id] })).sort((a, b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : b.ts - a.ts)).slice(0, 6);
+  const cardOf = id => CARDS.findIndex(c => c.id === id);
+
+  sb.innerHTML = `
+    <div class="hero"><span class="big">${n}</span><span class="of">av ${N} arter sett</span></div>
+    <div class="bar" role="img" aria-label="${Math.round(n / N * 100)} prosent av kortstokken"><i style="width:${(n / N * 100).toFixed(1)}%"></i></div>
+    <div class="kpis">
+      <div class="kpi"><b>${pts} <small style="font-size:14px;color:var(--muted)">/ ${ptsMax}</small></b><span>Poeng. Hvert kort gir like mange poeng som det har stjerner.</span></div>
+      <div class="kpi"><b>${rarest ? esc(rarest.navn) : '–'}</b><span>${rarest ? `Sjeldneste funn, ${rarest.stjerner} ${rarest.stjerner === 1 ? 'stjerne' : 'stjerner'}` : 'Sjeldneste funn vises her'}</span></div>
+    </div>
+
+    <div class="s-sec"><h3>Etter sjeldenhet</h3><div class="rar">
+      ${byRar.map(x => `<div class="rrow">${stars(x.r)}<div class="lab"><span>${RAR[x.r]}</span><div class="bar"><i style="width:${(x.seen / x.tot * 100).toFixed(1)}%"></i></div></div><span class="num">${x.seen}/${x.tot}</span></div>`).join('')}
+    </div></div>
+
+    <div class="s-sec"><h3>Nye arter per måned</h3>
+      <div class="months" id="months">
+        ${months.map((x, k) => `<button class="mcol ${x.n ? '' : 'zero'}" data-k="${k}" style="--h:${(x.n / maxM * 100).toFixed(1)}%" aria-label="${MND[x.m - 1]} ${x.y}: ${x.n} ${x.n === 1 ? 'art' : 'arter'}"><i style="height:${(x.n / maxM * 100).toFixed(1)}%"></i>${x.n === maxM && x.n > 0 ? `<span class="v">${x.n}</span>` : ''}</button>`).join('')}
+        <div class="tip" id="mtip"></div>
+      </div>
+      <div class="mlabels">${months.map(x => `<span>${MND[x.m - 1]}</span>`).join('')}</div>
+      <p class="cap">${n ? `${inYear} ${inYear === 1 ? 'art' : 'arter'} krysset av de siste 12 månedene.` : 'Ingen avkrysninger ennå. Trykk på SETT-ruta nederst på et kort når du ser fuglen.'}</p>
+    </div>
+
+    ${recent.length ? `<div class="s-sec"><h3>Sist sett</h3><ul class="recent">
+      ${recent.map(r => { const i = cardOf(r.id), c = CARDS[i]; return `<li><button data-i="${i}"><span class="ph" style="background-position:${spritePos(i)}" aria-hidden="true"></span><span><b style="font-weight:600">${esc(c.navn)}</b><br><span style="font-size:12.5px;color:var(--muted)">${esc(RAR[c.stjerner])}</span></span><span class="d">${fmtHand(r.date)}</span></button></li>`; }).join('')}
+    </ul></div>` : ''}
+
+    <div class="s-sec"><h3>Samlingen</h3><div class="album">
+      ${CARDS.map((c, i) => `<button class="alb ${Store.has(c.id) ? 's' : ''}" data-i="${i}" aria-label="${esc(c.navn)}${Store.has(c.id) ? ', sett' : ', ikke sett'}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.nr}</span><span class="okdot">${CHECK}</span></button>`).join('')}
+    </div></div>
+
+    <div class="s-sec"><h3>Lagring</h3>
+      <p class="store ${Store.mode === 'delt' ? 'sky' : ''}"><i></i>${Store.mode === 'delt' ? 'Avkrysningene lagres sammen med kortstokken og følger deg på alle enheter.' : 'Avkrysningene lagres på denne enheten.'}</p>
+      <div class="row"><button class="btn" id="copyBackup">Kopier sikkerhetskopi</button><button class="btn" id="showRestore">Gjenopprett</button></div>
+      <div class="restore" id="restoreBox" hidden>
+        <label for="restoreTxt" style="font-size:13px;color:var(--muted)">Lim inn en sikkerhetskopi. Avkrysningene i den legges til de du har.</label>
+        <textarea id="restoreTxt" spellcheck="false"></textarea>
+        <div><button class="btn pri" id="doRestore">Legg til avkrysningene</button></div>
+      </div>
+    </div>`;
+
+  const tip = $('#mtip'), mEl = $('#months');
+  const showTip = b => { const x = months[+b.dataset.k]; tip.textContent = `${MND[x.m - 1]}. ${x.y}: ${x.n} ${x.n === 1 ? 'art' : 'arter'}`; const r = b.getBoundingClientRect(), pr = mEl.getBoundingClientRect(); tip.style.left = (r.left - pr.left + r.width / 2) + 'px'; tip.style.top = Math.max(0, r.bottom - pr.top - (b.querySelector('i').offsetHeight) - 6) + 'px'; tip.classList.add('on'); };
+  mEl.querySelectorAll('.mcol').forEach(b => { b.addEventListener('pointerenter', () => showTip(b)); b.addEventListener('focus', () => showTip(b)); b.addEventListener('click', () => showTip(b)); b.addEventListener('pointerleave', () => tip.classList.remove('on')); b.addEventListener('blur', () => tip.classList.remove('on')); });
+}
+sb.addEventListener('click', async e => {
+  const j = e.target.closest('[data-i]');
+  if (j) { closeSheets(true); jump(+j.dataset.i); return; }
+  if (e.target.id === 'copyBackup') {
+    const txt = JSON.stringify({ kortstokk: 'hagefugler-oslo', versjon: 1, sett: Store.data });
+    try { await navigator.clipboard.writeText(txt); toast('Sikkerhetskopien er kopiert. Lim den inn i et notat eller en e-post til deg selv.'); }
+    catch (err) { $('#restoreBox').hidden = false; const t = $('#restoreTxt'); t.value = txt; t.select(); toast('Kopier teksten i feltet manuelt.'); }
+  }
+  if (e.target.id === 'showRestore') { $('#restoreBox').hidden = false; $('#restoreTxt').value = ''; $('#restoreTxt').focus(); }
+  if (e.target.id === 'doRestore') {
+    try {
+      const obj = JSON.parse($('#restoreTxt').value);
+      const src = obj.sett || obj; let added = 0; const merged = { ...Store.data };
+      Object.keys(src).forEach(id => { if (/^\d{3}$/.test(id) && src[id] && /^\d{4}-\d{2}-\d{2}$/.test(src[id].date) && !merged[id]) { merged[id] = { date: src[id].date, ts: src[id].ts || Date.now() }; added++; } });
+      Store.replaceAll(merged);
+      toast(added ? `La til ${added} avkrysninger.` : 'Ingen nye avkrysninger i sikkerhetskopien.');
+    } catch (err) { toast('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
+  }
+});
+
+/* ---- toast ---- */
+let toastT = 0;
+function toast(msg, action, fn) {
+  const t = $('#toast'), b = $('#toastBtn');
+  $('#toastMsg').textContent = msg;
+  b.hidden = !action; b.textContent = action || '';
+  b.onclick = () => { t.classList.remove('on'); fn && fn(); };
+  t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), action ? 6000 : 3800);
+}
+
+/* ---- react to data ---- */
+Store.on(() => {
+  pool.forEach(paintCard);
+  paintChrome();
+  if (openSheet && openSheet.id === 'statsSheet') renderStats();
+  if (openSheet && openSheet.id === 'searchSheet') renderSearch();
+});
+
+let rz = 0;
+addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => sync({ instant: true })); });
+
+// preload neighbours of neighbours so fast swiping never shows a blank card
+function warm() { [5, 6, 7, -3, -4].forEach(d => { const img = new Image(); img.decoding = 'async'; img.src = CARDS[mod(cur + d)].bilde; }); }
+
+sync();
+announce();
+setTimeout(warm, 600);
+Store.connectRemote();
+})();
+</script>

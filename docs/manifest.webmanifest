@@ -1,0 +1,27 @@
+{
+  "name": "Hagefugler Oslo",
+  "short_name": "Hagefugler",
+  "description": "60 hagefugler i Oslo som en kortstokk. Bla, søk, les om fuglene og kryss av dem du har sett.",
+  "lang": "nb",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e1e8e0",
+  "theme_color": "#0f4a36",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "./"
+}
