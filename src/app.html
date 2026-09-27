@@ -71,9 +71,9 @@ button{cursor:pointer}
 .card:not(.is-top){pointer-events:none}
 .card .inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.3,.7,.15,1)}
 .card.flipped .inner{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;border-radius:3.6cqw;-webkit-backface-visibility:hidden;backface-visibility:hidden;
+.face{position:absolute;inset:0;border-radius:4.4cqw;-webkit-backface-visibility:hidden;backface-visibility:hidden;
   box-shadow:0 .4cqw 1.2cqw rgba(var(--shadow),.16), 0 5cqw 11cqw -3cqw rgba(var(--shadow),.42)}
-.front{background-image:var(--cardsprite);background-size:1000% 600%}
+.front{background-image:var(--cardsprite);background-size:1000% calc(var(--rows, 10) * 100%)}
 .front img{display:block;width:100%;height:100%;border-radius:inherit;pointer-events:none;-webkit-user-drag:none}
 .card:not(.is-top) .face{box-shadow:0 .3cqw 1cqw rgba(var(--shadow),.14), 0 3cqw 7cqw -3cqw rgba(var(--shadow),.3)}
 
@@ -84,7 +84,7 @@ button{cursor:pointer}
 .seen .tick path{stroke-dashoffset:0;opacity:1;transition:stroke-dashoffset .38s cubic-bezier(.5,0,.3,1), opacity 0s}
 .sett-hit{position:absolute;background:none;border:0;border-radius:2cqw;padding:0}
 .dato{position:absolute;display:block;cursor:pointer}
-.dato input,.b-date input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;margin:0;padding:0;-webkit-appearance:none;appearance:none}
+.dato input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;margin:0;padding:0;-webkit-appearance:none;appearance:none}
 .hand{position:absolute;bottom:22%;font-family:var(--hand);font-weight:600;font-size:7cqw;line-height:1;color:var(--pen);
   white-space:nowrap;transform:rotate(-2.5deg);transform-origin:0 100%;pointer-events:none;
   clip-path:inset(-30% 100% -30% 0);transition:clip-path .55s steps(14, end) .12s}
@@ -92,47 +92,25 @@ button{cursor:pointer}
 .dato:focus-within{outline:2px solid var(--pen);outline-offset:1px;border-radius:1.5cqw}
 
 /* back of the card: readable field notes */
-.back{transform:rotateY(180deg);background:var(--card-cream);color:var(--card-ink);border:1.3cqw solid var(--card-gold);
-  display:flex;flex-direction:column;overflow:hidden;font-size:4.2cqw;line-height:1.36}
-.b-head{display:flex;gap:3cqw;align-items:flex-start;margin:4cqw 4cqw 0;padding:3cqw 3.5cqw 3cqw 4.5cqw;background:var(--card-teal);
-  border-radius:2.2cqw;box-shadow:inset 1.8cqw 0 0 var(--card-green)}
-.b-head h2{margin:0;font-size:7.6cqw;line-height:1.02;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
-.b-head .lat{margin:.6cqw 0 0;font-style:italic;font-size:4cqw;opacity:.85}
-.b-meta{margin-left:auto;text-align:right;display:grid;gap:.6cqw;justify-items:end;flex-shrink:0}
-.b-meta .no{font-weight:700;font-size:4.2cqw;font-variant-numeric:tabular-nums}
-.b-meta .st{font-size:2.9cqw;max-width:26cqw;line-height:1.2}
 .stars{display:inline-flex;gap:.2em;color:var(--card-gold)}
 .stars svg{width:1em;height:1em;fill:currentColor}
-.b-meta .stars{font-size:4.2cqw}
+
+/* back of the card: a proper card back, no text facts */
+.back{transform:rotateY(180deg);background:var(--card-cream);overflow:hidden;
+  box-shadow:inset 0 0 0 1.5cqw var(--card-gold), inset 0 0 0 2.3cqw var(--card-cream), inset 0 0 0 2.6cqw var(--card-gold),
+    0 .4cqw 1.2cqw rgba(var(--shadow),.16), 0 5cqw 11cqw -3cqw rgba(var(--shadow),.42)}
+.card:not(.is-top) .back{box-shadow:inset 0 0 0 1.5cqw var(--card-gold), inset 0 0 0 2.3cqw var(--card-cream), inset 0 0 0 2.6cqw var(--card-gold)}
 .card.is-top .back{touch-action:none}
 .card:not(.flipped) .back,.card.flipped .front{pointer-events:none}
-.b-body{flex:1;overflow-y:auto;padding:3.5cqw 5cqw 2cqw;overscroll-behavior:contain;touch-action:pan-y}
-.b-body dl{margin:0;display:grid;gap:2.6cqw}
-.b-body dt{font-size:2.9cqw;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--card-green)}
-.b-body dd{margin:.3cqw 0 0}
-.b-kicker{margin:0 0 2.6cqw;font-size:2.9cqw;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6b5a1c}
-.b-when{margin:0 0 3.4cqw;padding:2.4cqw 2.8cqw 2cqw;background:#f4f1dd;border-radius:2cqw}
-.b-when .top{display:flex;justify-content:space-between;align-items:baseline;gap:2cqw;padding:0;margin-bottom:1.6cqw}
-.b-when .top > span{font-size:2.9cqw;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--card-green)}
-.b-when .top small{font-size:2.7cqw;color:#5d6a5f;display:flex;gap:2.4cqw;align-items:center}
-.b-when .top small i{display:inline-block;width:2.4cqw;height:2.4cqw;border-radius:.6cqw;margin-right:.8cqw;vertical-align:-.2cqw}
-.mstrip{display:grid;grid-template-columns:repeat(12,1fr);gap:.9cqw}
-.mstrip b{display:grid;gap:.8cqw;justify-items:center;font-size:2.6cqw;font-weight:600;color:#5d6a5f}
-.mstrip b::before{content:"";width:100%;height:3.4cqw;border-radius:.9cqw;background:var(--m0)}
-.mstrip b.m1::before,.b-when i.m1{background:var(--m1)}
-.mstrip b.m2::before,.b-when i.m2{background:var(--m2)}
-.mstrip b.now{color:var(--card-ink);font-weight:800}
-.mstrip b.now::before{box-shadow:0 0 0 .5cqw var(--card-cream), 0 0 0 .9cqw var(--card-ink)}
-.back{--m0:#e4e1cb;--m1:#f6d98a;--m2:#e9a40f}
-.b-foot{display:flex;gap:2.4cqw;align-items:stretch;padding:3cqw 4cqw 4cqw;border-top:.3cqw solid #e6e3cf;background:#f7f5e6}
-.b-sett{display:flex;align-items:center;gap:2.4cqw;border:0;background:none;padding:1.4cqw 2cqw 1.4cqw 1cqw;border-radius:2cqw;font-weight:700;font-size:4.6cqw;color:var(--card-ink)}
-.b-box{position:relative;width:8.4cqw;height:8.4cqw;border:.9cqw solid var(--card-green);border-radius:1.8cqw;background:#fff;flex-shrink:0}
-.b-box svg{position:absolute;left:-8%;top:-45%;width:150%;height:150%;overflow:visible}
-.b-date{position:relative;flex:1;display:flex;align-items:flex-end;padding-bottom:1cqw;justify-content:space-between;gap:2cqw;min-width:0;
-  border-bottom:.35cqw solid var(--card-ink);margin-block:1.2cqw;padding-inline:1cqw;cursor:pointer}
-.b-date .lbl{font-size:3.4cqw;color:#4a5d53;flex-shrink:0}
-.b-date .val{font-family:var(--hand);font-weight:600;font-size:6.4cqw;color:var(--pen);line-height:1;white-space:nowrap}
-.b-date .val.empty{font-family:var(--font);font-weight:500;font-size:3.4cqw;color:#7a8a82}
+.cb-field{position:absolute;inset:4.6cqw;border-radius:2.8cqw;background-color:var(--card-green);
+  background-image:radial-gradient(circle at 50% 50%, rgba(255,255,255,.07), transparent 62%), var(--leaves);background-size:100% 100%, 10cqw 10cqw;background-position:center, center;
+  box-shadow:inset 0 0 0 .5cqw rgba(244,180,26,.75), inset 0 0 0 1.6cqw var(--card-green), inset 0 0 0 1.85cqw rgba(244,180,26,.45)}
+.cb-star{position:absolute;width:5.2cqw;height:5.2cqw;fill:var(--card-gold)}
+.cb-star.tl{left:4.2cqw;top:4.2cqw}.cb-star.tr{right:4.2cqw;top:4.2cqw}
+.cb-star.bl{left:4.2cqw;bottom:4.2cqw}.cb-star.br{right:4.2cqw;bottom:4.2cqw}
+.cb-medal{position:absolute;left:50%;top:50%;width:62cqw;height:62cqw;transform:translate(-50%,-50%);overflow:visible;
+  filter:drop-shadow(0 1.2cqw 2.4cqw rgba(0,0,0,.28))}
+.cb-medal text{font-family:var(--font);font-weight:700;font-size:13.5px;letter-spacing:3.2px;fill:var(--card-green)}
 
 /* desktop arrows */
 .nav{position:absolute;top:50%;width:46px;height:46px;margin-top:-41px;border-radius:50%;border:1px solid var(--line);display:none;place-items:center;
@@ -154,7 +132,7 @@ button{cursor:pointer}
 
 /* ---------- scrubber ---------- */
 .bottom{padding-block:4px 14px;display:grid;gap:8px;justify-items:center}
-.scrub{position:relative;width:100%;max-width:560px;height:34px;display:grid;grid-template-columns:repeat(60,1fr);gap:2px;align-items:end;
+.scrub{position:relative;width:100%;max-width:560px;height:34px;display:grid;grid-template-columns:repeat(60,1fr);gap:1px;align-items:end;
   touch-action:none;cursor:pointer;padding-inline:2px}
 .scrub i{display:block;height:9px;border-radius:2px;background:var(--track);transition:height .25s, background .25s}
 .scrub i.x10{height:13px}
@@ -185,7 +163,7 @@ button{cursor:pointer}
 .results{list-style:none;margin:10px -16px 0;padding:0 8px 6px;overflow-y:auto;overscroll-behavior:contain;min-height:0}
 .res{width:100%;display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;text-align:left;border:0;background:none;padding:8px;border-radius:14px}
 .res:hover,.res:focus-visible{background:var(--surface-2)}
-.ph{width:48px;height:48px;border-radius:12px;background-image:var(--photos);background-size:1000% 600%;background-color:var(--track)}
+.ph{width:48px;height:48px;border-radius:12px;background-image:var(--photos);background-size:1000% calc(var(--rows, 10) * 100%);background-color:var(--track)}
 .res .t{min-width:0}
 .res .n{display:block;font-weight:600;font-size:16px;line-height:1.2}
 .res .l{display:block;font-size:12.5px;font-style:italic;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -235,9 +213,9 @@ button{cursor:pointer}
 .recent button:hover{background:var(--surface-2)}
 .recent .ph{width:40px;height:40px;border-radius:10px}
 .recent .d{font-family:var(--hand);font-size:20px;color:var(--spruce-ink);font-weight:600;white-space:nowrap}
-.album{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.album{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
 .alb{position:relative;border:0;padding:0;background:none;aspect-ratio:150/210;border-radius:5px}
-.alb .th{position:absolute;inset:0;border-radius:5px;background-image:var(--cardsprite);background-size:1000% 600%;filter:grayscale(1);opacity:.35;transition:filter .3s, opacity .3s}
+.alb .th{position:absolute;inset:0;border-radius:5px;background-image:var(--cardsprite);background-size:1000% calc(var(--rows, 10) * 100%);filter:grayscale(1);opacity:.35;transition:filter .3s, opacity .3s}
 .alb.s .th{filter:none;opacity:1;box-shadow:0 3px 8px -3px rgba(var(--shadow),.5)}
 .alb .nr{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .alb.s .nr{display:none}
@@ -291,11 +269,12 @@ button{cursor:pointer}
   </main>
 
   <footer class="bottom">
-    <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="Bla i kortstokken" aria-valuemin="1" aria-valuemax="60" aria-valuenow="1"></div>
-    <p class="hint" id="hint">Dra til kanten · sveip fort · trykk for hagefakta</p>
+    <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="Bla i kortstokken" aria-valuemin="1" aria-valuemax="100" aria-valuenow="1"></div>
+    <p class="hint" id="hint">Dra til kanten · sveip fort · trykk for å snu kortet</p>
   </footer>
 </div>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><path id="cbRing" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0"/></defs></svg>
 <div class="scrim" id="scrim"></div>
 
 <section class="sheet search" id="searchSheet" role="dialog" aria-modal="true" aria-label="Søk">
@@ -349,13 +328,32 @@ const fmtHand = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); re
 const fmtLong = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-').map(Number); return `${d}. ${MND[m-1]}. ${y}`; };
 document.documentElement.style.setProperty('--photos', 'url("sprites/photos.webp")');
 document.documentElement.style.setProperty('--cardsprite', 'url("sprites/cards.webp")');
-const MND_LANG = ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
-function monthText(m) {
-  const runs = lvl => { const out = []; let a = -1; for (let k = 0; k <= 12; k++) { const on = k < 12 && m[k] === lvl; if (on && a < 0) a = k; if (!on && a >= 0) { out.push(a === k - 1 ? MND_LANG[a] : `${MND_LANG[a]}–${MND_LANG[k - 1]}`); a = -1; } } return out.join(', '); };
-  const v = runs(2), s = runs(1);
-  return `Når i hagen. ${v ? 'Vanlig: ' + v + '.' : ''} ${s ? 'Av og til: ' + s + '.' : ''}`.trim();
-}
-const spritePos = i => `${(i % 10) / 9 * 100}% ${Math.floor(i / 10) / 5 * 100}%`;
+const ROWS = Math.ceil(N / 10);
+document.documentElement.style.setProperty('--rows', ROWS);
+const spritePos = i => `${(i % 10) / 9 * 100}% ${ROWS > 1 ? Math.floor(i / 10) / (ROWS - 1) * 100 : 0}%`;
+const LEAVES = "url(\"data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><g fill='none' stroke='#f4c95d' stroke-opacity='.2' stroke-width='1.1'><path d='M4 36 Q4 20 20 20 Q20 36 4 36Z'/><path d='M36 4 Q20 4 20 20 Q36 20 36 4Z'/><path d='M4 36 L20 20 M20 20 L36 4'/></g><circle cx='36' cy='36' r='1.3' fill='#f4c95d' fill-opacity='.25'/><circle cx='4' cy='4' r='1.3' fill='#f4c95d' fill-opacity='.25'/></svg>") + "\")";
+document.documentElement.style.setProperty('--leaves', LEAVES);
+/* The card back: an emblem with a perched songbird, the deck name around it, gold stars in the corners */
+const BACK = `
+      <div class="cb-field"></div>
+      ${['tl','tr','bl','br'].map(k => `<svg class="cb-star ${k}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.85 6 6.55.78-4.84 4.5 1.3 6.5L12 17.2l-5.86 3.18 1.3-6.5L2.6 9.38l6.55-.78z"/></svg>`).join('')}
+      <svg class="cb-medal" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="97" fill="#fdfcf3" stroke="#f4b41a" stroke-width="6"/>
+        <circle cx="100" cy="100" r="66" fill="#e3f2ee" stroke="#f4b41a" stroke-width="2"/>
+        <circle cx="100" cy="100" r="92" fill="none" stroke="#0f4a36" stroke-width="1" stroke-opacity=".35"/>
+        <text><textPath href="#cbRing" startOffset="0">HAGEFUGLER · OSLO · HAGEFUGLER · OSLO ·</textPath></text>
+        <g transform="translate(50 52)">
+          <path d="M14 76 Q50 70 88 77" fill="none" stroke="#0f4a36" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M70 74 q8 -9 16 -6 q-6 8 -16 6z" fill="#2f7a57"/>
+          <path d="M31 58 L9 73 L13 78 L36 65 Z" fill="#0f4a36"/>
+          <ellipse cx="47" cy="56" rx="21" ry="14.5" transform="rotate(-18 47 56)" fill="#0f4a36"/>
+          <circle cx="65" cy="40" r="11" fill="#0f4a36"/>
+          <path d="M74 37 L85 40.5 L74 44 Z" fill="#e9a40f"/>
+          <circle cx="68" cy="38" r="2" fill="#fdfcf3"/>
+          <path d="M34 53 Q47 45 59 53 Q47 61 34 58 Z" fill="#2f7a57"/>
+          <path d="M45 69 L43 76 M53 68 L53 76" stroke="#0f4a36" stroke-width="2.4" stroke-linecap="round"/>
+        </g>
+      </svg>`;
 
 /* ================= Storage =================
    One small adapter so the same page runs as a Claude artifact (shared db)
@@ -442,9 +440,8 @@ function norm(s) {
   }
   return { s: out, map };
 }
-CARDS.forEach(c => { c.h_hage = c.hage.i_hagen; c.h_brett = c.hage.brett; c.h_hekking = c.hage.hekking; c.h_lyd = c.hage.lyd; });
 const FIELDS = [['navn', 'Navn', 100], ['latin', 'Latin', 40], ['kjennetegn', 'Kjennetegn', 30], ['fakta', 'Fun fact', 12], ['mat', 'Mat', 12],
-  ['h_brett', 'Fuglebrettet', 11], ['h_hekking', 'Hekking', 10], ['h_hage', 'I hagen', 9], ['h_lyd', 'Hør etter', 8], ['nar', 'Når', 8], ['status', 'Status', 8], ['utbredelse', 'Utbredelse', 3]];
+  ['nar', 'Når', 8], ['status', 'Status', 8], ['utbredelse', 'Utbredelse', 3]];
 const IDX = CARDS.map(c => Object.fromEntries(FIELDS.map(([k]) => [k, norm(c[k])])));
 
 /* ================= Deck ================= */
@@ -475,28 +472,7 @@ function makeCard(i) {
         <input type="date" data-act="date" aria-label="Dato du så ${esc(c.navn)}">
       </label>
     </div>
-    <div class="face back">
-      <div class="b-head">
-        <div><h2>${esc(c.navn)}</h2><p class="lat">${esc(c.latin)}</p></div>
-        <div class="b-meta">${stars(c.stjerner)}<span class="st">${esc(c.status)}</span><span class="no">${c.id}/${pad3(N)}</span></div>
-      </div>
-      <div class="b-body">
-        <p class="b-kicker">Som hagefugl</p>
-        <div class="b-when">
-          <div class="top"><span>Når i hagen</span><small><span><i class="m2"></i>vanlig</span><span><i class="m1"></i>av og til</span></small></div>
-          <div class="mstrip" role="img" aria-label="${esc(monthText(c.hage.mnd))}">${c.hage.mnd.map((v, k) => `<b class="m${v}${k === new Date().getMonth() ? ' now' : ''}">${'JFMAMJJASOND'[k]}</b>`).join('')}</div>
-        </div>
-        <dl>
-          <div><dt>I hagen</dt><dd>${esc(c.hage.i_hagen)}</dd></div>
-          <div><dt>Fuglebrettet</dt><dd>${esc(c.hage.brett)}</dd></div>
-          <div><dt>Hekking</dt><dd>${esc(c.hage.hekking)}</dd></div>
-          <div><dt>Hør etter</dt><dd>${esc(c.hage.lyd)}</dd></div>
-        </dl>
-      </div>
-      <div class="b-foot">
-        <button class="ctl b-sett" data-act="toggle" aria-pressed="false"><span class="b-box"><svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="position:absolute;left:-8%;top:-45%;width:150%;height:150%">${PEN}</svg></span>Sett</button>
-        <label class="ctl b-date"><span class="lbl">Dato</span><span class="val empty">Velg dato</span><input type="date" data-act="date" aria-label="Dato du så ${esc(c.navn)}"></label>
-      </div>
+    <div class="face back" aria-hidden="true">${BACK}
     </div>
   </div>`;
   paintCard(el);
@@ -512,9 +488,6 @@ function paintCard(el) {
     b.setAttribute('aria-label', s ? `${c.navn} er merket som sett ${fmtLong(s.date)}. Trykk for å fjerne` : `Merk ${c.navn} som sett i dag`);
   });
   el.querySelector('.hand').textContent = s ? fmtHand(s.date) : '';
-  const val = el.querySelector('.b-date .val');
-  val.textContent = s ? fmtHand(s.date) : 'Velg dato';
-  val.classList.toggle('empty', !s);
   el.querySelectorAll('input[type="date"]').forEach(inp => { inp.value = s ? s.date : ''; inp.max = todayISO(); });
 }
 
@@ -593,7 +566,6 @@ function jump(i, how = 'deal') {
 function flip() {
   const el = pool.get(cur); if (!el) return;
   el.classList.toggle('flipped');
-  if (el.classList.contains('flipped')) { const body = el.querySelector('.b-body'); if (body) body.scrollTop = 0; }
   nudgeHint();
 }
 function announce() { const c = CARDS[cur]; $('#live').textContent = `Kort ${cur + 1} av ${N}: ${c.navn}${Store.has(c.id) ? ', sett' : ''}`; }
@@ -793,7 +765,7 @@ function celebrate(c) {
   try { navigator.vibrate && navigator.vibrate(12); } catch (e) {}
   const n = Object.keys(Store.data).length;
   if (c.stjerner >= 4) toast(`${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i Oslo-hager. ${n} av ${N} sett.`);
-  else if (n === N) toast('Alle 60 kortene er krysset av. Hele kortstokken er komplett!');
+  else if (n === N) toast(`Alle ${N} kortene er krysset av. Hele kortstokken er komplett!`);
 }
 
 /* keyboard */
@@ -812,6 +784,8 @@ $('#nextBtn').addEventListener('click', () => { stopRiffle(); go(1); });
 
 /* ---- scrubber ---- */
 const scrub = $('#scrub');
+scrub.style.gridTemplateColumns = `repeat(${N}, 1fr)`;
+scrub.setAttribute('aria-valuemax', N);
 scrub.innerHTML = CARDS.map((c, i) => `<i class="${(i + 1) % 10 === 0 ? 'x10' : ''}"></i>`).join('');
 const ticks = [...scrub.children];
 const scrubIndex = e => { const r = scrub.getBoundingClientRect(); return Math.max(0, Math.min(N - 1, Math.floor((e.clientX - r.left) / r.width * N))); };

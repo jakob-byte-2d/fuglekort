@@ -1,6 +1,6 @@
 {
  "tittel": "Hagefugler Oslo",
- "antall": 60,
+ "antall": 100,
  "sjeldenhet": {
   "1": "Vanlig",
   "2": "Regelmessig",
@@ -24,37 +24,18 @@
    "vekt": "15–22 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia og øvrige Europa; Marokko–Tunisia, Tyrkia, Kaukasus, Russland, Kasakhstan, Mongolia og nordlige/vestlige Kina",
    "bilde": "cards/001.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0877,
-     0.8888,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9265,
-     0.3415
-    ]
-   },
-   "hage": {
-    "i_hagen": "Hagens mest selvsikre småfugl. Den er her hele året, og om vinteren leder den ofte meiseflokken rundt fuglebrettet.",
-    "brett": "Solsikkefrø, peanøtter og meiseboller. Fjern plastnettet rundt meiseboller, så føttene ikke setter seg fast.",
-    "hekking": "Tar gjerne fuglekasse med 32 mm inngangshull, hengt 1,5–3 meter opp på et tre eller en vegg.",
-    "lyd": "Et klart, gjentatt «ti-ty, ti-ty» allerede fra februar. Den har mange lyder, så en ukjent lyd i hagen er ofte kjøttmeis.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -68,42 +49,23 @@
    "kjennetegn": "Blå hette og vinger, gult bryst og hvite kinn.",
    "nar": "Hele året.",
    "mat": "Insekter, larver, frø og fett.",
-   "fakta": "Kan henge opp-ned ytterst på tynne kvister mens den leter etter mat.",
+   "fakta": "Henger gjerne opp-ned på tynne kvister når den leter mat.",
    "vingespenn": "18–20 cm",
    "vekt": "9–12 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Frankrike, Spania, Tyskland, Polen, Italia, Balkan og Tyrkia",
    "bilde": "cards/002.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0858,
-     0.8908,
-     0.0774,
-     0.0539
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5623,
-     0.9279,
-     0.3462
-    ]
-   },
-   "hage": {
-    "i_hagen": "Liten og akrobatisk. Den leter ytterst på kvister og knopper og henger ofte opp-ned.",
-    "brett": "Solsikkefrø, peanøtter og talg. Den er flink på nøtteautomater som henger fritt.",
-    "hekking": "Fuglekasse med rundt 28 mm hull. Det smale hullet holder den større kjøttmeisen ute.",
-    "lyd": "Et raskt «si-si-sirrr» og en snerrende advarsel når katten er ute.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -120,39 +82,20 @@
    "fakta": "Synger ofte fra hustak eller tretopper tidlig om morgenen.",
    "vingespenn": "34–38 cm",
    "vekt": "80–125 g",
-   "utbredelse": "Norge og store deler av Europa, Nord-Afrika, Tyrkia, Kaukasus og Sentral-Asia; innført i Australia og New Zealand.",
+   "utbredelse": "Norge og store deler av Europa, Nord-Afrika, Tyrkia, Kaukasus og Sentral-Asia; innført i Australia og New Zealand",
    "bilde": "cards/003.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0849,
-     0.8902,
-     0.0802,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9286,
-     0.3434
-    ]
-   },
-   "hage": {
-    "i_hagen": "Hopper over plenen, stopper og lytter, og drar opp meitemark. Om høsten raker den løv til side etter mat.",
-    "brett": "Spiser helst på bakken. Et halvt eple, rosiner eller havregryn på plenen er populært om vinteren.",
-    "hekking": "Bygger skålreir i tette busker, hekker og klatreplanter, eller på en hylle ved huset. Den starter ofte tidlig i april.",
-    "lyd": "Hannens rolige, fløytende sang fra hustaket i skumringen. Varsler med en hard, ratlende «tsjak-tsjak-tsjak».",
-    "mnd": [
-     1,
-     1,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -163,45 +106,26 @@
    "latin": "Pica pica",
    "stjerner": 1,
    "status": "Vanlig hagegjest i Oslo",
-   "kjennetegn": "Svart-hvit med svært lang, grønnblåglinsende stjert.",
+   "kjennetegn": "Svart-hvit; svært lang stjert med grønnblå glans.",
    "nar": "Hele året.",
-   "mat": "Alteter: insekter, matrester, frø, egg og smådyr.",
+   "mat": "Alteter: smådyr, egg, frø og matrester.",
    "fakta": "Bygger store kvistreir med et tydelig tak over reirskålen.",
    "vingespenn": "52–60 cm",
    "vekt": "200–250 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Russland, Kasakhstan og Mongolia; østasiatiske og nordafrikanske skjærer regnes nå som andre arter",
    "bilde": "cards/004.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0877,
-     0.8888,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9265,
-     0.3415
-    ]
-   },
-   "hage": {
-    "i_hagen": "Går målbevisst over plenen og undersøker alt. Den lærer raskt hvor det finnes mat, og tar egg og unger fra småfuglreir om våren.",
-    "brett": "Tar matrester fra bakken. Bruk heller automater som småfuglene når, men ikke skjærene.",
-    "hekking": "Det store kvistreiret med tak ligger godt synlig i trær nær hus, og paret holder seg i samme område år etter år.",
-    "lyd": "En tørr, skrattende «sjak-sjak-sjak», gjerne når en katt eller rovfugl er i nærheten.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -215,42 +139,23 @@
    "kjennetegn": "Kastanjebrun hette, hvite kinn og tydelig svart kinnflekk.",
    "nar": "Hele året.",
    "mat": "Frø, korn og insekter.",
-   "fakta": "Begge kjønn ser nesten like ut, i motsetning til gråspurven.",
+   "fakta": "Hann og hunn ser like ut, i motsetning til hos gråspurven.",
    "vingespenn": "20–22 cm",
    "vekt": "19–25 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Tyskland, Polen, Baltikum, Russland, Kasakhstan, Mongolia, Kina, Korea og Japan",
    "bilde": "cards/005.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0868,
-     0.8895,
-     0.0802,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9265,
-     0.3425
-    ]
-   },
-   "hage": {
-    "i_hagen": "Holder til i hager med hekker og busker, gjerne i små flokker sammen med gråspurv.",
-    "brett": "Frøblandinger, solsikkefrø og havre, både på brettet og på bakken.",
-    "hekking": "Hekker i fuglekasse med 32 mm hull, gjerne flere par nær hverandre.",
-    "lyd": "Et hardt «tett-tett» i flukt. Kjennes fra gråspurven på den brune issen og den svarte kinnflekken.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -264,42 +169,23 @@
    "kjennetegn": "Kraftig spurv; hann med grå isse og svart strupeflekk.",
    "nar": "Hele året.",
    "mat": "Frø, korn, matrester og insekter.",
-   "fakta": "Lever tett på mennesker og hekker gjerne i hulrom i bygninger.",
+   "fakta": "Lever tett på mennesker og hekker ofte i hulrom i hus.",
    "vingespenn": "21–25 cm",
    "vekt": "24–38 g",
-   "utbredelse": "Norge, Sverige, Danmark, Finland, Europa ellers, Nord-Afrika, Midtøsten og Asia; også innført i Nord- og Sør-Amerika, Sør-Afrika, Australia og New Zealand.",
+   "utbredelse": "Norge, Sverige, Danmark, Finland, Europa ellers, Nord-Afrika, Midtøsten og Asia; også innført i Nord- og Sør-Amerika, Sør-Afrika, Australia og New Zealand",
    "bilde": "cards/006.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.083,
-     0.8787,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9171,
-     0.3453
-    ]
-   },
-   "hage": {
-    "i_hagen": "Lever der folk bor, rundt hus, kafeer og hønsegårder. Den tar gjerne støvbad i tørr jord.",
-    "brett": "Frø, korn og smuler på brett og bakken, ofte i livlige flokker.",
-    "hekking": "Hekker i hulrom under takstein og bak kledning, eller i fuglekasse med rundt 35 mm hull. Heng gjerne flere kasser nær hverandre.",
-    "lyd": "Den enkle, gjentatte kvitringen «tsjilp» er lyden av en spurvekoloni.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -310,7 +196,7 @@
    "latin": "Sitta europaea",
    "stjerner": 1,
    "status": "Vanlig hagegjest i Oslo",
-   "kjennetegn": "Blågrå rygg, rustbeige underside og svart øyestrek.",
+   "kjennetegn": "Blågrå rygg, hvit buk, rødbrune sider og svart øyestrek.",
    "nar": "Hele året.",
    "mat": "Insekter, frø og nøtter.",
    "fakta": "Kan klatre nedover trestammer med hodet først.",
@@ -318,37 +204,18 @@
    "vekt": "20–25 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kaukasus, Kina og Japan",
    "bilde": "cards/007.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0868,
-     0.8902,
-     0.0802,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5679,
-     0.9272,
-     0.3377
-    ]
-   },
-   "hage": {
-    "i_hagen": "Klatrer opp og ned stammene, også med hodet først. Den bærer ofte frø bort og kiler dem inn i barken.",
-    "brett": "Solsikkefrø, peanøtter og talg. Den tar ett frø om gangen og flyr av gårde med det.",
-    "hekking": "Fuglekasse med 32 mm hull. Den murer gjerne hullet mindre med leire, så bare den selv slipper inn.",
-    "lyd": "Høye, klare fløyt, «tvitt-tvitt», og en rask trille om våren.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -361,43 +228,24 @@
    "status": "Vanlig hagegjest i Oslo",
    "kjennetegn": "Kraftig fink med svart hette; hann har klart rødt bryst.",
    "nar": "Hele året; lettest å se høst–vinter.",
-   "mat": "Frø, knopper og bær; insekter til ungene.",
-   "fakta": "Den myke, plystrende lokkelyden høres ofte før fuglen oppdages.",
+   "mat": "Frø, knopper, bær; insekter til ungene.",
+   "fakta": "Den myke plystrelyden høres ofte før fuglen sees.",
    "vingespenn": "22–26 cm",
    "vekt": "21–27 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Kasakhstan, Mongolia, Kina og Japan",
    "bilde": "cards/008.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0868,
-     0.9023,
-     0.0764,
-     0.0546
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5679,
-     0.9394,
-     0.3415
-    ]
-   },
-   "hage": {
-    "i_hagen": "Rolige par og små flokker som sitter lenge i trær og busker. De røde hannene lyser mot snøen om vinteren.",
-    "brett": "Solsikkefrø på brettet eller bakken. I hagen spiser den knopper på frukttrær og frø fra rognebær.",
-    "hekking": "Hekker skjult i tette grantrær og busker.",
-    "lyd": "En myk, sørgmodig plystring, «pju», som er lett å etterligne.",
-    "mnd": [
-     2,
-     2,
-     2,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -408,45 +256,26 @@
    "latin": "Erithacus rubecula",
    "stjerner": 1,
    "status": "Vanlig hagegjest i Oslo",
-   "kjennetegn": "Oransjerødt ansikt og bryst, brun rygg og store mørke øyne.",
-   "nar": "Vår–høst; enkelte overvintrer.",
+   "kjennetegn": "Oransjerødt ansikt og bryst, brun rygg, store mørke øyne.",
+   "nar": "Hele året, flest vår–høst.",
    "mat": "Insekter, mark, smådyr og bær.",
-   "fakta": "Forsvarer territoriet energisk selv om den virker liten og rund.",
+   "fakta": "Liten og rund, men forsvarer reviret sitt svært energisk.",
    "vingespenn": "20–22 cm",
    "vekt": "16–22 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia og Nordvest-Afrika",
    "bilde": "cards/009.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8794,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9164,
-     0.3387
-    ]
-   },
-   "hage": {
-    "i_hagen": "Følger gjerne etter når du graver i bedet, for å ta mark og larver du vender opp. Den kan bli svært tam.",
-    "brett": "Myk mat på bakken eller på et lavt brett: melormer, havregryn, rosiner og talgsmuler.",
-    "hekking": "Hekker lavt i skråninger, røtter, eføy og kvisthauger, eller i en halvåpen kasse godt skjult i vegetasjon.",
-    "lyd": "Perlende, vemodig sang tidlig morgen og sent kveld, noen ganger under gatelys om natta. Advarer med et hardt «tikk».",
-    "mnd": [
-     1,
-     1,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -460,42 +289,23 @@
    "kjennetegn": "Kraftig fink med olivengrønn kropp og gule vingefelt.",
    "nar": "Hele året.",
    "mat": "Frø og knopper; også noe insekter.",
-   "fakta": "Hannen kan vise seg fram i en langsom, flagrende sangflukt.",
+   "fakta": "Hannen viser seg fram i en langsom, flagrende sangflukt.",
    "vingespenn": "25–28 cm",
    "vekt": "24–34 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia og Nord-Afrika",
    "bilde": "cards/010.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0868,
-     0.8888,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9259,
-     0.3415
-    ]
-   },
-   "hage": {
-    "i_hagen": "Kraftig fink som gjerne sitter lenge på brettet og holder andre fugler unna.",
-    "brett": "Solsikkefrø er favoritten. Grønnfinken er utsatt for en parasittsykdom som smitter via brett og fuglebad, så vask dem jevnlig.",
-    "hekking": "Hekker i tette busker, hekker og bartrær, ofte flere par nær hverandre.",
-    "lyd": "Hannen har en nasal, trekkende «dzvuiii» og en kvitrende sang om våren.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -506,45 +316,26 @@
    "latin": "Fringilla coelebs",
    "stjerner": 1,
    "status": "Vanlig hagegjest i Oslo",
-   "kjennetegn": "Hann rustrød og blågrå; begge kjønn har tydelige hvite vingebånd.",
+   "kjennetegn": "Hann rustrød og blågrå; begge kjønn har hvite vingebånd.",
    "nar": "Mest vår–høst; noen overvintrer.",
    "mat": "Frø om vinteren, insekter i hekketiden.",
-   "fakta": "Sangen avsluttes gjerne med en tydelig, energisk sluttrille.",
+   "fakta": "Sangen ender gjerne med en tydelig, energisk sluttrille.",
    "vingespenn": "24–28 cm",
    "vekt": "18–29 g",
-   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Baltikum, Frankrike, Spania, Italia, Tyrkia, Kaukasus og deler av Sentral-Asia.",
+   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Baltikum, Frankrike, Spania, Italia, Tyrkia, Kaukasus og deler av Sentral-Asia",
    "bilde": "cards/011.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.903,
-     0.0783,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9434,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Går på bakken og plukker frø under fuglebrettet. Om vinteren er det mest hanner som blir igjen.",
-    "brett": "Frø som har falt ned fra brettet, og solsikkefrø eller havre strødd på bakken.",
-    "hekking": "Bygger et vakkert skålreir kledd med lav og mose, i en grein inntil stammen.",
-    "lyd": "Den faste sangstrofen ender med en tydelig sluttsnert. Lokkelyden er et metallisk «pink».",
-    "mnd": [
-     1,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -555,45 +346,26 @@
    "latin": "Dendrocopos major",
    "stjerner": 1,
    "status": "Vanlig hagegjest i Oslo",
-   "kjennetegn": "Svart-hvit hakkespett med rød undergump; hann har rød nakke.",
+   "kjennetegn": "Svart-hvit hakkespett, rød undergump; hann har rød nakke.",
    "nar": "Hele året.",
    "mat": "Insekter, frø, kongler og fett.",
    "fakta": "Kiler ofte fast kongler i en sprekk for å hakke ut frøene.",
    "vingespenn": "34–39 cm",
    "vekt": "70–98 g",
-   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kina, Korea og Japan.",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kina, Korea og Japan",
    "bilde": "cards/012.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.8895,
-     0.0783,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5679,
-     0.9265,
-     0.3358
-    ]
-   },
-   "hage": {
-    "i_hagen": "Den vanligste hakkespetten i hagen. Den hakker på stammer og stolper og blir fort fast gjest ved talgen.",
-    "brett": "Talg, meiseboller, peanøtter og solsikkefrø.",
-    "hekking": "Hakker eget reirhull i trær. Om våren kan den hakke opp fuglekasser for å ta meiseunger, så en metallplate rundt inngangshullet hjelper.",
-    "lyd": "Et kort, skarpt «kikk», og rask tromming på tørre greiner om våren.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -606,43 +378,24 @@
    "status": "Vanlig hagegjest i Oslo",
    "kjennetegn": "Grå kropp med svart hode, vinger, bryst og stjert.",
    "nar": "Hele året.",
-   "mat": "Alteter: smådyr, åtsel, matrester og frø.",
+   "mat": "Alteter: smådyr, åtsel, avfall og frø.",
    "fakta": "Svært lærenem og flink til å utnytte nye matkilder.",
    "vingespenn": "93–104 cm",
    "vekt": "370–650 g",
-   "utbredelse": "Norge, Sverige, Finland, Danmark, Irland, Tyskland, Polen, Baltikum, Italia, Balkan, Russland, Tyrkia og Midtøsten.",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Irland, Tyskland, Polen, Baltikum, Italia, Balkan, Russland, Tyrkia og Midtøsten",
    "bilde": "cards/013.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8888,
-     0.0802,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9259,
-     0.3415
-    ]
-   },
-   "hage": {
-    "i_hagen": "Går rundt på plener og ved søppeldunker og tester det meste den finner. Den husker godt hvor den har funnet mat.",
-    "brett": "Tar matrester og brød. Legg ikke ut store matrester, de trekker også rotter.",
-    "hekking": "Bygger stort kvistreir høyt i et tre og jager katter og rovfugler bort fra det.",
-    "lyd": "Et hest, gjentatt «kraa».",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -653,45 +406,26 @@
    "latin": "Columba palumbus",
    "stjerner": 1,
    "status": "Vanlig hagegjest i Oslo",
-   "kjennetegn": "Stor due med hvit halsflekk og hvite felt på vingene i flukt.",
+   "kjennetegn": "Stor due med hvit halsflekk og hvite vingefelt i flukt.",
    "nar": "Vår–høst; stadig flere vinterfugler.",
    "mat": "Frø, korn, blader, knopper og bær.",
-   "fakta": "Vingene klapper ofte høyt når hannen viser seg fram i flukt.",
+   "fakta": "Vingene klapper høyt når hannen viser seg fram i flukt.",
    "vingespenn": "75–80 cm",
    "vekt": "480–550 g",
-   "utbredelse": "Norge og resten av Europa, Nordvest-Afrika, Tyrkia, Kaukasus, Iran og Sentral-Asia; enkelte asiatiske bestander overvintrer mot Nord-India og Nepal.",
+   "utbredelse": "Norge og resten av Europa, Nordvest-Afrika, Tyrkia, Kaukasus, Iran og Sentral-Asia; enkelte asiatiske bestander overvintrer mot Nord-India og Nepal",
    "bilde": "cards/014.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8996,
-     0.0792,
-     0.0539
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5604,
-     0.934,
-     0.3472
-    ]
-   },
-   "hage": {
-    "i_hagen": "Stor due som går rolig på plenen og under fuglebrettet. Den er mer sky enn byduene.",
-    "brett": "Plukker frø og korn på bakken, og spiser gjerne kløver, knopper og bær.",
-    "hekking": "Legger et tynt kvistreir i tette trær, så tynt at eggene kan synes nedenfra.",
-    "lyd": "En dyp, rytmisk kurring, «du-DUU-du, du-du», gjentatt flere ganger.",
-    "mnd": [
-     1,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -700,47 +434,28 @@
    "id": "015",
    "navn": "Gråsisik",
    "latin": "Acanthis flammea",
-   "stjerner": 2,
-   "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Liten stripet fink med rød panne; hann ofte rosa på brystet.",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Liten stripet fink med rød panne; hann ofte rosa bryst.",
    "nar": "Mest høst og vinter.",
    "mat": "Små frø, særlig fra bjørk og or.",
-   "fakta": "Antallet varierer mye mellom år når flokker vandrer etter frømat.",
+   "fakta": "Flokker vandrer etter frø, så antallet varierer mye.",
    "vingespenn": "20–24 cm",
    "vekt": "12–20 g",
-   "utbredelse": "Norge, Sverige, Finland, Island, Russland, Canada, Alaska og andre nordlige områder; vinterstid sørover i Europa, Asia og Nord-Amerika.",
+   "utbredelse": "Norge, Sverige, Finland, Island, Russland, Canada, Alaska og andre nordlige områder; vinterstid sørover i Europa, Asia og Nord-Amerika",
    "bilde": "cards/015.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8888,
-     0.0802,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9259,
-     0.3509
-    ]
-   },
-   "hage": {
-    "i_hagen": "Kommer i urolige flokker om høsten og vinteren og henger i bjørketoppene.",
-    "brett": "Små frø som nyjerfrø og knuste solsikkekjerner. Ellers spiser den frø fra bjørk og or.",
-    "hekking": "Hekker sjelden i Oslo-hager. De fleste vintergjestene har hekket lenger nord eller i fjellet.",
-    "lyd": "Et tørt, raskt «tsjett-tsjett-tsjett» i flukt.",
-    "mnd": [
-     2,
-     2,
-     2,
-     1,
-     0,
-     0,
-     0,
-     0,
-     1,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -751,45 +466,26 @@
    "latin": "Spinus spinus",
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Liten gulgrønn fink med mørke vinger og tydelige gule felt.",
+   "kjennetegn": "Liten gulgrønn fink med mørke vinger og gule vingefelt.",
    "nar": "Hele året, ofte flokker vinter.",
    "mat": "Frø fra or, bjørk og bartrær.",
-   "fakta": "Kan henge akrobatisk i oreknopper mens den plukker frø.",
+   "fakta": "Kan henge akrobatisk i orekongler mens den plukker frø.",
    "vingespenn": "20–23 cm",
    "vekt": "11–15 g",
-   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kaukasus, Kina og Japan.",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kaukasus, Kina og Japan",
    "bilde": "cards/016.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0877,
-     0.8949,
-     0.0792,
-     0.0546
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5679,
-     0.9326,
-     0.3415
-    ]
-   },
-   "hage": {
-    "i_hagen": "Flokker henger akrobatisk i or, bjørk og gran. Om vinteren kommer de gjerne til automaten sammen med meisene.",
-    "brett": "Knuste solsikkekjerner, nyjerfrø og peanøtter.",
-    "hekking": "Hekker høyt oppe i gran, godt skjult.",
-    "lyd": "En klagende «dly-e» og en pratende, kvitrende sang med en hes avslutning.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     1,
-     1,
-     1,
-     1,
-     1,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -803,42 +499,23 @@
    "kjennetegn": "Rødt ansikt, svart-hvitt hode og kraftig gult vingebånd.",
    "nar": "Hele året, særlig sensommer–vinter.",
    "mat": "Små frø; også insekter om sommeren.",
-   "fakta": "Det lange, spisse nebbet er godt egnet til å plukke frø fra frøstander.",
+   "fakta": "Det spisse nebbet er som en pinsett for frø i frøstander.",
    "vingespenn": "21–26 cm",
    "vekt": "14–19 g",
-   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia, Nord-Afrika og deler av Sentral-Asia.",
+   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia, Nord-Afrika og deler av Sentral-Asia",
    "bilde": "cards/017.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8996,
-     0.0792,
-     0.0539
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.936,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Fargerik fink som kommer til hager med frøstander. Den plukker frø fra tistel, kardeborre og løvetann.",
-    "brett": "Nyjerfrø i egen automat og knuste solsikkekjerner. La frøstander stå i bedet utover høsten.",
-    "hekking": "Bygger et lite, pent reir ytterst på greinene i frukttrær og løvtrær.",
-    "lyd": "Lett, klingende kvitring. Lokkelyden «stiglitt» har gitt arten navnet.",
-    "mnd": [
-     2,
-     2,
-     1,
-     1,
-     1,
-     1,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -849,45 +526,26 @@
    "latin": "Coccothraustes coccothraustes",
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Stor fink med enormt nebb, brun kropp og svart ansiktsmaske.",
+   "kjennetegn": "Stor fink med enormt nebb, brun kropp, svart ansiktsmaske.",
    "nar": "Hele året, tydeligst vinter–vår.",
-   "mat": "Harde frø, kjerner, knopper og insekter.",
-   "fakta": "Nebbet kan knuse svært harde fruktsteiner og frøskall.",
+   "mat": "Harde frø, kjerner, knopper, insekter.",
+   "fakta": "Nebbet kan knuse harde fruktsteiner og frøskall.",
    "vingespenn": "29–33 cm",
    "vekt": "48–62 g",
-   "utbredelse": "Norge, Sverige, Danmark, Tyskland, Polen, Baltikum, Frankrike, Italia, Balkan, Tyrkia, Russland, Kina og Japan.",
+   "utbredelse": "Norge, Sverige, Danmark, Tyskland, Polen, Baltikum, Frankrike, Italia, Balkan, Tyrkia, Russland, Kina og Japan",
    "bilde": "cards/018.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8888,
-     0.0802,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9265,
-     0.3387
-    ]
-   },
-   "hage": {
-    "i_hagen": "Sky, og sitter gjerne høyt i trærne før den dukker ned på brettet. Oslo har mange kjernebitere om vinteren.",
-    "brett": "Solsikkefrø. Med det kraftige nebbet knekker den også kirsebærsteiner.",
-    "hekking": "Hekker i løvtrær, gjerne i parker og gamle hager.",
-    "lyd": "Et kort, skarpt «tsikk» som er lett å overse.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -904,39 +562,20 @@
    "fakta": "Gjemmer ofte frø i barksprekker som matlager til senere.",
    "vingespenn": "17–21 cm",
    "vekt": "8–10 g",
-   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Alpene, Balkan, Tyrkia, Russland, Himalaya, Kina og Japan.",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Alpene, Balkan, Tyrkia, Russland, Himalaya, Kina og Japan",
    "bilde": "cards/019.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0877,
-     0.8888,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9265,
-     0.3377
-    ]
-   },
-   "hage": {
-    "i_hagen": "Den minste meisen. Den kommer raskt inn til brettet, tar ett frø og forsvinner inn i grana igjen.",
-    "brett": "Solsikkefrø og talg. Mye av frøet gjemmer den i barken som matlager.",
-    "hekking": "Hekker i hull lavt ved bakken eller i fuglekasse med rundt 28 mm hull, gjerne nær bartrær.",
-    "lyd": "En rask, gjentatt «vitse-vitse-vitse», lysere og raskere enn kjøttmeisens sang.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -945,47 +584,28 @@
    "id": "020",
    "navn": "Granmeis",
    "latin": "Poecile montanus",
-   "stjerner": 3,
-   "status": "Uvanlig hagegjest i Oslo",
-   "kjennetegn": "Matt svart hette, hvite kinn og lys vingestripe; kraftig nakke.",
+   "stjerner": 2,
+   "status": "Regelmessig hagegjest i Oslo",
+   "kjennetegn": "Matt svart hette, lyst vingefelt og kraftig nakke.",
    "nar": "Hele året.",
    "mat": "Insekter, frø og små edderkoppdyr.",
    "fakta": "Hakker ofte ut sitt eget reirhull i mykt, råttent treverk.",
    "vingespenn": "18–21 cm",
    "vekt": "11–14 g",
-   "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Russland, Kasakhstan, Mongolia, Kina og Japan.",
+   "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Russland, Kasakhstan, Mongolia, Kina og Japan",
    "bilde": "cards/020.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8888,
-     0.0802,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9259,
-     0.3377
-    ]
-   },
-   "hage": {
-    "i_hagen": "Knyttet til skog, og kommer til hager nær skogkanten. Om vinteren er den ofte i flokk med andre meiser.",
-    "brett": "Solsikkefrø og talg. Den gjemmer mye mat til senere.",
-    "hekking": "Hakker ut eget reirhull i råtne stubber. En fuglekasse fylt med sagflis eller spon kan få den til å hekke.",
-    "lyd": "Et nasalt, sturent «de-de-de» og en langsom, klagende «tju-tju-tju».",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -996,45 +616,26 @@
    "latin": "Lophophanes cristatus",
    "stjerner": 3,
    "status": "Uvanlig hagegjest i Oslo",
-   "kjennetegn": "Spiss svart-hvit topp, markert ansiktsmønster og brungrå kropp.",
+   "kjennetegn": "Spiss svart-hvit topp, mønstret ansikt og brungrå kropp.",
    "nar": "Hele året.",
    "mat": "Insekter, edderkopper og frø.",
-   "fakta": "Er tett knyttet til barskog og kan høres med trillende kontaktlyder.",
+   "fakta": "Holder seg i barskog og avslører seg med trillende lyder.",
    "vingespenn": "17–20 cm",
    "vekt": "10–13 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Frankrike, Spania, Tyskland, Polen, Baltikum og vestlige deler av Russland",
    "bilde": "cards/021.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.903,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9441,
-     0.3415
-    ]
-   },
-   "hage": {
-    "i_hagen": "Hører hjemme i barskog. Du ser den i hager nær furu og gran, særlig om vinteren.",
-    "brett": "Solsikkefrø og talg, gjerne fra et brett nær bartrær.",
-    "hekking": "Hakker ut eget hull i råtne stammer, eller bruker en fuglekasse fylt med spon.",
-    "lyd": "En karakteristisk rullende trille, «tsi-tsi-pürrr».",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1048,42 +649,23 @@
    "kjennetegn": "Spraglete brun rygg, hvit underside og tynt, bøyd nebb.",
    "nar": "Hele året.",
    "mat": "Små insekter og edderkopper i bark.",
-   "fakta": "Kryper som regel oppover stammen og flyr ned til neste tre.",
+   "fakta": "Kryper oppover stammen og flyr ned til foten av neste tre.",
    "vingespenn": "17–21 cm",
    "vekt": "8–10 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Sentral- og Øst-Europa, Russland, Kasakhstan, Mongolia, Kina og Japan",
    "bilde": "cards/022.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8902,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9286,
-     0.3387
-    ]
-   },
-   "hage": {
-    "i_hagen": "Klatrer i spiral oppover stammen og leter i barksprekkene. Fra toppen flyr den ned til foten av neste tre.",
-    "brett": "Talg smurt inn i barksprekker, eller fint hakket talg på stammen.",
-    "hekking": "Hekker bak løs bark, eller i en egen trekryperkasse med åpningen på siden.",
-    "lyd": "Et høyt, tynt «srii» og en kort, fallende sangstrofe.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1094,45 +676,26 @@
    "latin": "Regulus regulus",
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Bitteliten og olivengrønn, med gul/oransje issestripe kantet i svart.",
+   "kjennetegn": "Bitteliten, olivengrønn; gul/oransje isse kantet i svart.",
    "nar": "Hele året.",
    "mat": "Svært små insekter og edderkopper.",
    "fakta": "Er Norges minste fugl og veier bare noen få gram.",
    "vingespenn": "13–16 cm",
    "vekt": "5–6 g",
-   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Alpene, Balkan, Russland, Kina og Japan.",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Alpene, Balkan, Russland, Kina og Japan",
    "bilde": "cards/023.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8922,
-     0.0792,
-     0.0559
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9313,
-     0.3387
-    ]
-   },
-   "hage": {
-    "i_hagen": "Beveger seg rastløst i gran og tuja, og forsvinner lett mellom barnålene.",
-    "brett": "Kommer sjelden på brettet, men kan ta fine talgsmuler. Tette bartrær gir både mat og ly.",
-    "hekking": "Henger et lite, dypt reir av mose og spindelvev under en grangrein.",
-    "lyd": "Svært høye «si-si-si» som mange voksne ikke lenger hører.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1143,45 +706,26 @@
    "latin": "Troglodytes troglodytes",
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Knøttliten brun fugl med kort stjert som ofte peker rett opp.",
+   "kjennetegn": "Knøttliten brun fugl; den korte stjerten peker ofte opp.",
    "nar": "Hele året, men færre i kalde vintre.",
-   "mat": "Insekter og edderkopper; også frø og bær om vinteren.",
+   "mat": "Insekter og edderkopper, litt frø.",
    "fakta": "Har overraskende kraftig sang i forhold til størrelsen.",
    "vingespenn": "13–17 cm",
    "vekt": "7–12 g",
-   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Tyrkia, Russland, Kina og Japan.",
+   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Tyrkia, Russland, Kina og Japan",
    "bilde": "cards/024.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8996,
-     0.0792,
-     0.0546
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9373,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Smyger lavt i kvisthauger, steinmurer og tett vegetasjon, med stjerten rett til værs.",
-    "brett": "Kommer sjelden på brettet. Talgsmuler og melormer på bakken hjelper den i kalde vintre.",
-    "hekking": "Hannen bygger flere kuleformede reir i røtter, kvisthauger og klatreplanter, og hunnen velger ett av dem.",
-    "lyd": "En overraskende kraftig og lang sang med en trille midt i strofen.",
-    "mnd": [
-     1,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1194,43 +738,24 @@
    "status": "Regelmessig hagegjest i Oslo",
    "kjennetegn": "Rosa-brun kråkefugl med blåsvart stripet vingefelt.",
    "nar": "Hele året.",
-   "mat": "Eikenøtter, frø, insekter, egg og smådyr.",
+   "mat": "Eikenøtter, frø, insekter, egg, smådyr.",
    "fakta": "Graver ned eikenøtter og bidrar dermed til å spre eik.",
    "vingespenn": "52–58 cm",
    "vekt": "140–190 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Russland, Himalaya, Kina og Japan",
    "bilde": "cards/025.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.8922,
-     0.0783,
-     0.0553
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5632,
-     0.9313,
-     0.3406
-    ]
-   },
-   "hage": {
-    "i_hagen": "Vaktsom kråkefugl som varsler høylytt når noe skjer. Om høsten flyr den fram og tilbake med nøtter som den graver ned.",
-    "brett": "Peanøtter og hasselnøtter. Den kan ta flere nøtter i halsposen på én gang.",
-    "hekking": "Hekker skjult i skog og store hager, ofte i tette bartrær.",
-    "lyd": "Et rått, skrikende «skraaak». Den kan også herme etter andre fugler, blant annet musvåk.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1247,39 +772,20 @@
    "fakta": "Kan forsvare reir ved å slippe avføring på inntrengere.",
    "vingespenn": "39–42 cm",
    "vekt": "80–130 g",
-   "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen og Russland i hekketiden; vinterstid Vest-/Sør-Europa, Nord-Afrika, Tyrkia og deler av Sørvest-Asia.",
+   "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen og Russland i hekketiden; vinterstid Vest-/Sør-Europa, Nord-Afrika, Tyrkia og deler av Sørvest-Asia",
    "bilde": "cards/026.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.8922,
-     0.0783,
-     0.0553
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9313,
-     0.3425
-    ]
-   },
-   "hage": {
-    "i_hagen": "Går på plenen i flokker og forsvarer reiret aggressivt om våren. Om vinteren kommer den til epler og rognebær.",
-    "brett": "Epler, bær og rosiner på bakken. La nedfallsfrukt ligge igjen for trostene om høsten.",
-    "hekking": "Hekker ofte i kolonier i trær, og kolonien angriper kråker og skjærer i fellesskap.",
-    "lyd": "Et hardt, skrattende «tsjakk-tsjakk-tsjakk».",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1290,45 +796,26 @@
    "latin": "Turdus philomelos",
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Brun overside og lys underside med tydelige mørke pilformede flekker.",
+   "kjennetegn": "Brun overside, lys underside med mørke pilformede flekker.",
    "nar": "Vår–høst.",
    "mat": "Mark, insekter, snegler og bær.",
-   "fakta": "Bruker gjerne en fast stein som ambolt for å knuse sneglehus.",
+   "fakta": "Bruker en fast stein som ambolt for å knuse sneglehus.",
    "vingespenn": "33–36 cm",
    "vekt": "64–90 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Sentral-/Øst-Europa og Vest-Russland; vinterstid bl.a. Frankrike, Iberia, Italia, Nord-Afrika og Tyrkia",
    "bilde": "cards/027.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8989,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9387,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Leter etter mark og snegler på plenen og i bedene. Knuste sneglehus rundt en stein viser at den har vært der.",
-    "brett": "Kommer sjelden på brettet, men tar epler og bær på bakken.",
-    "hekking": "Bygger reir i tett, ung gran. Innsiden er glattet med leire og tremasse.",
-    "lyd": "Sangen gjentar hver strofe to–tre ganger: «tjyvi, tjyvi, tjyvi».",
-    "mnd": [
-     0,
-     0,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1339,45 +826,26 @@
    "latin": "Turdus iliacus",
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Kremhvit øyebrynstripe og rustrøde felt langs sidene.",
-   "nar": "Vår–høst; vanlig på trekk, noen overvintrer.",
+   "kjennetegn": "Kremhvitt øyebryn og rustrøde flanker.",
+   "nar": "April–oktober; mange på trekk.",
    "mat": "Mark, insekter, bær og frukt.",
    "fakta": "Store trekkflokker kan fylle natten med tynne siih-lyder.",
    "vingespenn": "33–35 cm",
    "vekt": "50–75 g",
-   "utbredelse": "Norge, Sverige, Finland, Island og Russland; vinterstid Storbritannia, Vest- og Sør-Europa, Nord-Afrika og deler av Midtøsten.",
+   "utbredelse": "Norge, Sverige, Finland, Island og Russland; vinterstid Storbritannia, Vest- og Sør-Europa, Nord-Afrika og deler av Midtøsten",
    "bilde": "cards/028.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8956,
-     0.0792,
-     0.0539
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.934,
-     0.3387
-    ]
-   },
-   "hage": {
-    "i_hagen": "Mest synlig på trekket om høsten, når flokker spiser rognebær og epler i hagene.",
-    "brett": "Epler og bær. Rogn og andre bærbusker trekker den til hagen.",
-    "hekking": "Hekker i skog, i busker og lave trær.",
-    "lyd": "Tynne «siih»-lyder fra trekkflokker om natta i oktober.",
-    "mnd": [
-     1,
-     1,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1388,45 +856,26 @@
    "latin": "Sturnus vulgaris",
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Mørk og metallglinsende med lyse prikker; spisst gult nebb om våren.",
+   "kjennetegn": "Metallglinsende mørk med lyse prikker; gult nebb om våren.",
    "nar": "Vår–høst; enkelte vinter.",
    "mat": "Insekter, larver, mark, frukt og bær.",
-   "fakta": "Er en dyktig lydimitator og kan kopiere andre fuglers lyder.",
+   "fakta": "Dyktig imitator som kan herme etter andre fugler og lyder.",
    "vingespenn": "37–42 cm",
    "vekt": "75–90 g",
-   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Europa ellers, Russland og Vest-Asia; også innført i Nord-Amerika, Sør-Afrika, Australia og New Zealand.",
+   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Europa ellers, Russland og Vest-Asia; også innført i Nord-Amerika, Sør-Afrika, Australia og New Zealand",
    "bilde": "cards/029.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.8929,
-     0.0783,
-     0.0553
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5632,
-     0.9286,
-     0.3425
-    ]
-   },
-   "hage": {
-    "i_hagen": "Går målbevisst over plenen og stikker nebbet ned i gresset etter larver. Etter hekkingen samles de i store flokker.",
-    "brett": "Kommer av og til til talg og epler, men henter mest mat på plenen.",
-    "hekking": "Fuglekasse med 45–50 mm hull, høyt oppe på en husvegg eller i et tre.",
-    "lyd": "Sangen er en blanding av klikk, fløyt og etterligninger av andre fugler og lyder.",
-    "mnd": [
-     1,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1443,39 +892,20 @@
    "fakta": "Løper ofte på bakken og fanger insekter med raske utfall.",
    "vingespenn": "25–30 cm",
    "vekt": "17–25 g",
-   "utbredelse": "Norge, resten av Europa, Nord-Afrika, Russland, Sentral- og Øst-Asia, India, Kina og Japan; også Grønland og vestlige Alaska",
+   "utbredelse": "Norge, resten av Europa, Nord-Afrika, Russland, Sentral- og Øst-Asia og Japan; også Grønland og vestlige Alaska; vinterstid Afrika og Sør-Asia",
    "bilde": "cards/030.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8929,
-     0.0792,
-     0.0546
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9292,
-     0.3377
-    ]
-   },
-   "hage": {
-    "i_hagen": "Løper over plener, tak og parkeringsplasser og vipper med stjerten.",
-    "brett": "Kommer ikke på brettet. Den spiser insekter den fanger på bakken.",
-    "hekking": "Hekker i hulrom i bygninger, i vedstabler, under takstein eller i en halvåpen kasse.",
-    "lyd": "Et klart «tsli-vitt», ofte i flukt.",
-    "mnd": [
-     0,
-     0,
-     0,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1486,45 +916,26 @@
    "latin": "Phylloscopus trochilus",
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Liten olivengrønn sanger med lys øyebrynsstripe og bleke bein.",
-   "nar": "Mai–september.",
+   "kjennetegn": "Liten olivengrønn sanger, lyst øyebryn og bleke bein.",
+   "nar": "Slutten av april–september.",
    "mat": "Insekter og små edderkoppdyr.",
-   "fakta": "En av Norges mest tallrike hekkefugler, men overvintrer i Afrika.",
+   "fakta": "En av Norges vanligste hekkefugler; overvintrer i Afrika.",
    "vingespenn": "17–22 cm",
    "vekt": "7–12 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Tyskland, Polen, Baltikum og Russland; vinterstid Vest-, Øst- og Sør-Afrika",
    "bilde": "cards/031.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.9009,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9414,
-     0.3425
-    ]
-   },
-   "hage": {
-    "i_hagen": "Leter etter insekter ytterst i løvet på bjørk og busker. Den kommer tilbake fra Afrika i slutten av april.",
-    "brett": "Kommer ikke på brettet. Et fuglebad og busker med mye insekter hjelper den.",
-    "hekking": "Bygger et kuleformet reir på bakken, skjult i gresset under busker. La litt gress stå uklipt.",
-    "lyd": "En myk, fallende strofe som dør stille ut. En av de første vårsangerne det er lett å lære seg.",
-    "mnd": [
-     0,
-     0,
-     0,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     0,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1541,39 +952,20 @@
    "fakta": "Den enkle sangen høres ut som et gjentatt tjiff-tjaff.",
    "vingespenn": "15–21 cm",
    "vekt": "6–10 g",
-   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Sentral-/Øst-Europa, Tyrkia og Russland; vinterstid Sør-Europa, Nord-Afrika, Midtøsten og deler av Sør-Asia.",
+   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Sentral-/Øst-Europa, Tyrkia og Russland; vinterstid Vest- og Sør-Europa, Nord-Afrika, Midtøsten og deler av Sør-Asia",
    "bilde": "cards/032.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.8908,
-     0.0792,
-     0.0559
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9272,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Blant de første trekkfuglene som kommer tilbake om våren. Den leter etter insekter i trær og busker.",
-    "brett": "Kommer ikke på brettet. Den trenger busker og trær med mye insekter.",
-    "hekking": "Bygger kuleformet reir lavt i vegetasjonen, nær bakken.",
-    "lyd": "Den enkle «tjiff-tjaff»-sangen har gitt arten navn på flere språk.",
-    "mnd": [
-     0,
-     0,
-     0,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1585,44 +977,25 @@
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
    "kjennetegn": "Grå sanger; hann med svart hette, hunn med rustbrun hette.",
-   "nar": "Mai–september; sjelden vinter.",
+   "nar": "April–september; sjelden om vinteren.",
    "mat": "Insekter og bær.",
-   "fakta": "Noen bestander har endret trekkrute og overvintrer i hager i Vest-Europa.",
+   "fakta": "Noen munker har begynt å overvintre i hager i Vest-Europa.",
    "vingespenn": "20–23 cm",
    "vekt": "15–21 g",
    "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia, Kaukasus og Nord-Afrika",
    "bilde": "cards/033.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.903,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9441,
-     0.3406
-    ]
-   },
-   "hage": {
-    "i_hagen": "Synger fra tette busker og hekker. Om høsten spiser den mye bær, gjerne fra hyll og rogn.",
-    "brett": "Noen overvintrer og kommer da til epler og talg på brettet.",
-    "hekking": "Hekker lavt i tette busker og kratt.",
-    "lyd": "Sangen starter med kvitring og ender i klare, fløytende toner.",
-    "mnd": [
-     1,
-     1,
-     1,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1633,45 +1006,26 @@
    "latin": "Sylvia borin",
    "stjerner": 3,
    "status": "Uvanlig hagegjest i Oslo",
-   "kjennetegn": "Anonym gråbrun sanger uten tydelige vingebånd eller hodefarger.",
-   "nar": "Mai–september.",
+   "kjennetegn": "Anonym gråbrun sanger uten vingebånd eller hodetegninger.",
+   "nar": "Mai–august.",
    "mat": "Insekter og bær.",
-   "fakta": "Den rike, boblende sangen er ofte lettere å kjenne igjen enn drakten.",
+   "fakta": "Den rike, boblende sangen er lettere å kjenne enn drakten.",
    "vingespenn": "20–24 cm",
    "vekt": "16–22 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Sentral-/Øst-Europa og Russland til Jenisej; vinterstid Vest-, Sentral-, Øst- og Sør-Afrika",
    "bilde": "cards/034.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8915,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9292,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Gjemmer seg i tette busker og kratt og er mye lettere å høre enn å se.",
-    "brett": "Kommer ikke på brettet, men spiser bær fra buskene på sensommeren.",
-    "hekking": "Bygger reir lavt i tette busker.",
-    "lyd": "Lang, jevn og boblende sang uten den klare, fløytende avslutningen munken har.",
-    "mnd": [
-     0,
-     0,
-     0,
-     0,
-     2,
-     2,
-     2,
-     2,
-     2,
-     0,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1682,94 +1036,56 @@
    "latin": "Ficedula hypoleuca",
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Hann svart-hvit om våren; hunn brungrå med hvite vingefelt.",
-   "nar": "Mai–september.",
-   "mat": "Flygende insekter, larver og edderkopper.",
-   "fakta": "Tar gjerne i bruk fuglekasser og forsvarer dem energisk.",
+   "kjennetegn": "Hann svart-hvit om våren; hunn brungrå, hvite vingefelt.",
+   "nar": "Slutten av april–august.",
+   "mat": "Flygende insekter, larver, edderkopper.",
+   "fakta": "Tar gjerne fuglekasser og forsvarer dem energisk.",
    "vingespenn": "21–24 cm",
    "vekt": "11–16 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Sentral-/Øst-Europa og Vest-Sibir; vinterstid særlig fra Vest-Afrika østover mot Sentral-Afrika",
    "bilde": "cards/035.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8902,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9272,
-     0.3406
-    ]
-   },
-   "hage": {
-    "i_hagen": "Hannen synger ved kassen han har valgt, og viser den fram for hunnene i mai.",
-    "brett": "Kommer ikke på brettet. Den fanger flygende insekter.",
-    "hekking": "Fuglekasse med 32 mm hull. Heng den opp før fuglene kommer tilbake i begynnelsen av mai.",
-    "lyd": "Et rytmisk, vekslende «si-tu, si-tu, si-tu».",
-    "mnd": [
-     0,
-     0,
-     0,
-     0,
-     2,
-     2,
-     2,
-     2,
-     2,
-     0,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
   {
    "nr": 36,
    "id": "036",
-   "navn": "Grå fluesnapper",
+   "navn": "Gråfluesnapper",
    "latin": "Muscicapa striata",
    "stjerner": 3,
    "status": "Uvanlig hagegjest i Oslo",
    "kjennetegn": "Gråbrun, oppreist og svakt stripet på panne og bryst.",
-   "nar": "Mai–september.",
+   "nar": "Mai–august.",
    "mat": "Flygende insekter.",
-   "fakta": "Sitter ofte på samme utkikkspost og gjør korte fangstturer ut i lufta.",
+   "fakta": "Sitter på fast utkikkspost og tar insekter i korte utfall.",
    "vingespenn": "23–25 cm",
    "vekt": "14–19 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan og Vest-Asia; vinterstid Afrika sør for Sahara",
    "bilde": "cards/036.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8922,
-     0.0783,
-     0.0553
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9279,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Sitter på en fast utkikkspost, farer ut etter et insekt og vender tilbake til samme sted.",
-    "brett": "Kommer ikke på brettet. Den trenger flygende insekter.",
-    "hekking": "Hekker på husvegger, i klatreplanter og på bjelker, eller i en halvåpen fuglekasse.",
-    "lyd": "Svake, spisse «tsi»-lyder. Den er en stillferdig fugl.",
-    "mnd": [
-     0,
-     0,
-     0,
-     0,
-     2,
-     2,
-     2,
-     2,
-     2,
-     0,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1778,47 +1094,28 @@
    "id": "037",
    "navn": "Rødstjert",
    "latin": "Phoenicurus phoenicurus",
-   "stjerner": 3,
-   "status": "Uvanlig hagegjest i Oslo",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
    "kjennetegn": "Hann med svart ansikt, hvit panne og oransjerød stjert.",
    "nar": "Mai–september.",
    "mat": "Insekter, larver og bær.",
-   "fakta": "Den rustrøde stjerten dirrer ofte når fuglen sitter stille.",
+   "fakta": "Den rustrøde stjerten dirrer ofte når den sitter stille.",
    "vingespenn": "20–24 cm",
    "vekt": "12–16 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Sentral-/Øst-Europa, Russland, Iran og Sentral-Asia; vinterstid særlig Sahel/Vest-Afrika og deler av Den arabiske halvøy",
    "bilde": "cards/037.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.874,
-     0.0792,
-     0.0553
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9117,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Sitter på gjerder og greiner og dirrer med den rustrøde stjerten.",
-    "brett": "Kommer ikke på brettet, men spiser insekter og bær i hagen.",
-    "hekking": "Hekker i hulrom i trær og vegger, eller i fuglekasse med et større eller avlangt inngangshull.",
-    "lyd": "En kort, vemodig sangstrofe og et fløytende «huit» fulgt av tikkelyder.",
-    "mnd": [
-     0,
-     0,
-     0,
-     0,
-     2,
-     2,
-     2,
-     2,
-     2,
-     0,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1829,45 +1126,26 @@
    "latin": "Apus apus",
    "stjerner": 2,
    "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Mørk sigdformet fugl med svært lange vinger og kort stjert.",
+   "kjennetegn": "Mørk, sigdformet fugl med lange smale vinger, kort stjert.",
    "nar": "Mai–august.",
    "mat": "Flygende insekter og edderkopper.",
-   "fakta": "Tilbringer nesten hele livet i lufta og kan sove mens den flyr.",
+   "fakta": "Lever nesten hele livet i lufta og kan sove mens den flyr.",
    "vingespenn": "42–48 cm",
    "vekt": "31–56 g",
-   "utbredelse": "Norge, Sverige, Finland, Danmark og resten av Europa; Nord-Afrika, Russland, Sentral-Asia, Mongolia og Nord-Kina; vinterstid Sentral-, Øst- og Sør-Afrika.",
+   "utbredelse": "Norge, Sverige, Finland, Danmark og resten av Europa; Nord-Afrika, Russland, Sentral-Asia, Mongolia og Nord-Kina; vinterstid Sentral-, Øst- og Sør-Afrika",
    "bilde": "cards/038.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8902,
-     0.0792,
-     0.0559
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5632,
-     0.9272,
-     0.3415
-    ]
-   },
-   "hage": {
-    "i_hagen": "Skrikende flokker suser rundt hustakene på sommerkveldene. Den lander nesten aldri andre steder enn i reiret.",
-    "brett": "Kommer ikke på brettet. Den fanger insekter høyt oppe i lufta.",
-    "hekking": "Hekker i hulrom under takskjegget, og i egne tårnseilerkasser høyt oppe på husveggen.",
-    "lyd": "Et høyt, skingrende «sriiii» fra flokker i lav flukt.",
-    "mnd": [
-     0,
-     0,
-     0,
-     0,
-     2,
-     2,
-     2,
-     2,
-     0,
-     0,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1878,45 +1156,26 @@
    "latin": "Hirundo rustica",
    "stjerner": 3,
    "status": "Uvanlig hagegjest i Oslo",
-   "kjennetegn": "Blåsvart overside, rustrødt ansikt og svært lange stjertspisser.",
+   "kjennetegn": "Blåsvart, rustrød panne og strupe, lange stjertspisser.",
    "nar": "Mai–september.",
    "mat": "Flygende insekter.",
-   "fakta": "Bygger skålformet leirreir inne i låver og andre åpne bygninger.",
+   "fakta": "Bygger skålformet leirreir inne i låver og uthus.",
    "vingespenn": "32–35 cm",
    "vekt": "16–25 g",
-   "utbredelse": "Norge og resten av Europa, Nord-Afrika, store deler av Asia og Nord-Amerika; vinterstid Afrika, Sør-Asia og Sør-Amerika",
+   "utbredelse": "Norge og resten av Europa, Nord-Afrika, store deler av Asia og Nord-Amerika; vinterstid Afrika, Sør- og Sørøst-Asia og Mellom- og Sør-Amerika",
    "bilde": "cards/039.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8902,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9279,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Flyr lavt over plener og vann etter insekter, mest nær gårder, staller og uthus.",
-    "brett": "Kommer ikke på brettet. Den trenger beiter med mye insekter og åpne låver.",
-    "hekking": "Bygger skålreir av leire på bjelker inne i låver og uthus. Den trenger en åpen dør eller luke for å komme inn.",
-    "lyd": "En munter, kvitrende sang med en surrende trille.",
-    "mnd": [
-     0,
-     0,
-     0,
-     0,
-     2,
-     2,
-     2,
-     2,
-     2,
-     0,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1927,45 +1186,26 @@
    "latin": "Delichon urbicum",
    "stjerner": 3,
    "status": "Uvanlig hagegjest i Oslo",
-   "kjennetegn": "Blåsvart og hvit med tydelig hvit overgump og kort kløftet stjert.",
+   "kjennetegn": "Blåsvart og hvit med hvit overgump og kort kløftet stjert.",
    "nar": "Mai–september.",
    "mat": "Flygende insekter.",
-   "fakta": "Et reir kan bygges av rundt tusen små klumper med leire og mudder.",
+   "fakta": "Et reir kan bestå av rundt tusen små klumper med leire.",
    "vingespenn": "26–29 cm",
    "vekt": "16–20 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark og resten av Europa; Nord-Afrika, Tyrkia, Kaukasus, Russland og Vest-/Sentral-Asia; vinterstid særlig Afrika sør for Sahara",
    "bilde": "cards/040.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8908,
-     0.0792,
-     0.0559
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9279,
-     0.3387
-    ]
-   },
-   "hage": {
-    "i_hagen": "Flyr i flokker rundt husene og samler leire fra søledammer.",
-    "brett": "Kommer ikke på brettet. Den fanger insekter i lufta.",
-    "hekking": "Bygger lukket leirreir under takutstikk. Kunstige reirskåler under takskjegget kan få den til å slå seg ned, og en søledam hjelper.",
-    "lyd": "Et tørt, kvitrende «prrit».",
-    "mnd": [
-     0,
-     0,
-     0,
-     0,
-     2,
-     2,
-     2,
-     2,
-     2,
-     0,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -1976,45 +1216,26 @@
    "latin": "Loxia curvirostra",
    "stjerner": 3,
    "status": "Uvanlig hagegjest i Oslo",
-   "kjennetegn": "Kraftig fink med karakteristisk kryssende nebb; hann rødlig.",
+   "kjennetegn": "Kraftig fink med krysset nebb; hannen er rødlig.",
    "nar": "Hele året, antall varierer.",
    "mat": "Frø fra gran og andre bartrær.",
-   "fakta": "Det kryssede nebbet fungerer som tang for å åpne kongleskjell.",
+   "fakta": "Det kryssede nebbet brukes som tang til å åpne kongler.",
    "vingespenn": "27–30 cm",
    "vekt": "35–50 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Alpene og resten av Europa; Atlasfjellene, Russland, Sentral-/Øst-Asia, Himalaya, Japan og store deler av Nord-Amerika",
    "bilde": "cards/041.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8922,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9299,
-     0.3415
-    ]
-   },
-   "hage": {
-    "i_hagen": "Flokker i grantoppene, der de henger som små papegøyer og vrir frø ut av konglene.",
-    "brett": "Kommer sjelden på brettet, men trenger å drikke ofte. Et fuglebad kan lokke den ned.",
-    "hekking": "Kan hekke midt på vinteren når grana har mange kongler.",
-    "lyd": "Et hardt, gjentatt «kipp-kipp» i flukt.",
-    "mnd": [
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2031,39 +1252,20 @@
    "fakta": "Kan danne enorme vinterflokker der mattilgangen er god.",
    "vingespenn": "25–28 cm",
    "vekt": "21–29 g",
-   "utbredelse": "Norge, Sverige, Finland og Russland i hekketiden; vinterstid store deler av Europa, Middelhavsområdet, Tyrkia, Kina, Korea og Japan.",
+   "utbredelse": "Norge, Sverige, Finland og Russland i hekketiden; vinterstid store deler av Europa, Middelhavsområdet, Tyrkia, Kina, Korea og Japan",
    "bilde": "cards/042.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8902,
-     0.0792,
-     0.0559
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9279,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Kommer i flokker om høsten og vinteren, ofte sammen med bokfinker under brettet.",
-    "brett": "Solsikkefrø og frø strødd på bakken under brettet.",
-    "hekking": "Hekker i fjellbjørkeskog og nordlig skog, ikke i Oslo-hagene.",
-    "lyd": "En nasal, gnissende «dzveee» om våren og et hardt «jekk» i flukt.",
-    "mnd": [
-     1,
-     1,
-     1,
-     2,
-     0,
-     0,
-     0,
-     0,
-     1,
-     2,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2072,47 +1274,28 @@
    "id": "043",
    "navn": "Sidensvans",
    "latin": "Bombycilla garrulus",
-   "stjerner": 2,
-   "status": "Regelmessig hagegjest i Oslo",
-   "kjennetegn": "Silkemyk gråbrun drakt, topp og svart maske; gule stjertspisser.",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Gråbrun med topp og svart maske; gule stjertspisser.",
    "nar": "Sen høst–vinter.",
    "mat": "Bær og frukt; insekter om sommeren.",
    "fakta": "Flokker kan tømme et rognebærtre på kort tid.",
    "vingespenn": "32–35 cm",
    "vekt": "45–70 g",
-   "utbredelse": "Norge, Sverige, Finland, Russland, Canada og Alaska; vinterstid store deler av Europa, USA, Kina, Korea og Japan.",
+   "utbredelse": "Norge, Sverige, Finland, Russland, Canada og Alaska; vinterstid store deler av Europa, USA, Kina, Korea og Japan",
    "bilde": "cards/043.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8915,
-     0.0792,
-     0.0559
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9279,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Flokker dukker plutselig opp i rogn og epletrær, tømmer dem og drar videre.",
-    "brett": "Epler som henger igjen på treet, og bær fra rogn, mispel og hagtorn.",
-    "hekking": "Hekker i nordlig barskog, langt nord for Oslo.",
-    "lyd": "En myk, surrende trille, «sirrrr», fra hele flokken.",
-    "mnd": [
-     2,
-     2,
-     1,
-     1,
-     0,
-     0,
-     0,
-     0,
-     0,
-     1,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2131,37 +1314,18 @@
    "vekt": "23–29 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Balkan, Russland og Vest-Asia; også innført på New Zealand",
    "bilde": "cards/044.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8929,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.934,
-     0.3443
-    ]
-   },
-   "hage": {
-    "i_hagen": "Sitter på gjerder og busktopper i kulturlandskapet. Om vinteren søker flokker ned til hager og gårder.",
-    "brett": "Havre, korn og frøblandinger strødd på bakken.",
-    "hekking": "Bygger reir på bakken eller lavt i busker og grøftekanter.",
-    "lyd": "Den tørre lokkelyden «tsitt» høres mest om vinteren.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2170,47 +1334,28 @@
    "id": "045",
    "navn": "Grønnspett",
    "latin": "Picus viridis",
-   "stjerner": 3,
-   "status": "Uvanlig hagegjest i Oslo",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
    "kjennetegn": "Stor grønn hakkespett med rød isse og gulgrønn overgump.",
    "nar": "Hele året.",
    "mat": "Maur og andre insekter.",
-   "fakta": "Leter mye etter maur på bakken og har en svært lang klebrig tunge.",
+   "fakta": "Leter etter maur på bakken med svært lang, klebrig tunge.",
    "vingespenn": "40–42 cm",
    "vekt": "180–250 g",
    "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Frankrike, Spania, Tyskland, Polen, Italia, Balkan og deler av Vest-Asia",
    "bilde": "cards/045.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.9003,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.94,
-     0.3425
-    ]
-   },
-   "hage": {
-    "i_hagen": "Hopper på plenen og graver etter maur med den lange tungen.",
-    "brett": "Kommer sjelden på brettet. La maurtuer og litt uklipt plen være i fred.",
-    "hekking": "Hakker reirhull i gamle løvtrær.",
-    "lyd": "En høy, «leende» serie: «klü-klü-klü-klü».",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2223,43 +1368,24 @@
    "status": "Uvanlig hagegjest i Oslo",
    "kjennetegn": "Svært stor, helt svart hakkespett med rød isseflekk.",
    "nar": "Hele året.",
-   "mat": "Maur, billelarver og andre insekter i ved.",
-   "fakta": "Hakker store reirhull som senere brukes av mange andre arter.",
+   "mat": "Maur, billelarver og insekter i ved.",
+   "fakta": "Hakker store reirhull som senere brukes av andre arter.",
    "vingespenn": "64–68 cm",
    "vekt": "300–350 g",
-   "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Balkan, Russland, Kina, Korea og Japan.",
+   "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Balkan, Russland, Kina, Korea og Japan",
    "bilde": "cards/046.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8881,
-     0.0802,
-     0.058
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5679,
-     0.9259,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Kommer til store hager og parker nær skog, og etterlater store, avlange hakkemerker i stammer og stubber.",
-    "brett": "Kommer sjelden på brettet. La gamle stubber og døde trær stå.",
-    "hekking": "Hakker store, ovale reirhull høyt oppe i tykke stammer.",
-    "lyd": "Et høyt «kri-kri-kri» i flukt og et klagende «kliiieh» når den sitter.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2268,47 +1394,28 @@
    "id": "047",
    "navn": "Dvergspett",
    "latin": "Dryobates minor",
-   "stjerner": 4,
-   "status": "Sjelden hagegjest i Oslo",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
    "kjennetegn": "Vår minste hakkespett, svart-hvit uten rød undergump.",
    "nar": "Hele året.",
-   "mat": "Små insekter og larver på tynne greiner.",
-   "fakta": "Er omtrent på størrelse med en spurv og arbeider ofte høyt i trekronene.",
+   "mat": "Insekter og larver på tynne greiner.",
+   "fakta": "På størrelse med en spurv; jobber ofte høyt i trekronene.",
    "vingespenn": "24–29 cm",
    "vekt": "19–23 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Kasakhstan, Kina og Japan",
    "bilde": "cards/047.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.8915,
-     0.0783,
-     0.0553
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9286,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Liten og lett å overse. Den hakker i tynne greiner høyt oppe i løvtrærne.",
-    "brett": "Kan ta talg om vinteren, men kommer sjelden på brettet. La døde greiner og gamle løvtrær stå.",
-    "hekking": "Hakker reirhull i råtne greiner og stammer av or, bjørk og osp.",
-    "lyd": "En rekke høye «pi-pi-pi-pi» og svak, lang tromming.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2322,42 +1429,23 @@
    "kjennetegn": "Slank rovfugl med lang stjert og tverrstripet underside.",
    "nar": "Hele året, ofte synlig vinter.",
    "mat": "Små og mellomstore fugler.",
-   "fakta": "Kan dukke opp lynraskt ved en fuglemater på jakt etter småfugl.",
+   "fakta": "Dukker opp lynraskt ved fuglematen på jakt etter småfugl.",
    "vingespenn": "58–80 cm",
    "vekt": "105–350 g",
-   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Nord-Afrika, Russland, Sentral-Asia, Kina og Japan.",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Nord-Afrika, Russland, Sentral-Asia, Kina og Japan",
    "bilde": "cards/048.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.8922,
-     0.0792,
-     0.0553
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9313,
-     0.3415
-    ]
-   },
-   "hage": {
-    "i_hagen": "Kommer lynraskt og lavt rundt husveggen og tar småfugler ved brettet.",
-    "brett": "Småfugler. Sett fuglebrettet et par meter fra tette busker, så småfuglene har et sted å flykte.",
-    "hekking": "Hekker i tett granskog.",
-    "lyd": "Mest stille, men et raskt «kekekeke» nær reiret.",
-    "mnd": [
-     2,
-     2,
-     2,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2368,45 +1456,26 @@
    "latin": "Astur gentilis",
    "stjerner": 3,
    "status": "Uvanlig hagegjest i Oslo",
-   "kjennetegn": "Kraftig hauk med bredt bryst, lang stjert og tydelig hvitt øyebryn.",
+   "kjennetegn": "Kraftig hauk med bredt bryst, lang stjert, hvitt øyebryn.",
    "nar": "Hele året.",
    "mat": "Fugler og mellomstore pattedyr.",
-   "fakta": "Er større og kraftigere enn spurvehauken, men langt sjeldnere i hager.",
+   "fakta": "Større og kraftigere enn spurvehauk, sjeldnere i hager.",
    "vingespenn": "90–120 cm",
    "vekt": "520–2200 g",
    "utbredelse": "Norge, Sverige, Finland og øvrige Europa; Nord-Marokko, Russland/Sibir, Kaukasus, Iran, Himalaya, Kina, Korea og Japan",
    "bilde": "cards/049.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.8915,
-     0.0783,
-     0.0559
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9286,
-     0.3406
-    ]
-   },
-   "hage": {
-    "i_hagen": "Sjelden i hager, men kan jakte duer og kråker i parker og villastrøk.",
-    "brett": "Store fugler som duer, kråker og skjærer.",
-    "hekking": "Bygger store kvistreir i gammel skog.",
-    "lyd": "Et hardt «kjek-kjek-kjek» nær reiret.",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2417,45 +1486,26 @@
    "latin": "Strix aluco",
    "stjerner": 3,
    "status": "Uvanlig hagegjest i Oslo",
-   "kjennetegn": "Kompakt ugle med mørke øyne og brun eller gråspraglet drakt.",
+   "kjennetegn": "Kompakt ugle med mørke øyne og brun eller grå drakt.",
    "nar": "Hele året; høres mest kveld/natt.",
    "mat": "Smågnagere, småfugl og frosk.",
-   "fakta": "Hannen hoer, mens hunnen ofte svarer med et skarpt «kewick».",
+   "fakta": "Hannen hoer; hunnen svarer ofte med skarpt «kewick».",
    "vingespenn": "94–104 cm",
    "vekt": "350–590 g",
-   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Europa ellers, Nord-Afrika, Tyrkia, Kaukasus og deler av Vest- og Sentral-Asia",
+   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia, Kaukasus og deler av Vest- og Sentral-Asia",
    "bilde": "cards/050.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.8962,
-     0.0783,
-     0.0559
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.936,
-     0.3425
-    ]
-   },
-   "hage": {
-    "i_hagen": "Aktiv om natta. Om dagen sover den ofte tett inntil stammen i ei gran, og småfugler kan avsløre den ved å mobbe den.",
-    "brett": "Mus og rotter, småfugler og frosk.",
-    "hekking": "Hekker i hule trær og store uglekasser, av og til i piper og låver.",
-    "lyd": "Hannens lange hoing høres fra høst til vår, og hunnen svarer med «kewick».",
-    "mnd": [
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2468,43 +1518,24 @@
    "status": "Uvanlig hagegjest i Oslo",
    "kjennetegn": "Mørk kråkefugl tett besatt med lyse dråpeflekker.",
    "nar": "Hele året; noen år mer synlig.",
-   "mat": "Frø, særlig hasselnøtter og barfrø, samt smådyr.",
+   "mat": "Hasselnøtter, barfrø og smådyr.",
    "fakta": "Gjemmer tusenvis av frø og husker mange av lagerplassene.",
    "vingespenn": "52–58 cm",
    "vekt": "150–190 g",
-   "utbredelse": "Barskogområder i Europa og Asia. Norge, Sverige, Finland, Alpene, Karpatene, Balkan, Russland, Sibir, Himalaya, Kina, Korea og Japan.",
+   "utbredelse": "Norge, Sverige, Finland, Alpene, Karpatene, Balkan, Russland, Sibir, Kina, Korea og Japan",
    "bilde": "cards/051.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0868,
-     0.8962,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5632,
-     0.9333,
-     0.3462
-    ]
-   },
-   "hage": {
-    "i_hagen": "Kommer til hager med hasselbusker om høsten, plukker nøttene og gjemmer dem.",
-    "brett": "Hasselnøtter. Plant hassel hvis du vil ha den på besøk.",
-    "hekking": "Hekker tidlig på våren i granskog.",
-    "lyd": "Et hardt, skrattende «kraaak».",
-    "mnd": [
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     2,
-     2,
-     2,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2521,39 +1552,20 @@
    "fakta": "Kan opptre svært tamt når vinterflokker vandrer sørover.",
    "vingespenn": "33–35 cm",
    "vekt": "47–64 g",
-   "utbredelse": "Sirkumpolart i boreale skoger i Eurasia og Nord-Amerika. Norge, Sverige, Finland, Russland, Canada og Alaska; enkelte vintre sørover i Europa, Asia og USA.",
+   "utbredelse": "Norge, Sverige, Finland, Russland, Canada og Alaska; enkelte vintre sørover i Europa, Asia og USA",
    "bilde": "cards/052.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8895,
-     0.0783,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9265,
-     0.3377
-    ]
-   },
-   "hage": {
-    "i_hagen": "Kommer til rogn og epletrær i invasjonsår. Den er så tam at den kan sitte helt stille mens du ser på.",
-    "brett": "Rognebær, epler, knopper og solsikkefrø.",
-    "hekking": "Hekker i nordlig barskog og fjellskog.",
-    "lyd": "Myke, fløytende lokkelyder, ofte fra hele flokken.",
-    "mnd": [
-     1,
-     1,
-     1,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2564,45 +1576,26 @@
    "latin": "Carpodacus erythrinus",
    "stjerner": 4,
    "status": "Sjelden hagegjest i Oslo",
-   "kjennetegn": "Hann med rødt hode, strupe, bryst og overgump; hunn og ungfugl brungrå.",
+   "kjennetegn": "Hann rød på hode, bryst og overgump; hunn brungrå.",
    "nar": "Mai–august.",
    "mat": "Frø, knopper, bær og insekter.",
    "fakta": "På engelsk gjengis sangen ofte som «pleased to see you».",
    "vingespenn": "22–26 cm",
    "vekt": "21–33 g",
-   "utbredelse": "Hekker fra Europa gjennom Sibir og Sentral-Asia; overvintrer hovedsakelig på det indiske subkontinent og i deler av Sørøst-Asia. Norge, Sverige, Finland, Baltikum, Polen, Russland, Kasakhstan og Sentral-Asia; vinterstid Pakistan, India, Nepal, Bangladesh og videre østover mot Sørøst-Asia.",
+   "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Russland, Kasakhstan og Sentral-Asia; vinterstid Pakistan, India, Nepal, Bangladesh og videre østover mot Sørøst-Asia",
    "bilde": "cards/053.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0896,
-     0.903,
-     0.0774,
-     0.0539
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9394,
-     0.3387
-    ]
-   },
-   "hage": {
-    "i_hagen": "Synger fra busktopper i frodige hager, kratt og buskmark tidlig på sommeren.",
-    "brett": "Knopper, frø og insekter. Kommer sjelden på brettet.",
-    "hekking": "Bygger reir lavt i tette busker.",
-    "lyd": "En kort, fløytende strofe som gjentas ofte og bærer langt.",
-    "mnd": [
-     0,
-     0,
-     0,
-     0,
-     2,
-     2,
-     2,
-     1,
-     0,
-     0,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2613,45 +1606,26 @@
    "latin": "Motacilla cinerea",
    "stjerner": 3,
    "status": "Uvanlig hagegjest i Oslo",
-   "kjennetegn": "Lang stjert, grå rygg og klart gul underside, særlig mot stjerten.",
+   "kjennetegn": "Lang stjert, grå rygg og gul underside, særlig bak.",
    "nar": "Vår–høst; enkelte overvintrer.",
-   "mat": "Insekter og edderkopper, særlig langs vassdrag.",
-   "fakta": "Holder gjerne til ved stryk og bekker selv gjennom kalde perioder.",
+   "mat": "Insekter og edderkopper ved vann.",
+   "fakta": "Holder til ved stryk og bekker, også i kalde perioder.",
    "vingespenn": "25–28 cm",
    "vekt": "13–22 g",
-   "utbredelse": "Norge, Sverige, Storbritannia, Europa ellers, Nord-Afrika, Tyrkia, Kaukasus, Himalaya, Kina og Japan.",
+   "utbredelse": "Norge, Sverige, Storbritannia, Europa ellers, Nord-Afrika, Tyrkia, Kaukasus, Himalaya, Kina og Japan",
    "bilde": "cards/054.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8888,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9259,
-     0.3377
-    ]
-   },
-   "hage": {
-    "i_hagen": "Ser du den i hagen, er det nesten alltid nær en bekk eller ei elv.",
-    "brett": "Kommer ikke på brettet. Den fanger insekter ved rennende vann.",
-    "hekking": "Hekker i hulrom ved bekker, under bruer og på murer ved vann.",
-    "lyd": "Et skarpt, metallisk «tsi-tsitt» i flukt.",
-    "mnd": [
-     1,
-     1,
-     1,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     2,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2660,47 +1634,28 @@
    "id": "055",
    "navn": "Gråspett",
    "latin": "Picus canus",
-   "stjerner": 4,
-   "status": "Sjelden hagegjest i Oslo",
+   "stjerner": 5,
+   "status": "Svært sjelden hagegjest i Oslo",
    "kjennetegn": "Grønnlig kropp, grått hode; hann har liten rød panneflekk.",
-   "nar": "Hele året; sees oftere ved bebyggelse om vinteren.",
+   "nar": "Hele året; oftere ved hus om vinteren.",
    "mat": "Maur og andre insekter.",
-   "fakta": "Ligner grønnspett, men er mindre og har langt mindre rødt på hodet.",
+   "fakta": "Ligner grønnspett, men mindre og med lite rødt på hodet.",
    "vingespenn": "38–42 cm",
    "vekt": "130–160 g",
-   "utbredelse": "Norge, Sverige, Finland, Sentral- og Øst-Europa, Balkan, Russland, Himalaya, Kina, Korea og Japan.",
+   "utbredelse": "Norge, Sverige, Finland, Sentral- og Øst-Europa, Balkan, Russland, Himalaya, Kina, Korea og Japan",
    "bilde": "cards/055.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0858,
-     0.8881,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.567,
-     0.9259,
-     0.3387
-    ]
-   },
-   "hage": {
-    "i_hagen": "Kommer oftere nær hus om vinteren, gjerne til talg. Den ser gråere ut enn grønnspetten.",
-    "brett": "Talg og meiseboller om vinteren. Ellers spiser den maur.",
-    "hekking": "Hakker reirhull i løvtrær, særlig osp.",
-    "lyd": "En fallende serie fløytetoner som går saktere mot slutten.",
-    "mnd": [
-     2,
-     2,
-     2,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     2,
-     2
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2711,45 +1666,26 @@
    "latin": "Regulus ignicapilla",
    "stjerner": 5,
    "status": "Svært sjelden hagegjest i Oslo",
-   "kjennetegn": "Svært liten, med hvitt øyebryn, svart øyestrek og gul/oransje issestripe.",
+   "kjennetegn": "Bitteliten; hvitt øyebryn, svart øyestrek, oransje isse.",
    "nar": "Særlig trekk vår/høst.",
    "mat": "Små insekter og edderkopper.",
-   "fakta": "En sørlig slektning av fuglekongen som nå dukker opp oftere i Norge.",
+   "fakta": "Første hekkefunn i Norge var i Sørkedalen i Oslo i 2019.",
    "vingespenn": "13–16 cm",
    "vekt": "5–7 g",
-   "utbredelse": "Vest-, Sentral- og Sør-Europa, Nordvest-Afrika og Tyrkia; delvis trekkfugl. Storbritannia, Frankrike, Spania, Portugal, Tyskland, Italia, Balkan, Marokko, Algerie, Tunisia og Tyrkia; sjelden gjest nord til Norge.",
+   "utbredelse": "Storbritannia, Frankrike, Spania, Portugal, Tyskland, Italia, Balkan, Marokko, Algerie, Tunisia og Tyrkia; sjelden gjest nord til Norge",
    "bilde": "cards/056.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.9003,
-     0.0792,
-     0.0526
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5651,
-     0.9367,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Oppdages i gran og tette busker under trekket. Se etter den hvite øyebrynstripen, som fuglekongen mangler.",
-    "brett": "Kommer ikke på brettet. Den spiser små insekter i bartrær.",
-    "hekking": "Hekker sjelden i Norge.",
-    "lyd": "En rask serie høye toner som øker i styrke, uten fuglekongens avsluttende snirkel.",
-    "mnd": [
-     0,
-     0,
-     1,
-     2,
-     1,
-     0,
-     0,
-     0,
-     1,
-     2,
-     1,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2760,45 +1696,26 @@
    "latin": "Phylloscopus inornatus",
    "stjerner": 5,
    "status": "Svært sjelden hagegjest i Oslo",
-   "kjennetegn": "Bitteliten grønn sanger med kraftig gult øyebryn og to vingebånd.",
-   "nar": "September–oktober; svært sjelden ellers.",
+   "kjennetegn": "Bitteliten grønn sanger, gult øyebryn, to vingebånd.",
+   "nar": "September–oktober, ellers sjelden.",
    "mat": "Små insekter og edderkopper.",
-   "fakta": "Hekker langt øst i Sibir og dukker likevel årlig opp i Vest-Europa.",
+   "fakta": "Hekker i Sibir, men dukker årlig opp i Vest-Europa.",
    "vingespenn": "14–17 cm",
    "vekt": "5,5–8 g",
-   "utbredelse": "Russland/Sibir, Mongolia og Nordøst-Kina i hekketiden; vinterstid Kina, India og Sørøst-Asia; regelmessig trekkgjest til Europa.",
+   "utbredelse": "Russland/Sibir, Mongolia og Nordøst-Kina i hekketiden; vinterstid Kina, India og Sørøst-Asia; regelmessig trekkgjest til Europa",
    "bilde": "cards/057.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0877,
-     0.8888,
-     0.0792,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.566,
-     0.9265,
-     0.3396
-    ]
-   },
-   "hage": {
-    "i_hagen": "Dukker opp i løvtrær og busker om høsten, ofte sammen med meiseflokker.",
-    "brett": "Kommer ikke på brettet. Den spiser små insekter.",
-    "hekking": "Hekker i Sibir, ikke i Norge.",
-    "lyd": "En høy, stigende «tsu-iist» avslører den ofte før du ser den.",
-    "mnd": [
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     2,
-     2,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2809,45 +1726,26 @@
    "latin": "Loxia leucoptera",
    "stjerner": 5,
    "status": "Svært sjelden hagegjest i Oslo",
-   "kjennetegn": "Korsnebb med to tydelige hvite vingebånd; hann rosa-rød.",
+   "kjennetegn": "Korsnebb med to hvite vingebånd; hannen rosa-rød.",
    "nar": "Uregelmessig, mest høst–vinter.",
-   "mat": "Frø fra lerk og andre bartrær; også bær.",
-   "fakta": "Kan komme i store østlige invasjoner enkelte år og nesten mangle andre år.",
+   "mat": "Frø fra lerk og andre bartrær, og bær.",
+   "fakta": "Kommer i invasjoner fra øst noen år og mangler andre år.",
    "vingespenn": "26–30 cm",
    "vekt": "25–40 g",
-   "utbredelse": "Boreale barskoger i Nord-Amerika og Nord-Eurasia; irruptiv sørover. Canada og Alaska; Nord-Skandinavia, Finland og Russland/Sibir østover mot Nordvest-Kina; invasjonsår sørover i Europa, USA og Asia.",
+   "utbredelse": "Canada og Alaska; Nord-Skandinavia, Finland og Russland/Sibir østover mot Nordvest-Kina; i invasjonsår sørover i Europa, USA og Asia",
    "bilde": "cards/058.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0887,
-     0.8996,
-     0.0764,
-     0.0532
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5623,
-     0.934,
-     0.35
-    ]
-   },
-   "hage": {
-    "i_hagen": "I invasjonsår kommer flokker til lerk og gran, der de sitter tamt og spiser av konglene.",
-    "brett": "Frø fra lerk og gran. Et fuglebad kan lokke den ned for å drikke.",
-    "hekking": "Hekker ikke i Oslo.",
-    "lyd": "Lokkelyden ligner grankorsnebbens, men den har også et nasalt «tyyt» som minner om en leketrompet.",
-    "mnd": [
-     1,
-     1,
-     1,
-     0,
-     0,
-     0,
-     0,
-     1,
-     1,
-     1,
-     1,
-     1
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2858,45 +1756,26 @@
    "latin": "Upupa epops",
    "stjerner": 5,
    "status": "Svært sjelden hagegjest i Oslo",
-   "kjennetegn": "Oransjebrun med stor viftetopp og brede svart-hvite vingebånd.",
+   "kjennetegn": "Oransjebrun med viftetopp og brede svart-hvite vingebånd.",
    "nar": "Sjelden vår–høst.",
    "mat": "Store insekter og larver på bakken.",
-   "fakta": "Den spektakulære toppen foldes ut som en vifte når fuglen er opphisset.",
+   "fakta": "Toppen foldes ut som en vifte når fuglen blir opphisset.",
    "vingespenn": "44–48 cm",
    "vekt": "46–89 g",
-   "utbredelse": "Spania, Portugal, Frankrike, Italia, Balkan, Tyrkia, store deler av Afrika, Midtøsten, Sentral-Asia, India og Kina; sjelden gjest i Norge.",
+   "utbredelse": "Spania, Portugal, Frankrike, Italia, Balkan, Tyrkia, store deler av Afrika, Midtøsten, Sentral-Asia, India og Kina; sjelden gjest i Norge",
    "bilde": "cards/059.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0877,
-     0.8888,
-     0.0783,
-     0.0573
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9259,
-     0.3406
-    ]
-   },
-   "hage": {
-    "i_hagen": "En sjelden gjest som kan dukke opp på plener om våren, der den stikker det lange nebbet ned i jorda.",
-    "brett": "Store insekter og larver på bakken.",
-    "hekking": "Hekker ikke i Norge.",
-    "lyd": "Et dempet «upp-upp-upp» som har gitt arten det latinske navnet Upupa.",
-    "mnd": [
-     0,
-     0,
-     0,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     0,
-     0,
-     0
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   },
@@ -2907,45 +1786,1226 @@
    "latin": "Surnia ulula",
    "stjerner": 4,
    "status": "Sjelden hagegjest i Oslo",
-   "kjennetegn": "Langstjertet ugle med gule øyne og tydelig tverrstripet underside.",
+   "kjennetegn": "Langstjertet ugle, gule øyne og tverrstripet underside.",
    "nar": "Sjelden, oftest høst–vinter.",
    "mat": "Smågnagere og småfugl.",
-   "fakta": "Jakter ofte om dagen og sitter gjerne helt åpent i toppen av trær.",
+   "fakta": "Jakter ofte om dagen og sitter åpent i tretoppene.",
    "vingespenn": "69–82 cm",
-   "vekt": "ca. 300 g",
-   "utbredelse": "Boreale områder i Nord-Amerika og Eurasia. Norge, Sverige, Finland, Russland/Sibir, Canada og Alaska; i gode smågnagerår kan den vandre sørover.",
+   "vekt": "240–450 g",
+   "utbredelse": "Norge, Sverige, Finland, Russland/Sibir, Canada og Alaska; i gode smågnagerår kan den vandre sørover",
    "bilde": "cards/060.webp",
+   "harFoto": true,
    "sett": {
     "boks": [
-     0.0877,
-     0.8895,
-     0.0792,
-     0.0566
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
     ],
     "linje": [
-     0.5642,
-     0.9265,
-     0.3425
+     0.532,
+     0.9133,
+     0.3893
     ]
-   },
-   "hage": {
-    "i_hagen": "Sitter åpent i toppen av trær på dagtid og kan være svært tam.",
-    "brett": "Smågnagere og småfugl.",
-    "hekking": "Hekker i nordlig barskog, i gamle spettehull og hule stubber.",
-    "lyd": "En rask, boblende trille om våren.",
-    "mnd": [
-     1,
-     1,
-     1,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     1,
-     1,
-     1
+   }
+  },
+  {
+   "nr": 61,
+   "id": "061",
+   "navn": "Kaie",
+   "latin": "Coloeus monedula",
+   "stjerner": 2,
+   "status": "Regelmessig hagegjest i Oslo",
+   "kjennetegn": "Liten svart kråkefugl med grå nakke og lyse øyne.",
+   "nar": "Hele året.",
+   "mat": "Insekter, frø, bær og matrester.",
+   "fakta": "Hekker ofte i skorsteiner; parene er trofaste livet ut.",
+   "vingespenn": "67–74 cm",
+   "vekt": "220–270 g",
+   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Europa ellers, Marokko, Tyrkia, Kaukasus, Iran og Sentral-Asia",
+   "bilde": "cards/061.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 62,
+   "id": "062",
+   "navn": "Stjertmeis",
+   "latin": "Aegithalos caudatus",
+   "stjerner": 2,
+   "status": "Regelmessig hagegjest i Oslo",
+   "kjennetegn": "Liten rund meis med svært lang stjert; hvitt hode i Norge.",
+   "nar": "Hele året, mest synlig høst–vinter.",
+   "mat": "Små insekter, edderkopper og fett.",
+   "fakta": "Lager et kuleformet reir av mose, lav og opptil 2000 fjær.",
+   "vingespenn": "16–19 cm",
+   "vekt": "7–9 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia, Russland, Kasakhstan, Kina, Korea og Japan",
+   "bilde": "cards/062.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 63,
+   "id": "063",
+   "navn": "Møller",
+   "latin": "Curruca curruca",
+   "stjerner": 2,
+   "status": "Regelmessig hagegjest i Oslo",
+   "kjennetegn": "Grå sanger med mørk kinnflekk og hvit strupe.",
+   "nar": "Mai–august.",
+   "mat": "Insekter, larver og bær.",
+   "fakta": "Trekker sørøstover via Midtøsten til Øst-Afrika.",
+   "vingespenn": "16–20 cm",
+   "vekt": "10–16 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Russland, Sibir, Kasakhstan og Mongolia; vinterstid Nordøst-Afrika, Arabia og India",
+   "bilde": "cards/063.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 64,
+   "id": "064",
+   "navn": "Fiskemåke",
+   "latin": "Larus canus",
+   "stjerner": 2,
+   "status": "Regelmessig hagegjest i Oslo",
+   "kjennetegn": "Mellomstor måke med tynt gulgrønt nebb og mørke øyne.",
+   "nar": "Hele året, flest mars–oktober.",
+   "mat": "Mark, insekter, fisk og matrester.",
+   "fakta": "Tramper på plenen for å lokke meitemark opp av jorda.",
+   "vingespenn": "110–125 cm",
+   "vekt": "300–480 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Island, Baltikum og Russland/Sibir; vinterstid Vest- og Sør-Europa og Øst-Asia",
+   "bilde": "cards/064.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 65,
+   "id": "065",
+   "navn": "Gråmåke",
+   "latin": "Larus argentatus",
+   "stjerner": 2,
+   "status": "Regelmessig hagegjest i Oslo",
+   "kjennetegn": "Stor måke med lysegrå rygg, rosa bein og rød nebbflekk.",
+   "nar": "Hele året.",
+   "mat": "Fisk, smådyr, åtsel og avfall.",
+   "fakta": "Ungene hakker på den røde nebbflekken for å få mat.",
+   "vingespenn": "130–150 cm",
+   "vekt": "800–1250 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Irland, Island, Frankrike, Tyskland, Baltikum og Kolahalvøya",
+   "bilde": "cards/065.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 66,
+   "id": "066",
+   "navn": "Jernspurv",
+   "latin": "Prunella modularis",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Spurvelik, men med tynt nebb og blygrått hode og bryst.",
+   "nar": "Mars–oktober; noen få overvintrer.",
+   "mat": "Små insekter, edderkopper og frø.",
+   "fakta": "Beveger seg musaktig på bakken under busker og fuglebrett.",
+   "vingespenn": "19–21 cm",
+   "vekt": "19–24 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia og Kaukasus; vinterstid Sør-Europa, Nord-Afrika og Midtøsten",
+   "bilde": "cards/066.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 67,
+   "id": "067",
+   "navn": "Tyrkerdue",
+   "latin": "Streptopelia decaocto",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Lys sandbrun due med smal svart halvring i nakken.",
+   "nar": "Hele året.",
+   "mat": "Frø og korn, gjerne under fuglebrettet.",
+   "fakta": "Kom fra Balkan; hekket første gang i Norge i Oslo i 1952.",
+   "vingespenn": "47–55 cm",
+   "vekt": "150–220 g",
+   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia, Midtøsten, India og Kina; innført i USA og Karibia",
+   "bilde": "cards/067.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 68,
+   "id": "068",
+   "navn": "Gulsanger",
+   "latin": "Hippolais icterina",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Gulgrønn sanger med kraftig nebb og lyst vingefelt.",
+   "nar": "Slutten av mai–august.",
+   "mat": "Insekter, larver og noe bær.",
+   "fakta": "Hermer etter andre fugler i den lange, skravlete sangen.",
+   "vingespenn": "20–24 cm",
+   "vekt": "11–16 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Tyskland, Polen, Frankrike, Balkan, Russland og Vest-Sibir; vinterstid sørlige Afrika",
+   "bilde": "cards/068.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 69,
+   "id": "069",
+   "navn": "Duetrost",
+   "latin": "Turdus viscivorus",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Stor, blek trost med runde svarte flekker på brystet.",
+   "nar": "Mars–oktober; enkelte om vinteren.",
+   "mat": "Mark, insekter og bær.",
+   "fakta": "Synger fra høye trær, gjerne i regn og sterk vind.",
+   "vingespenn": "42–48 cm",
+   "vekt": "110–140 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Nordvest-Afrika, Tyrkia, Iran, Sentral-Asia, Himalaya og Vest-Sibir",
+   "bilde": "cards/069.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 70,
+   "id": "070",
+   "navn": "Ravn",
+   "latin": "Corvus corax",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Stor helsvart kråkefugl; kileformet stjert og tykt nebb.",
+   "nar": "Hele året.",
+   "mat": "Åtsel, smådyr, egg og avfall.",
+   "fakta": "Verdens største spurvefugl; kan leke og tumle i lufta.",
+   "vingespenn": "115–150 cm",
+   "vekt": "800–1500 g",
+   "utbredelse": "Norge, Europa, Nord-Afrika, Midtøsten, Himalaya, Russland, Kina, Grønland og Nord- og Mellom-Amerika",
+   "bilde": "cards/070.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 71,
+   "id": "071",
+   "navn": "Musvåk",
+   "latin": "Buteo buteo",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Bredvinget rovfugl som sirkler; drakten varierer mye.",
+   "nar": "Mars–oktober; få om vinteren.",
+   "mat": "Smågnagere, fugler, mark og åtsel.",
+   "fakta": "Sirkler på varm luft og roper et klagende «pijæh».",
+   "vingespenn": "110–130 cm",
+   "vekt": "550–1000 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia, Kaukasus og Vest-Sibir; østlige bestander overvintrer i Afrika",
+   "bilde": "cards/071.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 72,
+   "id": "072",
+   "navn": "Gråhegre",
+   "latin": "Ardea cinerea",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Stor grå hegre med lang hals og svart stripe over øyet.",
+   "nar": "Hele året.",
+   "mat": "Fisk, frosk, mus og insekter.",
+   "fakta": "Står bomstille og kan tømme en hagedam for fisk.",
+   "vingespenn": "175–195 cm",
+   "vekt": "1–2 kg",
+   "utbredelse": "Norge, Europa, store deler av Afrika og Asia til Kina, Japan og Indonesia",
+   "bilde": "cards/072.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 73,
+   "id": "073",
+   "navn": "Stokkand",
+   "latin": "Anas platyrhynchos",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Hann med grønt hode og hvit halsring; hunn brunspraglet.",
+   "nar": "Hele året.",
+   "mat": "Planter, frø, insekter og smådyr.",
+   "fakta": "Stamfar til nesten alle tamender.",
+   "vingespenn": "81–98 cm",
+   "vekt": "750–1500 g",
+   "utbredelse": "Norge, Europa, Nord-Afrika, store deler av Asia og Nord-Amerika; innført i Australia og New Zealand",
+   "bilde": "cards/073.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 74,
+   "id": "074",
+   "navn": "Skogdue",
+   "latin": "Columba oenas",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest i Oslo",
+   "kjennetegn": "Blågrå due uten hvitt; grønnglinsende halsflekk.",
+   "nar": "Mars–oktober.",
+   "mat": "Frø, korn og blader.",
+   "fakta": "Hekker i hule trær, ofte i gamle svartspetthull.",
+   "vingespenn": "63–69 cm",
+   "vekt": "290–330 g",
+   "utbredelse": "Sør-Norge, Sverige, Danmark, Storbritannia, Europa ellers, Nordvest-Afrika, Tyrkia og Sentral-Asia",
+   "bilde": "cards/074.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 75,
+   "id": "075",
+   "navn": "Løvmeis",
+   "latin": "Poecile palustris",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Blank svart hette, liten svart hakeflekk og brungrå rygg.",
+   "nar": "Hele året.",
+   "mat": "Frø, nøtter og insekter.",
+   "fakta": "Lokkelyden «pitsjuu» skiller den lettest fra granmeisen.",
+   "vingespenn": "18–20 cm",
+   "vekt": "10–13 g",
+   "utbredelse": "Sør-Norge, Sør-Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia og Kaukasus; også Øst-Asia med Kina, Korea og Japan",
+   "bilde": "cards/075.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 76,
+   "id": "076",
+   "navn": "Spurveugle",
+   "latin": "Glaucidium passerinum",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Bitteliten ugle med gule øyne og «falske øyne» i nakken.",
+   "nar": "Hele året; oftest sett om vinteren.",
+   "mat": "Småfugl og smågnagere.",
+   "fakta": "Jakter ved fuglebrett og lagrer bytte i hule trær.",
+   "vingespenn": "32–39 cm",
+   "vekt": "50–80 g",
+   "utbredelse": "Norge, Sverige, Finland, Alpene, Karpatene, Baltikum, Russland, Sibir, Nordøst-Kina og Sakhalin",
+   "bilde": "cards/076.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 77,
+   "id": "077",
+   "navn": "Tårnfalk",
+   "latin": "Falco tinnunculus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Liten, rustbrun falk som ofte står stille i lufta.",
+   "nar": "April–september.",
+   "mat": "Smågnagere, insekter og småfugl.",
+   "fakta": "Bygger ikke eget reir; bruker gamle kråkereir og hulrom.",
+   "vingespenn": "65–82 cm",
+   "vekt": "150–250 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, store deler av Afrika og Asia til Kina og Japan",
+   "bilde": "cards/077.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 78,
+   "id": "078",
+   "navn": "Vandrefalk",
+   "latin": "Falco peregrinus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Kraftig falk med mørk hjelm og tverrstripet underside.",
+   "nar": "Hele året.",
+   "mat": "Fugler, særlig duer, fanget i lufta.",
+   "fakta": "Verdens raskeste dyr; kan stupe i over 300 km/t.",
+   "vingespenn": "95–115 cm",
+   "vekt": "600–1300 g",
+   "utbredelse": "Finnes på alle kontinenter unntatt Antarktis, fra arktisk tundra til tropiske strøk",
+   "bilde": "cards/078.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 79,
+   "id": "079",
+   "navn": "Gjøk",
+   "latin": "Cuculus canorus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Grå, falkelik fugl med lang stjert og tverrstripet buk.",
+   "nar": "Mai–juli; høres mest i mai.",
+   "mat": "Hårete larver og andre insekter.",
+   "fakta": "Legger eggene i andre fuglers reir og lar dem fø ungen.",
+   "vingespenn": "54–60 cm",
+   "vekt": "110–130 g",
+   "utbredelse": "Norge og resten av Europa, Nord-Afrika, Tyrkia og store deler av Asia til Kina og Japan; vinterstid Afrika sør for Sahara",
+   "bilde": "cards/079.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 80,
+   "id": "080",
+   "navn": "Trane",
+   "latin": "Grus grus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Svært stor, grå fugl med lang hals og svart-hvitt hode.",
+   "nar": "Trekk over Oslo i april og september.",
+   "mat": "Planter, frø, korn, insekter og smådyr.",
+   "fakta": "Trompetropet kan høres flere kilometer unna.",
+   "vingespenn": "180–240 cm",
+   "vekt": "4,5–6 kg",
+   "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Russland og Sibir; vinterstid Spania, Frankrike, Nord-Afrika, Midtøsten, India og Kina",
+   "bilde": "cards/080.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 81,
+   "id": "081",
+   "navn": "Varsler",
+   "latin": "Lanius excubitor",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Grå, svart og hvit med svart øyemaske og lang stjert.",
+   "nar": "Oktober–april.",
+   "mat": "Smågnagere, småfugl og store insekter.",
+   "fakta": "Spidder byttet på torner og kvister som et spiskammer.",
+   "vingespenn": "30–36 cm",
+   "vekt": "50–80 g",
+   "utbredelse": "Norge, Sverige, Finland, Russland og Vest-Sibir; også Sentral-Europa; om vinteren sørover i Europa",
+   "bilde": "cards/081.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 82,
+   "id": "082",
+   "navn": "Vendehals",
+   "latin": "Jynx torquilla",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Spett med barkfarget, spraglete drakt og lang stjert.",
+   "nar": "Mai–august.",
+   "mat": "Maur, maurlarver og puper.",
+   "fakta": "Vrir og vender på hodet som en slange når den blir truet.",
+   "vingespenn": "25–27 cm",
+   "vekt": "30–45 g",
+   "utbredelse": "Norge, Sverige, Finland, Europa ellers, Russland, Sibir, Kina og Japan; vinterstid Afrika sør for Sahara og Sør-Asia",
+   "bilde": "cards/082.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 83,
+   "id": "083",
+   "navn": "Trepiplerke",
+   "latin": "Anthus trivialis",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Brunstripet piplerke med gulbrunt, stripet bryst.",
+   "nar": "Mai–september.",
+   "mat": "Insekter og frø.",
+   "fakta": "Daler syngende ned fra tretoppen som en liten fallskjerm.",
+   "vingespenn": "25–27 cm",
+   "vekt": "20–25 g",
+   "utbredelse": "Norge, Sverige, Finland, Storbritannia, Europa ellers, Tyrkia, Sentral-Asia og Sibir; vinterstid Afrika og India",
+   "bilde": "cards/083.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 84,
+   "id": "084",
+   "navn": "Bøksanger",
+   "latin": "Phylloscopus sibilatrix",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Gulgrønn sanger med gult bryst og hvit buk.",
+   "nar": "Mai–august.",
+   "mat": "Små insekter og edderkopper.",
+   "fakta": "Sangen er en skjelvende trille som går stadig fortere.",
+   "vingespenn": "19–24 cm",
+   "vekt": "8–13 g",
+   "utbredelse": "Norge, Sverige, Finland, Storbritannia, Europa ellers, Russland og Vest-Sibir; vinterstid Vest- og Sentral-Afrika",
+   "bilde": "cards/084.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 85,
+   "id": "085",
+   "navn": "Tretåspett",
+   "latin": "Picoides tridactylus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Svart-hvit spett uten rødt; hannen har gul isse.",
+   "nar": "Hele året.",
+   "mat": "Barkbillelarver og andre insekter.",
+   "fakta": "Hakker ringer av små hull i barken og drikker sevje.",
+   "vingespenn": "32–35 cm",
+   "vekt": "55–75 g",
+   "utbredelse": "Norge, Sverige, Finland, Alpene, Karpatene, Balkan, Baltikum, Russland, Sibir, Nordøst-Kina og Hokkaido",
+   "bilde": "cards/085.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 86,
+   "id": "086",
+   "navn": "Rugde",
+   "latin": "Scolopax rusticola",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Løvbrun skogvadefugl med langt nebb og tverrstripet isse.",
+   "nar": "Mars–oktober; sees mest i skumringen.",
+   "mat": "Meitemark og insektlarver.",
+   "fakta": "Øynene sitter så langt bak at den ser nesten 360 grader.",
+   "vingespenn": "56–60 cm",
+   "vekt": "240–420 g",
+   "utbredelse": "Norge, Sverige, Finland, Storbritannia, Europa ellers, Russland, Sibir og Japan; vinterstid Vest- og Sør-Europa, Nord-Afrika og Sør-Asia",
+   "bilde": "cards/086.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 87,
+   "id": "087",
+   "navn": "Furukorsnebb",
+   "latin": "Loxia pytyopsittacus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Stor korsnebb med svært kraftig, papegøyeaktig nebb.",
+   "nar": "Hele året, antall varierer.",
+   "mat": "Frø fra furukongler.",
+   "fakta": "Det kraftige nebbet klarer å åpne harde furukongler.",
+   "vingespenn": "27–31 cm",
+   "vekt": "45–60 g",
+   "utbredelse": "Norge, Sverige, Finland, Baltikum og Nordvest-Russland; små bestander i Skottland",
+   "bilde": "cards/087.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 88,
+   "id": "088",
+   "navn": "Fossekall",
+   "latin": "Cinclus cinclus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Rund, mørkebrun fugl med stor hvit smekke.",
+   "nar": "Hele året; mest synlig om vinteren.",
+   "mat": "Vanninsekter og larver fra bunnen.",
+   "fakta": "Norges nasjonalfugl; går under vann i bekker og elver.",
+   "vingespenn": "25–30 cm",
+   "vekt": "55–75 g",
+   "utbredelse": "Norge, Sverige, Finland, Storbritannia, Alpene, Pyreneene, Balkan, Nordvest-Afrika, Tyrkia, Kaukasus, Sentral-Asia og Himalaya",
+   "bilde": "cards/088.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 89,
+   "id": "089",
+   "navn": "Kvinand",
+   "latin": "Bucephala clangula",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Hann svart-hvit, rund hvit kinnflekk; hunn grå, brunhodet.",
+   "nar": "Hele året på åpne vann.",
+   "mat": "Muslinger, snegler og insektlarver.",
+   "fakta": "Hekker i hule trær og fuglekasser; ungene hopper ned.",
+   "vingespenn": "77–83 cm",
+   "vekt": "800–1200 g",
+   "utbredelse": "Norge, Sverige, Finland, Baltikum, Russland, Sibir, Canada og Alaska; vinterstid Vest-Europa, Øst-Asia og USA",
+   "bilde": "cards/089.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 90,
+   "id": "090",
+   "navn": "Fiskeørn",
+   "latin": "Pandion haliaetus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Brun over, hvit under, med mørk stripe gjennom øyet.",
+   "nar": "April–september.",
+   "mat": "Fisk, fanget i stup med beina først.",
+   "fakta": "Kan vende ytre tå bakover for å holde godt på glatt fisk.",
+   "vingespenn": "145–170 cm",
+   "vekt": "1,2–2 kg",
+   "utbredelse": "Europa, Asia, Afrika og Amerika; i Norge hekker den særlig på Østlandet og i Trøndelag",
+   "bilde": "cards/090.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 91,
+   "id": "091",
+   "navn": "Vepsevåk",
+   "latin": "Pernis apivorus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest i Oslo",
+   "kjennetegn": "Ligner musvåk, men har smalt hode og lang stjert.",
+   "nar": "Mai–august.",
+   "mat": "Vepselarver og humlelarver fra bol.",
+   "fakta": "Graver ut vepsebol; tette ansiktsfjær beskytter mot stikk.",
+   "vingespenn": "135–150 cm",
+   "vekt": "510–1050 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Europa ellers, Tyrkia og Vest-Sibir; vinterstid Vest- og Sentral-Afrika",
+   "bilde": "cards/091.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 92,
+   "id": "092",
+   "navn": "Isfugl",
+   "latin": "Alcedo atthis",
+   "stjerner": 5,
+   "status": "Svært sjelden hagegjest i Oslo",
+   "kjennetegn": "Glinsende blå rygg, oransje bryst og langt, spisst nebb.",
+   "nar": "Mest vinter ved åpne elver.",
+   "mat": "Småfisk og vanninsekter.",
+   "fakta": "Stuper fra en gren og tar fisk med lynrask presisjon.",
+   "vingespenn": "24–26 cm",
+   "vekt": "34–46 g",
+   "utbredelse": "Sør-Norge, Sverige, Danmark, Storbritannia, Europa ellers, Nordvest-Afrika, Midtøsten og Asia til Japan og Indonesia",
+   "bilde": "cards/092.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 93,
+   "id": "093",
+   "navn": "Perleugle",
+   "latin": "Aegolius funereus",
+   "stjerner": 5,
+   "status": "Svært sjelden hagegjest i Oslo",
+   "kjennetegn": "Liten ugle med stort, lyst ansikt og gule øyne.",
+   "nar": "Hele året; høres mest i mars–april.",
+   "mat": "Smågnagere og noe småfugl.",
+   "fakta": "Navnet kommer av de hvite «perlene» på ryggen.",
+   "vingespenn": "50–62 cm",
+   "vekt": "90–200 g",
+   "utbredelse": "Norge, Sverige, Finland, Alpene, Baltikum, Russland, Sibir, Canada, Alaska og Klippefjellene i USA",
+   "bilde": "cards/093.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 94,
+   "id": "094",
+   "navn": "Lappugle",
+   "latin": "Strix nebulosa",
+   "stjerner": 5,
+   "status": "Svært sjelden hagegjest i Oslo",
+   "kjennetegn": "Svær grå ugle med stort, ringet ansikt og gule øyne.",
+   "nar": "Hele året; oftest i gode smågnagerår.",
+   "mat": "Smågnagere, særlig markmus.",
+   "fakta": "Hører smågnagere under snøen og slår ned gjennom den.",
+   "vingespenn": "130–150 cm",
+   "vekt": "700–1700 g",
+   "utbredelse": "Norge, Sverige, Finland, Russland, Sibir, Mongolia, Canada, Alaska og fjellskogene i det vestlige USA",
+   "bilde": "cards/094.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 95,
+   "id": "095",
+   "navn": "Skogsnipe",
+   "latin": "Tringa ochropus",
+   "stjerner": 5,
+   "status": "Svært sjelden hagegjest i Oslo",
+   "kjennetegn": "Mørk vadefugl med hvit overgump som lyser når den letter.",
+   "nar": "April–september.",
+   "mat": "Insekter, larver og små krepsdyr.",
+   "fakta": "Hekker i gamle trostereir oppe i trær, ikke på bakken.",
+   "vingespenn": "41–46 cm",
+   "vekt": "70–110 g",
+   "utbredelse": "Norge, Sverige, Finland, Baltikum, Russland og Sibir; vinterstid Vest-Europa, Afrika, Midtøsten og Sør-Asia",
+   "bilde": "cards/095.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 96,
+   "id": "096",
+   "navn": "Enkeltbekkasin",
+   "latin": "Gallinago gallinago",
+   "stjerner": 5,
+   "status": "Svært sjelden hagegjest i Oslo",
+   "kjennetegn": "Brunstripet vadefugl med svært langt, rett nebb.",
+   "nar": "April–september.",
+   "mat": "Mark, insektlarver og små snegler.",
+   "fakta": "Stjertfjærene lager en «mekrende» lyd i stupflukten.",
+   "vingespenn": "44–47 cm",
+   "vekt": "80–120 g",
+   "utbredelse": "Norge, Europa, Island, Russland og Sibir; vinterstid Vest- og Sør-Europa, Afrika og Sør-Asia",
+   "bilde": "cards/096.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 97,
+   "id": "097",
+   "navn": "Storlom",
+   "latin": "Gavia arctica",
+   "stjerner": 5,
+   "status": "Svært sjelden hagegjest i Oslo",
+   "kjennetegn": "Elegant lom med grått hode, svart strupe og stripet hals.",
+   "nar": "April–oktober på Marka-vannene.",
+   "mat": "Fisk, som den fanger under vann.",
+   "fakta": "Det klagende, ulende ropet høres langt over Marka-vannene.",
+   "vingespenn": "110–130 cm",
+   "vekt": "1,3–3,4 kg",
+   "utbredelse": "Norge, Sverige, Finland, Skottland, Russland og Sibir; vinterstid langs kysten av Europa og Øst-Asia",
+   "bilde": "cards/097.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 98,
+   "id": "098",
+   "navn": "Jerpe",
+   "latin": "Tetrastes bonasia",
+   "stjerner": 5,
+   "status": "Svært sjelden hagegjest i Oslo",
+   "kjennetegn": "Duestor, gråspraglet skogshøne; hanen har svart strupe.",
+   "nar": "Hele året.",
+   "mat": "Knopper, rakler, bær og insekter.",
+   "fakta": "Den tynne, høye plystringen kan etterlignes med fløyte.",
+   "vingespenn": "48–54 cm",
+   "vekt": "350–500 g",
+   "utbredelse": "Norge, Sverige, Finland, Alpene, Karpatene, Baltikum, Russland, Sibir, Nordøst-Kina, Korea og Hokkaido",
+   "bilde": "cards/098.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 99,
+   "id": "099",
+   "navn": "Orrfugl",
+   "latin": "Lyrurus tetrix",
+   "stjerner": 5,
+   "status": "Svært sjelden hagegjest i Oslo",
+   "kjennetegn": "Hanen blåsvart med lyreformet stjert; høna brunspraglet.",
+   "nar": "Hele året; spill på myrer april–mai.",
+   "mat": "Bjørkeknopper, rakler, bær og skudd.",
+   "fakta": "Orrhanene samles på myra om våren og kurrer og blåser.",
+   "vingespenn": "65–80 cm",
+   "vekt": "750–1400 g",
+   "utbredelse": "Norge, Sverige, Finland, Storbritannia, Alpene, Baltikum, Polen, Russland, Sibir, Mongolia og Nord-Kina",
+   "bilde": "cards/099.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
+    ]
+   }
+  },
+  {
+   "nr": 100,
+   "id": "100",
+   "navn": "Storfugl",
+   "latin": "Tetrao urogallus",
+   "stjerner": 5,
+   "status": "Svært sjelden hagegjest i Oslo",
+   "kjennetegn": "Stor skogshøne; tiuren svart med vifte, røya brunspraglet.",
+   "nar": "Hele året; spill i april–mai.",
+   "mat": "Furunåler om vinteren, blåbær og skudd.",
+   "fakta": "Tiuren spiller om våren med knepping og sliping.",
+   "vingespenn": "70–125 cm",
+   "vekt": "1,5–5 kg",
+   "utbredelse": "Norge, Sverige, Finland, Skottland, Alpene, Pyreneene, Karpatene, Baltikum, Russland og Sibir til Baikal",
+   "bilde": "cards/100.webp",
+   "harFoto": false,
+   "sett": {
+    "boks": [
+     0.076,
+     0.8781,
+     0.0693,
+     0.0505
+    ],
+    "linje": [
+     0.532,
+     0.9133,
+     0.3893
     ]
    }
   }

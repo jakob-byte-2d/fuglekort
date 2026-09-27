@@ -1,6 +1,6 @@
 // Hagefugler Oslo – offline-støtte for den frittstående appen.
 // Øk versjonen når kortbildene eller appen endres, så hentes alt på nytt.
-const CACHE = 'hagefugler-oslo-v1';
+const CACHE = 'hagefugler-oslo-v2';
 const ASSETS = [
   "./",
   "index.html",
@@ -69,7 +69,47 @@ const ASSETS = [
   "cards/057.webp",
   "cards/058.webp",
   "cards/059.webp",
-  "cards/060.webp"
+  "cards/060.webp",
+  "cards/061.webp",
+  "cards/062.webp",
+  "cards/063.webp",
+  "cards/064.webp",
+  "cards/065.webp",
+  "cards/066.webp",
+  "cards/067.webp",
+  "cards/068.webp",
+  "cards/069.webp",
+  "cards/070.webp",
+  "cards/071.webp",
+  "cards/072.webp",
+  "cards/073.webp",
+  "cards/074.webp",
+  "cards/075.webp",
+  "cards/076.webp",
+  "cards/077.webp",
+  "cards/078.webp",
+  "cards/079.webp",
+  "cards/080.webp",
+  "cards/081.webp",
+  "cards/082.webp",
+  "cards/083.webp",
+  "cards/084.webp",
+  "cards/085.webp",
+  "cards/086.webp",
+  "cards/087.webp",
+  "cards/088.webp",
+  "cards/089.webp",
+  "cards/090.webp",
+  "cards/091.webp",
+  "cards/092.webp",
+  "cards/093.webp",
+  "cards/094.webp",
+  "cards/095.webp",
+  "cards/096.webp",
+  "cards/097.webp",
+  "cards/098.webp",
+  "cards/099.webp",
+  "cards/100.webp"
 ];
 
 self.addEventListener('install', event => {

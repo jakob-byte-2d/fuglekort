@@ -30,7 +30,7 @@ head = f"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 {title}
-<meta name="description" content="60 hagefugler i Oslo som en kortstokk. Bla, søk, les om fuglene og kryss av dem du har sett.">
+<meta name="description" content="100 fuglekort fra Oslo som en kortstokk. Bla, søk og kryss av fuglene du har sett.">
 <meta name="theme-color" content="#0f4a36">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">

@@ -1,7 +1,7 @@
 {
   "name": "Hagefugler Oslo",
   "short_name": "Hagefugler",
-  "description": "60 hagefugler i Oslo som en kortstokk. Bla, søk, les om fuglene og kryss av dem du har sett.",
+  "description": "100 fuglekort fra Oslo som en kortstokk. Bla, søk og kryss av fuglene du har sett.",
   "lang": "nb",
   "start_url": "./",
   "scope": "./",

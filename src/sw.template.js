@@ -1,6 +1,6 @@
 // Hagefugler Oslo – offline-støtte for den frittstående appen.
 // Øk versjonen når kortbildene eller appen endres, så hentes alt på nytt.
-const CACHE = 'hagefugler-oslo-v1';
+const CACHE = 'hagefugler-oslo-v2';
 const ASSETS = __ASSETS__;
 
 self.addEventListener('install', event => {

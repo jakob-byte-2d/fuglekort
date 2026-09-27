@@ -1,6 +1,6 @@
 # Hagefugler Oslo
 
-Kortstokk med 60 hagefugler i Oslo. Du kan sveipe for å bla, snu kortene for å lese om fuglen som hagefugl, søke på navn eller kjennetegn, krysse av fuglene du har sett med dato og se statistikk.
+Kortstokk med 100 fuglekort fra Oslo. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, krysse av fuglene du har sett med dato og se statistikk.
 
 Appen ligger på **https://jakob-byte-2d.github.io/hagefugler-oslo/** når GitHub Pages er slått på (se under).
 
@@ -8,7 +8,7 @@ Appen ligger på **https://jakob-byte-2d.github.io/hagefugler-oslo/** når GitHu
 
 ```
 hagefugler-oslo/
-├── data/cards.json          All tekst fra kortene + posisjonen til SETT-ruta og datolinja på hvert kort
+├── data/cards.json          Navn, sjeldenhet og teksten fra kortene (til søket) + posisjonen til SETT-ruta og datolinja
 ├── src/app.html             Selve appen (HTML, CSS og JavaScript i én fil)
 ├── src/sw.template.js       Mal for offline-støtte (service worker)
 ├── build.py                 Bygger docs/index.html og artifact.html fra src + data
@@ -18,7 +18,7 @@ hagefugler-oslo/
     ├── manifest.webmanifest  Gjør at appen kan legges på hjemskjermen (PWA)
     ├── sw.js                 Gjør at appen virker uten nett etter første besøk
     ├── icons/                App-ikoner
-    ├── cards/001–060.webp    Kortbildene (900 px brede, avrundede hjørner)
+    ├── cards/001–100.webp    Kortbildene (750 × 1050 px, avrundede hjørner)
     └── sprites/              Små miniatyrer til søk og samlingen
 ```
 
@@ -65,15 +65,11 @@ Vil du ha synkronisering i den frittstående appen, bytter du ut `connectRemote(
 2. Kjør `python3 build.py`.
 3. Øk `CACHE`-versjonen i `src/sw.template.js` hvis appen allerede er installert, så telefonene henter de nye filene.
 
-Miniatyrene i `docs/sprites/` er rutenett på 10 × 6. Får du flere enn 60 kort, må de lages på nytt med flere rader, og `spritePos()` og `background-size` i `app.html` må justeres.
+Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort. Appen regner ut antall rader selv, så nye kort trenger bare nye miniatyrer.
 
 ## Bruk
 
 - **Hold** på kortet, så løftes det og følger fingeren. **Dra det til kanten** og slipp for neste (venstre) eller forrige (høyre) kort.
 - **Sveip fort** for å bla gjennom mange kort. Farten avtar av seg selv, og **et trykk** stopper blaingen.
-- **Trykk** på kortet for å snu det og lese om fuglen som hagefugl.
+- **Trykk** på kortet for å snu det og se baksiden.
 - Tastatur: ← → blar, mellomrom snur kortet, S krysser av, / åpner søk, Esc stopper blaing og lukker paneler.
-
-## Hagefakta
-
-Hvert kort i `data/cards.json` har et felt `hage` med `i_hagen`, `brett` (fuglebrettet), `hekking`, `lyd` og `mnd`: tolv tall for januar til desember, der 2 betyr vanlig i hagen, 1 betyr av og til og 0 betyr at den ikke er her. Søket leter også i disse tekstene.
