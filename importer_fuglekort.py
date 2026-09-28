@@ -14,7 +14,7 @@ Skriptet
   4. lager miniatyrene i docs/sprites/ og app-ikonene i docs/icons/ (fra baksiden)
   5. kjører build.py
 """
-import json, shutil, statistics, subprocess, sys
+import json, re, shutil, statistics, subprocess, sys
 from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
@@ -22,6 +22,11 @@ from PIL import Image, ImageDraw
 ROT = Path(__file__).resolve().parent
 DOCS = ROT / "docs"
 W, H = 750, 1050
+
+
+def nokkel(latin):
+    """Fast nøkkel for en art, f.eks. «parus-major». Avkrysningene lagres på denne, så de følger fuglen når kortene får ny rekkefølge."""
+    return re.sub(r"[^a-z]+", "-", latin.lower()).strip("-")
 
 
 def finn_sett(fil):
@@ -81,7 +86,7 @@ def main(app):
 
     # 3. data
     kort = [{
-        "nr": k["nr"], "id": f"{k['nr']:03d}", "navn": k["norsk"], "latin": k["latin"],
+        "nr": k["nr"], "id": f"{k['nr']:03d}", "key": nokkel(k["latin"]), "navn": k["norsk"], "latin": k["latin"],
         "stjerner": k["stjerner"], "status": k["stjernetekst"],
         "kjennetegn": k["kjennetegn"], "nar": k["naar"], "mat": k["mat"], "fakta": k["funfact"],
         "vingespenn": k["vingespenn"], "vekt": k["vekt"], "utbredelse": k["land"],
@@ -91,6 +96,10 @@ def main(app):
     data = {"tittel": "Hagefugler Oslo", "antall": len(kort), "bakside": "cards/bakside.webp", "hjelp": hjelp,
             "sjeldenhet": {"1": "Vanlig", "2": "Regelmessig", "3": "Uvanlig", "4": "Sjelden", "5": "Svært sjelden"},
             "kort": kort}
+    assert len({k["key"] for k in kort}) == len(kort), "to kort har samme latinske navn"
+    tidligere = ROT / "data" / "tidligere_nummer.json"
+    if tidligere.exists():   # gamle avkrysninger lagret på kortnummer flyttes over på arten
+        data["tidligereNr"] = json.loads(tidligere.read_text(encoding="utf-8"))["nummer"]
     (ROT / "data" / "cards.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # 4. miniatyrer (10 kolonner) og ikoner

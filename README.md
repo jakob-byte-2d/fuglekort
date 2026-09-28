@@ -57,7 +57,7 @@ npx cap open ios        # eller: npx cap open android
 
 All lagring går gjennom objektet `Store` øverst i skriptet i `src/app.html`:
 
-- **Som Claude-artifact** lagres avkrysningene i artifactens database (samlingen `sett`, ett dokument per kort, f.eks. `sett/024 = { nr, date, ts }`), så de følger med på alle enheter der du er logget inn.
+- **Som Claude-artifact** lagres avkrysningene i artifactens database (samlingen `sett`, ett dokument per art, f.eks. `sett/parus-major = { art, date, ts }`), så de følger med på alle enheter der du er logget inn.
 - **Som frittstående app** lagres de i nettleserens `localStorage` på enheten. Under «Lagring» i statistikkmenyen finnes «Kopier sikkerhetskopi» og «Gjenopprett», så du kan flytte listen mellom enheter.
 
 Vil du ha synkronisering i den frittstående appen, bytter du ut `connectRemote()` og `push()` i `Store` med kall mot din egen backend, for eksempel Firebase eller Supabase. Resten av appen trenger ingen endringer.
@@ -68,7 +68,7 @@ Vil du ha synkronisering i den frittstående appen, bytter du ut `connectRemote(
 2. Her: `python3 importer_fuglekort.py sti/til/app`
 3. Commit og push. GitHub Pages oppdaterer appen, og telefonene henter de nye kortene selv.
 
-Skriptet kopierer kortene, de to forklaringskortene og baksiden, finner SETT-ruta og datolinja, lager `data/cards.json`, miniatyrene og app-ikonene, og kjører `build.py`. Nummeret på hvert kort (001, 002 …) er nøkkelen for avkrysningene, så et kort beholder avkrysningen sin så lenge nummeret er det samme.
+Skriptet kopierer kortene, de to forklaringskortene og baksiden, finner SETT-ruta og datolinja, lager `data/cards.json`, miniatyrene og app-ikonene, og kjører `build.py`. Avkrysningene lagres på artens latinske navn (f.eks. `parus-major`), ikke på kortnummeret, så de følger fuglen når kortene får ny rekkefølge. Avkrysninger fra før dette (lagret på kortnummer) flyttes over automatisk ved hjelp av `data/tidligere_nummer.json`.
 
 Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort. Appen regner ut antall rader selv.
 

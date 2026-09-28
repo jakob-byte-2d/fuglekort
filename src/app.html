@@ -360,7 +360,10 @@ const Store = {
   db: null,
   subs: new Set(),
   queue: {},
-  loadLocal() { try { this.data = JSON.parse(lsGet(this.KEY) || '{}') || {}; } catch (e) { this.data = {}; } },
+  loadLocal() {
+    try { this.data = JSON.parse(lsGet(this.KEY) || '{}') || {}; } catch (e) { this.data = {}; }
+    if (migrateKeys(this.data).length) this.saveLocal();
+  },
   saveLocal() { lsSet(this.KEY, JSON.stringify(this.data)); },
   emit() { this.subs.forEach(fn => fn()); },
   on(fn) { this.subs.add(fn); },
@@ -377,6 +380,7 @@ const Store = {
     db.collection('sett').onSnapshot(snap => {
       const next = {};
       snap.docs.forEach(d => { if (d.exists) { const v = d.data(); if (v && v.date) next[d.id] = { date: v.date, ts: v.ts || 0 }; } });
+      const moved = migrateKeys(next);          // old documents named by card number → the species
       if (!settled && !snap.metadata.fromCache) {
         settled = true;
         // First real answer from an empty shared store: lift any sightings made on this device before.
@@ -387,6 +391,7 @@ const Store = {
       this.mode = 'delt';
       this.saveLocal();
       this.emit();
+      moved.forEach(([oldId, key]) => { this.push(key); this.push(oldId); });
     }, () => { this.mode = 'lokal'; this.emit(); });
   },
   set(id, date) { this.data[id] = { date, ts: Date.now() }; this.saveLocal(); this.emit(); this.push(id); },
@@ -404,7 +409,7 @@ const Store = {
         const v = this.data[id];
         try {
           const ref = this.db.doc('sett/' + id);
-          if (v) await ref.set({ nr: Number(id), date: v.date, ts: v.ts }); else await ref.delete();
+          if (v) await ref.set({ art: id, date: v.date, ts: v.ts }); else await ref.delete();
         } catch (e) {
           if (e && (e.code === 'invalid_argument' || e.code === 'not_granted' || e.code === 'revoked')) {
             this.readOnly = true; this.mode = 'lokal'; this.emit();
@@ -421,6 +426,22 @@ const Store = {
     run();
   }
 };
+/* Sightings are keyed by species (c.key, e.g. "parus-major"), so they survive a new card order.
+   Older versions keyed them by card number; move those over once, using the old numbering. */
+const BY_KEY = Object.fromEntries(CARDS.map((c, i) => [c.key, i]));
+const OLD_NR = DATA.tidligereNr || {};
+function migrateKeys(obj) {
+  const moved = [];
+  Object.keys(obj).forEach(k => {
+    if (!/^\d{3}$/.test(k)) return;
+    const key = OLD_NR[k];
+    if (key && BY_KEY[key] != null && !obj[key]) obj[key] = obj[k];
+    delete obj[k];
+    moved.push([k, key]);
+  });
+  return moved.filter(([, key]) => key);
+}
+const seenCount = () => Object.keys(Store.data).filter(k => BY_KEY[k] != null).length;
 Store.loadLocal();
 
 /* ================= Search index ================= */
@@ -474,7 +495,7 @@ function makeCard(i) {
 
 function paintCard(el) {
   const c = CARDS[+el.dataset.i];
-  const s = Store.get(c.id);
+  const s = Store.get(c.key);
   el.classList.toggle('seen', !!s);
   el.querySelectorAll('[data-act="toggle"]').forEach(b => {
     b.setAttribute('aria-pressed', s ? 'true' : 'false');
@@ -561,7 +582,7 @@ function flip() {
   el.classList.toggle('flipped');
   nudgeHint();
 }
-function announce() { const c = CARDS[cur]; $('#live').textContent = `Kort ${cur + 1} av ${N}: ${c.navn}${Store.has(c.id) ? ', sett' : ''}`; }
+function announce() { const c = CARDS[cur]; $('#live').textContent = `Kort ${cur + 1} av ${N}: ${c.navn}${Store.has(c.key) ? ', sett' : ''}`; }
 const haptic = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
 
 /* ---- momentum: a fast swipe riffles through many cards, slowing down; a tap stops it ---- */
@@ -741,22 +762,22 @@ deckEl.addEventListener('click', e => {
 deckEl.addEventListener('change', e => {
   const inp = e.target.closest('input[type="date"]'); if (!inp) return;
   const el = inp.closest('.card'); const c = CARDS[+el.dataset.i];
-  if (inp.value) { Store.set(c.id, inp.value); celebrate(c); }
+  if (inp.value) { Store.set(c.key, inp.value); celebrate(c); }
 });
 
 function toggleSeen(c) {
-  const prev = Store.get(c.id);
+  const prev = Store.get(c.key);
   if (prev) {
-    Store.remove(c.id);
-    toast(`${c.navn} er ikke lenger merket som sett.`, 'Angre', () => Store.set(c.id, prev.date));
+    Store.remove(c.key);
+    toast(`${c.navn} er ikke lenger merket som sett.`, 'Angre', () => Store.set(c.key, prev.date));
   } else {
-    Store.set(c.id, todayISO());
+    Store.set(c.key, todayISO());
     celebrate(c);
   }
 }
 function celebrate(c) {
   try { navigator.vibrate && navigator.vibrate(12); } catch (e) {}
-  const n = Object.keys(Store.data).length;
+  const n = seenCount();
   if (c.stjerner >= 4) toast(`${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i Oslo-hager. ${n} av ${N} sett.`);
   else if (n === N) toast(`Alle ${N} kortene er krysset av. Hele kortstokken er komplett!`);
 }
@@ -798,13 +819,13 @@ scrub.addEventListener('keydown', e => {
 /* ---- header, ring, scrubber paint ---- */
 function paintChrome() {
   const c = CARDS[cur];
-  const n = Object.keys(Store.data).length;
+  const n = seenCount();
   $('#sub').textContent = `Kort ${c.id} av ${pad3(N)} · ${n} sett`;
   $('#ringNum').textContent = n;
   const C = 2 * Math.PI * 14;
   $('#ringArc').setAttribute('stroke-dasharray', `${(n / N * C).toFixed(2)} ${C.toFixed(2)}`);
   $('#openStats').setAttribute('aria-label', `Statistikk: ${n} av ${N} sett`);
-  ticks.forEach((t, i) => { t.classList.toggle('s', Store.has(CARDS[i].id)); t.classList.toggle('c', i === cur); });
+  ticks.forEach((t, i) => { t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
   scrub.setAttribute('aria-valuenow', cur + 1);
   scrub.setAttribute('aria-valuetext', `Kort ${cur + 1}: ${c.navn}`);
 }
@@ -867,7 +888,7 @@ function renderSearch() {
   const terms = q.split(/\s+/).filter(Boolean);
   const out = [];
   CARDS.forEach((c, i) => {
-    const seen = Store.has(c.id);
+    const seen = Store.has(c.key);
     if (filter === 'sett' && !seen) return;
     if (filter === 'ikke' && seen) return;
     if (!terms.length) { out.push({ i, score: 0 }); return; }
@@ -894,7 +915,7 @@ function renderSearch() {
     return;
   }
   resEl.innerHTML = out.map(({ i, hit }) => {
-    const c = CARDS[i], s = Store.get(c.id);
+    const c = CARDS[i], s = Store.get(c.key);
     const label = hit ? FIELDS.find(f => f[0] === hit)[1] : '';
     return `<li><button class="res" data-i="${i}">
       <span class="ph" style="background-position:${spritePos(i)}" aria-hidden="true"></span>
@@ -932,12 +953,12 @@ function openStats() { showSheet($('#statsSheet')); renderStats(); setTimeout(()
 $('#openStats').addEventListener('click', openStats);
 $('#closeStats').addEventListener('click', () => closeSheets());
 function renderStats() {
-  const ids = Object.keys(Store.data);
+  const ids = Object.keys(Store.data).filter(k => BY_KEY[k] != null);
   const n = ids.length;
-  const byRar = [1, 2, 3, 4, 5].map(r => ({ r, tot: CARDS.filter(c => c.stjerner === r).length, seen: CARDS.filter(c => c.stjerner === r && Store.has(c.id)).length }));
+  const byRar = [1, 2, 3, 4, 5].map(r => ({ r, tot: CARDS.filter(c => c.stjerner === r).length, seen: CARDS.filter(c => c.stjerner === r && Store.has(c.key)).length }));
   const ptsMax = CARDS.reduce((a, c) => a + c.stjerner, 0);
-  const pts = CARDS.reduce((a, c) => a + (Store.has(c.id) ? c.stjerner : 0), 0);
-  const rarest = CARDS.filter(c => Store.has(c.id)).sort((a, b) => b.stjerner - a.stjerner || a.nr - b.nr)[0];
+  const pts = CARDS.reduce((a, c) => a + (Store.has(c.key) ? c.stjerner : 0), 0);
+  const rarest = CARDS.filter(c => Store.has(c.key)).sort((a, b) => b.stjerner - a.stjerner || a.nr - b.nr)[0];
   // last 12 months
   const now = new Date(); const months = [];
   for (let k = 11; k >= 0; k--) { const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push({ y: d.getFullYear(), m: d.getMonth() + 1, n: 0 }); }
@@ -945,7 +966,7 @@ function renderStats() {
   const maxM = Math.max(1, ...months.map(x => x.n));
   const inYear = months.reduce((a, x) => a + x.n, 0);
   const recent = ids.map(id => ({ id, ...Store.data[id] })).sort((a, b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : b.ts - a.ts)).slice(0, 6);
-  const cardOf = id => CARDS.findIndex(c => c.id === id);
+  const cardOf = key => BY_KEY[key];
 
   sb.innerHTML = `
     <div class="hero"><span class="big">${n}</span><span class="of">av ${N} arter sett</span></div>
@@ -973,7 +994,7 @@ function renderStats() {
     </ul></div>` : ''}
 
     <div class="s-sec"><h3>Samlingen</h3><div class="album">
-      ${CARDS.map((c, i) => `<button class="alb ${Store.has(c.id) ? 's' : ''}" data-i="${i}" aria-label="${esc(c.navn)}${Store.has(c.id) ? ', sett' : ', ikke sett'}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.nr}</span><span class="okdot">${CHECK}</span></button>`).join('')}
+      ${CARDS.map((c, i) => `<button class="alb ${Store.has(c.key) ? 's' : ''}" data-i="${i}" aria-label="${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.nr}</span><span class="okdot">${CHECK}</span></button>`).join('')}
     </div></div>
 
     <div class="s-sec"><h3>Lagring</h3>
@@ -994,7 +1015,7 @@ sb.addEventListener('click', async e => {
   const j = e.target.closest('[data-i]');
   if (j) { closeSheets(true); jump(+j.dataset.i); return; }
   if (e.target.id === 'copyBackup') {
-    const txt = JSON.stringify({ kortstokk: 'hagefugler-oslo', versjon: 1, sett: Store.data });
+    const txt = JSON.stringify({ kortstokk: 'hagefugler-oslo', versjon: 2, sett: Store.data });
     try { await navigator.clipboard.writeText(txt); toast('Sikkerhetskopien er kopiert. Lim den inn i et notat eller en e-post til deg selv.'); }
     catch (err) { $('#restoreBox').hidden = false; const t = $('#restoreTxt'); t.value = txt; t.select(); toast('Kopier teksten i feltet manuelt.'); }
   }
@@ -1002,8 +1023,8 @@ sb.addEventListener('click', async e => {
   if (e.target.id === 'doRestore') {
     try {
       const obj = JSON.parse($('#restoreTxt').value);
-      const src = obj.sett || obj; let added = 0; const merged = { ...Store.data };
-      Object.keys(src).forEach(id => { if (/^\d{3}$/.test(id) && src[id] && /^\d{4}-\d{2}-\d{2}$/.test(src[id].date) && !merged[id]) { merged[id] = { date: src[id].date, ts: src[id].ts || Date.now() }; added++; } });
+      const src = { ...(obj.sett || obj) }; migrateKeys(src); let added = 0; const merged = { ...Store.data };
+      Object.keys(src).forEach(id => { if (BY_KEY[id] != null && src[id] && /^\d{4}-\d{2}-\d{2}$/.test(src[id].date) && !merged[id]) { merged[id] = { date: src[id].date, ts: src[id].ts || Date.now() }; added++; } });
       Store.replaceAll(merged);
       toast(added ? `La til ${added} avkrysninger.` : 'Ingen nye avkrysninger i sikkerhetskopien.');
     } catch (err) { toast('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
