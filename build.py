@@ -56,8 +56,17 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
 
 # Service worker precache list follows the card data, so new cards are cached automatically
 assets = ["./", "index.html", "manifest.webmanifest", "sprites/photos.webp", "sprites/cards.webp",
-          "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"] + [c["bilde"] for c in data["kort"]]
+          "icons/icon-192.png", "icons/icon-512.png", "icons/icon-512-maskable.png", "icons/apple-touch-icon.png"]
+assets += [data.get("bakside", "cards/bakside.webp")] + [h["bilde"] for h in data.get("hjelp", [])] + [c["bilde"] for c in data["kort"]]
+# The cache name follows the content, so phones fetch new cards automatically after every change
+import hashlib
+h = hashlib.sha1((ROOT / "docs" / "index.html").read_bytes())
+for f in assets:
+    fp = ROOT / "docs" / f
+    if fp.is_file():
+        h.update(fp.read_bytes())
 sw = (ROOT / "src" / "sw.template.js").read_text(encoding="utf-8").replace("__ASSETS__", json.dumps(assets, indent=2))
+sw = re.sub(r"const CACHE = '[^']*';", f"const CACHE = 'hagefugler-oslo-{h.hexdigest()[:10]}';", sw)
 (ROOT / "docs" / "sw.js").write_text(sw, encoding="utf-8")
 
 print(f"Bygget {len(data['kort'])} kort → docs/index.html og artifact.html")

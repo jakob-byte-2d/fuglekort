@@ -71,7 +71,7 @@ button{cursor:pointer}
 .card:not(.is-top){pointer-events:none}
 .card .inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.3,.7,.15,1)}
 .card.flipped .inner{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;border-radius:4.4cqw;-webkit-backface-visibility:hidden;backface-visibility:hidden;
+.face{position:absolute;inset:0;border-radius:5.07cqw;-webkit-backface-visibility:hidden;backface-visibility:hidden;
   box-shadow:0 .4cqw 1.2cqw rgba(var(--shadow),.16), 0 5cqw 11cqw -3cqw rgba(var(--shadow),.42)}
 .front{background-image:var(--cardsprite);background-size:1000% calc(var(--rows, 10) * 100%)}
 .front img{display:block;width:100%;height:100%;border-radius:inherit;pointer-events:none;-webkit-user-drag:none}
@@ -95,22 +95,11 @@ button{cursor:pointer}
 .stars{display:inline-flex;gap:.2em;color:var(--card-gold)}
 .stars svg{width:1em;height:1em;fill:currentColor}
 
-/* back of the card: a proper card back, no text facts */
-.back{transform:rotateY(180deg);background:var(--card-cream);overflow:hidden;
-  box-shadow:inset 0 0 0 1.5cqw var(--card-gold), inset 0 0 0 2.3cqw var(--card-cream), inset 0 0 0 2.6cqw var(--card-gold),
-    0 .4cqw 1.2cqw rgba(var(--shadow),.16), 0 5cqw 11cqw -3cqw rgba(var(--shadow),.42)}
-.card:not(.is-top) .back{box-shadow:inset 0 0 0 1.5cqw var(--card-gold), inset 0 0 0 2.3cqw var(--card-cream), inset 0 0 0 2.6cqw var(--card-gold)}
+/* back of the card: the deck's own back (cards/bakside.webp from Fuglekort-) */
+.back{transform:rotateY(180deg)}
+.back img{display:block;width:100%;height:100%;border-radius:inherit;pointer-events:none;-webkit-user-drag:none}
 .card.is-top .back{touch-action:none}
 .card:not(.flipped) .back,.card.flipped .front{pointer-events:none}
-.cb-field{position:absolute;inset:4.6cqw;border-radius:2.8cqw;background-color:var(--card-green);
-  background-image:radial-gradient(circle at 50% 50%, rgba(255,255,255,.07), transparent 62%), var(--leaves);background-size:100% 100%, 10cqw 10cqw;background-position:center, center;
-  box-shadow:inset 0 0 0 .5cqw rgba(244,180,26,.75), inset 0 0 0 1.6cqw var(--card-green), inset 0 0 0 1.85cqw rgba(244,180,26,.45)}
-.cb-star{position:absolute;width:5.2cqw;height:5.2cqw;fill:var(--card-gold)}
-.cb-star.tl{left:4.2cqw;top:4.2cqw}.cb-star.tr{right:4.2cqw;top:4.2cqw}
-.cb-star.bl{left:4.2cqw;bottom:4.2cqw}.cb-star.br{right:4.2cqw;bottom:4.2cqw}
-.cb-medal{position:absolute;left:50%;top:50%;width:62cqw;height:62cqw;transform:translate(-50%,-50%);overflow:visible;
-  filter:drop-shadow(0 1.2cqw 2.4cqw rgba(0,0,0,.28))}
-.cb-medal text{font-family:var(--font);font-weight:700;font-size:13.5px;letter-spacing:3.2px;fill:var(--card-green)}
 
 /* desktop arrows */
 .nav{position:absolute;top:50%;width:46px;height:46px;margin-top:-41px;border-radius:50%;border:1px solid var(--line);display:none;place-items:center;
@@ -231,6 +220,24 @@ button{cursor:pointer}
 .restore{margin-top:10px;display:grid;gap:8px}
 .restore textarea{width:100%;min-height:90px;border-radius:10px;border:1px solid var(--line);background:var(--bg-hi);padding:10px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
 
+.iconbtn.qmark{font-size:19px;font-weight:700;line-height:1}
+.help{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:center;gap:14px;
+  padding:calc(env(safe-area-inset-top,0px) + 16px) 0 calc(env(safe-area-inset-bottom,0px) + 16px);
+  visibility:hidden;opacity:0;transition:opacity .25s, visibility 0s .25s}
+.help.on{visibility:visible;opacity:1;transition:opacity .25s}
+.help-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 16px 10px;justify-content:safe center;
+  scrollbar-width:none;overscroll-behavior-x:contain}
+.help-track::-webkit-scrollbar{display:none}
+.help-card{flex:0 0 auto;margin:0;width:min(86vw, (100dvh - 150px) * .7143, 500px);aspect-ratio:750/1050;scroll-snap-align:center;
+  border-radius:5.07%/3.62%;box-shadow:0 18px 50px -12px rgba(0,0,0,.55);transform:translateY(12px) scale(.97);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.help.on .help-card{transform:none}
+.help-card img{display:block;width:100%;height:100%;border-radius:inherit}
+.help-bar{display:flex;align-items:center;justify-content:center;gap:18px}
+.help-dots{display:flex;gap:8px}
+.help-dots button{width:9px;height:9px;padding:0;border-radius:50%;border:0;background:rgba(255,255,255,.45)}
+.help-dots button[aria-selected="true"]{background:#fff;transform:scale(1.25)}
+.help-close{border:0;border-radius:999px;padding:9px 18px;font-weight:600;background:rgba(255,255,255,.92);color:#15251e}
+.help ~ .scrim, .scrim.dark{background:rgba(6,14,10,.72)}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:60;
   background:var(--ink);color:var(--bg);border-radius:14px;padding:10px 10px 10px 16px;font-size:14px;display:flex;gap:12px;align-items:center;
   width:max-content;max-width:calc(100% - 32px);transition:opacity .25s, transform .25s}
@@ -250,6 +257,7 @@ button{cursor:pointer}
       <h1>Hagefugler Oslo</h1>
       <p id="sub">Kort 001 av 060</p>
     </div>
+    <button class="iconbtn qmark" id="openHelp" aria-label="Om kortene og tegnforklaring" title="Om kortene (?)">?</button>
     <button class="iconbtn" id="openSearch" aria-label="Søk etter fugl" title="Søk (/)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>
     </button>
@@ -274,7 +282,6 @@ button{cursor:pointer}
   </footer>
 </div>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><path id="cbRing" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0"/></defs></svg>
 <div class="scrim" id="scrim"></div>
 
 <section class="sheet search" id="searchSheet" role="dialog" aria-modal="true" aria-label="Søk">
@@ -300,6 +307,14 @@ button{cursor:pointer}
     <button class="textbtn" id="closeStats">Lukk</button>
   </div>
   <div id="statsBody"></div>
+</section>
+
+<section class="help" id="helpSheet" role="dialog" aria-modal="true" aria-label="Om kortene">
+  <div class="help-track" id="helpTrack"></div>
+  <div class="help-bar">
+    <div class="help-dots" id="helpDots" role="tablist" aria-label="Forklaringskort"></div>
+    <button class="help-close" id="closeHelp">Lukk</button>
+  </div>
 </section>
 
 <div class="toast" id="toast" role="status"><span id="toastMsg"></span><button id="toastBtn" hidden>Angre</button></div>
@@ -331,29 +346,7 @@ document.documentElement.style.setProperty('--cardsprite', 'url("sprites/cards.w
 const ROWS = Math.ceil(N / 10);
 document.documentElement.style.setProperty('--rows', ROWS);
 const spritePos = i => `${(i % 10) / 9 * 100}% ${ROWS > 1 ? Math.floor(i / 10) / (ROWS - 1) * 100 : 0}%`;
-const LEAVES = "url(\"data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><g fill='none' stroke='#f4c95d' stroke-opacity='.2' stroke-width='1.1'><path d='M4 36 Q4 20 20 20 Q20 36 4 36Z'/><path d='M36 4 Q20 4 20 20 Q36 20 36 4Z'/><path d='M4 36 L20 20 M20 20 L36 4'/></g><circle cx='36' cy='36' r='1.3' fill='#f4c95d' fill-opacity='.25'/><circle cx='4' cy='4' r='1.3' fill='#f4c95d' fill-opacity='.25'/></svg>") + "\")";
-document.documentElement.style.setProperty('--leaves', LEAVES);
-/* The card back: an emblem with a perched songbird, the deck name around it, gold stars in the corners */
-const BACK = `
-      <div class="cb-field"></div>
-      ${['tl','tr','bl','br'].map(k => `<svg class="cb-star ${k}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.85 6 6.55.78-4.84 4.5 1.3 6.5L12 17.2l-5.86 3.18 1.3-6.5L2.6 9.38l6.55-.78z"/></svg>`).join('')}
-      <svg class="cb-medal" viewBox="0 0 200 200" aria-hidden="true">
-        <circle cx="100" cy="100" r="97" fill="#fdfcf3" stroke="#f4b41a" stroke-width="6"/>
-        <circle cx="100" cy="100" r="66" fill="#e3f2ee" stroke="#f4b41a" stroke-width="2"/>
-        <circle cx="100" cy="100" r="92" fill="none" stroke="#0f4a36" stroke-width="1" stroke-opacity=".35"/>
-        <text><textPath href="#cbRing" startOffset="0">HAGEFUGLER · OSLO · HAGEFUGLER · OSLO ·</textPath></text>
-        <g transform="translate(50 52)">
-          <path d="M14 76 Q50 70 88 77" fill="none" stroke="#0f4a36" stroke-width="3.2" stroke-linecap="round"/>
-          <path d="M70 74 q8 -9 16 -6 q-6 8 -16 6z" fill="#2f7a57"/>
-          <path d="M31 58 L9 73 L13 78 L36 65 Z" fill="#0f4a36"/>
-          <ellipse cx="47" cy="56" rx="21" ry="14.5" transform="rotate(-18 47 56)" fill="#0f4a36"/>
-          <circle cx="65" cy="40" r="11" fill="#0f4a36"/>
-          <path d="M74 37 L85 40.5 L74 44 Z" fill="#e9a40f"/>
-          <circle cx="68" cy="38" r="2" fill="#fdfcf3"/>
-          <path d="M34 53 Q47 45 59 53 Q47 61 34 58 Z" fill="#2f7a57"/>
-          <path d="M45 69 L43 76 M53 68 L53 76" stroke="#0f4a36" stroke-width="2.4" stroke-linecap="round"/>
-        </g>
-      </svg>`;
+const BACK = `<img src="${esc(DATA.bakside || 'cards/bakside.webp')}" alt="" draggable="false" decoding="async" loading="lazy">`;
 
 /* ================= Storage =================
    One small adapter so the same page runs as a Claude artifact (shared db)
@@ -777,6 +770,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'Escape') { stopRiffle(); }
   else if ((e.key === ' ' || e.key === 'Enter') && !e.target.closest('button')) { e.preventDefault(); flip(); }
   else if (e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) { e.preventDefault(); openSearch(); }
+  else if (e.key === '?') { e.preventDefault(); openHelp(); }
   else if (e.key.toLowerCase() === 's' && !e.metaKey && !e.ctrlKey) { toggleSeen(CARDS[cur]); }
 });
 $('#prevBtn').addEventListener('click', () => { stopRiffle(); go(-1); });
@@ -831,7 +825,7 @@ function showSheet(el) {
 }
 function closeSheets(silent) {
   if (!openSheet) return;
-  openSheet.classList.remove('on'); scrim.classList.remove('on'); app.inert = false;
+  openSheet.classList.remove('on'); scrim.classList.remove('on', 'dark'); app.inert = false;
   openSheet = null;
   if (!silent && lastFocus && lastFocus.focus) lastFocus.focus();
 }
@@ -917,6 +911,20 @@ resEl.addEventListener('click', e => {
   jump(+b.dataset.i);
   stage.focus && stage.focus();
 });
+
+/* ---- help: the two explanation cards ---- */
+const helpSheet = $('#helpSheet'), helpTrack = $('#helpTrack'), helpDots = $('#helpDots');
+const HJELP = DATA.hjelp || [];
+$('#openHelp').hidden = !HJELP.length;
+helpTrack.innerHTML = HJELP.map(h => `<figure class="help-card"><img src="${esc(h.bilde)}" alt="${esc(h.navn)}" loading="lazy" decoding="async"></figure>`).join('');
+helpDots.innerHTML = HJELP.map((h, k) => `<button role="tab" aria-selected="${k === 0}" aria-label="${esc(h.navn)}" data-k="${k}"></button>`).join('');
+const helpIndex = () => { const w = helpTrack.firstElementChild ? helpTrack.firstElementChild.offsetWidth + 18 : 1; return Math.round(helpTrack.scrollLeft / w); };
+helpTrack.addEventListener('scroll', () => { const k = helpIndex(); helpDots.querySelectorAll('button').forEach((b, j) => b.setAttribute('aria-selected', j === k)); }, { passive: true });
+helpDots.addEventListener('click', e => { const b = e.target.closest('button'); if (b) helpTrack.children[+b.dataset.k].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); });
+function openHelp() { showSheet(helpSheet); scrim.classList.add('dark'); helpTrack.scrollLeft = 0; setTimeout(() => $('#closeHelp').focus(), 60); }
+$('#openHelp').addEventListener('click', openHelp);
+$('#closeHelp').addEventListener('click', () => closeSheets());
+helpSheet.addEventListener('click', e => { if (!e.target.closest('.help-card, .help-bar')) closeSheets(); });
 
 /* ---- stats ---- */
 const sb = $('#statsBody');

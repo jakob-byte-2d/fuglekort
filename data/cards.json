@@ -1,6 +1,19 @@
 {
  "tittel": "Hagefugler Oslo",
  "antall": 100,
+ "bakside": "cards/bakside.webp",
+ "hjelp": [
+  {
+   "id": "000a",
+   "navn": "Om kortene",
+   "bilde": "cards/000a.webp"
+  },
+  {
+   "id": "000b",
+   "navn": "Slik leser du kortene",
+   "bilde": "cards/000b.webp"
+  }
+ ],
  "sjeldenhet": {
   "1": "Vanlig",
   "2": "Regelmessig",
@@ -23,14 +36,14 @@
    "vingespenn": "22–25 cm",
    "vekt": "15–22 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia og øvrige Europa; Marokko–Tunisia, Tyrkia, Kaukasus, Russland, Kasakhstan, Mongolia og nordlige/vestlige Kina",
+   "rodliste": "Livskraftig",
    "bilde": "cards/001.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -53,14 +66,14 @@
    "vingespenn": "18–20 cm",
    "vekt": "9–12 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Frankrike, Spania, Tyskland, Polen, Italia, Balkan og Tyrkia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/002.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -83,14 +96,14 @@
    "vingespenn": "34–38 cm",
    "vekt": "80–125 g",
    "utbredelse": "Norge og store deler av Europa, Nord-Afrika, Tyrkia, Kaukasus og Sentral-Asia; innført i Australia og New Zealand",
+   "rodliste": "Livskraftig",
    "bilde": "cards/003.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -113,14 +126,14 @@
    "vingespenn": "52–60 cm",
    "vekt": "200–250 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Russland, Kasakhstan og Mongolia; østasiatiske og nordafrikanske skjærer regnes nå som andre arter",
+   "rodliste": "Livskraftig",
    "bilde": "cards/004.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -143,14 +156,14 @@
    "vingespenn": "20–22 cm",
    "vekt": "19–25 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Tyskland, Polen, Baltikum, Russland, Kasakhstan, Mongolia, Kina, Korea og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/005.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -173,14 +186,14 @@
    "vingespenn": "21–25 cm",
    "vekt": "24–38 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Europa ellers, Nord-Afrika, Midtøsten og Asia; også innført i Nord- og Sør-Amerika, Sør-Afrika, Australia og New Zealand",
+   "rodliste": "Nær truet",
    "bilde": "cards/006.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -203,14 +216,14 @@
    "vingespenn": "22–27 cm",
    "vekt": "20–25 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kaukasus, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/007.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -233,14 +246,14 @@
    "vingespenn": "22–26 cm",
    "vekt": "21–27 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Kasakhstan, Mongolia, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/008.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -263,14 +276,14 @@
    "vingespenn": "20–22 cm",
    "vekt": "16–22 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia og Nordvest-Afrika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/009.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -293,14 +306,14 @@
    "vingespenn": "25–28 cm",
    "vekt": "24–34 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia og Nord-Afrika",
+   "rodliste": "Sårbar",
    "bilde": "cards/010.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -323,14 +336,14 @@
    "vingespenn": "24–28 cm",
    "vekt": "18–29 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Baltikum, Frankrike, Spania, Italia, Tyrkia, Kaukasus og deler av Sentral-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/011.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -353,14 +366,14 @@
    "vingespenn": "34–39 cm",
    "vekt": "70–98 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kina, Korea og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/012.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -383,14 +396,14 @@
    "vingespenn": "93–104 cm",
    "vekt": "370–650 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Irland, Tyskland, Polen, Baltikum, Italia, Balkan, Russland, Tyrkia og Midtøsten",
+   "rodliste": "Livskraftig",
    "bilde": "cards/013.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -413,14 +426,14 @@
    "vingespenn": "75–80 cm",
    "vekt": "480–550 g",
    "utbredelse": "Norge og resten av Europa, Nordvest-Afrika, Tyrkia, Kaukasus, Iran og Sentral-Asia; enkelte asiatiske bestander overvintrer mot Nord-India og Nepal",
+   "rodliste": "Livskraftig",
    "bilde": "cards/014.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -443,14 +456,14 @@
    "vingespenn": "20–24 cm",
    "vekt": "12–20 g",
    "utbredelse": "Norge, Sverige, Finland, Island, Russland, Canada, Alaska og andre nordlige områder; vinterstid sørover i Europa, Asia og Nord-Amerika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/015.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -473,14 +486,14 @@
    "vingespenn": "20–23 cm",
    "vekt": "11–15 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kaukasus, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/016.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -503,14 +516,14 @@
    "vingespenn": "21–26 cm",
    "vekt": "14–19 g",
    "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia, Nord-Afrika og deler av Sentral-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/017.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -533,14 +546,14 @@
    "vingespenn": "29–33 cm",
    "vekt": "48–62 g",
    "utbredelse": "Norge, Sverige, Danmark, Tyskland, Polen, Baltikum, Frankrike, Italia, Balkan, Tyrkia, Russland, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/018.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -563,14 +576,14 @@
    "vingespenn": "17–21 cm",
    "vekt": "8–10 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Alpene, Balkan, Tyrkia, Russland, Himalaya, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/019.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -593,14 +606,14 @@
    "vingespenn": "18–21 cm",
    "vekt": "11–14 g",
    "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Russland, Kasakhstan, Mongolia, Kina og Japan",
+   "rodliste": "Sårbar",
    "bilde": "cards/020.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -623,14 +636,14 @@
    "vingespenn": "17–20 cm",
    "vekt": "10–13 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Frankrike, Spania, Tyskland, Polen, Baltikum og vestlige deler av Russland",
+   "rodliste": "Livskraftig",
    "bilde": "cards/021.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -653,14 +666,14 @@
    "vingespenn": "17–21 cm",
    "vekt": "8–10 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Sentral- og Øst-Europa, Russland, Kasakhstan, Mongolia, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/022.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -683,14 +696,14 @@
    "vingespenn": "13–16 cm",
    "vekt": "5–6 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Alpene, Balkan, Russland, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/023.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -713,14 +726,14 @@
    "vingespenn": "13–17 cm",
    "vekt": "7–12 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Tyrkia, Russland, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/024.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -743,14 +756,14 @@
    "vingespenn": "52–58 cm",
    "vekt": "140–190 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Russland, Himalaya, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/025.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -773,14 +786,14 @@
    "vingespenn": "39–42 cm",
    "vekt": "80–130 g",
    "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen og Russland i hekketiden; vinterstid Vest-/Sør-Europa, Nord-Afrika, Tyrkia og deler av Sørvest-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/026.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -803,14 +816,14 @@
    "vingespenn": "33–36 cm",
    "vekt": "64–90 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Sentral-/Øst-Europa og Vest-Russland; vinterstid bl.a. Frankrike, Iberia, Italia, Nord-Afrika og Tyrkia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/027.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -833,14 +846,14 @@
    "vingespenn": "33–35 cm",
    "vekt": "50–75 g",
    "utbredelse": "Norge, Sverige, Finland, Island og Russland; vinterstid Storbritannia, Vest- og Sør-Europa, Nord-Afrika og deler av Midtøsten",
+   "rodliste": "Livskraftig",
    "bilde": "cards/028.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -863,14 +876,14 @@
    "vingespenn": "37–42 cm",
    "vekt": "75–90 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Europa ellers, Russland og Vest-Asia; også innført i Nord-Amerika, Sør-Afrika, Australia og New Zealand",
+   "rodliste": "Nær truet",
    "bilde": "cards/029.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -893,14 +906,14 @@
    "vingespenn": "25–30 cm",
    "vekt": "17–25 g",
    "utbredelse": "Norge, resten av Europa, Nord-Afrika, Russland, Sentral- og Øst-Asia og Japan; også Grønland og vestlige Alaska; vinterstid Afrika og Sør-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/030.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -923,14 +936,14 @@
    "vingespenn": "17–22 cm",
    "vekt": "7–12 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Tyskland, Polen, Baltikum og Russland; vinterstid Vest-, Øst- og Sør-Afrika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/031.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -953,14 +966,14 @@
    "vingespenn": "15–21 cm",
    "vekt": "6–10 g",
    "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Sentral-/Øst-Europa, Tyrkia og Russland; vinterstid Vest- og Sør-Europa, Nord-Afrika, Midtøsten og deler av Sør-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/032.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -983,14 +996,14 @@
    "vingespenn": "20–23 cm",
    "vekt": "15–21 g",
    "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia, Kaukasus og Nord-Afrika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/033.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1013,14 +1026,14 @@
    "vingespenn": "20–24 cm",
    "vekt": "16–22 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Sentral-/Øst-Europa og Russland til Jenisej; vinterstid Vest-, Sentral-, Øst- og Sør-Afrika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/034.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1043,14 +1056,14 @@
    "vingespenn": "21–24 cm",
    "vekt": "11–16 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Sentral-/Øst-Europa og Vest-Sibir; vinterstid særlig fra Vest-Afrika østover mot Sentral-Afrika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/035.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1073,14 +1086,14 @@
    "vingespenn": "23–25 cm",
    "vekt": "14–19 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan og Vest-Asia; vinterstid Afrika sør for Sahara",
+   "rodliste": "Livskraftig",
    "bilde": "cards/036.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1103,14 +1116,14 @@
    "vingespenn": "20–24 cm",
    "vekt": "12–16 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Sentral-/Øst-Europa, Russland, Iran og Sentral-Asia; vinterstid særlig Sahel/Vest-Afrika og deler av Den arabiske halvøy",
+   "rodliste": "Livskraftig",
    "bilde": "cards/037.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1133,14 +1146,14 @@
    "vingespenn": "42–48 cm",
    "vekt": "31–56 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark og resten av Europa; Nord-Afrika, Russland, Sentral-Asia, Mongolia og Nord-Kina; vinterstid Sentral-, Øst- og Sør-Afrika",
+   "rodliste": "Nær truet",
    "bilde": "cards/038.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1163,14 +1176,14 @@
    "vingespenn": "32–35 cm",
    "vekt": "16–25 g",
    "utbredelse": "Norge og resten av Europa, Nord-Afrika, store deler av Asia og Nord-Amerika; vinterstid Afrika, Sør- og Sørøst-Asia og Mellom- og Sør-Amerika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/039.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1193,14 +1206,14 @@
    "vingespenn": "26–29 cm",
    "vekt": "16–20 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark og resten av Europa; Nord-Afrika, Tyrkia, Kaukasus, Russland og Vest-/Sentral-Asia; vinterstid særlig Afrika sør for Sahara",
+   "rodliste": "Nær truet",
    "bilde": "cards/040.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1223,14 +1236,14 @@
    "vingespenn": "27–30 cm",
    "vekt": "35–50 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Alpene og resten av Europa; Atlasfjellene, Russland, Sentral-/Øst-Asia, Himalaya, Japan og store deler av Nord-Amerika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/041.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1253,14 +1266,14 @@
    "vingespenn": "25–28 cm",
    "vekt": "21–29 g",
    "utbredelse": "Norge, Sverige, Finland og Russland i hekketiden; vinterstid store deler av Europa, Middelhavsområdet, Tyrkia, Kina, Korea og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/042.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1283,14 +1296,14 @@
    "vingespenn": "32–35 cm",
    "vekt": "45–70 g",
    "utbredelse": "Norge, Sverige, Finland, Russland, Canada og Alaska; vinterstid store deler av Europa, USA, Kina, Korea og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/043.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1313,14 +1326,14 @@
    "vingespenn": "23–29 cm",
    "vekt": "23–29 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Balkan, Russland og Vest-Asia; også innført på New Zealand",
+   "rodliste": "Sårbar",
    "bilde": "cards/044.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1343,14 +1356,14 @@
    "vingespenn": "40–42 cm",
    "vekt": "180–250 g",
    "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Frankrike, Spania, Tyskland, Polen, Italia, Balkan og deler av Vest-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/045.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1373,14 +1386,14 @@
    "vingespenn": "64–68 cm",
    "vekt": "300–350 g",
    "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Balkan, Russland, Kina, Korea og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/046.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1403,14 +1416,14 @@
    "vingespenn": "24–29 cm",
    "vekt": "19–23 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Kasakhstan, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/047.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1433,14 +1446,14 @@
    "vingespenn": "58–80 cm",
    "vekt": "105–350 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Nord-Afrika, Russland, Sentral-Asia, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/048.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1463,14 +1476,14 @@
    "vingespenn": "90–120 cm",
    "vekt": "520–2200 g",
    "utbredelse": "Norge, Sverige, Finland og øvrige Europa; Nord-Marokko, Russland/Sibir, Kaukasus, Iran, Himalaya, Kina, Korea og Japan",
+   "rodliste": "Sårbar",
    "bilde": "cards/049.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1493,14 +1506,14 @@
    "vingespenn": "94–104 cm",
    "vekt": "350–590 g",
    "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia, Kaukasus og deler av Vest- og Sentral-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/050.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1523,14 +1536,14 @@
    "vingespenn": "52–58 cm",
    "vekt": "150–190 g",
    "utbredelse": "Norge, Sverige, Finland, Alpene, Karpatene, Balkan, Russland, Sibir, Kina, Korea og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/051.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1553,14 +1566,14 @@
    "vingespenn": "33–35 cm",
    "vekt": "47–64 g",
    "utbredelse": "Norge, Sverige, Finland, Russland, Canada og Alaska; enkelte vintre sørover i Europa, Asia og USA",
+   "rodliste": "Nær truet",
    "bilde": "cards/052.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1583,14 +1596,14 @@
    "vingespenn": "22–26 cm",
    "vekt": "21–33 g",
    "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Russland, Kasakhstan og Sentral-Asia; vinterstid Pakistan, India, Nepal, Bangladesh og videre østover mot Sørøst-Asia",
+   "rodliste": "Nær truet",
    "bilde": "cards/053.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1613,14 +1626,14 @@
    "vingespenn": "25–28 cm",
    "vekt": "13–22 g",
    "utbredelse": "Norge, Sverige, Storbritannia, Europa ellers, Nord-Afrika, Tyrkia, Kaukasus, Himalaya, Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/054.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1643,14 +1656,14 @@
    "vingespenn": "38–42 cm",
    "vekt": "130–160 g",
    "utbredelse": "Norge, Sverige, Finland, Sentral- og Øst-Europa, Balkan, Russland, Himalaya, Kina, Korea og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/055.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1673,14 +1686,14 @@
    "vingespenn": "13–16 cm",
    "vekt": "5–7 g",
    "utbredelse": "Storbritannia, Frankrike, Spania, Portugal, Tyskland, Italia, Balkan, Marokko, Algerie, Tunisia og Tyrkia; sjelden gjest nord til Norge",
+   "rodliste": "Ikke egnet",
    "bilde": "cards/056.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1703,14 +1716,14 @@
    "vingespenn": "14–17 cm",
    "vekt": "5,5–8 g",
    "utbredelse": "Russland/Sibir, Mongolia og Nordøst-Kina i hekketiden; vinterstid Kina, India og Sørøst-Asia; regelmessig trekkgjest til Europa",
+   "rodliste": "Ikke vurdert",
    "bilde": "cards/057.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1733,14 +1746,14 @@
    "vingespenn": "26–30 cm",
    "vekt": "25–40 g",
    "utbredelse": "Canada og Alaska; Nord-Skandinavia, Finland og Russland/Sibir østover mot Nordvest-Kina; i invasjonsår sørover i Europa, USA og Asia",
+   "rodliste": "Sårbar",
    "bilde": "cards/058.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1763,14 +1776,14 @@
    "vingespenn": "44–48 cm",
    "vekt": "46–89 g",
    "utbredelse": "Spania, Portugal, Frankrike, Italia, Balkan, Tyrkia, store deler av Afrika, Midtøsten, Sentral-Asia, India og Kina; sjelden gjest i Norge",
+   "rodliste": "Ikke vurdert",
    "bilde": "cards/059.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1793,14 +1806,14 @@
    "vingespenn": "69–82 cm",
    "vekt": "240–450 g",
    "utbredelse": "Norge, Sverige, Finland, Russland/Sibir, Canada og Alaska; i gode smågnagerår kan den vandre sørover",
+   "rodliste": "Livskraftig",
    "bilde": "cards/060.webp",
-   "harFoto": true,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1823,14 +1836,14 @@
    "vingespenn": "67–74 cm",
    "vekt": "220–270 g",
    "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Europa ellers, Marokko, Tyrkia, Kaukasus, Iran og Sentral-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/061.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1853,14 +1866,14 @@
    "vingespenn": "16–19 cm",
    "vekt": "7–9 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia, Russland, Kasakhstan, Kina, Korea og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/062.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1883,14 +1896,14 @@
    "vingespenn": "16–20 cm",
    "vekt": "10–16 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Russland, Sibir, Kasakhstan og Mongolia; vinterstid Nordøst-Afrika, Arabia og India",
+   "rodliste": "Livskraftig",
    "bilde": "cards/063.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1913,14 +1926,14 @@
    "vingespenn": "110–125 cm",
    "vekt": "300–480 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Island, Baltikum og Russland/Sibir; vinterstid Vest- og Sør-Europa og Øst-Asia",
+   "rodliste": "Sårbar",
    "bilde": "cards/064.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1943,14 +1956,14 @@
    "vingespenn": "130–150 cm",
    "vekt": "800–1250 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Irland, Island, Frankrike, Tyskland, Baltikum og Kolahalvøya",
+   "rodliste": "Sårbar",
    "bilde": "cards/065.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -1973,14 +1986,14 @@
    "vingespenn": "19–21 cm",
    "vekt": "19–24 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia og Kaukasus; vinterstid Sør-Europa, Nord-Afrika og Midtøsten",
+   "rodliste": "Livskraftig",
    "bilde": "cards/066.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2003,14 +2016,14 @@
    "vingespenn": "47–55 cm",
    "vekt": "150–220 g",
    "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia, Midtøsten, India og Kina; innført i USA og Karibia",
+   "rodliste": "Nær truet",
    "bilde": "cards/067.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2033,14 +2046,14 @@
    "vingespenn": "20–24 cm",
    "vekt": "11–16 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Tyskland, Polen, Frankrike, Balkan, Russland og Vest-Sibir; vinterstid sørlige Afrika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/068.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2063,14 +2076,14 @@
    "vingespenn": "42–48 cm",
    "vekt": "110–140 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Nordvest-Afrika, Tyrkia, Iran, Sentral-Asia, Himalaya og Vest-Sibir",
+   "rodliste": "Livskraftig",
    "bilde": "cards/069.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2093,14 +2106,14 @@
    "vingespenn": "115–150 cm",
    "vekt": "800–1500 g",
    "utbredelse": "Norge, Europa, Nord-Afrika, Midtøsten, Himalaya, Russland, Kina, Grønland og Nord- og Mellom-Amerika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/070.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2123,14 +2136,14 @@
    "vingespenn": "110–130 cm",
    "vekt": "550–1000 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia, Kaukasus og Vest-Sibir; østlige bestander overvintrer i Afrika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/071.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2153,14 +2166,14 @@
    "vingespenn": "175–195 cm",
    "vekt": "1–2 kg",
    "utbredelse": "Norge, Europa, store deler av Afrika og Asia til Kina, Japan og Indonesia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/072.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2183,14 +2196,14 @@
    "vingespenn": "81–98 cm",
    "vekt": "750–1500 g",
    "utbredelse": "Norge, Europa, Nord-Afrika, store deler av Asia og Nord-Amerika; innført i Australia og New Zealand",
+   "rodliste": "Livskraftig",
    "bilde": "cards/073.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2213,14 +2226,14 @@
    "vingespenn": "63–69 cm",
    "vekt": "290–330 g",
    "utbredelse": "Sør-Norge, Sverige, Danmark, Storbritannia, Europa ellers, Nordvest-Afrika, Tyrkia og Sentral-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/074.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2243,14 +2256,14 @@
    "vingespenn": "18–20 cm",
    "vekt": "10–13 g",
    "utbredelse": "Sør-Norge, Sør-Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia og Kaukasus; også Øst-Asia med Kina, Korea og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/075.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2273,14 +2286,14 @@
    "vingespenn": "32–39 cm",
    "vekt": "50–80 g",
    "utbredelse": "Norge, Sverige, Finland, Alpene, Karpatene, Baltikum, Russland, Sibir, Nordøst-Kina og Sakhalin",
+   "rodliste": "Livskraftig",
    "bilde": "cards/076.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2303,14 +2316,14 @@
    "vingespenn": "65–82 cm",
    "vekt": "150–250 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, store deler av Afrika og Asia til Kina og Japan",
+   "rodliste": "Livskraftig",
    "bilde": "cards/077.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2333,14 +2346,14 @@
    "vingespenn": "95–115 cm",
    "vekt": "600–1300 g",
    "utbredelse": "Finnes på alle kontinenter unntatt Antarktis, fra arktisk tundra til tropiske strøk",
+   "rodliste": "Livskraftig",
    "bilde": "cards/078.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2363,14 +2376,14 @@
    "vingespenn": "54–60 cm",
    "vekt": "110–130 g",
    "utbredelse": "Norge og resten av Europa, Nord-Afrika, Tyrkia og store deler av Asia til Kina og Japan; vinterstid Afrika sør for Sahara",
+   "rodliste": "Nær truet",
    "bilde": "cards/079.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2393,14 +2406,14 @@
    "vingespenn": "180–240 cm",
    "vekt": "4,5–6 kg",
    "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Russland og Sibir; vinterstid Spania, Frankrike, Nord-Afrika, Midtøsten, India og Kina",
+   "rodliste": "Livskraftig",
    "bilde": "cards/080.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2423,14 +2436,14 @@
    "vingespenn": "30–36 cm",
    "vekt": "50–80 g",
    "utbredelse": "Norge, Sverige, Finland, Russland og Vest-Sibir; også Sentral-Europa; om vinteren sørover i Europa",
+   "rodliste": "Livskraftig",
    "bilde": "cards/081.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2453,14 +2466,14 @@
    "vingespenn": "25–27 cm",
    "vekt": "30–45 g",
    "utbredelse": "Norge, Sverige, Finland, Europa ellers, Russland, Sibir, Kina og Japan; vinterstid Afrika sør for Sahara og Sør-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/082.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2483,14 +2496,14 @@
    "vingespenn": "25–27 cm",
    "vekt": "20–25 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Europa ellers, Tyrkia, Sentral-Asia og Sibir; vinterstid Afrika og India",
+   "rodliste": "Livskraftig",
    "bilde": "cards/083.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2513,14 +2526,14 @@
    "vingespenn": "19–24 cm",
    "vekt": "8–13 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Europa ellers, Russland og Vest-Sibir; vinterstid Vest- og Sentral-Afrika",
+   "rodliste": "Livskraftig",
    "bilde": "cards/084.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2543,14 +2556,14 @@
    "vingespenn": "32–35 cm",
    "vekt": "55–75 g",
    "utbredelse": "Norge, Sverige, Finland, Alpene, Karpatene, Balkan, Baltikum, Russland, Sibir, Nordøst-Kina og Hokkaido",
+   "rodliste": "Nær truet",
    "bilde": "cards/085.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2573,14 +2586,14 @@
    "vingespenn": "56–60 cm",
    "vekt": "240–420 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Europa ellers, Russland, Sibir og Japan; vinterstid Vest- og Sør-Europa, Nord-Afrika og Sør-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/086.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2603,14 +2616,14 @@
    "vingespenn": "27–31 cm",
    "vekt": "45–60 g",
    "utbredelse": "Norge, Sverige, Finland, Baltikum og Nordvest-Russland; små bestander i Skottland",
+   "rodliste": "Livskraftig",
    "bilde": "cards/087.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2633,14 +2646,14 @@
    "vingespenn": "25–30 cm",
    "vekt": "55–75 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Alpene, Pyreneene, Balkan, Nordvest-Afrika, Tyrkia, Kaukasus, Sentral-Asia og Himalaya",
+   "rodliste": "Livskraftig",
    "bilde": "cards/088.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2663,14 +2676,14 @@
    "vingespenn": "77–83 cm",
    "vekt": "800–1200 g",
    "utbredelse": "Norge, Sverige, Finland, Baltikum, Russland, Sibir, Canada og Alaska; vinterstid Vest-Europa, Øst-Asia og USA",
+   "rodliste": "Livskraftig",
    "bilde": "cards/089.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2693,14 +2706,14 @@
    "vingespenn": "145–170 cm",
    "vekt": "1,2–2 kg",
    "utbredelse": "Europa, Asia, Afrika og Amerika; i Norge hekker den særlig på Østlandet og i Trøndelag",
+   "rodliste": "Sårbar",
    "bilde": "cards/090.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2723,14 +2736,14 @@
    "vingespenn": "135–150 cm",
    "vekt": "510–1050 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Europa ellers, Tyrkia og Vest-Sibir; vinterstid Vest- og Sentral-Afrika",
+   "rodliste": "Nær truet",
    "bilde": "cards/091.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2753,14 +2766,14 @@
    "vingespenn": "24–26 cm",
    "vekt": "34–46 g",
    "utbredelse": "Sør-Norge, Sverige, Danmark, Storbritannia, Europa ellers, Nordvest-Afrika, Midtøsten og Asia til Japan og Indonesia",
+   "rodliste": "Ikke egnet",
    "bilde": "cards/092.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2783,14 +2796,14 @@
    "vingespenn": "50–62 cm",
    "vekt": "90–200 g",
    "utbredelse": "Norge, Sverige, Finland, Alpene, Baltikum, Russland, Sibir, Canada, Alaska og Klippefjellene i USA",
+   "rodliste": "Livskraftig",
    "bilde": "cards/093.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2813,14 +2826,14 @@
    "vingespenn": "130–150 cm",
    "vekt": "700–1700 g",
    "utbredelse": "Norge, Sverige, Finland, Russland, Sibir, Mongolia, Canada, Alaska og fjellskogene i det vestlige USA",
+   "rodliste": "Sårbar",
    "bilde": "cards/094.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2843,14 +2856,14 @@
    "vingespenn": "41–46 cm",
    "vekt": "70–110 g",
    "utbredelse": "Norge, Sverige, Finland, Baltikum, Russland og Sibir; vinterstid Vest-Europa, Afrika, Midtøsten og Sør-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/095.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2873,14 +2886,14 @@
    "vingespenn": "44–47 cm",
    "vekt": "80–120 g",
    "utbredelse": "Norge, Europa, Island, Russland og Sibir; vinterstid Vest- og Sør-Europa, Afrika og Sør-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/096.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2903,14 +2916,14 @@
    "vingespenn": "110–130 cm",
    "vekt": "1,3–3,4 kg",
    "utbredelse": "Norge, Sverige, Finland, Skottland, Russland og Sibir; vinterstid langs kysten av Europa og Øst-Asia",
+   "rodliste": "Livskraftig",
    "bilde": "cards/097.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2933,14 +2946,14 @@
    "vingespenn": "48–54 cm",
    "vekt": "350–500 g",
    "utbredelse": "Norge, Sverige, Finland, Alpene, Karpatene, Baltikum, Russland, Sibir, Nordøst-Kina, Korea og Hokkaido",
+   "rodliste": "Livskraftig",
    "bilde": "cards/098.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2963,14 +2976,14 @@
    "vingespenn": "65–80 cm",
    "vekt": "750–1400 g",
    "utbredelse": "Norge, Sverige, Finland, Storbritannia, Alpene, Baltikum, Polen, Russland, Sibir, Mongolia og Nord-Kina",
+   "rodliste": "Livskraftig",
    "bilde": "cards/099.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,
@@ -2993,14 +3006,14 @@
    "vingespenn": "70–125 cm",
    "vekt": "1,5–5 kg",
    "utbredelse": "Norge, Sverige, Finland, Skottland, Alpene, Pyreneene, Karpatene, Baltikum, Russland og Sibir til Baikal",
+   "rodliste": "Livskraftig",
    "bilde": "cards/100.webp",
-   "harFoto": false,
    "sett": {
     "boks": [
      0.076,
      0.8781,
      0.0693,
-     0.0505
+     0.0495
     ],
     "linje": [
      0.532,

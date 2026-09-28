@@ -1,6 +1,6 @@
 // Hagefugler Oslo – offline-støtte for den frittstående appen.
-// Øk versjonen når kortbildene eller appen endres, så hentes alt på nytt.
-const CACHE = 'hagefugler-oslo-v2';
+// build.py setter versjonen ut fra innholdet, så telefonene henter alt på nytt etter hver endring.
+const CACHE = 'hagefugler-oslo-f37356c336';
 const ASSETS = [
   "./",
   "index.html",
@@ -9,7 +9,11 @@ const ASSETS = [
   "sprites/cards.webp",
   "icons/icon-192.png",
   "icons/icon-512.png",
+  "icons/icon-512-maskable.png",
   "icons/apple-touch-icon.png",
+  "cards/bakside.webp",
+  "cards/000a.webp",
+  "cards/000b.webp",
   "cards/001.webp",
   "cards/002.webp",
   "cards/003.webp",
