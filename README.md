@@ -1,4 +1,4 @@
-# Hagefugler Oslo
+# Hagefugler
 
 Kortstokk med 100 fuglekort fra Oslo. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, krysse av fuglene du har sett med dato og se statistikk. Knappen **?** viser de to forklaringskortene.
 
@@ -48,7 +48,7 @@ Da starter den i fullskjerm med eget ikon, og kortene virker uten nett. Etter en
 ```
 npm init -y
 npm i @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android
-npx cap init "Hagefugler Oslo" no.hagefugler.oslo --web-dir docs
+npx cap init "Hagefugler" no.hagefugler.app --web-dir docs
 npx cap add ios && npx cap add android
 npx cap open ios        # eller: npx cap open android
 ```

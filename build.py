@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bygger Hagefugler Oslo fra src/app.html + data/cards.json.
+"""Bygger Hagefugler fra src/app.html + data/cards.json.
 
 Lager to utgaver av samme side:
   docs/index.html     – frittstående app (PWA): full HTML med manifest og offline-støtte
@@ -22,7 +22,7 @@ fragment = src.replace("__CARDS_JSON__", payload)
 
 # 2) Standalone app: full document, title moved into <head>, manifest + service worker
 title_m = re.search(r"<title>.*?</title>\s*", fragment, re.S)
-title = title_m.group(0).strip() if title_m else "<title>Hagefugler Oslo</title>"
+title = title_m.group(0).strip() if title_m else "<title>Hagefugler</title>"
 body = fragment.replace(title_m.group(0), "", 1) if title_m else fragment
 head = f"""<!doctype html>
 <html lang="nb">

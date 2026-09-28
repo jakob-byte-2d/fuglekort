@@ -93,7 +93,7 @@ def main(app):
         "rodliste": (k.get("rodliste") or {}).get("navn", ""),
         "bilde": f"cards/{k['nr']:03d}.webp", "sett": sett,
     } for k in kort_inn]
-    data = {"tittel": "Hagefugler Oslo", "antall": len(kort), "bakside": "cards/bakside.webp", "hjelp": hjelp,
+    data = {"tittel": "Hagefugler", "antall": len(kort), "bakside": "cards/bakside.webp", "hjelp": hjelp,
             "sjeldenhet": {"1": "Vanlig", "2": "Regelmessig", "3": "Uvanlig", "4": "Sjelden", "5": "Svært sjelden"},
             "kort": kort}
     assert len({k["key"] for k in kort}) == len(kort), "to kort har samme latinske navn"
