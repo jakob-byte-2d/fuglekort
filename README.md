@@ -4,12 +4,12 @@ Kortstokk med 100 fuglekort fra Oslo. Du kan sveipe for å bla, snu kortene, sø
 
 Kortene lages i repoet **Fuglekort-** (Fuglekort-fabrikken). Dette repoet er appen som viser dem.
 
-Appen ligger på **https://jakob-byte-2d.github.io/hagefugler-oslo/** når GitHub Pages er slått på (se under).
+Appen ligger på **https://jakob-byte-2d.github.io/hagefugler/** når GitHub Pages er slått på (se under).
 
 ## Innhold
 
 ```
-hagefugler-oslo/
+hagefugler/
 ├── data/cards.json          Navn, sjeldenhet og teksten fra kortene (til søket) + posisjonen til SETT-ruta og datolinja
 ├── src/app.html             Selve appen (HTML, CSS og JavaScript i én fil)
 ├── src/sw.template.js       Mal for offline-støtte (service worker)
