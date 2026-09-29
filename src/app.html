@@ -932,7 +932,7 @@ const hashBonus = /^#(b\d{2})$/i.exec(location.hash || '');
 if (hashBonus) { const i = CARDS.findIndex(c => c.id === hashBonus[1].toLowerCase()); if (i >= 0) cur = i; }
 const pool = new Map();
 
-const altTekst = c => `${c.bonus ? 'Bonuskort' : 'Fuglekort'} ${c.id}: ${c.navn}, ${c.latin}. ${c.status}.${(foto() || c.bonus) && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
+const altTekst = c => `${c.bonus ? 'Bonuskort' : 'Fuglekort'} ${c.id}: ${c.navn}, ${c.latin}. ${c.status}.${foto() && c.bildeFoto && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
 function makeCard(i) {
   const c = CARDS[i];
   const [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje;
@@ -1558,8 +1558,9 @@ const setSheet = $('#settingsSheet');
 $('#openSettings').hidden = !HAR_FOTO && !Vipp.stottet;
 $('#bildeSek').hidden = !HAR_FOTO;
 $('#vippSek').hidden = !Vipp.stottet;
-$('#fotoAntall').textContent = `Fotografier fra Artsdatabanken og Artsobservasjoner for ${BIRDS.filter(c => c.bildeFoto).length} av ${NB} fugler. De andre viser illustrasjonen. Fotografene står på kortet Bildekreditering under ?.`
-  + (NBON ? ' Bonuskortene har alltid fotografi.' : '');
+$('#fotoAntall').textContent = `Fotografier fra Artsdatabanken og Artsobservasjoner for ${BIRDS.filter(c => c.bildeFoto).length} av ${NB} fugler`
+  + (NBON ? ` og ${BONUS.filter(c => c.bildeFoto).length} av ${NBON} bonusdyr` : '')
+  + '. De andre viser illustrasjonen. Fotografene står på kortene Bildekreditering under ?.';
 function paintSettings() {
   setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg));
   $('#vippBtn').setAttribute('aria-checked', Vipp.aktiv ? 'true' : 'false');

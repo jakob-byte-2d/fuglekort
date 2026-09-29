@@ -8,8 +8,9 @@ der STI/TIL/app er mappen `ut/app` fra `python bygg.py` i Fuglekort-, eller den 
 «app»-nedlastingen fra Actions → Bygg fuglekort. Mappen skal ha kort.json, kort/, bilder/ og bakside.webp.
 
 Skriptet
-  1. kopierer kortbildene (001–NNN), bonuskortene (b01–b05, andre dyr), forklaringskortene (000a, 000b, og
-     bildekrediteringen for bonuskortene, b00) og baksiden til docs/cards/
+  1. kopierer kortbildene (001–NNN), bonuskortene (b01–b05, andre dyr), de to forklaringskortene (000a, 000b)
+     og baksiden til docs/cards/, og kortene med fotografi (også bonuskortene og bildekrediteringen deres, b00)
+     til docs/cards-foto/
   2. finner SETT-ruta og datolinja på kortene, så avkrysningen havner riktig
   3. lager data/cards.json (navn, sjeldenhet og korttekst til søket)
   4. lager miniatyrene i docs/sprites/ og app-ikonene i docs/icons/ (fra baksiden)
@@ -60,12 +61,13 @@ def ikon(bakside, storrelse, maskable=False):
     return kvadrat.resize((storrelse, storrelse), Image.LANCZOS)
 
 
-def foto_felt(k):
-    """Kortbildet med fotografi og hvem som tok det, for kort som har fotografi."""
+def foto_felt(k, kid=None):
+    """Kortbildet med fotografi og hvem som tok det, for kort som har fotografi (kid: «001», «b01» …)."""
     fs = k.get("fotosett") or {}
     if not fs.get("foto"):
         return {}
-    return {"bildeFoto": f"cards-foto/{k['nr']:03d}.webp", "fotograf": fs["foto"]["fotograf"], "lisens": fs["foto"]["lisens"]}
+    return {"bildeFoto": f"cards-foto/{kid or format(k['nr'], '03d')}.webp",
+            "fotograf": fs["foto"]["fotograf"], "lisens": fs["foto"]["lisens"]}
 
 
 def main(app):
@@ -86,13 +88,20 @@ def main(app):
     for f in kilde.get("forklaringskort", []):
         shutil.copy(app / f["kortbilde"], DOCS / "cards" / f"{f['id']}.webp")
         hjelp.append({"id": f["id"], "navn": f.get("navn") or f.get("tittel"), "bilde": f"cards/{f['id']}.webp"})
-    # bonuskortene har fotografier i begge bildevalgene; bildekrediteringen deres (b00) står sist under ?
+    # bonuskortene: KI-kortene i cards/, kortene med fotografi i cards-foto/ (som fuglene);
+    # bildekrediteringen deres (b00) står sist under ? når man har valgt fotografier
     for k in bonus_inn:
         shutil.copy(app / k["kortbilde"], DOCS / "cards" / f"{k['nr_tekst']}.webp")
-    hjelp_bonus = []
-    for f in bonus.get("forklaringskort", []):
+        fs = k.get("fotosett")
+        if fs and fs.get("foto"):
+            shutil.copy(app / fs["kortbilde"], DOCS / "cards-foto" / f"{k['nr_tekst']}.webp")
+    hjelp_bonus, hjelp_bonus_foto = [], []
+    for f in bonus.get("forklaringskort", []):                  # (eldre kort.json: b00 lå her)
         shutil.copy(app / f["kortbilde"], DOCS / "cards" / f"{f['id']}.webp")
         hjelp_bonus.append({"id": f["id"], "navn": f.get("navn") or f.get("tittel"), "bilde": f"cards/{f['id']}.webp"})
+    for f in (bonus.get("fotosett") or {}).get("forklaringskort", []):
+        shutil.copy(app / f["kortbilde"], DOCS / "cards-foto" / f"{f['id']}.webp")
+        hjelp_bonus_foto.append({"id": f["id"], "navn": f.get("navn") or f.get("tittel"), "bilde": f"cards-foto/{f['id']}.webp"})
     bakside = app / (kilde.get("bakside") or "bakside.webp")
     shutil.copy(bakside, DOCS / "cards" / "bakside.webp")
     # fotosettet: bare kort som faktisk har fotografi kopieres; resten er like KI-kortene og gjenbrukes
@@ -128,7 +137,7 @@ def main(app):
         "bilde": f"cards/{k['nr']:03d}.webp", "sett": sett,
         **foto_felt(k),
     } for k in kort_inn]
-    # bonuskortene (andre dyr): samme felt, men «lengde» i stedet for vingespenn, og alltid fotografi
+    # bonuskortene (andre dyr): samme felt, men «lengde» i stedet for vingespenn
     kort += [{
         "nr": k["nr"], "id": k["nr_tekst"], "bonus": True, "key": nokkel(k["latin"]), "navn": k["norsk"], "latin": k["latin"],
         "stjerner": k["stjerner"], "status": k["stjernetekst"],
@@ -136,10 +145,12 @@ def main(app):
         "lengde": k["lengde"], "vekt": k["vekt"], "utbredelse": k["land"],
         "rodliste": (k.get("rodliste") or {}).get("navn", ""),
         "bilde": f"cards/{k['nr_tekst']}.webp", "sett": sett,
+        **foto_felt(k, k["nr_tekst"]),
+        # eldre kort.json uten fotosett: kortet selv var fotografiet
         **({"fotograf": k["foto"]["fotograf"], "lisens": k["foto"]["lisens"]} if k.get("foto") else {}),
     } for k in bonus_inn]
     hjelp += hjelp_bonus
-    hjelp_foto += hjelp_bonus
+    hjelp_foto += hjelp_bonus + hjelp_bonus_foto
     data = {"tittel": "Hagefugler", "antall": len(kort_inn), "bonus": len(bonus_inn), "bakside": "cards/bakside.webp", "hjelp": hjelp,
             "sjeldenhet": {"1": "Vanlig", "2": "Regelmessig", "3": "Uvanlig", "4": "Sjelden", "5": "Svært sjelden"},
             "kort": kort}

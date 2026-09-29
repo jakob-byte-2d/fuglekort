@@ -82,7 +82,7 @@ Bonuskort) og kommer med i importen fra feltet `bonus` i `kort.json`. I `data/ca
 
 - Man blar til dem etter kort 100 (og videre rundt til 001), søker på dem og registrerer observasjonsdager som for fuglene. De får også glinskant.
 - De teller ikke med i fuglelista: ringen, «av 100 fugler sett», poengene, sjeldenhetsstolpene og merkene gjelder bare fuglene. Statistikken har en egen del, «Bonuskort – andre dyr», og «Sist sett» viser begge.
-- Bildene er fotografier i begge bildevalgene. Fotografene og lisensen står på kortet «Bildekreditering bonuskort» (b00), som ligger sist under **?**.
+- Bonuskortene har KI-illustrasjoner og fotografier som fuglene: KI-kortene i `docs/cards/`, kortene med fotografi i `docs/cards-foto/` (med `bildeFoto`, `fotograf` og `lisens` i `cards.json`). Fotografene og lisensen står på kortet «Bildekreditering bonuskort» (b00), som ligger sist under **?** når man har valgt fotografier.
 - `#b03` i adressen åpner et bonuskort direkte, som `#42` for fuglekortene.
 
 ## Glinskort og merker

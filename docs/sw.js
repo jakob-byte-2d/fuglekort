@@ -1,6 +1,6 @@
 // Hagefugler – offline-støtte for den frittstående appen.
 // build.py setter versjonen ut fra innholdet, så telefonene henter alt på nytt etter hver endring.
-const CACHE = 'hagefugler-oslo-efec631d76';
+const CACHE = 'hagefugler-oslo-88492dbe57';
 const ASSETS = [
   "./",
   "index.html",
@@ -14,7 +14,6 @@ const ASSETS = [
   "cards/bakside.webp",
   "cards/000a.webp",
   "cards/000b.webp",
-  "cards/b00.webp",
   "cards/001.webp",
   "cards/002.webp",
   "cards/003.webp",
@@ -123,6 +122,7 @@ const ASSETS = [
   "sprites/cards-foto.webp",
   "sprites/photos-foto.webp",
   "cards-foto/000c.webp",
+  "cards-foto/b00.webp",
   "cards-foto/001.webp",
   "cards-foto/002.webp",
   "cards-foto/003.webp",
@@ -170,7 +170,12 @@ const ASSETS = [
   "cards-foto/047.webp",
   "cards-foto/048.webp",
   "cards-foto/049.webp",
-  "cards-foto/050.webp"
+  "cards-foto/050.webp",
+  "cards-foto/b01.webp",
+  "cards-foto/b02.webp",
+  "cards-foto/b03.webp",
+  "cards-foto/b04.webp",
+  "cards-foto/b05.webp"
 ];
 
 self.addEventListener('install', event => {

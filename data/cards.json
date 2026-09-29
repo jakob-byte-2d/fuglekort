@@ -13,11 +13,6 @@
    "id": "000b",
    "navn": "Slik leser du kortene",
    "bilde": "cards/000b.webp"
-  },
-  {
-   "id": "b00",
-   "navn": "Bildekreditering bonuskort",
-   "bilde": "cards/b00.webp"
   }
  ],
  "sjeldenhet": {
@@ -3303,6 +3298,7 @@
      0.392
     ]
    },
+   "bildeFoto": "cards-foto/b01.webp",
    "fotograf": "Hege Røkenes",
    "lisens": "CC BY 4.0"
   },
@@ -3337,6 +3333,7 @@
      0.392
     ]
    },
+   "bildeFoto": "cards-foto/b02.webp",
    "fotograf": "Hildegunn Bjørgan",
    "lisens": "CC BY 4.0"
   },
@@ -3371,6 +3368,7 @@
      0.392
     ]
    },
+   "bildeFoto": "cards-foto/b03.webp",
    "fotograf": "Eirik Røtnes",
    "lisens": "CC BY 4.0"
   },
@@ -3405,6 +3403,7 @@
      0.392
     ]
    },
+   "bildeFoto": "cards-foto/b04.webp",
    "fotograf": "Ragnar Skrede",
    "lisens": "CC BY 4.0"
   },
@@ -3439,6 +3438,7 @@
      0.392
     ]
    },
+   "bildeFoto": "cards-foto/b05.webp",
    "fotograf": "Steinar Stueflotten",
    "lisens": "CC BY 4.0"
   }
@@ -3462,7 +3462,7 @@
   {
    "id": "b00",
    "navn": "Bildekreditering bonuskort",
-   "bilde": "cards/b00.webp"
+   "bilde": "cards-foto/b00.webp"
   }
  ],
  "tidligereNr": {
