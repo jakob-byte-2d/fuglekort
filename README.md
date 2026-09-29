@@ -81,7 +81,7 @@ feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`, `id` som
 
 **De er en belønning og en overraskelse.** Et bonuskort finnes ikke i appen før det er fortjent:
 
-- Ett bonuskort for hver 5. registrering av fugler (5, 10, 15, 20 og 25 registreringer), i rekkefølgen b01, b02 … En registrering er én observasjonsdag for én fugl, også de som kommer fra en hagefugltelling. Bonusdyrene teller ikke.
+- Et bonuskort ved 5, 10, 20, 40 og 60 registreringer av fugler (`BONUS_GRENSER` i `src/app.html`), i rekkefølgen b01, b02 … En registrering er én observasjonsdag for én fugl, også de som kommer fra en hagefugltelling. Bonusdyrene teller ikke.
 - Før det er fortjent, vises det ingen steder: ikke i kortstokken, scrubberen, søket, samlingen, «Sist sett», glinskortene, telleliste (ekorn står der som en vanlig rad, siden det er med i skjemaet) eller under **?**. `#b03` i adressen virker først når kortet er funnet. Kortet «Bildekreditering bonuskort» (b00) kommer under **?** når alle er funnet.
 - Hint uten å si hva: statistikken har delen «Bonus» med et kort med spørsmålstegn og hvor mange registreringer som mangler, og meldingen nederst sier «To registreringer til en bonus!» og «Én registrering til en bonus!».
 - **Når et bonuskort er fortjent**, faller et kort med baksiden opp inn på skjermen og vugger, med et lysende spørsmålstegn. Trykk, så snur det seg: blader virvler ut, et stempel sier BONUSKORT, og det står hvilke kort det er stokket inn blant. Trykk igjen, så viser kortstokken hvor det havnet, og kortet lyser opp. Ingenting skjer av seg selv; hvert steg venter på et trykk. Avsløringen vises én gang (i Claude lagres det i samlingen `bonusvist`); bonuskort fortjent før denne versjonen avsløres første gang appen åpnes.

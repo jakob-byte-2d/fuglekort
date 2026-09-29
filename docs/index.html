@@ -913,21 +913,22 @@ const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          
 Store.loadLocal();
 
 /* ================= Bonuskort som belønning =================
-   The other animals are a surprise: none of them shows anywhere until it is earned. One bonus card comes for
-   every 5 registrations of birds (5, 10, 15, 20, 25), in the order b01, b02 … It is then shuffled in among
+   The other animals are a surprise: none of them shows anywhere until it is earned. A bonus card comes at
+   5, 10, 20, 40 and 60 registrations of birds (BONUS_GRENSER), in the order b01, b02 … It is then shuffled in among
    the bird cards with the same number of stars, at a place that is the same every time and on every device. */
-const BONUS_STEG = 5;
+const BONUS_GRENSER = [5, 10, 20, 40, 60];               // registrations needed for bonus card 1, 2, 3 …
+const bonusGrense = k => k < BONUS_GRENSER.length ? BONUS_GRENSER[k] : BONUS_GRENSER[BONUS_GRENSER.length - 1] + 20 * (k - BONUS_GRENSER.length + 1);
 const BONUS_REKKE = BONUS.slice().sort((a, b) => (a.id < b.id ? -1 : 1));
 const registreringer = () => Object.keys(Store.data).filter(erFugl).reduce((a, k) => a + Store.data[k].dager.length, 0);
-const apneBonus = () => new Set(BONUS_REKKE.slice(0, Math.min(NBON, Math.floor(registreringer() / BONUS_STEG))).map(c => c.key));
+const apneBonus = () => { const r = registreringer(); return new Set(BONUS_REKKE.filter((c, k) => r >= bonusGrense(k)).map(c => c.key)); };
 let APNE = apneBonus();
 const erApen = c => !c.bonus || APNE.has(c.key);
 const erApenK = k => BY_KEY[k] != null && erApen(CARDS[BY_KEY[k]]);
 const bonusSeen = () => BONUS.filter(c => erApen(c) && Store.has(c.key)).length;
 function nesteBonus() {
   if (APNE.size >= NBON) return null;
-  const r = registreringer(), grense = (APNE.size + 1) * BONUS_STEG;
-  return { mangler: grense - r, grense, fra: APNE.size * BONUS_STEG, r };
+  const r = registreringer(), grense = bonusGrense(APNE.size);
+  return { mangler: grense - r, grense, fra: APNE.size ? bonusGrense(APNE.size - 1) : 0, r };
 }
 const hashTall = s => { let h = 5381; for (const ch of s) h = (h * 33 + ch.charCodeAt(0)) >>> 0; return h; };
 function byggStokk() {
@@ -1800,7 +1801,7 @@ function renderStats() {
       ${nb ? `<div class="teaser"><span class="tz-kort" aria-hidden="true"><img src="${esc(DATA.bakside || 'cards/bakside.webp')}" alt=""><b>?</b></span>
         <span class="tz-t"><b>${APNE.size ? 'Enda en bonus venter' : 'Det venter en bonus'}</b>
         <small>${nb.mangler === 1 ? 'Én registrering igjen' : `${nb.mangler} registreringer igjen`}. Hver gang du registrerer en fugl, kommer du nærmere.</small>
-        <i class="mbar" role="img" aria-label="${nb.r - nb.fra} av ${BONUS_STEG}"><i style="width:${((nb.r - nb.fra) / BONUS_STEG * 100).toFixed(1)}%"></i></i></span></div>` : ''}
+        <i class="mbar" role="img" aria-label="${Math.max(0, nb.r - nb.fra)} av ${nb.grense - nb.fra}"><i style="width:${(Math.max(0, Math.min(1, (nb.r - nb.fra) / (nb.grense - nb.fra))) * 100).toFixed(1)}%"></i></i></span></div>` : ''}
       ${APNE.size ? `<p class="cap">Bonuskortene er stokket inn blant kortene med like mange stjerner. De får glinskant som fuglene, men teller ikke med i fuglelista, poengene eller merkene.</p>` : ''}
     </div>` : ''}
 
