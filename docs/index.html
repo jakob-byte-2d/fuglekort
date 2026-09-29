@@ -23,7 +23,7 @@
 :root{
   --bg:#e1e8e0; --bg-hi:#f3f6f0; --ink:#15251e; --muted:#586a61; --line:#c6d2c8;
   --surface:#f7f9f4; --surface-2:#e9efe8; --spruce:#0f4a36; --spruce-ink:#0f4a36; --on-spruce:#f3f8f2;
-  --gold:#eea914; --gold-ink:#8a5a00; --track:#cfdacf; --shadow:22,44,33; --scrim:rgba(12,26,20,.36);
+  --gold:#eea914; --gold-ink:#8a5a00; --track:#cfdacf; --shadow:22,44,33; --scrim:rgba(12,26,20,.36); --rec:#d6452f; --ok:#2f9a5f; --warn-bg:#fdf1d6; --warn-ink:#6b4700;
   --card-cream:#fdfcf3; --card-ink:#14231d; --card-teal:#d5eeee; --card-gold:#f4b41a; --card-green:#0f4a36; --pen:#1c3aa0;
   --font:"Familjen Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --hand:"Caveat", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
@@ -33,14 +33,14 @@
   :root:not([data-theme="light"]){
     --bg:#0c1712; --bg-hi:#18291f; --ink:#e3ebe5; --muted:#8fa298; --line:#26392f;
     --surface:#122019; --surface-2:#1a2b22; --spruce:#1d6a4d; --spruce-ink:#8bd0aa; --on-spruce:#f3f8f2;
-    --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56);
+    --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0c1712; --bg-hi:#18291f; --ink:#e3ebe5; --muted:#8fa298; --line:#26392f;
   --surface:#122019; --surface-2:#1a2b22; --spruce:#1d6a4d; --spruce-ink:#8bd0aa; --on-spruce:#f3f8f2;
-  --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56);
+  --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -49,12 +49,13 @@ body{height:100%;margin:0;overflow:hidden;font-family:var(--font);color:var(--in
   background:radial-gradient(ellipse 75% 58% at 50% 46%, var(--bg-hi), var(--bg) 72%) var(--bg);
   -webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
 button,input,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
+button{cursor:pointer;touch-action:manipulation}
 :focus-visible{outline:2px solid var(--spruce-ink);outline-offset:2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* ---------- shell ---------- */
-.app{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding-inline:16px;max-width:1100px;margin:0 auto}
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto;padding-inline:16px;max-width:1100px;margin:0 auto}
+.app>.top{grid-row:1}.app>.tellebar{grid-row:2}.app>.stage{grid-row:3}.app>.bottom{grid-row:4}
 .top{display:flex;align-items:center;gap:8px;padding-block:12px 2px}
 .brand{flex:1;min-width:0}
 .brand h1{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
@@ -112,6 +113,13 @@ button{cursor:pointer}
   color:var(--pen);white-space:nowrap;transform:rotate(-4deg);pointer-events:none}
 .antall.pop{animation:pop .55s cubic-bezier(.3,1.7,.5,1)}
 @keyframes pop{from{transform:rotate(-14deg) scale(.3);opacity:0}to{transform:rotate(-4deg) scale(1);opacity:1}}
+/* counting: the number of this species in the count, as a sticker on the corner of the card */
+.tall{position:absolute;right:-2.6cqw;top:-2.6cqw;min-width:13cqw;height:13cqw;padding:0 2.6cqw;border-radius:99px;display:none;place-items:center;
+  background:var(--card-gold);color:#1b1402;font-weight:800;font-size:6.6cqw;font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+  border:.8cqw solid #fff8e1;box-shadow:0 1cqw 3cqw rgba(20,35,29,.35);transform:rotate(8deg);pointer-events:none}
+.telling .tall.on{display:grid}
+.tall.pop{animation:tallpop .35s cubic-bezier(.3,1.7,.5,1)}
+@keyframes tallpop{from{transform:rotate(8deg) scale(.55)}to{transform:rotate(8deg) scale(1)}}
 
 /* back of the card: the days this bird was seen, on a note over the deck's back */
 .logg{position:absolute;left:6.5%;right:6.5%;top:32%;bottom:5%;display:flex;flex-direction:column;overflow:hidden;
@@ -172,6 +180,36 @@ button{cursor:pointer}
 .scrub i.s{background:var(--gold);height:16px}
 .scrub i.c{background:var(--ink);height:26px}
 .hint{margin:0;font-size:12.5px;color:var(--muted);transition:opacity .4s}
+.telling .hint{display:none}
+
+/* ---------- counting (Hagefugltellingen) ---------- */
+.tellebar{display:flex;align-items:center;gap:8px;margin-top:8px;padding:6px 6px 6px 12px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--line);box-shadow:0 6px 18px -12px rgba(var(--shadow),.5)}
+.tellebar[hidden]{display:none}
+.rec{width:10px;height:10px;border-radius:50%;background:var(--rec);flex-shrink:0;animation:rec 1.6s ease-in-out infinite}
+@keyframes rec{50%{opacity:.35}}
+.tellebar.time .rec{background:var(--ok);animation:none}
+.tb-t{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px;white-space:nowrap;overflow:hidden}
+.tb-t b{font-size:18px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.tb-t span{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+@media (max-width:374px){.tb-t span{display:none}}
+.tb-btn{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:8px 11px;font-size:13.5px;font-weight:600;white-space:nowrap}
+.tb-btn.pri{background:var(--spruce);border-color:var(--spruce);color:var(--on-spruce)}
+.teller{width:100%;max-width:560px;display:flex;align-items:center;gap:12px}
+.teller[hidden]{display:none}
+.tl-n{flex:1;min-width:0;display:grid}
+.tl-n b{font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-n span{font-size:12.5px;color:var(--muted)}
+.step{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.st-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;font-size:24px;font-weight:500;line-height:1;color:var(--ink)}
+.st-btn.plus{background:var(--gold);border-color:var(--gold);color:#1b1402}
+.st-btn:active{transform:scale(.92)}
+.step input{width:58px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg-hi);text-align:center;font-size:22px;font-weight:700;
+  font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield}
+.step input::-webkit-inner-spin-button,.step input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.step input:focus{outline:none;border-color:var(--spruce-ink);box-shadow:0 0 0 3px color-mix(in srgb, var(--spruce-ink) 22%, transparent)}
+.step.sm .st-btn{width:40px;height:40px;font-size:21px}
+.step.sm input{width:50px;height:40px;font-size:18px}
 .hint.gone{opacity:0}
 
 /* ---------- sheets ---------- */
@@ -262,7 +300,42 @@ button{cursor:pointer}
 .btn{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 12px;font-size:13.5px;font-weight:600}
 .btn.pri{background:var(--spruce);border-color:var(--spruce);color:var(--on-spruce)}
 .restore{margin-top:10px;display:grid;gap:8px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
 .restore textarea{width:100%;min-height:90px;border-radius:10px;border:1px solid var(--line);background:var(--bg-hi);padding:10px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
+/* counting sheets: start, list of species, summary */
+.lead{font-size:15px;line-height:1.5;margin:16px 0 0}
+.fakta{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px;line-height:1.4;color:var(--muted)}
+.fakta li{padding-left:18px;position:relative}
+.fakta li::before{content:"";position:absolute;left:3px;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.felt{display:grid;gap:6px;margin-top:20px;font-size:13px;font-weight:600;color:var(--muted)}
+.felt input{height:48px;border-radius:12px;border:1px solid var(--line);background:var(--bg-hi);padding:0 14px;font-size:17px;font-weight:400;color:var(--ink);outline:none}
+.felt input:focus{border-color:var(--spruce-ink);box-shadow:0 0 0 3px color-mix(in srgb, var(--spruce-ink) 22%, transparent)}
+.btn.big{width:100%;margin-top:16px;padding:14px;font-size:16px;border-radius:14px}
+.tsok{margin-top:14px}
+.tsok input{height:44px;font-size:16px}
+.tliste{list-style:none;margin:10px -8px 0;padding:0}
+.tliste li{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:14px}
+.tliste li.har{background:color-mix(in srgb, var(--gold) 13%, transparent)}
+.tl-go{flex:1;min-width:0;display:flex;align-items:center;gap:12px;border:0;background:none;padding:0;text-align:left}
+.tl-go .ph{width:40px;height:40px;border-radius:10px;flex-shrink:0}
+.tl-go .ph.ekorn{display:grid;place-items:center;background:var(--surface-2);color:var(--muted)}
+.tl-go .ph.ekorn svg{width:22px;height:22px}
+.tl-go span:last-child{min-width:0;display:grid}
+.tl-go b{font-weight:600;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-go small{font-size:12px;color:var(--muted)}
+.sum-meta{margin:6px 0 0;font-size:14px;color:var(--muted);line-height:1.45}
+.varsel{margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);color:var(--warn-ink);font-size:14px;line-height:1.45}
+.sum-tall{display:flex;gap:18px;margin-top:18px}
+.sum-tall div{display:grid}
+.sum-tall b{font-size:34px;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.sum-tall span{font-size:13px;color:var(--muted);margin-top:4px}
+.skjema{list-style:none;margin:16px 0 0;padding:0;border-top:1px solid var(--line)}
+.skjema li{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 2px;border-bottom:1px solid var(--line);font-size:16px}
+.skjema li b{font-variant-numeric:tabular-nums;font-size:18px}
+.skjema li small{color:var(--muted);font-size:12.5px;margin-left:6px}
+.tl-hist{margin-top:12px}
+.tl-hist .ph.tdato{display:grid;place-items:center;background:var(--surface-2);font-size:12px;font-weight:700;line-height:1.1;text-align:center;color:var(--ink)}
+.tl-hist .ph.tdato small{display:block;font-size:10px;font-weight:600;color:var(--muted)}
 
 .iconbtn.qmark{font-size:19px;font-weight:700;line-height:1}
 /* innstillinger: valg av bildesett */
@@ -326,6 +399,13 @@ button{cursor:pointer}
     </button>
   </header>
 
+  <div class="tellebar" id="tellebar" role="region" aria-label="Hagefugltelling pågår" hidden>
+    <span class="rec" aria-hidden="true"></span>
+    <div class="tb-t"><b id="tTid" role="timer">0:00</b><span id="tInfo"></span></div>
+    <button class="tb-btn" id="tListe">Telleliste</button>
+    <button class="tb-btn pri" id="tSlutt">Avslutt</button>
+  </div>
+
   <main class="stage" id="stage" tabindex="-1" aria-roledescription="kortstokk" style="outline:none">
     <button class="nav prev ctl" id="prevBtn" aria-label="Forrige kort"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button>
     <div class="float"><div class="deck" id="deck"></div></div>
@@ -337,6 +417,14 @@ button{cursor:pointer}
 
   <footer class="bottom">
     <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="Bla i kortstokken" aria-valuemin="1" aria-valuemax="100" aria-valuenow="1"></div>
+    <div class="teller" id="teller" hidden>
+      <div class="tl-n"><b id="tlNavn"></b><span>flest samtidig</span></div>
+      <div class="step">
+        <button class="st-btn" data-d="-1" aria-label="En færre">−</button>
+        <input id="tlAnt" type="number" inputmode="numeric" min="0" max="9999" enterkeyhint="done" aria-label="Flest samtidig">
+        <button class="st-btn plus" data-d="1" aria-label="En til">+</button>
+      </div>
+    </div>
     <p class="hint" id="hint">Dra til kanten · sveip fort · trykk for å snu kortet</p>
   </footer>
 </div>
@@ -380,6 +468,42 @@ button{cursor:pointer}
     </div>
     <p class="valg-merk">Valget gjelder bare på denne enheten. Avkrysningene dine påvirkes ikke.</p>
   </div>
+</section>
+
+<section class="sheet stats" id="startSheet" role="dialog" aria-modal="true" aria-labelledby="startTitle">
+  <div class="s-head">
+    <h2 id="startTitle">Hagefugltelling</h2>
+    <button class="textbtn" id="closeStart">Lukk</button>
+  </div>
+  <p class="lead">For hver art teller du det høyeste antallet du ser <b>samtidig</b>, ikke alle du ser i løpet av tellingen.</p>
+  <ul class="fakta">
+    <li>Tell gjerne i minst én time. Klokka går øverst mens du teller.</li>
+    <li>Bla til kortet og trykk +, eller åpne telleliste for å finne arten raskt. Du kan også skrive inn tallet.</li>
+    <li>Ekorn står i telleliste, siden det er med i skjemaet.</li>
+    <li>Når du avslutter, får du tallene i samme rekkefølge som skjemaet på Fuglevennen.no, og alle artene du har talt får en observasjonsdag.</li>
+  </ul>
+  <label class="felt">Område (valgfritt)<input id="tOmrade" maxlength="80" autocomplete="off" placeholder="f.eks. Hagen hjemme"></label>
+  <button class="btn pri big" id="tStart">Start telling</button>
+</section>
+
+<section class="sheet stats" id="listeSheet" role="dialog" aria-modal="true" aria-labelledby="listeTitle">
+  <div class="s-head">
+    <h2 id="listeTitle">Telleliste</h2>
+    <button class="textbtn" id="closeListe">Ferdig</button>
+  </div>
+  <div class="qbox tsok">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>
+    <input id="lq" type="search" placeholder="Finn art" autocomplete="off" enterkeyhint="search" aria-label="Finn art i telleliste">
+  </div>
+  <ul class="tliste" id="tliste"></ul>
+</section>
+
+<section class="sheet stats" id="sumSheet" role="dialog" aria-modal="true" aria-labelledby="sumTitle">
+  <div class="s-head">
+    <h2 id="sumTitle">Hagefugltelling</h2>
+    <button class="textbtn" id="closeSum">Lukk</button>
+  </div>
+  <div id="sumBody"></div>
 </section>
 
 <section class="help" id="helpSheet" role="dialog" aria-modal="true" aria-label="Om kortene">
@@ -447,24 +571,88 @@ function entries(raw) {
   Object.keys(raw || {}).forEach(k => { const e = entry(raw[k]); if (e) out[k] = e; });
   return out;
 }
-const Store = {
-  KEY: 'hagefugler-oslo:sett:v1',
-  data: {},             // "parus-major" -> { date: "2026-09-20", dager: ["2026-09-20", "2026-09-29"], ts: 1727… }
-  mode: 'lokal',
-  readOnly: false,
-  db: null,
-  subs: new Set(),
-  queue: {},
-  loadLocal() {
-    let raw = {};
-    try { raw = JSON.parse(lsGet(this.KEY) || '{}') || {}; } catch (e) { raw = {}; }
-    this.data = entries(raw);
-    migrateKeys(this.data);
-    this.saveLocal();
-  },
-  saveLocal() { lsSet(this.KEY, JSON.stringify(this.data)); },
-  emit() { this.subs.forEach(fn => fn()); },
-  on(fn) { this.subs.add(fn); },
+/* A collection kept on this device and, inside Claude, in the artifact's shared database
+   (one document per id). Used for the sightings (`sett`) and the garden bird counts (`tellinger`). */
+let dbP = null;
+const hentDb = () => dbP || (dbP = (async () => {
+  const c = window.claude;
+  if (!c || typeof c.use !== 'function') return null;
+  try { return await c.use('db'); } catch (e) { return null; }
+})());
+function samling({ col, key, norm, toDoc, migrate, hva }) {
+  return {
+    KEY: key, data: {}, mode: 'lokal', readOnly: false, db: null, subs: new Set(), queue: {},
+    loadLocal() {
+      let raw = {};
+      try { raw = JSON.parse(lsGet(this.KEY) || '{}') || {}; } catch (e) { raw = {}; }
+      this.data = norm(raw);
+      if (migrate) migrate(this.data);
+      this.saveLocal();
+    },
+    saveLocal() { lsSet(this.KEY, JSON.stringify(this.data)); },
+    emit() { this.subs.forEach(fn => fn()); },
+    on(fn) { this.subs.add(fn); },
+    async connectRemote() {
+      const db = await hentDb();
+      if (!db) return;
+      this.db = db;
+      let settled = false;
+      db.collection(col).onSnapshot(snap => {
+        const raw = {};
+        snap.docs.forEach(d => { if (d.exists) raw[d.id] = d.data(); });
+        const next = norm(raw);
+        const moved = migrate ? migrate(next) : [];   // old documents named by card number → the species
+        if (!settled && !snap.metadata.fromCache) {
+          settled = true;
+          // First real answer from an empty shared store: lift anything saved on this device before.
+          if (snap.empty) Object.keys(this.data).forEach(id => { next[id] = this.data[id]; this.push(id); });
+        }
+        Object.keys(this.queue).forEach(id => { if (this.queue[id].busy || this.queue[id].again) { if (this.data[id]) next[id] = this.data[id]; else delete next[id]; } });
+        this.data = next;
+        this.mode = 'delt';
+        this.saveLocal();
+        this.emit();
+        moved.forEach(([oldId, key]) => { this.push(key); this.push(oldId); });
+      }, () => { this.mode = 'lokal'; this.emit(); });
+    },
+    replaceAll(obj) { const prev = Object.keys(this.data); this.data = obj; this.saveLocal(); this.emit(); new Set([...prev, ...Object.keys(obj)]).forEach(id => this.push(id)); },
+    push(id) {
+      if (!this.db || this.readOnly) return;
+      const q = this.queue[id] || (this.queue[id] = { busy: false, again: false });
+      if (q.busy) { q.again = true; return; }
+      q.busy = true;
+      const run = async () => {
+        let tries = 0;
+        for (;;) {
+          q.again = false;
+          const v = this.data[id];
+          try {
+            const ref = this.db.doc(col + '/' + id);
+            if (v) await ref.set(toDoc(id, v)); else await ref.delete();
+          } catch (e) {
+            if (e && (e.code === 'invalid_argument' || e.code === 'not_granted' || e.code === 'revoked')) {
+              this.readOnly = true; this.mode = 'lokal'; this.emit();
+              toast(`Denne visningen kan ikke lagre i den delte lista. ${hva} ligger bare på denne enheten.`);
+              break;
+            }
+            if (tries++ < 1) { await new Promise(r => setTimeout(r, 900 + Math.random() * 900)); q.again = true; }
+            else { toast('Fikk ikke lagret akkurat nå. Endringen ligger på denne enheten.'); }
+          }
+          if (!q.again) break;
+        }
+        q.busy = false;
+      };
+      run();
+    }
+  };
+}
+
+const Store = Object.assign(samling({
+  col: 'sett', key: 'hagefugler-oslo:sett:v1', norm: entries, hva: 'Avkrysningen',
+  toDoc: (id, v) => ({ art: id, date: v.date, dager: v.dager, ts: v.ts }),
+  migrate: obj => migrateKeys(obj),
+}), {
+  // data: "parus-major" -> { date: "2026-09-20", dager: ["2026-09-20", "2026-09-29"], ts: 1727… }
   has(id) { return !!this.data[id]; },
   get(id) { return this.data[id]; },
   days(id) { return this.data[id] ? this.data[id].dager : []; },
@@ -476,61 +664,14 @@ const Store = {
   },
   addDay(id, d) { const cur = this.days(id); if (cur.includes(d)) return false; this.put(id, [...cur, d]); return true; },
   removeDay(id, d) { this.put(id, this.days(id).filter(x => x !== d)); },
-  async connectRemote() {
-    const c = window.claude;
-    if (!c || typeof c.use !== 'function') return;
-    let db = null;
-    try { db = await c.use('db'); } catch (e) { db = null; }
-    if (!db) return;
-    this.db = db;
-    let settled = false;
-    db.collection('sett').onSnapshot(snap => {
-      const next = {};
-      snap.docs.forEach(d => { if (d.exists) { const e = entry(d.data()); if (e) next[d.id] = e; } });
-      const moved = migrateKeys(next);          // old documents named by card number → the species
-      if (!settled && !snap.metadata.fromCache) {
-        settled = true;
-        // First real answer from an empty shared store: lift any sightings made on this device before.
-        if (snap.empty) Object.keys(this.data).forEach(id => { next[id] = this.data[id]; this.push(id); });
-      }
-      Object.keys(this.queue).forEach(id => { if (this.queue[id].busy || this.queue[id].again) { if (this.data[id]) next[id] = this.data[id]; else delete next[id]; } });
-      this.data = next;
-      this.mode = 'delt';
-      this.saveLocal();
-      this.emit();
-      moved.forEach(([oldId, key]) => { this.push(key); this.push(oldId); });
-    }, () => { this.mode = 'lokal'; this.emit(); });
+  /* one day for several species at once (the end of a count); returns the ones that got a new day */
+  addDayMany(ids, d) {
+    const nye = ids.filter(id => !this.days(id).includes(d));
+    nye.forEach(id => { this.data[id] = { ...entry({ dager: [...this.days(id), d] }), ts: Date.now() }; });
+    if (nye.length) { this.saveLocal(); this.emit(); nye.forEach(id => this.push(id)); }
+    return nye;
   },
-  replaceAll(obj) { const prev = Object.keys(this.data); this.data = obj; this.saveLocal(); this.emit(); new Set([...prev, ...Object.keys(obj)]).forEach(id => this.push(id)); },
-  push(id) {
-    if (!this.db || this.readOnly) return;
-    const q = this.queue[id] || (this.queue[id] = { busy: false, again: false });
-    if (q.busy) { q.again = true; return; }
-    q.busy = true;
-    const run = async () => {
-      let tries = 0;
-      for (;;) {
-        q.again = false;
-        const v = this.data[id];
-        try {
-          const ref = this.db.doc('sett/' + id);
-          if (v) await ref.set({ art: id, date: v.date, dager: v.dager, ts: v.ts }); else await ref.delete();
-        } catch (e) {
-          if (e && (e.code === 'invalid_argument' || e.code === 'not_granted' || e.code === 'revoked')) {
-            this.readOnly = true; this.mode = 'lokal'; this.emit();
-            toast('Denne visningen kan ikke lagre i den delte lista. Avkrysningen ligger bare på denne enheten.');
-            break;
-          }
-          if (tries++ < 1) { await new Promise(r => setTimeout(r, 900 + Math.random() * 900)); q.again = true; }
-          else { toast('Fikk ikke lagret akkurat nå. Endringen ligger på denne enheten.'); }
-        }
-        if (!q.again) break;
-      }
-      q.busy = false;
-    };
-    run();
-  }
-};
+});
 /* Sightings are keyed by species (c.key, e.g. "parus-major"), so they survive a new card order.
    Older versions keyed them by card number; move those over once, using the old numbering. */
 const BY_KEY = Object.fromEntries(CARDS.map((c, i) => [c.key, i]));
@@ -548,6 +689,47 @@ function migrateKeys(obj) {
 }
 const seenCount = () => Object.keys(Store.data).filter(k => BY_KEY[k] != null).length;
 Store.loadLocal();
+
+/* ================= Hagefugltelling =================
+   A count keeps its start and end time, the area, and the highest number of each species seen at the
+   same time. Counts are stored apart from the sightings; ending one gives each counted bird a day. */
+const EKSTRA = [{ key: 'ekorn', navn: 'Ekorn' }];      // not a bird, but on Fuglevennen's form
+const NAVN = Object.fromEntries([...CARDS.map(c => [c.key, c.navn]), ...EKSTRA.map(e => [e.key, e.navn])]);
+function tellinger(raw) {
+  const out = {};
+  Object.keys(raw || {}).forEach(id => {
+    const v = raw[id];
+    if (!v || !/^t\d+$/.test(id) || !Number.isFinite(v.start)) return;
+    const arter = {};
+    Object.keys(v.arter || {}).forEach(k => { const n = Math.floor(+v.arter[k]); if (NAVN[k] && n > 0) arter[k] = Math.min(n, 9999); });
+    out[id] = { start: v.start, slutt: Number.isFinite(v.slutt) && v.slutt > 0 ? v.slutt : 0, omrade: String(v.omrade || '').slice(0, 80), arter, ts: v.ts || 0 };
+  });
+  return out;
+}
+const Tell = Object.assign(samling({
+  col: 'tellinger', key: 'hagefugler:tellinger:v1', norm: tellinger, hva: 'Tellingen',
+  toDoc: (id, v) => ({ start: v.start, slutt: v.slutt, omrade: v.omrade, arter: v.arter, ts: v.ts }),
+}), {
+  // data: "t1790700000000" -> { start, slutt (0 while counting), omrade, arter: { "parus-major": 4, "ekorn": 1 }, ts }
+  aktivId() { return Object.keys(this.data).filter(id => !this.data[id].slutt).sort((a, b) => this.data[b].start - this.data[a].start)[0] || null; },
+  aktiv() { const id = this.aktivId(); return id ? this.data[id] : null; },
+  ferdige() { return Object.keys(this.data).filter(id => this.data[id].slutt).sort((a, b) => this.data[b].start - this.data[a].start); },
+  lagre(id) { this.data[id].ts = Date.now(); this.saveLocal(); this.emit(); this.push(id); },
+  start(omrade) { const t = Date.now(), id = 't' + t; this.data[id] = { start: t, slutt: 0, omrade, arter: {}, ts: t }; this.lagre(id); return id; },
+  antall(key) { const a = this.aktiv(); return a ? a.arter[key] || 0 : 0; },
+  settAntall(key, n) {
+    const id = this.aktivId(); if (!id) return;
+    const a = this.data[id];
+    n = Math.max(0, Math.min(9999, Math.floor(+n) || 0));
+    if ((a.arter[key] || 0) === n) return;
+    if (n) a.arter[key] = n; else delete a.arter[key];
+    this.lagre(id);
+  },
+  avslutt() { const id = this.aktivId(); if (!id) return null; this.data[id].slutt = Date.now(); this.lagre(id); return id; },
+  slett(id) { const v = this.data[id]; delete this.data[id]; this.saveLocal(); this.emit(); this.push(id); return v; },
+  gjenopprett(id, v) { this.data[id] = v; this.lagre(id); },
+});
+Tell.loadLocal();
 
 /* ================= Search index ================= */
 function norm(s) {
@@ -587,6 +769,7 @@ function makeCard(i) {
       <img src="${esc(bildeAv(c))}" alt="${esc(altTekst(c))}" draggable="false" decoding="async">
       <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
       <button class="ctl sett-hit" data-act="toggle" aria-pressed="false" aria-label="Sett ${esc(c.navn)}" style="left:${P(bx - 0.025)};top:${P(by - 0.012)};width:${P(bw + 0.22)};height:${P(bh + 0.024)}"></button>
+      <span class="tall" aria-hidden="true"></span>
       <span class="antall" aria-hidden="true" style="left:${P(bx + bw + 0.14)};top:${P(by - 0.006)};height:${P(bh + 0.012)}"></span>
       <label class="ctl dato" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}">
         <span class="hand" style="left:${P((lx - dLeft + 0.012) / dW)}"></span>
@@ -623,6 +806,9 @@ function paintCard(el) {
   if (before != null && dager.length > before && dager.length > 1) { ant.classList.remove('pop'); void ant.offsetWidth; ant.classList.add('pop'); }
   const inp = el.querySelector('[data-act="date"]');
   inp.value = s ? s.date : ''; inp.max = t;
+  const tall = el.querySelector('.tall'), n = Tell.antall(c.key), f = +tall.dataset.n || 0;
+  tall.dataset.n = n; tall.textContent = n || ''; tall.classList.toggle('on', n > 0);
+  if (n > f && f > 0) { tall.classList.remove('pop'); void tall.offsetWidth; tall.classList.add('pop'); }
   paintLogg(el, c, dager);
 }
 
@@ -970,6 +1156,8 @@ document.addEventListener('keydown', e => {
   else if (e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) { e.preventDefault(); openSearch(); }
   else if (e.key === '?') { e.preventDefault(); openHelp(); }
   else if (e.key.toLowerCase() === 's' && !e.metaKey && !e.ctrlKey) { trykkSett(CARDS[cur]); }
+  else if (Tell.aktiv() && (e.key === '+' || e.key === '=')) { e.preventDefault(); endreAntall(CARDS[cur].key, 1); }
+  else if (Tell.aktiv() && (e.key === '-' || e.key === '_')) { e.preventDefault(); endreAntall(CARDS[cur].key, -1); }
 });
 $('#prevBtn').addEventListener('click', () => { stopRiffle(); go(-1); });
 $('#nextBtn').addEventListener('click', () => { stopRiffle(); go(1); });
@@ -1003,6 +1191,7 @@ function paintChrome() {
   $('#ringArc').setAttribute('stroke-dasharray', `${(n / N * C).toFixed(2)} ${C.toFixed(2)}`);
   $('#openStats').setAttribute('aria-label', `Statistikk: ${n} av ${N} sett`);
   ticks.forEach((t, i) => { t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
+  paintTeller();
   scrub.setAttribute('aria-valuenow', cur + 1);
   scrub.setAttribute('aria-valuetext', `Kort ${cur + 1}: ${c.navn}`);
 }
@@ -1172,6 +1361,7 @@ function renderStats() {
   const recent = ids.map(id => ({ id, d: last(id), ant: Store.data[id].dager.length, ts: Store.data[id].ts }))
     .sort((a, b) => (b.d > a.d ? 1 : b.d < a.d ? -1 : b.ts - a.ts)).slice(0, 6);
   const cardOf = key => BY_KEY[key];
+  const aktivT = Tell.aktiv(), ferdigeT = Tell.ferdige();
   const obsDager = new Set(ids.flatMap(id => Store.data[id].dager)).size;
   const regs = ids.reduce((a, id) => a + Store.data[id].dager.length, 0);
   const most = ids.map(id => ({ c: CARDS[BY_KEY[id]], ant: Store.data[id].dager.length })).sort((a, b) => b.ant - a.ant || a.c.nr - b.c.nr)[0];
@@ -1184,6 +1374,12 @@ function renderStats() {
       <div class="kpi"><b>${rarest ? esc(rarest.navn) : '–'}</b><span>${rarest ? `Sjeldneste funn, ${rarest.stjerner} ${rarest.stjerner === 1 ? 'stjerne' : 'stjerner'}` : 'Sjeldneste funn vises her'}</span></div>
       <div class="kpi"><b>${obsDager}</b><span>${obsDager === 1 ? 'Observasjonsdag' : 'Observasjonsdager'}, med ${regs} ${regs === 1 ? 'registrering' : 'registreringer'} i alt</span></div>
       <div class="kpi"><b>${most && most.ant > 1 ? esc(most.c.navn) : '–'}</b><span>${most && most.ant > 1 ? `Sett flest dager, ${most.ant} i alt` : 'Fuglen du har sett flest dager, vises her'}</span></div>
+    </div>
+
+    <div class="s-sec"><h3>Hagefugltelling</h3>
+      <p class="cap" style="margin:0 0 12px">Tell det høyeste antallet av hver art du ser samtidig, og send tallene til Hagefugltellingen på Fuglevennen.no.</p>
+      <button class="btn pri" id="${aktivT ? 'goTell' : 'openStart'}">${aktivT ? 'Tilbake til tellingen' : 'Start telling'}</button>
+      ${ferdigeT.length ? `<ul class="recent tl-hist">${ferdigeT.map(id => { const v = Tell.data[id], x = sumAv(v), d = new Date(v.start); return `<li><button data-tid="${id}"><span class="ph tdato" aria-hidden="true"><span>${d.getDate()}.<small>${MND[d.getMonth()]}</small></span></span><span><b style="font-weight:600">${esc(stor(datoLang(v.start)))}</b><br><span style="font-size:12.5px;color:var(--muted)">${flertall(x.arter, 'art', 'arter')} · ${flertall(x.ind, 'individ', 'individer')} · ${varighet(v.slutt - v.start)}${v.omrade ? ` · ${esc(v.omrade)}` : ''}</span></span><span></span></button></li>`; }).join('')}</ul>` : ''}
     </div>
 
     <div class="s-sec"><h3>Etter sjeldenhet</h3><div class="rar">
@@ -1208,7 +1404,7 @@ function renderStats() {
     </div></div>
 
     <div class="s-sec"><h3>Lagring</h3>
-      <p class="store ${Store.mode === 'delt' ? 'sky' : ''}"><i></i>${Store.mode === 'delt' ? 'Avkrysningene lagres sammen med kortstokken og følger deg på alle enheter.' : 'Avkrysningene lagres på denne enheten.'}</p>
+      <p class="store ${Store.mode === 'delt' ? 'sky' : ''}"><i></i>${Store.mode === 'delt' ? 'Avkrysningene og tellingene lagres sammen med kortstokken og følger deg på alle enheter.' : 'Avkrysningene og tellingene lagres på denne enheten.'}</p>
       <div class="row"><button class="btn" id="copyBackup">Kopier sikkerhetskopi</button><button class="btn" id="showRestore">Gjenopprett</button></div>
       <div class="restore" id="restoreBox" hidden>
         <label for="restoreTxt" style="font-size:13px;color:var(--muted)">Lim inn en sikkerhetskopi. Avkrysningene i den legges til de du har.</label>
@@ -1222,10 +1418,14 @@ function renderStats() {
   mEl.querySelectorAll('.mcol').forEach(b => { b.addEventListener('pointerenter', () => showTip(b)); b.addEventListener('focus', () => showTip(b)); b.addEventListener('click', () => showTip(b)); b.addEventListener('pointerleave', () => tip.classList.remove('on')); b.addEventListener('blur', () => tip.classList.remove('on')); });
 }
 sb.addEventListener('click', async e => {
+  const tl = e.target.closest('[data-tid]');
+  if (tl) { openSum(tl.dataset.tid); return; }
   const j = e.target.closest('[data-i]');
   if (j) { closeSheets(true); jump(+j.dataset.i); return; }
+  if (e.target.id === 'openStart') { openStart(); return; }
+  if (e.target.id === 'goTell') { closeSheets(); return; }
   if (e.target.id === 'copyBackup') {
-    const txt = JSON.stringify({ kortstokk: 'hagefugler', versjon: 3, sett: Store.data });
+    const txt = JSON.stringify({ kortstokk: 'hagefugler', versjon: 4, sett: Store.data, tellinger: Tell.data });
     try { await navigator.clipboard.writeText(txt); toast('Sikkerhetskopien er kopiert. Lim den inn i et notat eller en e-post til deg selv.'); }
     catch (err) { $('#restoreBox').hidden = false; const t = $('#restoreTxt'); t.value = txt; t.select(); toast('Kopier teksten i feltet manuelt.'); }
   }
@@ -1246,10 +1446,192 @@ sb.addEventListener('click', async e => {
         merged[id] = { ...entry({ dager: [...had, ...nye] }), ts: Date.now() };
       });
       if (dager) Store.replaceAll(merged);
-      toast(dager ? `La til ${dager} ${dager === 1 ? 'dag' : 'dager'}${arter ? `, ${arter} ${arter === 1 ? 'ny art' : 'nye arter'}` : ''}.` : 'Ingen nye dager i sikkerhetskopien.');
+      // finished counts that are not here yet
+      const tsrc = tellinger(obj.tellinger || {}), tm = { ...Tell.data };
+      let telt = 0;
+      Object.keys(tsrc).forEach(id => { if (tsrc[id].slutt && !tm[id]) { tm[id] = tsrc[id]; telt++; } });
+      if (telt) Tell.replaceAll(tm);
+      const deler = [];
+      if (dager) deler.push(flertall(dager, 'dag', 'dager') + (arter ? ` (${flertall(arter, 'ny art', 'nye arter')})` : ''));
+      if (telt) deler.push(flertall(telt, 'telling', 'tellinger'));
+      toast(deler.length ? `La til ${deler.join(' og ')}.` : 'Ingen nye dager eller tellinger i sikkerhetskopien.');
     } catch (err) { toast('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
   }
 });
+
+/* ---- Hagefugltelling: start, counter, list of species, summary ---- */
+const tellebar = $('#tellebar'), teller = $('#teller'), tlAnt = $('#tlAnt');
+const startSheet = $('#startSheet'), listeSheet = $('#listeSheet'), sumSheet = $('#sumSheet');
+let kol; try { kol = new Intl.Collator('nb'); } catch (e) { kol = { compare: (a, b) => a.localeCompare(b) }; }
+const pad2 = n => String(n).padStart(2, '0');
+const isoAv = ms => { const d = new Date(ms); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
+const klokke = ms => { const d = new Date(ms); return `${pad2(d.getHours())}.${pad2(d.getMinutes())}`; };
+const varighet = ms => { const m = Math.max(0, Math.round(ms / 60000)); return m < 60 ? `${m} min` : `${Math.floor(m / 60)} t${m % 60 ? ` ${m % 60} min` : ''}`; };
+const tidTekst = ms => { const t = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60); return h ? `${h}:${pad2(m)}:${pad2(t % 60)}` : `${m}:${pad2(t % 60)}`; };
+const datoLang = ms => { const d = new Date(ms); return `${UKEDAG[d.getDay()]} ${d.getDate()}. ${MND[d.getMonth()]}. ${d.getFullYear()}`; };
+const stor = t => t.charAt(0).toUpperCase() + t.slice(1);
+const flertall = (n, en, flere) => `${n} ${n === 1 ? en : flere}`;
+const EKORN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9.5c0-3 2-5 4-5s4 2 4 5v1H8z"/><path d="M8.5 10.5c0 4.5 1.5 8 3.5 9 2-1 3.5-4.5 3.5-9"/><path d="M12 4.5V3"/></svg>';
+const sumAv = v => { const ks = Object.keys(v.arter); return { arter: ks.length, ind: ks.reduce((a, k) => a + v.arter[k], 0) }; };
+const sorterte = v => Object.keys(v.arter).map(k => ({ k, navn: NAVN[k], n: v.arter[k] })).sort((a, b) => kol.compare(a.navn, b.navn));
+
+let tellTimer = 0, timeVarslet = false;
+function paintTell() {
+  const a = Tell.aktiv();
+  document.body.classList.toggle('telling', !!a);
+  tellebar.hidden = !a; teller.hidden = !a;
+  if (!a) { clearInterval(tellTimer); tellTimer = 0; return; }
+  if (!tellTimer) tellTimer = setInterval(tikk, 1000);
+  tikk();
+  const { arter, ind } = sumAv(a);
+  $('#tInfo').textContent = arter ? flertall(arter, 'art', 'arter') : 'ingen talt';
+  $('#tInfo').title = arter ? `${flertall(arter, 'art', 'arter')}, ${flertall(ind, 'individ', 'individer')}` : '';
+  paintTeller();
+}
+function tikk() {
+  const a = Tell.aktiv(); if (!a) return;
+  const ms = Date.now() - a.start, time = ms >= 3600000;
+  $('#tTid').textContent = tidTekst(ms);
+  tellebar.classList.toggle('time', time);
+  if (time && !timeVarslet) { timeVarslet = true; if (ms < 3600000 + 5000) toast('Én time er gått. Du kan avslutte når du vil.'); }
+}
+/* the counter under the deck belongs to the card on top */
+function paintTeller() {
+  if (!Tell.aktiv()) return;
+  const c = CARDS[cur];
+  $('#tlNavn').textContent = c.navn;
+  if (document.activeElement !== tlAnt) tlAnt.value = Tell.antall(c.key);
+  tlAnt.setAttribute('aria-label', `Flest samtidig av ${c.navn}`);
+}
+function endreAntall(key, d) {
+  Tell.settAntall(key, Tell.antall(key) + d);
+  if (d > 0) haptic(8);
+}
+teller.addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (b) endreAntall(CARDS[cur].key, +b.dataset.d); });
+tlAnt.addEventListener('change', () => Tell.settAntall(CARDS[cur].key, tlAnt.value));
+tlAnt.addEventListener('focus', () => tlAnt.select());
+tlAnt.addEventListener('keydown', e => { if (e.key === 'Enter') tlAnt.blur(); });
+
+function openStart() {
+  if (Tell.aktiv()) { closeSheets(); return; }
+  $('#tOmrade').value = lsGet('hagefugler:omrade') || '';
+  showSheet(startSheet);
+  setTimeout(() => $('#tStart').focus(), 60);
+}
+$('#closeStart').addEventListener('click', () => closeSheets());
+$('#tStart').addEventListener('click', () => {
+  if (Tell.aktiv()) { closeSheets(); return; }
+  const omrade = $('#tOmrade').value.trim().slice(0, 80);
+  lsSet('hagefugler:omrade', omrade);
+  timeVarslet = false;
+  Tell.start(omrade);
+  closeSheets(true);
+  toast('Tellingen er i gang. Bla til arten og trykk +, eller åpne telleliste.');
+});
+
+/* the list: every species with its own counter, the commonest garden birds first, ekorn on top */
+const tlisteEl = $('#tliste'), lq = $('#lq');
+function openListe() { lq.value = ''; renderListe(); showSheet(listeSheet); listeSheet.scrollTop = 0; setTimeout(() => $('#closeListe').focus(), 60); }
+function renderListe() {
+  const q = norm(lq.value.trim()).s;
+  const rader = [...EKSTRA.map(e => ({ key: e.key, navn: e.navn, i: null })), ...CARDS.map((c, i) => ({ key: c.key, navn: c.navn, i }))]
+    .filter(r => !q || norm(r.navn).s.includes(q));
+  if (!rader.length) { tlisteEl.innerHTML = `<li class="empty">Ingen art passer til «${esc(lq.value)}».</li>`; return; }
+  tlisteEl.innerHTML = rader.map(r => {
+    const n = Tell.antall(r.key), fugl = r.i != null;
+    const inn = `${fugl ? `<span class="ph" style="background-position:${spritePos(r.i)}" aria-hidden="true"></span>` : `<span class="ph ekorn" aria-hidden="true">${EKORN_SVG}</span>`}<span><b>${esc(r.navn)}</b><small>${fugl ? esc(RAR[CARDS[r.i].stjerner]) : 'Med i skjemaet'}</small></span>`;
+    return `<li class="${n ? 'har' : ''}" data-k="${r.key}">
+      ${fugl ? `<button class="tl-go" data-go="${r.i}" aria-label="Vis kortet for ${esc(r.navn)}">${inn}</button>` : `<div class="tl-go">${inn}</div>`}
+      <div class="step sm"><button class="st-btn" data-d="-1" aria-label="En færre ${esc(r.navn)}">−</button><input type="number" inputmode="numeric" min="0" max="9999" enterkeyhint="done" value="${n}" aria-label="Flest samtidig av ${esc(r.navn)}"><button class="st-btn plus" data-d="1" aria-label="En til ${esc(r.navn)}">+</button></div>
+    </li>`;
+  }).join('');
+}
+function oppdaterListe() {
+  tlisteEl.querySelectorAll('li[data-k]').forEach(li => {
+    const n = Tell.antall(li.dataset.k), inp = li.querySelector('input');
+    li.classList.toggle('har', n > 0);
+    if (document.activeElement !== inp) inp.value = n;
+  });
+}
+tlisteEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-d]');
+  if (b) { endreAntall(b.closest('li').dataset.k, +b.dataset.d); return; }
+  const g = e.target.closest('[data-go]');
+  if (g) { closeSheets(true); jump(+g.dataset.go); }
+});
+tlisteEl.addEventListener('change', e => { const inp = e.target.closest('input'); if (inp) Tell.settAntall(inp.closest('li').dataset.k, inp.value); });
+tlisteEl.addEventListener('focusin', e => { if (e.target.matches('input')) e.target.select(); });
+tlisteEl.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) e.target.blur(); });
+lq.addEventListener('input', renderListe);
+$('#closeListe').addEventListener('click', () => closeSheets());
+$('#tListe').addEventListener('click', openListe);
+
+/* the summary: species in the same (alphabetical) order as the form on Fuglevennen.no */
+let sumId = null;
+function openSum(id) { if (!id || !Tell.data[id]) return; sumId = id; renderSum(); showSheet(sumSheet); sumSheet.scrollTop = 0; setTimeout(() => $('#closeSum').focus(), 60); }
+function renderSum() {
+  const v = Tell.data[sumId];
+  if (!v) { if (openSheet === sumSheet) closeSheets(); return; }
+  const aktiv = !v.slutt, slutt = v.slutt || Date.now(), ms = slutt - v.start;
+  const { arter, ind } = sumAv(v), rader = sorterte(v);
+  $('#sumTitle').textContent = aktiv ? 'Avslutte tellingen?' : 'Hagefugltelling';
+  $('#sumBody').innerHTML = `
+    <p class="sum-meta">${stor(datoLang(v.start))}, kl. ${klokke(v.start)}–${aktiv ? 'nå' : klokke(slutt)} (${varighet(ms)})${v.omrade ? `<br>Område: ${esc(v.omrade)}` : ''}</p>
+    ${aktiv && ms < 3600000 ? `<p class="varsel">Tellingen har vart i ${varighet(ms)}. Fuglevennen anbefaler å telle i minst én time.</p>` : ''}
+    <div class="sum-tall"><div><b>${arter}</b><span>${arter === 1 ? 'art' : 'arter'}</span></div><div><b>${ind}</b><span>${ind === 1 ? 'individ' : 'individer'}</span></div></div>
+    ${rader.length ? `<ul class="skjema">${rader.map(r => `<li><span>${esc(r.navn)}</span><b>${r.n}</b></li>`).join('')}</ul>
+      <p class="cap">Samme rekkefølge som skjemaet på Fuglevennen.no, så du kan skrive av rett nedover. Arter som ikke står i skjemaet, legger du til under lista der.</p>`
+      : `<p class="cap">Ingen arter er talt ennå.</p>`}
+    <div class="row">
+      ${aktiv ? `<button class="btn" id="sumFortsett">Fortsett tellingen</button>${rader.length ? `<button class="btn pri" id="sumAvslutt">Avslutt og lagre</button>` : `<button class="btn" id="sumAvbryt">Avbryt tellingen</button>`}` : ''}
+      ${rader.length ? `<button class="btn" id="sumKopier">Kopier som tekst</button>${navigator.share ? `<button class="btn" id="sumDel">Del</button>` : ''}` : ''}
+      ${aktiv ? '' : `<a class="btn" href="https://www.fuglevennen.no/" target="_blank" rel="noopener">Åpne Fuglevennen.no</a><button class="btn" id="sumSlett">Slett tellingen</button>`}
+    </div>
+    <div class="restore" id="sumTekstBoks" hidden><textarea id="sumTekst" readonly></textarea></div>`;
+}
+function somTekst(v) {
+  const slutt = v.slutt || Date.now(), { arter, ind } = sumAv(v);
+  return [`Hagefugltelling ${datoLang(v.start)}, kl. ${klokke(v.start)}–${klokke(slutt)} (${varighet(slutt - v.start)})`,
+    ...(v.omrade ? [`Område: ${v.omrade}`] : []), '',
+    ...sorterte(v).map(r => `${r.navn}: ${r.n}`), '',
+    `${flertall(arter, 'art', 'arter')}, ${flertall(ind, 'individ', 'individer')}`].join('\n');
+}
+async function kopierTekst(txt) {
+  try { await navigator.clipboard.writeText(txt); return true; } catch (e) {}
+  try {
+    const t = document.createElement('textarea'); t.value = txt; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;opacity:0;top:0';
+    document.body.appendChild(t); t.select(); const ok = document.execCommand('copy'); t.remove(); return ok;
+  } catch (e) { return false; }
+}
+function avsluttTelling() {
+  const id = Tell.avslutt(); if (!id) return;
+  const v = Tell.data[id], dag = isoAv(v.start);
+  const nye = Store.addDayMany(Object.keys(v.arter).filter(k => BY_KEY[k] != null), dag);
+  renderSum();
+  toast(`Tellingen er lagret.${nye.length ? ` ${flertall(nye.length, 'art', 'arter')} fikk en observasjonsdag.` : ''}`, 'Angre', () => {
+    if (!Tell.data[id]) return;
+    Tell.data[id].slutt = 0; Tell.lagre(id);
+    nye.forEach(k => Store.removeDay(k, dag));
+    if (openSheet === sumSheet) closeSheets();
+  });
+}
+sumSheet.addEventListener('click', async e => {
+  const id = e.target.id, v = Tell.data[sumId];
+  if (id === 'closeSum' || id === 'sumFortsett') closeSheets();
+  else if (id === 'sumAvslutt') avsluttTelling();
+  else if (id === 'sumAvbryt' || id === 'sumSlett') {
+    const tid = sumId, gml = Tell.slett(tid);
+    closeSheets(true);
+    toast(id === 'sumAvbryt' ? 'Tellingen er avbrutt.' : 'Tellingen er slettet.', 'Angre', () => Tell.gjenopprett(tid, gml));
+  }
+  else if (id === 'sumKopier' && v) {
+    const txt = somTekst(v);
+    if (await kopierTekst(txt)) toast('Tellingen er kopiert. Lim den inn i et notat, eller ha den oppe når du fyller ut skjemaet.');
+    else { $('#sumTekstBoks').hidden = false; const t = $('#sumTekst'); t.value = txt; t.style.minHeight = '220px'; t.focus(); t.select(); toast('Kopier teksten i feltet manuelt.'); }
+  }
+  else if (id === 'sumDel' && v) { try { await navigator.share({ title: 'Hagefugltelling', text: somTekst(v) }); } catch (err) {} }
+});
+$('#tSlutt').addEventListener('click', () => openSum(Tell.aktivId()));
 
 /* ---- toast ---- */
 let toastT = 0;
@@ -1270,6 +1652,14 @@ Store.on(() => {
   if (openSheet && openSheet.id === 'searchSheet') renderSearch();
 });
 
+Tell.on(() => {
+  pool.forEach(paintCard);
+  paintTell();
+  if (openSheet === listeSheet) oppdaterListe();
+  if (openSheet === sumSheet) renderSum();
+  if (openSheet && openSheet.id === 'statsSheet') renderStats();
+});
+
 let rz = 0;
 addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => sync({ instant: true })); });
 
@@ -1279,7 +1669,9 @@ function warm() { [5, 6, 7, -3, -4].forEach(d => { const img = new Image(); img.
 sync();
 announce();
 setTimeout(warm, 600);
+paintTell();
 Store.connectRemote();
+Tell.connectRemote();
 })();
 </script>
 

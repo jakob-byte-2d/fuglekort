@@ -1,6 +1,6 @@
 # Hagefugler
 
-Kortstokk med 100 fuglekort fra Oslo. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl og se statistikk. Knappen **?** viser de to forklaringskortene.
+Kortstokk med 100 fuglekort fra Oslo. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen og se statistikk. Knappen **?** viser de to forklaringskortene.
 
 Kortene lages i repoet **Fuglekort-** (Fuglekort-fabrikken). Dette repoet er appen som viser dem.
 
@@ -62,13 +62,24 @@ fotografi til `docs/cards-foto/`; de andre er like KI-kortene og gjenbrukes. I `
 `bildeFoto`, `fotograf` og `lisens`, og `hjelpFoto` er forklaringskortene med Bildekreditering. Begge settene
 lagres på telefonen, så man kan bytte også uten nett. Finnes ikke fotosettet, skjules tannhjulet.
 
+## Hagefugltelling
+
+Under statistikken (ringen øverst til høyre) finnes **Start telling**. Skriv gjerne inn området, og trykk Start.
+
+- **Mens du teller** går klokka i en linje under toppen. Under kortstokken står telleren for kortet du ser på: − og + (eller skriv inn tallet) for det høyeste antallet du har sett **samtidig**. Kort med antall får et gult merke i hjørnet. På tastatur: + og −.
+- **Telleliste** viser alle artene med hver sin teller, de vanligste hagefuglene først og **Ekorn** øverst (det står i skjemaet på Fuglevennen.no). Du kan søke etter en art. Trykker du på navnet, kommer du til kortet.
+- **Avslutt** viser tallene i alfabetisk rekkefølge, som skjemaet på Fuglevennen.no. Har tellingen vart under én time, står det en påminnelse om at Fuglevennen anbefaler minst én time. Du kan fortsette eller avslutte og lagre. Da får alle fuglene i tellingen en observasjonsdag (datoen tellingen startet). Du angrer i meldingen nederst.
+- **Tidligere tellinger** ligger under Hagefugltelling i statistikken. Der kan du kopiere tallene som tekst, dele dem, åpne Fuglevennen.no eller slette tellingen.
+- Tellingen lagres fortløpende, så den fortsetter der du slapp hvis appen lukkes.
+
 ## Lagring av observasjoner
 
 All lagring går gjennom objektet `Store` øverst i skriptet i `src/app.html`:
 
 - **Som Claude-artifact** lagres observasjonene i artifactens database (samlingen `sett`, ett dokument per art, f.eks. `sett/parus-major = { art, date, dager, ts }`), så de følger med på alle enheter der du er logget inn. `dager` er alle dagene fuglen er sett, eldste først, og `date` er den første av dem (feltet er beholdt så eldre versjoner av appen fortsatt kan lese lista).
+- Tellingene ligger i samlingen `tellinger`, ett dokument per telling, f.eks. `tellinger/t1790700000000 = { start, slutt, omrade, arter: { "parus-major": 4, "ekorn": 1 }, ts }`. `start` og `slutt` er tidspunkter i millisekunder, og `slutt` er 0 mens tellingen pågår. I den frittstående appen ligger de i `localStorage` under `hagefugler:tellinger:v1`.
 - Avkrysninger fra før observasjonsdagene kom (bare `date`) blir automatisk fuglens første observasjonsdag.
-- **Som frittstående app** lagres de i nettleserens `localStorage` på enheten. Under «Lagring» i statistikkmenyen finnes «Kopier sikkerhetskopi» og «Gjenopprett», så du kan flytte listen mellom enheter. Gjenoppretting legger dagene i kopien til dem du har, og tar også imot eldre kopier med én dato per fugl.
+- **Som frittstående app** lagres de i nettleserens `localStorage` på enheten. Under «Lagring» i statistikkmenyen finnes «Kopier sikkerhetskopi» og «Gjenopprett», så du kan flytte listen mellom enheter. Gjenoppretting legger dagene i kopien til dem du har, og tar også imot eldre kopier med én dato per fugl. Sikkerhetskopien har også med de avsluttede tellingene.
 
 Vil du ha synkronisering i den frittstående appen, bytter du ut `connectRemote()` og `push()` i `Store` med kall mot din egen backend, for eksempel Firebase eller Supabase. Resten av appen trenger ingen endringer.
 
