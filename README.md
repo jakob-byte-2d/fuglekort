@@ -68,22 +68,28 @@ lagres på telefonen, så man kan bytte også uten nett. Finnes ikke fotosettet,
 Under statistikken (ringen øverst til høyre) finnes **Start telling**. Skriv gjerne inn området, og trykk Start.
 
 - **Mens du teller** går klokka i en linje under toppen. Under kortstokken står telleren for kortet du ser på: − og + (eller skriv inn tallet) for det høyeste antallet du har sett **samtidig**. Kort med antall får et gult merke i hjørnet. På tastatur: + og −.
-- **Telleliste** viser alle artene med hver sin teller: **Ekorn** øverst (det står i skjemaet på Fuglevennen.no, og har nå sitt eget bonuskort), så de vanligste hagefuglene først, og til slutt de andre bonusdyrene. Du kan søke etter en art. Trykker du på navnet, kommer du til kortet. Tellinger fra før bonuskortene, der ekorn ble lagret som `ekorn`, flyttes over på ekornkortet (`sciurus-vulgaris`) når de leses.
+- **Telleliste** viser alle artene med hver sin teller: **Ekorn** øverst (det står i skjemaet på Fuglevennen.no; når ekornkortet er funnet, telles det på kortet), så de vanligste hagefuglene først, og til slutt bonusdyrene du har funnet. Du kan søke etter en art. Trykker du på navnet, kommer du til kortet. Tellinger fra før bonuskortene, der ekorn ble lagret som `ekorn`, flyttes over på ekornkortet (`sciurus-vulgaris`) når de leses.
 - **Avslutt** viser tallene i alfabetisk rekkefølge, som skjemaet på Fuglevennen.no. Har tellingen vart under én time, står det en påminnelse om at Fuglevennen anbefaler minst én time. Du kan fortsette eller avslutte og lagre. Da får alle fuglene i tellingen en observasjonsdag (datoen tellingen startet). Du angrer i meldingen nederst.
 - **Tidligere tellinger** ligger under Hagefugltelling i statistikken. Der kan du kopiere tallene som tekst, dele dem, åpne Fuglevennen.no eller slette tellingen.
 - Tellingen lagres fortløpende, så den fortsetter der du slapp hvis appen lukkes.
 
 ## Bonuskort (andre dyr)
 
-Etter de 100 fuglekortene kommer fem bonuskort med de vanligste ville pattedyrene i hager: b01 ekorn, b02 rådyr,
-b03 hare, b04 elg og b05 rødrev (rangert etter Hagefugltellingen 2024–2026). De lages i Fuglekort- (arket
-Bonuskort) og kommer med i importen fra feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`,
-`id` som `b01` og `lengde` i stedet for `vingespenn`.
+Fem bonuskort med de vanligste ville pattedyrene i hager: b01 ekorn, b02 rådyr, b03 hare, b04 elg og b05 rødrev
+(rangert etter Hagefugltellingen 2024–2026). De lages i Fuglekort- (arket Bonuskort) og kommer med i importen fra
+feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`, `id` som `b01` og `lengde` i stedet for `vingespenn`.
 
-- Man blar til dem etter kort 100 (og videre rundt til 001), søker på dem og registrerer observasjonsdager som for fuglene. De får også glinskant.
-- De teller ikke med i fuglelista: ringen, «av 100 fugler sett», poengene, sjeldenhetsstolpene og merkene gjelder bare fuglene. Statistikken har en egen del, «Bonuskort – andre dyr», og «Sist sett» viser begge.
-- Bonuskortene har KI-illustrasjoner og fotografier som fuglene: KI-kortene i `docs/cards/`, kortene med fotografi i `docs/cards-foto/` (med `bildeFoto`, `fotograf` og `lisens` i `cards.json`). Fotografene og lisensen står på kortet «Bildekreditering bonuskort» (b00), som ligger sist under **?** når man har valgt fotografier.
-- `#b03` i adressen åpner et bonuskort direkte, som `#42` for fuglekortene.
+**De er en belønning og en overraskelse.** Et bonuskort finnes ikke i appen før det er fortjent:
+
+- Ett bonuskort for hver 5. registrering av fugler (5, 10, 15, 20 og 25 registreringer), i rekkefølgen b01, b02 … En registrering er én observasjonsdag for én fugl, også de som kommer fra en hagefugltelling. Bonusdyrene teller ikke.
+- Før det er fortjent, vises det ingen steder: ikke i kortstokken, scrubberen, søket, samlingen, «Sist sett», glinskortene, telleliste (ekorn står der som en vanlig rad, siden det er med i skjemaet) eller under **?**. `#b03` i adressen virker først når kortet er funnet. Kortet «Bildekreditering bonuskort» (b00) kommer under **?** når alle er funnet.
+- Hint uten å si hva: statistikken har delen «Bonus» med et kort med spørsmålstegn og hvor mange registreringer som mangler, og meldingen nederst sier «To registreringer til en bonus!» og «Én registrering til en bonus!».
+- **Når et bonuskort er fortjent**, faller et kort med baksiden opp inn på skjermen og vugger, med et lysende spørsmålstegn. Trykk (eller vent litt), så snur det seg: blader virvler ut, et stempel sier BONUSKORT, og det står hvilke kort det er stokket inn blant. Trykk igjen, så viser kortstokken hvor det havnet, og kortet lyser opp. Avsløringen vises én gang (i Claude lagres det i samlingen `bonusvist`); bonuskort fortjent før denne versjonen avsløres første gang appen åpnes.
+- Kortet stokkes inn blant fuglekortene med like mange stjerner, et sted mellom to av dem. Plassen er fast (regnes ut fra artsnavnet), så den er lik hver gang og på alle enheter. Ekorn (★★) havner blant kortene 018–032, rådyr (★★★) blant 033–048, og hare, elg og rødrev (★★★★) blant 049–068.
+- Et **BONUS-merke** ligger nederst til høyre på kortet, over det trykte kortnummeret. Overskriften viser «Bonuskort» uten nummer, og samlingen viser «Bonus» på kortene som ikke er sett.
+- Angrer du registreringen som ga et bonuskort, eller sletter dager så du kommer under grensen, forsvinner kortet igjen, og det avsløres på nytt når det er fortjent.
+- Bonuskortene får observasjonsdager og glinskant som fuglene, men teller ikke med i fuglelista: ringen, «av 100 fugler sett», poengene, sjeldenhetsstolpene og merkene gjelder bare fuglene.
+- De har KI-illustrasjoner og fotografier som fuglene: KI-kortene i `docs/cards/`, kortene med fotografi i `docs/cards-foto/` (med `bildeFoto`, `fotograf` og `lisens` i `cards.json`). Med fotografier står fotografen og lisensen også nederst på baksiden av kortet.
 
 ## Glinskort og merker
 

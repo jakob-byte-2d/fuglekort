@@ -164,6 +164,73 @@ button{cursor:pointer;touch-action:manipulation}
 .card.glinsny .mk-blits{animation:blits 1.3s ease-out forwards}
 @keyframes blits{0%{background-position:100% 100%;opacity:0}20%{opacity:1}100%{background-position:0% 0%;opacity:0}}
 
+/* ---------- bonuskort ---------- */
+.bonusmerke{position:absolute;right:3.2%;bottom:1.1%;height:4.5%;min-width:19%;padding:0 3cqw;display:grid;place-items:center;border-radius:99px;
+  background:linear-gradient(135deg,#a9461a,#ec8f32 55%,#c25d1d);color:#fff8ec;font-weight:800;font-size:3.5cqw;letter-spacing:.16em;text-transform:uppercase;
+  box-shadow:0 .6cqw 1.8cqw rgba(60,25,5,.4), inset 0 0 0 .3cqw rgba(255,255,255,.35);transform:rotate(-3deg);pointer-events:none;line-height:1}
+.kred{position:absolute;left:8%;right:8%;bottom:1.4%;margin:0;padding:.8cqw 2.4cqw;border-radius:99px;background:rgba(253,252,243,.9);color:#3b4a42;
+  font-size:2.9cqw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.kred[hidden]{display:none}
+.card.nybonus .face.front{animation:nybonus 1.8s ease-out}
+@keyframes nybonus{0%{box-shadow:0 0 0 0 rgba(236,143,50,.9),0 0 0 0 rgba(236,143,50,.5)}40%{box-shadow:0 0 0 2.5cqw rgba(236,143,50,.35),0 0 12cqw 4cqw rgba(236,143,50,.45)}100%{box-shadow:0 0 0 0 rgba(236,143,50,0),0 0 0 0 rgba(236,143,50,0)}}
+.teaser{display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:center;margin-top:12px;padding:12px;border-radius:14px;border:1px dashed var(--line)}
+.tz-kort{position:relative;width:56px;aspect-ratio:750/1050;border-radius:6px;overflow:hidden;box-shadow:0 4px 10px -4px rgba(var(--shadow),.5)}
+.tz-kort img{display:block;width:100%;height:100%;filter:brightness(.55) saturate(.8)}
+.tz-kort b{position:absolute;inset:0;display:grid;place-items:center;color:#ffe3a3;font-size:28px;font-weight:800;text-shadow:0 0 12px rgba(255,190,80,.9)}
+.tz-t{display:grid;gap:4px}
+.tz-t b{font-size:15px}
+.tz-t small{font-size:12.5px;line-height:1.35;color:var(--muted)}
+.tz-t .mbar{width:100%;margin-top:4px}
+
+/* ---------- the reveal when a bonus card is earned ----------
+   Unlike the border celebration: a card falls in face down and rocks, a question mark glows on its back;
+   a tap (or a moment's wait) turns it, leaves burst out and a stamp says BONUSKORT. */
+.bfest{position:fixed;inset:0;z-index:55;display:grid;place-items:center;align-content:center;gap:22px;padding:24px 16px;overflow:hidden;cursor:pointer;
+  background:radial-gradient(ellipse 80% 60% at 50% 42%, rgba(46,78,58,.93), rgba(5,11,8,.96) 72%);opacity:0;visibility:hidden;transition:opacity .35s, visibility 0s .35s}
+.bfest.on{opacity:1;visibility:visible;transition:opacity .35s}
+.bfest[hidden]{display:none}
+.bf-lys{position:absolute;left:50%;top:42%;width:110vmin;height:110vmin;margin:-55vmin 0 0 -55vmin;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle, rgba(255,200,120,.32) 0, rgba(255,200,120,.08) 35%, transparent 62%);opacity:0}
+.bfest.on .bf-lys{animation:bf-puls 2.4s ease-in-out infinite}
+@keyframes bf-puls{0%,100%{opacity:.5;transform:scale(.9)}50%{opacity:1;transform:scale(1.06)}}
+.bf-kort{position:relative;width:min(70vw, 44vh, 340px);aspect-ratio:750/1050;perspective:1600px;container-type:inline-size;transform:translateY(-110vh) rotate(-14deg)}
+.bfest.on .bf-kort{animation:bf-fall .95s cubic-bezier(.2,1.25,.45,1) forwards}
+@keyframes bf-fall{to{transform:none}}
+.bf-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .85s cubic-bezier(.3,.7,.15,1)}
+.bfest.on:not(.snudd) .bf-inner{animation:bf-vugg 1.6s ease-in-out 1s infinite}
+@keyframes bf-vugg{0%,100%{transform:rotate(0)}20%{transform:rotate(-3deg) scale(1.02)}40%{transform:rotate(3deg) scale(1.02)}60%{transform:rotate(-1.5deg)}80%{transform:rotate(1deg)}}
+.bfest.snudd .bf-inner{transform:rotateY(180deg)}
+.bf-side{position:absolute;inset:0;border-radius:5.07cqw;overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden;box-shadow:0 2cqw 8cqw rgba(0,0,0,.55)}
+.bf-side img{display:block;width:100%;height:100%}
+.bf-for{transform:rotateY(180deg)}
+.bfest.on:not(.snudd) .bf-bak{animation:bf-glo 1.6s ease-in-out infinite}
+@keyframes bf-glo{50%{box-shadow:0 0 0 1cqw rgba(255,210,130,.6), 0 0 16cqw 4cqw rgba(255,190,90,.45)}}
+.bf-q{position:absolute;left:50%;top:60%;width:34cqw;height:34cqw;margin:-17cqw;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle, rgba(255,246,220,.97) 0 55%, rgba(255,220,150,.9));color:#a9461a;font-size:24cqw;font-weight:900;line-height:1;
+  box-shadow:0 0 0 1.2cqw rgba(255,255,255,.5), 0 0 10cqw rgba(255,200,110,.9)}
+.bfest.on .bf-q{animation:bf-q 1.6s ease-in-out infinite}
+@keyframes bf-q{50%{transform:scale(1.08)}}
+.bf-ring{position:absolute;left:50%;top:42%;width:40px;height:40px;margin:-20px;border-radius:50%;border:3px solid rgba(255,214,150,.9);opacity:0;pointer-events:none}
+.bfest.snudd .bf-ring{animation:bf-ring 1s ease-out .3s forwards}
+@keyframes bf-ring{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(16)}}
+.bf-blader{position:absolute;left:50%;top:42%;width:0;height:0;pointer-events:none}
+.bf-blad{position:absolute;left:-7px;top:-5px;width:14px;height:9px;border-radius:0 100% 0 100%;background:var(--f);opacity:0}
+.bfest.snudd .bf-blad{animation:bf-blad 1.7s cubic-bezier(.15,.7,.3,1) calc(.3s + var(--d)) forwards}
+@keyframes bf-blad{0%{opacity:1;transform:translate(0,0) rotate(0) scale(.6)}70%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(1.4)}}
+.bf-tekst{position:relative;display:grid;justify-items:center;text-align:center;color:#f3f8f2;min-height:118px;align-content:start}
+.bf-t1,.bf-t2{display:grid;justify-items:center;gap:6px;grid-area:1/1}
+.bf-t1 b{font-size:clamp(22px, 6.4vw, 30px);font-weight:800}
+.bf-t1 small,.bf-t2 small{font-size:12.5px;opacity:.65}
+.bf-t2{visibility:hidden}
+.bfest.snudd .bf-t1{visibility:hidden}
+.bfest.snudd .bf-t2{visibility:visible}
+.bf-stempel{font-size:clamp(26px, 8vw, 38px);font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#ffb35c;padding:2px 16px 4px;
+  border:4px solid currentColor;border-radius:10px;transform:rotate(-6deg);opacity:0;margin-bottom:4px}
+.bfest.snudd .bf-stempel{animation:bf-stempel .5s cubic-bezier(.3,1.6,.5,1) .55s forwards}
+@keyframes bf-stempel{0%{opacity:0;transform:rotate(-6deg) scale(2.4)}60%{opacity:1}100%{opacity:1;transform:rotate(-6deg) scale(1)}}
+.bf-art{font-size:20px;font-weight:700}
+.bf-info{font-size:14px;opacity:.85}
+
 /* ---------- the celebration when a card gets sølv-, gull- or holokant ----------
    The card comes forward over everything, light rays turn behind it, the new border lights up and the
    level is named. Tap to close; it closes by itself after a few seconds. */
@@ -482,6 +549,9 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   .card,.card .inner,.sheet,.scrim,.tick path,.hand{transition-duration:.01s!important}
   .antall.pop{animation:none}
   .fest.on .fest-straaler,.fest.on .fest-kort,.fest.on .fest-tekst,.fest.on .fest-kort .mkant,.fest.on .fest-kort .mk-blits{animation:none;opacity:1;transform:none}
+  .bfest.on .bf-kort,.bfest .bf-inner,.bfest .bf-bak,.bfest .bf-q,.bfest .bf-lys,.bfest.snudd .bf-stempel{animation:none!important;transform:none;opacity:1}
+  .bfest.snudd .bf-inner{transform:rotateY(180deg)}
+  .bf-blader,.bf-ring{display:none}
   .card.is-top[data-niva]:not(.styrt) .mkant,.card.glinsny .mk-blits{animation:none}
 }
 </style>
@@ -628,6 +698,21 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <figure class="fest-kort seen"><img id="festBilde" alt=""><span id="festMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></figure>
   <div class="fest-tekst"><b id="festNavn"></b><span id="festArt"></span><small>Trykk for å fortsette</small></div>
 </div>
+<div class="bfest" id="bfest" role="dialog" aria-modal="true" aria-labelledby="bfTittel" hidden>
+  <div class="bf-lys" aria-hidden="true"></div>
+  <div class="bf-blader" id="bfBlader" aria-hidden="true"></div>
+  <div class="bf-ring" aria-hidden="true"></div>
+  <div class="bf-kort">
+    <div class="bf-inner">
+      <div class="bf-side bf-bak"><img src="cards/bakside.webp" alt=""><b class="bf-q" aria-hidden="true">?</b></div>
+      <div class="bf-side bf-for seen"><img id="bfBilde" alt=""><span id="bfMerker"></span><span class="bonusmerke" aria-hidden="true">Bonus</span></div>
+    </div>
+  </div>
+  <div class="bf-tekst">
+    <div class="bf-t1"><b id="bfTittel">Du har fått en bonus!</b><small>Trykk for å snu kortet</small></div>
+    <div class="bf-t2"><span class="bf-stempel">Bonuskort</span><span class="bf-art" id="bfArt"></span><span class="bf-info" id="bfInfo"></span><small>Trykk for å se kortet i kortstokken</small></div>
+  </div>
+</div>
 <div class="toast" id="toast" role="status"><span id="toastMsg"></span><button id="toastBtn" hidden>Angre</button></div>
 
 <script type="application/json" id="kortdata">__CARDS_JSON__</script>
@@ -643,7 +728,9 @@ const NB = BIRDS.length, NBON = BONUS.length;
 const RAR = DATA.sjeldenhet;
 const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const mod = n => ((n % N) + N) % N;
+/* the cards that are in the deck right now, in order (bonus cards join when they are earned) */
+let DECK = CARDS.map((c, i) => i), POS = Object.fromEntries(DECK.map((i, p) => [i, p])), ND = N;
+const mod = n => ((n % ND) + ND) % ND;
 const pad3 = n => String(n).padStart(3, '0');
 const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.85 6 6.55.78-4.84 4.5 1.3 6.5L12 17.2l-5.86 3.18 1.3-6.5L2.6 9.38l6.55-.78z"/></svg>';
 const stars = n => `<span class="stars" aria-label="${n} av 5 stjerner">${STAR.repeat(n)}</span>`;
@@ -806,8 +893,54 @@ function migrateKeys(obj) {
 }
 const erFugl = k => BY_KEY[k] != null && !CARDS[BY_KEY[k]].bonus;
 const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          // fuglekortene
-const bonusSeen = () => BONUS.filter(c => Store.has(c.key)).length;
 Store.loadLocal();
+
+/* ================= Bonuskort som belønning =================
+   The other animals are a surprise: none of them shows anywhere until it is earned. One bonus card comes for
+   every 5 registrations of birds (5, 10, 15, 20, 25), in the order b01, b02 … It is then shuffled in among
+   the bird cards with the same number of stars, at a place that is the same every time and on every device. */
+const BONUS_STEG = 5;
+const BONUS_REKKE = BONUS.slice().sort((a, b) => (a.id < b.id ? -1 : 1));
+const registreringer = () => Object.keys(Store.data).filter(erFugl).reduce((a, k) => a + Store.data[k].dager.length, 0);
+const apneBonus = () => new Set(BONUS_REKKE.slice(0, Math.min(NBON, Math.floor(registreringer() / BONUS_STEG))).map(c => c.key));
+let APNE = apneBonus();
+const erApen = c => !c.bonus || APNE.has(c.key);
+const erApenK = k => BY_KEY[k] != null && erApen(CARDS[BY_KEY[k]]);
+const bonusSeen = () => BONUS.filter(c => erApen(c) && Store.has(c.key)).length;
+function nesteBonus() {
+  if (APNE.size >= NBON) return null;
+  const r = registreringer(), grense = (APNE.size + 1) * BONUS_STEG;
+  return { mangler: grense - r, grense, fra: APNE.size * BONUS_STEG, r };
+}
+const hashTall = s => { let h = 5381; for (const ch of s) h = (h * 33 + ch.charCodeAt(0)) >>> 0; return h; };
+function byggStokk() {
+  const foran = new Map(), etter = new Map();
+  const legg = (m, i, j) => { if (!m.has(i)) m.set(i, []); m.get(i).push(j); };
+  const fugler = CARDS.map((c, i) => i).filter(i => !CARDS[i].bonus);
+  BONUS_REKKE.filter(c => APNE.has(c.key)).forEach(c => {
+    const j = BY_KEY[c.key];
+    const blokk = fugler.filter(i => CARDS[i].stjerner === c.stjerner);
+    if (!blokk.length) { legg(etter, fugler[fugler.length - 1], j); return; }
+    // somewhere between two cards with the same stars, never first or last in the group
+    const k = blokk.length > 1 ? 1 + hashTall(c.key) % (blokk.length - 1) : 1;
+    if (k < blokk.length) legg(foran, blokk[k], j); else legg(etter, blokk[blokk.length - 1], j);
+  });
+  DECK = [];
+  fugler.forEach(i => { (foran.get(i) || []).forEach(j => DECK.push(j)); DECK.push(i); (etter.get(i) || []).forEach(j => DECK.push(j)); });
+  POS = Object.fromEntries(DECK.map((i, p) => [i, p])); ND = DECK.length;
+}
+byggStokk();
+/* bonus cards whose reveal has been shown; shared like the sightings, so each one is revealed once */
+const Vist = Object.assign(samling({
+  col: 'bonusvist', key: 'hagefugler:bonusvist:v1', hva: 'Bonuskortet',
+  norm: raw => Object.fromEntries(Object.keys(raw || {}).filter(k => BY_KEY[k] != null && CARDS[BY_KEY[k]].bonus).map(k => [k, { ts: +((raw[k] || {}).ts) || 1 }])),
+  toDoc: (id, v) => ({ ts: v.ts }),
+}), {
+  har(k) { return !!this.data[k]; },
+  merk(k) { if (this.data[k]) return; this.data[k] = { ts: Date.now() }; this.saveLocal(); this.push(k); },
+  glem(k) { if (!this.data[k]) return; delete this.data[k]; this.saveLocal(); this.push(k); },
+});
+Vist.loadLocal();
 
 /* ================= Hagefugltelling =================
    A count keeps its start and end time, the area, and the highest number of each species seen at the
@@ -904,7 +1037,7 @@ function opptjent() {
 /* what was reached since `for` (taken just before a change), as text for the message at the bottom */
 function nyheter(for_) {
   const na = opptjent(), ut = [];
-  CARDS.forEach(c => { const n = na.niva[c.key]; if (n > for_.niva[c.key]) { ut.push(`${c.navn} fikk ${kantNavn(n)}!`); feir(c, n); } });
+  CARDS.forEach(c => { const n = na.niva[c.key]; if (erApen(c) && n > for_.niva[c.key]) { ut.push(`${c.navn} fikk ${kantNavn(n)}!`); feir(c, n); } });
   MERKER.forEach(m => { if (na.merker.has(m.id) && !for_.merker.has(m.id)) ut.push(`Nytt merke: ${m.navn}!`); });
   return ut.length ? ' ' + ut.join(' ') : '';
 }
@@ -925,14 +1058,15 @@ const IDX = CARDS.map(c => Object.fromEntries(FIELDS.map(([k]) => [k, norm(c[k])
 
 /* ================= Deck ================= */
 const stage = $('#stage'), deckEl = $('#deck');
-let cur = Math.min(N - 1, Math.max(0, parseInt(lsGet('hagefugler-oslo:kort') || '0', 10) || 0));
+let cur = parseInt(lsGet('hagefugler-oslo:kort') || '0', 10) || 0;
+if (POS[cur] == null) cur = DECK[0];
 const hashNr = /^#k?(\d{1,3})$/.exec(location.hash || '');
 if (hashNr && +hashNr[1] >= 1 && +hashNr[1] <= NB) cur = +hashNr[1] - 1;
 const hashBonus = /^#(b\d{2})$/i.exec(location.hash || '');
-if (hashBonus) { const i = CARDS.findIndex(c => c.id === hashBonus[1].toLowerCase()); if (i >= 0) cur = i; }
+if (hashBonus) { const i = CARDS.findIndex(c => c.id === hashBonus[1].toLowerCase()); if (i >= 0 && erApen(CARDS[i])) cur = i; }
 const pool = new Map();
 
-const altTekst = c => `${c.bonus ? 'Bonuskort' : 'Fuglekort'} ${c.id}: ${c.navn}, ${c.latin}. ${c.status}.${foto() && c.bildeFoto && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
+const altTekst = c => `${c.bonus ? 'Bonuskort' : `Fuglekort ${c.id}`}: ${c.navn}, ${c.latin}. ${c.status}.${foto() && c.bildeFoto && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
 function makeCard(i) {
   const c = CARDS[i];
   const [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje;
@@ -942,12 +1076,13 @@ function makeCard(i) {
   el.className = 'card';
   el.dataset.i = i;
   el.setAttribute('role', 'group');
-  el.setAttribute('aria-label', `Kort ${c.id}: ${c.navn}`);
+  el.setAttribute('aria-label', `${c.bonus ? 'Bonuskort' : `Kort ${c.id}`}: ${c.navn}`);
   el.innerHTML = `
   <div class="inner">
     <div class="face front" style="background-position:${spritePos(i)}">
       <img src="${esc(bildeAv(c))}" alt="${esc(altTekst(c))}" draggable="false" decoding="async">
       <span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span>
+      ${c.bonus ? '<span class="bonusmerke" aria-hidden="true">Bonus</span>' : ''}
       <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
       <button class="ctl sett-hit" data-act="toggle" aria-pressed="false" aria-label="Sett ${esc(c.navn)}" style="left:${P(bx - 0.025)};top:${P(by - 0.012)};width:${P(bw + 0.22)};height:${P(bh + 0.024)}"></button>
       <span class="tall" aria-hidden="true"></span>
@@ -957,7 +1092,7 @@ function makeCard(i) {
         <input type="date" data-act="date" aria-label="Første gang du så ${esc(c.navn)}">
       </label>
     </div>
-    <div class="face back">${BACK}<div class="logg" hidden></div></div>
+    <div class="face back">${BACK}<div class="logg" hidden></div>${c.bonus ? '<p class="kred"></p>' : ''}</div>
   </div>`;
   el.querySelector('.back').inert = true;
   paintCard(el);
@@ -997,6 +1132,8 @@ function paintCard(el) {
   tall.dataset.n = n; tall.textContent = n || ''; tall.classList.toggle('on', n > 0);
   if (n > f && f > 0) { tall.classList.remove('pop'); void tall.offsetWidth; tall.classList.add('pop'); }
   paintLogg(el, c, dager);
+  const kred = el.querySelector('.kred');
+  if (kred) { kred.textContent = foto() && c.bildeFoto && c.fotograf ? `Foto: ${c.fotograf}${c.lisens ? ` · ${c.lisens}` : ''}` : ''; kred.hidden = !kred.textContent; }
 }
 
 /* the back of the card: every day this bird was seen, newest first */
@@ -1050,11 +1187,11 @@ function apply(el, p) {
   el.style.opacity = p.o;
   el.style.zIndex = p.z;
 }
-function slotOf(i) { let d = mod(i - cur); if (d > N / 2) d -= N; return d >= -2 && d <= 4 ? d : null; }
+function slotOf(i) { if (POS[i] == null) return null; let d = mod(POS[i] - POS[cur]); if (d > ND / 2) d -= ND; return d >= -2 && d <= 4 ? d : null; }
 
 function sync(opts = {}) {
   const m = metrics();
-  const need = SLOTS.map(d => mod(cur + d));
+  const need = SLOTS.map(d => DECK[mod(POS[cur] + d)]);
   for (const [i, el] of pool) if (!need.includes(i)) { el.remove(); pool.delete(i); }
   const fresh = [];
   need.forEach(i => {
@@ -1085,11 +1222,12 @@ function sync(opts = {}) {
   paintChrome();
 }
 
-function go(dir, quiet) { cur = mod(cur + dir); sync(); if (!quiet) { announce(); nudgeHint(); } }
+function go(dir, quiet) { cur = DECK[mod(POS[cur] + dir)]; sync(); if (!quiet) { announce(); nudgeHint(); } }
 function jump(i, how = 'deal') {
   stopRiffle();
   if (i === cur) { sync(); return; }
-  if (how !== 'instant' && Math.abs(i - cur) === 1) { go(i - cur); return; }
+  if (POS[i] == null) return;
+  if (how !== 'instant' && Math.abs(POS[i] - POS[cur]) === 1) { go(POS[i] - POS[cur]); return; }
   cur = i;
   if (how === 'instant') { sync({ instant: true }); }
   else { pool.forEach(el => el.remove()); pool.clear(); sync({ deal: true }); }
@@ -1100,7 +1238,7 @@ function flip() {
   setFlipped(el, !el.classList.contains('flipped'));
   nudgeHint();
 }
-function announce() { const c = CARDS[cur]; $('#live').textContent = `${c.bonus ? `Bonuskort ${c.id} av ${NBON}` : `Kort ${c.nr} av ${NB}`}: ${c.navn}${Store.has(c.key) ? ', sett' : ''}`; }
+function announce() { const c = CARDS[cur]; $('#live').textContent = `${c.bonus ? 'Bonuskort' : `Kort ${c.nr} av ${NB}`}: ${c.navn}${Store.has(c.key) ? ', sett' : ''}`; }
 const haptic = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
 
 /* ---- momentum: a fast swipe riffles through many cards, slowing down; a tap stops it ---- */
@@ -1198,7 +1336,7 @@ stage.addEventListener('pointermove', e => {
 });
 function renderDrag(d) {
   const m = d.m, W = m.W, dx = d.dx, dy = d.dy;
-  const get = k => pool.get(mod(cur + k));
+  const get = k => pool.get(DECK[mod(POS[cur] + k)]);
   // the held card follows the finger, tilting like a card pinched at the top or bottom
   get(0) && apply(get(0), { x: dx, y: dy, r: dx / W * 15 * (d.upper ? 1 : -1), s: 1.035, o: 1, z: 13 });
   if (dx <= 0) {
@@ -1338,18 +1476,18 @@ function trykkSett(c) {
   const for_ = opptjent();
   Store.addDay(c.key, t);
   haptic(10);
-  toast(`${c.navn}: ${dager.length + 1}. observasjonsdag.${nyheter(for_)}`, 'Angre', () => Store.removeDay(c.key, t));
+  toast(`${c.navn}: ${dager.length + 1}. observasjonsdag.${nyheter(for_)}${bonusHint()}`, 'Angre', () => Store.removeDay(c.key, t));
 }
 function registrer(c, d) {
   const for_ = opptjent();
   Store.put(c.key, [d]);
   haptic(12);
-  const n = seenCount(), b = bonusSeen();
-  const msg = c.bonus ? (b === NBON ? `${c.navn}! Alle ${NBON} bonuskortene er sett.` : `${c.navn}! Bonuskort: ${b} av ${NBON} dyr sett.`)
+  const n = seenCount();
+  const msg = c.bonus ? `${c.navn}! Bonuskortet er sett for første gang.`
     : n === NB ? `Alle ${NB} fuglene er sett. Hele kortstokken er komplett!`
     : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i norske hager. ${n} av ${NB} sett.`
     : `${c.navn} er sett for første gang. ${n} av ${NB} arter.`;
-  toast(msg + nyheter(for_), 'Angre', () => Store.put(c.key, []));
+  toast(msg + nyheter(for_) + bonusHint(), 'Angre', () => Store.put(c.key, []));
 }
 function leggTilDag(c, d) {
   const gml = Store.days(c.key);
@@ -1357,7 +1495,7 @@ function leggTilDag(c, d) {
   if (gml.includes(d)) { toast(`${fmtHand(d)} er allerede registrert for ${c.navn}.`); return; }
   const for_ = opptjent();
   Store.addDay(c.key, d);
-  toast(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${nyheter(for_)}`, 'Angre', () => Store.put(c.key, gml));
+  toast(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${nyheter(for_)}${bonusHint()}`, 'Angre', () => Store.put(c.key, gml));
 }
 function slettDag(c, d) {
   const gml = Store.days(c.key);
@@ -1381,7 +1519,7 @@ function visLogg(c) {
 
 /* keyboard */
 document.addEventListener('keydown', e => {
-  if (festAapen) { if (['Escape', 'Enter', ' '].includes(e.key)) { e.preventDefault(); lukkFest(); } return; }
+  if (festAapen) { if (e.key === 'Escape') { e.preventDefault(); lukkFest(); } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); festTrykk(); } return; }
   if (e.target.closest('input, textarea')) { if (e.key === 'Escape') closeSheets(); return; }
   if (openSheet) { if (e.key === 'Escape') closeSheets(); return; }
   if (e.key === 'ArrowRight') { e.preventDefault(); stopRiffle(); go(1); }
@@ -1399,11 +1537,15 @@ $('#nextBtn').addEventListener('click', () => { stopRiffle(); go(1); });
 
 /* ---- scrubber ---- */
 const scrub = $('#scrub');
-scrub.style.gridTemplateColumns = `repeat(${N}, 1fr)`;
-scrub.setAttribute('aria-valuemax', N);
-scrub.innerHTML = CARDS.map((c, i) => `<i class="${c.bonus ? `bn${i === NB ? ' bn1' : ''}` : (i + 1) % 10 === 0 ? 'x10' : ''}"></i>`).join('');
-const ticks = [...scrub.children];
-const scrubIndex = e => { const r = scrub.getBoundingClientRect(); return Math.max(0, Math.min(N - 1, Math.floor((e.clientX - r.left) / r.width * N))); };
+let ticks = [];
+function byggScrub() {
+  scrub.style.gridTemplateColumns = `repeat(${ND}, 1fr)`;
+  scrub.setAttribute('aria-valuemax', ND);
+  scrub.innerHTML = DECK.map(i => { const c = CARDS[i]; return `<i class="${c.bonus ? 'bn' : c.nr % 10 === 0 ? 'x10' : ''}"></i>`; }).join('');
+  ticks = [...scrub.children];
+}
+byggScrub();
+const scrubIndex = e => { const r = scrub.getBoundingClientRect(); return DECK[Math.max(0, Math.min(ND - 1, Math.floor((e.clientX - r.left) / r.width * ND)))]; };
 let scrubbing = false;
 scrub.addEventListener('pointerdown', e => { stopRiffle(); scrubbing = true; try { scrub.setPointerCapture(e.pointerId); } catch (err) {} jump(scrubIndex(e), 'instant'); });
 scrub.addEventListener('pointermove', e => { if (scrubbing) { const i = scrubIndex(e); if (i !== cur) jump(i, 'instant'); } });
@@ -1411,25 +1553,24 @@ scrub.addEventListener('pointerup', () => { scrubbing = false; nudgeHint(); });
 scrub.addEventListener('pointercancel', () => { scrubbing = false; });
 scrub.addEventListener('keydown', e => {
   const map = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10 };
-  if (e.key in map) { e.preventDefault(); e.stopPropagation(); jump(Math.max(0, Math.min(N - 1, cur + map[e.key])), 'instant'); }
-  else if (e.key === 'Home') { e.preventDefault(); jump(0, 'instant'); }
-  else if (e.key === 'End') { e.preventDefault(); jump(N - 1, 'instant'); }
+  if (e.key in map) { e.preventDefault(); e.stopPropagation(); jump(DECK[Math.max(0, Math.min(ND - 1, POS[cur] + map[e.key]))], 'instant'); }
+  else if (e.key === 'Home') { e.preventDefault(); jump(DECK[0], 'instant'); }
+  else if (e.key === 'End') { e.preventDefault(); jump(DECK[ND - 1], 'instant'); }
 });
 
 /* ---- header, ring, scrubber paint ---- */
 function paintChrome() {
   const c = CARDS[cur];
   const n = seenCount();
-  $('#sub').textContent = c.bonus ? `Bonuskort ${c.id} av ${String(NBON).padStart(2, '0')} · ${bonusSeen()} av ${NBON} sett`
-                                  : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
+  $('#sub').textContent = c.bonus ? `Bonuskort · ${n} fugler sett` : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
   $('#ringNum').textContent = n;
   const C = 2 * Math.PI * 14;
   $('#ringArc').setAttribute('stroke-dasharray', `${(n / NB * C).toFixed(2)} ${C.toFixed(2)}`);
   $('#openStats').setAttribute('aria-label', `Statistikk: ${n} av ${NB} fugler sett`);
-  ticks.forEach((t, i) => { t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
+  ticks.forEach((t, p) => { const i = DECK[p]; t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
   paintTeller();
-  scrub.setAttribute('aria-valuenow', cur + 1);
-  scrub.setAttribute('aria-valuetext', `${c.bonus ? `Bonuskort ${c.id}` : `Kort ${c.nr}`}: ${c.navn}`);
+  scrub.setAttribute('aria-valuenow', POS[cur] + 1);
+  scrub.setAttribute('aria-valuetext', `${c.bonus ? 'Bonuskort' : `Kort ${c.nr}`}: ${c.navn}`);
 }
 
 let hintCount = lsGet('hagefugler-oslo:hint') === 'ok' ? 99 : 0;
@@ -1490,6 +1631,7 @@ function renderSearch() {
   const terms = q.split(/\s+/).filter(Boolean);
   const out = [];
   CARDS.forEach((c, i) => {
+    if (!erApen(c)) return;
     const seen = Store.has(c.key);
     if (filter === 'sett' && !seen) return;
     if (filter === 'ikke' && seen) return;
@@ -1524,7 +1666,7 @@ function renderSearch() {
       <span class="t"><span class="n">${terms.length ? hl(c.navn, IDX[i].navn, terms) : esc(c.navn)}</span>
         <span class="l">${terms.length ? hl(c.latin, IDX[i].latin, terms) : esc(c.latin)}</span>
         ${hit ? `<span class="sn"><em>${label}:</em> ${snippet(c[hit], IDX[i][hit], terms)}</span>` : ''}</span>
-      <span class="r">${s ? `<span class="okdot" title="Sett første gang ${fmtLong(s.date)}, ${dagerTekst(s.dager.length)}">${CHECK}</span>` : `<span>${c.id}</span>`}${stars(c.stjerner)}</span>
+      <span class="r">${s ? `<span class="okdot" title="Sett første gang ${fmtLong(s.date)}, ${dagerTekst(s.dager.length)}">${CHECK}</span>` : `<span>${c.bonus ? 'Bonus' : c.id}</span>`}${stars(c.stjerner)}</span>
     </button></li>`;
   }).join('');
 }
@@ -1537,7 +1679,7 @@ resEl.addEventListener('click', e => {
 
 /* ---- help: the two explanation cards ---- */
 const helpSheet = $('#helpSheet'), helpTrack = $('#helpTrack'), helpDots = $('#helpDots');
-const hjelpListe = () => (foto() && DATA.hjelpFoto) || DATA.hjelp || [];
+const hjelpListe = () => ((foto() && DATA.hjelpFoto) || DATA.hjelp || []).filter(h => !/^b/.test(h.id) || APNE.size >= NBON);
 function renderHelp() {
   const HJELP = hjelpListe();
   $('#openHelp').hidden = !HJELP.length;
@@ -1558,10 +1700,12 @@ const setSheet = $('#settingsSheet');
 $('#openSettings').hidden = !HAR_FOTO && !Vipp.stottet;
 $('#bildeSek').hidden = !HAR_FOTO;
 $('#vippSek').hidden = !Vipp.stottet;
-$('#fotoAntall').textContent = `Fotografier fra Artsdatabanken og Artsobservasjoner for ${BIRDS.filter(c => c.bildeFoto).length} av ${NB} fugler`
-  + (NBON ? ` og ${BONUS.filter(c => c.bildeFoto).length} av ${NBON} bonusdyr` : '')
-  + '. De andre viser illustrasjonen. Fotografene står på kortene Bildekreditering under ?.';
+// only the bonus cards already found are mentioned
+const fotoTekst = () => `Fotografier fra Artsdatabanken og Artsobservasjoner for ${BIRDS.filter(c => c.bildeFoto).length} av ${NB} fugler`
+  + '. De andre viser illustrasjonen. Fotografene står på kortene Bildekreditering under ?.'
+  + (BONUS.some(c => erApen(c) && c.bildeFoto) ? ' Bonuskortene du har funnet, har også fotografi.' : '');
 function paintSettings() {
+  $('#fotoAntall').textContent = fotoTekst();
   setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg));
   $('#vippBtn').setAttribute('aria-checked', Vipp.aktiv ? 'true' : 'false');
 }
@@ -1575,7 +1719,7 @@ function settBilder(v) {
   if (v === bildevalg || !HAR_FOTO) return;
   bildevalg = v; lsSet('hagefugler:bilder', v);
   settSprites();
-  pool.forEach(el => { const c = CARDS[+el.dataset.i], img = el.querySelector('.front img'); img.src = bildeAv(c); img.alt = altTekst(c); });
+  pool.forEach(el => { const c = CARDS[+el.dataset.i], img = el.querySelector('.front img'); img.src = bildeAv(c); img.alt = altTekst(c); paintCard(el); });
   renderHelp(); paintSettings(); setTimeout(warm, 300);
   toast(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
 }
@@ -1594,18 +1738,18 @@ $('#openStats').addEventListener('click', openStats);
 $('#closeStats').addEventListener('click', () => closeSheets());
 function albumKort(c, i) {
   const nv = nivaAv(c);
-  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? esc(c.id) : c.nr}</span><span class="okdot">${CHECK}</span></button>`;
+  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot">${CHECK}</span></button>`;
 }
 function renderStats() {
   // fuglelista: bare fuglekortene; bonuskortene (andre dyr) har sin egen del lenger ned
-  const alleIds = Object.keys(Store.data).filter(k => BY_KEY[k] != null);
+  const alleIds = Object.keys(Store.data).filter(erApenK);
   const ids = alleIds.filter(erFugl);
   const n = ids.length;
   const byRar = [1, 2, 3, 4, 5].map(r => ({ r, tot: BIRDS.filter(c => c.stjerner === r).length, seen: BIRDS.filter(c => c.stjerner === r && Store.has(c.key)).length }));
   const ptsMax = BIRDS.reduce((a, c) => a + c.stjerner, 0);
   const pts = BIRDS.reduce((a, c) => a + (Store.has(c.key) ? c.stjerner : 0), 0);
   const rarest = BIRDS.filter(c => Store.has(c.key)).sort((a, b) => b.stjerner - a.stjerner || a.nr - b.nr)[0];
-  const nBonus = bonusSeen();
+  const nb = nesteBonus();
   // last 12 months
   const now = new Date(); const months = [];
   for (let k = 11; k >= 0; k--) { const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push({ y: d.getFullYear(), m: d.getMonth() + 1, n: 0 }); }
@@ -1618,8 +1762,8 @@ function renderStats() {
   const cardOf = key => BY_KEY[key];
   const aktivT = Tell.aktiv(), ferdigeT = Tell.ferdige();
   const nt = nokkeltall(), merkerOk = MERKER.filter(m => m.v(nt) >= m.mal).length;
-  const perNiva = [0, 0, 0, 0]; CARDS.forEach(c => perNiva[nivaAv(c)]++);
-  const naermest = CARDS.map((c, i) => ({ c, i, n: Store.has(c.key) && nesteNiva(c) })).filter(x => x.n).sort((a, b) => a.n.mangler - b.n.mangler || b.c.stjerner - a.c.stjerner).slice(0, 3);
+  const perNiva = [0, 0, 0, 0]; CARDS.filter(erApen).forEach(c => perNiva[nivaAv(c)]++);
+  const naermest = CARDS.map((c, i) => ({ c, i, n: erApen(c) && Store.has(c.key) && nesteNiva(c) })).filter(x => x.n).sort((a, b) => a.n.mangler - b.n.mangler || b.c.stjerner - a.c.stjerner).slice(0, 3);
   const obsDager = new Set(ids.flatMap(id => Store.data[id].dager)).size;
   const regs = ids.reduce((a, id) => a + Store.data[id].dager.length, 0);
   const most = ids.map(id => ({ c: CARDS[BY_KEY[id]], ant: Store.data[id].dager.length })).sort((a, b) => b.ant - a.ant || a.c.nr - b.c.nr)[0];
@@ -1633,6 +1777,15 @@ function renderStats() {
       <div class="kpi"><b>${obsDager}</b><span>${obsDager === 1 ? 'Observasjonsdag' : 'Observasjonsdager'}, med ${regs} ${regs === 1 ? 'registrering' : 'registreringer'} i alt</span></div>
       <div class="kpi"><b>${most && most.ant > 1 ? esc(most.c.navn) : '–'}</b><span>${most && most.ant > 1 ? `Sett flest dager, ${most.ant} i alt` : 'Fuglen du har sett flest dager, vises her'}</span></div>
     </div>
+
+    ${NBON ? `<div class="s-sec"><h3>Bonus${APNE.size ? `kort <span class="h3n">${APNE.size} funnet</span>` : ''}</h3>
+      ${APNE.size ? `<div class="album">${BONUS_REKKE.filter(erApen).map(c => albumKort(c, BY_KEY[c.key])).join('')}</div>` : ''}
+      ${nb ? `<div class="teaser"><span class="tz-kort" aria-hidden="true"><img src="${esc(DATA.bakside || 'cards/bakside.webp')}" alt=""><b>?</b></span>
+        <span class="tz-t"><b>${APNE.size ? 'Enda en bonus venter' : 'Det venter en bonus'}</b>
+        <small>${nb.mangler === 1 ? 'Én registrering igjen' : `${nb.mangler} registreringer igjen`}. Hver gang du registrerer en fugl, kommer du nærmere.</small>
+        <i class="mbar" role="img" aria-label="${nb.r - nb.fra} av ${BONUS_STEG}"><i style="width:${((nb.r - nb.fra) / BONUS_STEG * 100).toFixed(1)}%"></i></i></span></div>` : ''}
+      ${APNE.size ? `<p class="cap">Bonuskortene er stokket inn blant kortene med like mange stjerner. De får glinskant som fuglene, men teller ikke med i fuglelista, poengene eller merkene.</p>` : ''}
+    </div>` : ''}
 
     <div class="s-sec"><h3>Glinskort</h3>
       <div class="nivaer">${[1, 2, 3].map(k => `<div class="nv n${k}"><b>${perNiva[k]}</b><span>${NIVA[k]}</span></div>`).join('')}</div>
@@ -1675,9 +1828,7 @@ function renderStats() {
       ${CARDS.map((c, i) => c.bonus ? '' : albumKort(c, i)).join('')}
     </div></div>
 
-    ${NBON ? `<div class="s-sec"><h3>Bonuskort – andre dyr <span class="h3n">${nBonus} av ${NBON}</span></h3><div class="album">
-      ${CARDS.map((c, i) => c.bonus ? albumKort(c, i) : '').join('')}
-    </div><p class="cap">Bonuskortene ligger etter fuglekortene i kortstokken. De får glinskant som fuglene, men teller ikke med i fuglelista, poengene eller merkene.</p></div>` : ''}
+
 
     <div class="s-sec"><h3>Lagring</h3>
       <p class="store ${Store.mode === 'delt' ? 'sky' : ''}"><i></i>${Store.mode === 'delt' ? 'Avkrysningene og tellingene lagres sammen med kortstokken og følger deg på alle enheter.' : 'Avkrysningene og tellingene lagres på denne enheten.'}</p>
@@ -1812,8 +1963,9 @@ function renderListe() {
   const q = norm(lq.value.trim()).s;
   const forst = c => Object.values(ALIAS).includes(c.key);      // f.eks. ekorn: øverst som før, nå med eget kort
   const kort = CARDS.map((c, i) => ({ key: c.key, navn: c.navn, i }));
-  const rader = [...kort.filter(r => forst(CARDS[r.i])), ...EKSTRA.map(e => ({ key: e.key, navn: e.navn, i: null })),
-    ...kort.filter(r => !CARDS[r.i].bonus), ...kort.filter(r => CARDS[r.i].bonus && !forst(CARDS[r.i]))]
+  // ekorn is on Fuglevennen's form, so it is always on top; as a plain row until its bonus card is found
+  const rader = [...kort.filter(r => forst(CARDS[r.i])).map(r => erApen(CARDS[r.i]) ? r : { ...r, i: null }), ...EKSTRA.map(e => ({ key: e.key, navn: e.navn, i: null })),
+    ...kort.filter(r => !CARDS[r.i].bonus), ...kort.filter(r => CARDS[r.i].bonus && !forst(CARDS[r.i]) && erApen(CARDS[r.i]))]
     .filter(r => !q || norm(r.navn).s.includes(q));
   if (!rader.length) { tlisteEl.innerHTML = `<li class="empty">Ingen art passer til «${esc(lq.value)}».</li>`; return; }
   tlisteEl.innerHTML = rader.map(r => {
@@ -1913,48 +2065,110 @@ sumSheet.addEventListener('click', async e => {
 });
 $('#tSlutt').addEventListener('click', () => openSum(Tell.aktivId()));
 
-/* ---- celebration: one at a time, in order ---- */
-const festEl = $('#fest'), festKo = [];
-let festT = 0, festAapen = false, festPlanlagt = false, festFokus = null;
-function feir(c, niva) {
-  festKo.push({ c, niva });
-  if (!festAapen && !festPlanlagt) { festPlanlagt = true; setTimeout(nesteFest, 250); }
+/* ---- celebrations: one at a time, in order (new border, new bonus card) ---- */
+const festEl = $('#fest'), bfEl = $('#bfest'), festKo = [];
+let festT = 0, festAapen = false, festPlanlagt = false, festFokus = null, aktivFest = null;
+const planleggFest = () => { if (!festAapen && !festPlanlagt) { festPlanlagt = true; setTimeout(nesteFest, 250); } };
+function feir(c, niva) { festKo.push({ type: 'niva', c, niva }); planleggFest(); }
+function feirBonus(c) { festKo.push({ type: 'bonus', c }); planleggFest(); }
+/* the pen marks as on the card itself: tick, "× N" and the date of the first sighting */
+function pennMerker(c) {
+  const s = Store.get(c.key), n = Store.days(c.key).length; if (!s) return '';
+  const [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje, P = v => (v * 100).toFixed(3) + '%', dLeft = lx - 0.13, dW = lw + 0.15;
+  return `<svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
+    <span class="antall ${n >= 100 ? 'tre' : ''}" style="left:${P(bx + bw + 0.14)};top:${P(by - 0.006)};height:${P(bh + 0.012)}">${n > 1 ? `× ${n}` : ''}</span>
+    <span class="dato" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}"><span class="hand" style="left:${P((lx - dLeft + 0.012) / dW)}">${fmtHand(s.date)}</span></span>`;
 }
+function vis(el) { el.hidden = false; el.classList.remove('on', 'snudd'); void el.offsetWidth; el.classList.add('on'); setTimeout(() => el.focus && el.focus(), 50); }
 function nesteFest() {
   festPlanlagt = false;
   if (festAapen) return;
   const f = festKo.shift(); if (!f) return;
-  festAapen = true;
-  festFokus = document.activeElement;
+  festAapen = true; festFokus = document.activeElement; aktivFest = f;
+  clearTimeout(festT);
+  if (f.type === 'bonus') visBonus(f); else visNiva(f);
+}
+function visNiva(f) {
   festEl.dataset.niva = f.niva;
   festEl.querySelector('.fest-kort').dataset.niva = f.niva;
   $('#festBilde').src = bildeAv(f.c);
-  // the pen marks as on the card itself: tick, "× N" and the date of the first sighting
-  const c = f.c, s = Store.get(c.key), n = Store.days(c.key).length;
-  const [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje, P = v => (v * 100).toFixed(3) + '%', dLeft = lx - 0.13, dW = lw + 0.15;
-  $('#festMerker').innerHTML = s ? `<svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
-    <span class="antall ${n >= 100 ? 'tre' : ''}" style="left:${P(bx + bw + 0.14)};top:${P(by - 0.006)};height:${P(bh + 0.012)}">${n > 1 ? `× ${n}` : ''}</span>
-    <span class="dato" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}"><span class="hand" style="left:${P((lx - dLeft + 0.012) / dW)}">${fmtHand(s.date)}</span></span>` : '';
+  $('#festMerker').innerHTML = pennMerker(f.c);
   $('#festNavn').textContent = stor(kantNavn(f.niva)) + '!';
   $('#festArt').textContent = `${f.c.navn} · ${dagerTekst(Store.days(f.c.key).length)}`;
-  festEl.hidden = false; festEl.classList.remove('on'); void festEl.offsetWidth; festEl.classList.add('on');
+  vis(festEl);
   haptic([18, 70, 28, 70, 40]);
   $('#live').textContent = `${f.c.navn} fikk ${kantNavn(f.niva)}.`;
-  setTimeout(() => festEl.focus && festEl.focus(), 50);
-  clearTimeout(festT); festT = setTimeout(lukkFest, 4200);
+  festT = setTimeout(lukkFest, 4200);
 }
+const BLADFARGER = ['#6fb35a', '#3f8f4e', '#9ccc65', '#e98a2d', '#f2c14e', '#a9461a'];
+function visBonus(f) {
+  const c = f.c;
+  f.snudd = false;
+  $('#bfBilde').src = bildeAv(c);
+  $('#bfMerker').innerHTML = pennMerker(c);
+  $('#bfArt').textContent = c.navn;
+  $('#bfInfo').textContent = `Stokket inn blant kortene med ${c.stjerner} ${c.stjerner === 1 ? 'stjerne' : 'stjerner'}.`;
+  $('#bfBlader').innerHTML = Array.from({ length: 26 }, (_, k) => {
+    const v = (k / 26) * Math.PI * 2 + Math.random() * .4, r = 140 + Math.random() * 190;
+    return `<i class="bf-blad" style="--x:${(Math.cos(v) * r).toFixed(0)}px;--y:${(Math.sin(v) * r - 40).toFixed(0)}px;--r:${(Math.random() * 720 - 360).toFixed(0)}deg;--d:${(Math.random() * .25).toFixed(2)}s;--f:${BLADFARGER[k % BLADFARGER.length]}"></i>`;
+  }).join('');
+  vis(bfEl);
+  haptic([12, 60, 12]);
+  $('#live').textContent = 'Du har fått en bonus! Trykk for å snu kortet.';
+  festT = setTimeout(snuBonus, 3400);                    // turns by itself if nobody taps
+}
+function snuBonus() {
+  const f = aktivFest; if (!f || f.type !== 'bonus' || f.snudd) return;
+  f.snudd = true;
+  bfEl.classList.add('snudd');
+  haptic([30, 40, 30, 40, 90]);
+  $('#live').textContent = `Bonuskort: ${f.c.navn}. ${$('#bfInfo').textContent}`;
+  clearTimeout(festT); festT = setTimeout(lukkFest, 9000);
+}
+function festTrykk() { const f = aktivFest; if (f && f.type === 'bonus' && !f.snudd) snuBonus(); else lukkFest(); }
 function lukkFest() {
   if (!festAapen) return;
   clearTimeout(festT);
-  festEl.classList.remove('on');
+  const f = aktivFest, el = f && f.type === 'bonus' ? bfEl : festEl;
+  el.classList.remove('on');
   setTimeout(() => {
-    festEl.hidden = true; festAapen = false;
+    el.hidden = true; el.classList.remove('snudd'); festAapen = false; aktivFest = null;
+    // a new bonus card: show where it landed in the deck
+    if (f && f.type === 'bonus' && !openSheet && POS[BY_KEY[f.c.key]] != null) {
+      jump(BY_KEY[f.c.key]);
+      setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
+    }
     if (festKo.length) nesteFest(); else if (festFokus && festFokus.focus && !openSheet) festFokus.focus();
   }, 350);
 }
-festEl.tabIndex = -1;
-festEl.addEventListener('click', lukkFest);
-festEl.addEventListener('keydown', e => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); lukkFest(); } });
+[festEl, bfEl].forEach(el => {
+  el.tabIndex = -1;
+  el.addEventListener('click', festTrykk);
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); lukkFest(); }
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); festTrykk(); }
+  });
+});
+
+/* ---- bonus cards: join the deck when earned, and are revealed once ---- */
+const bonusKlar = () => !window.claude || (Store.mode === 'delt' && Vist.mode === 'delt');   // in Claude: wait for the shared lists
+function sjekkBonus() {
+  const na = apneBonus();
+  if (na.size !== APNE.size || [...na].some(k => !APNE.has(k))) {
+    APNE = na; byggStokk(); byggScrub();
+    if (POS[cur] == null) cur = DECK[0];                  // the card left the deck (a registration was undone)
+    sync({ instant: true }); renderHelp();
+    if (openSheet && openSheet.id === 'statsSheet') renderStats();
+    if (openSheet === listeSheet) renderListe();
+  }
+  if (!bonusKlar()) return;
+  Object.keys(Vist.data).forEach(k => { if (!APNE.has(k)) Vist.glem(k); });   // revealed again if earned again
+  BONUS_REKKE.forEach(c => { if (APNE.has(c.key) && !Vist.har(c.key)) { Vist.merk(c.key); feirBonus(c); } });
+}
+Store.on(sjekkBonus);
+Vist.on(sjekkBonus);
+/* a hint that a bonus is near, without saying what */
+function bonusHint() { const nb = nesteBonus(); return nb && nb.mangler > 0 && nb.mangler <= 2 ? (nb.mangler === 1 ? ' Én registrering til en bonus!' : ' To registreringer til en bonus!') : ''; }
 
 /* ---- toast ---- */
 let toastT = 0;
@@ -1987,7 +2201,7 @@ let rz = 0;
 addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => sync({ instant: true })); });
 
 // preload neighbours of neighbours so fast swiping never shows a blank card
-function warm() { [5, 6, 7, -3, -4].forEach(d => { const img = new Image(); img.decoding = 'async'; img.src = bildeAv(CARDS[mod(cur + d)]); }); }
+function warm() { [5, 6, 7, -3, -4].forEach(d => { const img = new Image(); img.decoding = 'async'; img.src = bildeAv(CARDS[DECK[mod(POS[cur] + d)]]); }); }
 
 sync();
 announce();
@@ -1995,5 +2209,7 @@ setTimeout(warm, 600);
 paintTell();
 Store.connectRemote();
 Tell.connectRemote();
+Vist.connectRemote();
+setTimeout(sjekkBonus, 900);                              // bonus cards earned before this version: revealed now
 })();
 </script>
