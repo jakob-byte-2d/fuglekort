@@ -220,7 +220,7 @@ button{cursor:pointer;touch-action:manipulation}
 .bf-tekst{position:relative;display:grid;justify-items:center;text-align:center;color:#f3f8f2;min-height:118px;align-content:start}
 .bf-t1,.bf-t2{display:grid;justify-items:center;gap:6px;grid-area:1/1}
 .bf-t1 b{font-size:clamp(22px, 6.4vw, 30px);font-weight:800}
-.bf-t1 small,.bf-t2 small{font-size:12.5px;opacity:.65}
+.bf-t1 small,.bf-t2 small{font-size:13px;opacity:.8}
 .bf-t2{visibility:hidden}
 .bfest.snudd .bf-t1{visibility:hidden}
 .bfest.snudd .bf-t2{visibility:visible}
@@ -269,7 +269,7 @@ button{cursor:pointer;touch-action:manipulation}
 .fest[data-niva="2"] .fest-tekst b{background:linear-gradient(135deg,#8a5a0a,#f9dc86 30%,#c08a1f 55%,#fff4c6 75%,#7d4f06)}
 .fest[data-niva="3"] .fest-tekst b{background:linear-gradient(115deg,#ffa0a0,#ffe38a,#aaffa8,#96ecff,#b0a8ff,#ffa6e3)}
 .fest-tekst span{font-size:15px;opacity:.9}
-.fest-tekst small{font-size:12.5px;opacity:.6;margin-top:6px}
+.fest-tekst small{font-size:13px;opacity:.8;margin-top:6px}
 
 /* back of the card: readable field notes */
 .stars{display:inline-flex;gap:.2em;color:var(--card-gold)}
@@ -1562,7 +1562,7 @@ scrub.addEventListener('keydown', e => {
 function paintChrome() {
   const c = CARDS[cur];
   const n = seenCount();
-  $('#sub').textContent = c.bonus ? `Bonuskort · ${n} fugler sett` : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
+  $('#sub').textContent = c.bonus ? `Bonuskort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
   $('#ringNum').textContent = n;
   const C = 2 * Math.PI * 14;
   $('#ringArc').setAttribute('stroke-dasharray', `${(n / NB * C).toFixed(2)} ${C.toFixed(2)}`);
@@ -2065,9 +2065,9 @@ sumSheet.addEventListener('click', async e => {
 });
 $('#tSlutt').addEventListener('click', () => openSum(Tell.aktivId()));
 
-/* ---- celebrations: one at a time, in order (new border, new bonus card) ---- */
+/* ---- celebrations: one at a time, in order (new border, new bonus card); they stay until tapped ---- */
 const festEl = $('#fest'), bfEl = $('#bfest'), festKo = [];
-let festT = 0, festAapen = false, festPlanlagt = false, festFokus = null, aktivFest = null;
+let festAapen = false, festPlanlagt = false, festFokus = null, aktivFest = null;
 const planleggFest = () => { if (!festAapen && !festPlanlagt) { festPlanlagt = true; setTimeout(nesteFest, 250); } };
 function feir(c, niva) { festKo.push({ type: 'niva', c, niva }); planleggFest(); }
 function feirBonus(c) { festKo.push({ type: 'bonus', c }); planleggFest(); }
@@ -2085,7 +2085,6 @@ function nesteFest() {
   if (festAapen) return;
   const f = festKo.shift(); if (!f) return;
   festAapen = true; festFokus = document.activeElement; aktivFest = f;
-  clearTimeout(festT);
   if (f.type === 'bonus') visBonus(f); else visNiva(f);
 }
 function visNiva(f) {
@@ -2098,7 +2097,6 @@ function visNiva(f) {
   vis(festEl);
   haptic([18, 70, 28, 70, 40]);
   $('#live').textContent = `${f.c.navn} fikk ${kantNavn(f.niva)}.`;
-  festT = setTimeout(lukkFest, 4200);
 }
 const BLADFARGER = ['#6fb35a', '#3f8f4e', '#9ccc65', '#e98a2d', '#f2c14e', '#a9461a'];
 function visBonus(f) {
@@ -2115,7 +2113,6 @@ function visBonus(f) {
   vis(bfEl);
   haptic([12, 60, 12]);
   $('#live').textContent = 'Du har fått en bonus! Trykk for å snu kortet.';
-  festT = setTimeout(snuBonus, 3400);                    // turns by itself if nobody taps
 }
 function snuBonus() {
   const f = aktivFest; if (!f || f.type !== 'bonus' || f.snudd) return;
@@ -2123,12 +2120,10 @@ function snuBonus() {
   bfEl.classList.add('snudd');
   haptic([30, 40, 30, 40, 90]);
   $('#live').textContent = `Bonuskort: ${f.c.navn}. ${$('#bfInfo').textContent}`;
-  clearTimeout(festT); festT = setTimeout(lukkFest, 9000);
 }
 function festTrykk() { const f = aktivFest; if (f && f.type === 'bonus' && !f.snudd) snuBonus(); else lukkFest(); }
 function lukkFest() {
   if (!festAapen) return;
-  clearTimeout(festT);
   const f = aktivFest, el = f && f.type === 'bonus' ? bfEl : festEl;
   el.classList.remove('on');
   setTimeout(() => {
