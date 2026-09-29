@@ -74,9 +74,9 @@ Under statistikken (ringen øverst til høyre) finnes **Start telling**. Skriv g
 
 ## Glinskort og merker
 
-Et kort får glans når du har sett fuglen mange dager. Jo sjeldnere fugl, jo færre dager trengs:
+Kanten på et kort blir sølv, gull eller holo når du har sett fuglen mange dager. Jo sjeldnere fugl, jo færre dager trengs:
 
-| Sjeldenhet | Glans | Glitter | Holo |
+| Sjeldenhet | Sølv | Gull | Holo |
 |---|---|---|---|
 | ★ | 10 | 25 | 50 |
 | ★★ | 5 | 15 | 30 |
@@ -84,11 +84,11 @@ Et kort får glans når du har sett fuglen mange dager. Jo sjeldnere fugl, jo f�
 | ★★★★ | 1 | 3 | 6 |
 | ★★★★★ | Holo med én gang | | |
 
-- **Glans** har et lysskjær, **Glitter** har gyllent skjær og gnister, og **Holo** har regnbueskjær og gnister. Lyset glir sakte over kortet av seg selv, følger fingeren når du drar i kortet og musa på datamaskin.
-- **Vipping:** Under Innstillinger kan du la glinset følge telefonen når du vipper den. På Android er det på fra start; på iPhone må du slå det på, og telefonen spør om lov til å bruke bevegelsessensoren.
+- Bare den trykte kanten (den hvite kanten og den gule dobbeltstreken ytterst) byttes ut med **sølv**, **gull** eller **holo** (regnbue). Resten av kortet er uendret. En lysstripe glir sakte langs kanten av seg selv, følger fingeren når du drar i kortet og musa på datamaskin.
+- **Vipping:** Under Innstillinger kan du la lyset følge telefonen når du vipper den. På Android er det på fra start; på iPhone må du slå det på, og telefonen spør om lov til å bruke bevegelsessensoren.
 - **Merker:** 10, 25 og 50 arter, hele kortstokken, sju dager på rad, 30 observasjonsdager, fire årstider (vår, sommer, høst og vinter), Tellekorps (en hagefugltelling på minst én time) og Flokk (minst 20 av én art i en telling).
-- Nivåer og merker regnes ut fra observasjonene og tellingene hver gang, så de lagres ikke for seg. Sletter du dager, kan et kort miste glansen igjen.
-- Når et kort får nytt nivå eller du får et merke, står det i meldingen nederst, og kortet blinker. Statistikken viser antall glinskort, hvilke kort som er nærmest neste nivå, og alle merkene med fremdrift. I samlingen har glinskortene sølv-, gull- eller regnbuekant.
+- Nivåer og merker regnes ut fra observasjonene og tellingene hver gang, så de lagres ikke for seg. Sletter du dager, kan et kort miste kanten igjen.
+- Når et kort får nytt nivå eller du får et merke, står det i meldingen nederst, og kortet blinker. Statistikken viser antall glinskort, hvilke kort som er nærmest neste nivå, og alle merkene med fremdrift. I samlingen har glinskortene sølv-, gull- eller holokant.
 - Baksiden av et kort viser nivået og hvor mange dager som mangler til neste.
 
 ## Lagring av observasjoner
