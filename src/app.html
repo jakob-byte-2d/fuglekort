@@ -221,6 +221,17 @@ button{cursor:pointer}
 .restore textarea{width:100%;min-height:90px;border-radius:10px;border:1px solid var(--line);background:var(--bg-hi);padding:10px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
 
 .iconbtn.qmark{font-size:19px;font-weight:700;line-height:1}
+/* innstillinger: valg av bildesett */
+.valg{display:grid;gap:10px}
+.valg button{display:grid;grid-template-columns:22px 1fr;gap:4px 12px;align-items:start;text-align:left;width:100%;
+  border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:14px;color:var(--ink)}
+.valg button .rd{grid-row:span 2;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);margin-top:1px;display:grid;place-items:center}
+.valg button[aria-checked="true"]{border-color:var(--spruce-ink);background:color-mix(in srgb, var(--spruce-ink) 9%, var(--surface))}
+.valg button[aria-checked="true"] .rd{border-color:var(--spruce-ink)}
+.valg button[aria-checked="true"] .rd::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--spruce-ink)}
+.valg b{font-size:16px;font-weight:600}
+.valg small{font-size:13px;line-height:1.35;color:var(--muted)}
+.valg-merk{font-size:13px;line-height:1.4;color:var(--muted);margin:12px 0 0}
 .help{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:center;gap:14px;
   padding:calc(env(safe-area-inset-top,0px) + 16px) 0 calc(env(safe-area-inset-bottom,0px) + 16px);
   visibility:hidden;opacity:0;transition:opacity .25s, visibility 0s .25s}
@@ -257,6 +268,9 @@ button{cursor:pointer}
       <h1>Hagefugler</h1>
       <p id="sub">Kort 001 av 060</p>
     </div>
+    <button class="iconbtn" id="openSettings" aria-label="Innstillinger" title="Innstillinger" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
     <button class="iconbtn qmark" id="openHelp" aria-label="Om kortene og tegnforklaring" title="Om kortene (?)">?</button>
     <button class="iconbtn" id="openSearch" aria-label="Søk etter fugl" title="Søk (/)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>
@@ -309,6 +323,20 @@ button{cursor:pointer}
   <div id="statsBody"></div>
 </section>
 
+<section class="sheet stats" id="settingsSheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="s-head">
+    <h2 id="settingsTitle">Innstillinger</h2>
+    <button class="textbtn" id="closeSettings">Lukk</button>
+  </div>
+  <div class="s-sec"><h3 id="bildevalgTitle">Bilder på kortene</h3>
+    <div class="valg" role="radiogroup" aria-labelledby="bildevalgTitle">
+      <button role="radio" data-bilder="ki" aria-checked="true"><span class="rd"></span><b>KI-illustrasjoner</b><small>Tegnede fuglebilder laget til kortstokken. Samme bilder som på de trykte kortene.</small></button>
+      <button role="radio" data-bilder="foto" aria-checked="false"><span class="rd"></span><b>Fotografier</b><small id="fotoAntall"></small></button>
+    </div>
+    <p class="valg-merk">Valget gjelder bare på denne enheten. Avkrysningene dine påvirkes ikke.</p>
+  </div>
+</section>
+
 <section class="help" id="helpSheet" role="dialog" aria-modal="true" aria-label="Om kortene">
   <div class="help-track" id="helpTrack"></div>
   <div class="help-bar">
@@ -341,8 +369,17 @@ const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
 const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const fmtHand = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}.${m}.${y}`; };
 const fmtLong = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-').map(Number); return `${d}. ${MND[m-1]}. ${y}`; };
-document.documentElement.style.setProperty('--photos', 'url("sprites/photos.webp")');
-document.documentElement.style.setProperty('--cardsprite', 'url("sprites/cards.webp")');
+/* Bildesett: KI-illustrasjoner (standard) eller fotografier fra Artsdatabanken der de finnes */
+const HAR_FOTO = Array.isArray(DATA.hjelpFoto) && CARDS.some(c => c.bildeFoto);
+let bildevalg = HAR_FOTO && lsGet('hagefugler:bilder') === 'foto' ? 'foto' : 'ki';
+const foto = () => bildevalg === 'foto';
+const bildeAv = c => (foto() && c.bildeFoto) || c.bilde;
+function settSprites() {
+  const f = foto() ? '-foto' : '';
+  document.documentElement.style.setProperty('--photos', `url("sprites/photos${f}.webp")`);
+  document.documentElement.style.setProperty('--cardsprite', `url("sprites/cards${f}.webp")`);
+}
+settSprites();
 const ROWS = Math.ceil(N / 10);
 document.documentElement.style.setProperty('--rows', ROWS);
 const spritePos = i => `${(i % 10) / 9 * 100}% ${ROWS > 1 ? Math.floor(i / 10) / (ROWS - 1) * 100 : 0}%`;
@@ -465,6 +502,7 @@ const hashNr = /^#k?(\d{1,3})$/.exec(location.hash || '');
 if (hashNr && +hashNr[1] >= 1 && +hashNr[1] <= N) cur = +hashNr[1] - 1;
 const pool = new Map();
 
+const altTekst = c => `Fuglekort ${c.id}: ${c.navn}, ${c.latin}. ${c.status}.${foto() && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
 function makeCard(i) {
   const c = CARDS[i];
   const [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje;
@@ -478,7 +516,7 @@ function makeCard(i) {
   el.innerHTML = `
   <div class="inner">
     <div class="face front" style="background-position:${spritePos(i)}">
-      <img src="${esc(c.bilde)}" alt="Fuglekort ${c.id}: ${esc(c.navn)}, ${esc(c.latin)}. ${esc(c.status)}." draggable="false" decoding="async">
+      <img src="${esc(bildeAv(c))}" alt="${esc(altTekst(c))}" draggable="false" decoding="async">
       <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
       <button class="ctl sett-hit" data-act="toggle" aria-pressed="false" aria-label="Sett ${esc(c.navn)}" style="left:${P(bx - 0.025)};top:${P(by - 0.012)};width:${P(bw + 0.22)};height:${P(bh + 0.024)}"></button>
       <label class="ctl dato" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}">
@@ -935,10 +973,14 @@ resEl.addEventListener('click', e => {
 
 /* ---- help: the two explanation cards ---- */
 const helpSheet = $('#helpSheet'), helpTrack = $('#helpTrack'), helpDots = $('#helpDots');
-const HJELP = DATA.hjelp || [];
-$('#openHelp').hidden = !HJELP.length;
-helpTrack.innerHTML = HJELP.map(h => `<figure class="help-card"><img src="${esc(h.bilde)}" alt="${esc(h.navn)}" loading="lazy" decoding="async"></figure>`).join('');
-helpDots.innerHTML = HJELP.map((h, k) => `<button role="tab" aria-selected="${k === 0}" aria-label="${esc(h.navn)}" data-k="${k}"></button>`).join('');
+const hjelpListe = () => (foto() && DATA.hjelpFoto) || DATA.hjelp || [];
+function renderHelp() {
+  const HJELP = hjelpListe();
+  $('#openHelp').hidden = !HJELP.length;
+  helpTrack.innerHTML = HJELP.map(h => `<figure class="help-card"><img src="${esc(h.bilde)}" alt="${esc(h.navn)}" loading="lazy" decoding="async"></figure>`).join('');
+  helpDots.innerHTML = HJELP.map((h, k) => `<button role="tab" aria-selected="${k === 0}" aria-label="${esc(h.navn)}" data-k="${k}"></button>`).join('');
+}
+renderHelp();
 const helpIndex = () => { const w = helpTrack.firstElementChild ? helpTrack.firstElementChild.offsetWidth + 18 : 1; return Math.round(helpTrack.scrollLeft / w); };
 helpTrack.addEventListener('scroll', () => { const k = helpIndex(); helpDots.querySelectorAll('button').forEach((b, j) => b.setAttribute('aria-selected', j === k)); }, { passive: true });
 helpDots.addEventListener('click', e => { const b = e.target.closest('button'); if (b) helpTrack.children[+b.dataset.k].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); });
@@ -946,6 +988,28 @@ function openHelp() { showSheet(helpSheet); scrim.classList.add('dark'); helpTra
 $('#openHelp').addEventListener('click', openHelp);
 $('#closeHelp').addEventListener('click', () => closeSheets());
 helpSheet.addEventListener('click', e => { if (!e.target.closest('.help-card, .help-bar')) closeSheets(); });
+
+/* ---- innstillinger ---- */
+const setSheet = $('#settingsSheet');
+$('#openSettings').hidden = !HAR_FOTO;
+$('#fotoAntall').textContent = `Fotografier fra Artsdatabanken for ${CARDS.filter(c => c.bildeFoto).length} av ${N} arter. De andre viser illustrasjonen. Fotografene står på kortet Bildekreditering under ?.`;
+function paintSettings() { setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg)); }
+function openSettings() { paintSettings(); showSheet(setSheet); setTimeout(() => setSheet.querySelector('[aria-checked="true"]').focus(), 60); }
+function settBilder(v) {
+  if (v === bildevalg || !HAR_FOTO) return;
+  bildevalg = v; lsSet('hagefugler:bilder', v);
+  settSprites();
+  pool.forEach(el => { const c = CARDS[+el.dataset.i], img = el.querySelector('.front img'); img.src = bildeAv(c); img.alt = altTekst(c); });
+  renderHelp(); paintSettings(); setTimeout(warm, 300);
+  toast(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
+}
+$('#openSettings').addEventListener('click', openSettings);
+$('#closeSettings').addEventListener('click', () => closeSheets());
+setSheet.addEventListener('click', e => { const b = e.target.closest('[data-bilder]'); if (b) settBilder(b.dataset.bilder); });
+setSheet.addEventListener('keydown', e => {
+  if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) || !e.target.closest('[data-bilder]')) return;
+  e.preventDefault(); settBilder(bildevalg === 'ki' ? 'foto' : 'ki'); setSheet.querySelector('[aria-checked="true"]').focus();
+});
 
 /* ---- stats ---- */
 const sb = $('#statsBody');
@@ -1054,7 +1118,7 @@ let rz = 0;
 addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => sync({ instant: true })); });
 
 // preload neighbours of neighbours so fast swiping never shows a blank card
-function warm() { [5, 6, 7, -3, -4].forEach(d => { const img = new Image(); img.decoding = 'async'; img.src = CARDS[mod(cur + d)].bilde; }); }
+function warm() { [5, 6, 7, -3, -4].forEach(d => { const img = new Image(); img.decoding = 'async'; img.src = bildeAv(CARDS[mod(cur + d)]); }); }
 
 sync();
 announce();

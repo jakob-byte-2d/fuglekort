@@ -59,12 +59,22 @@ def ikon(bakside, storrelse, maskable=False):
     return kvadrat.resize((storrelse, storrelse), Image.LANCZOS)
 
 
+def foto_felt(k):
+    """Kortbildet med fotografi og hvem som tok det, for kort som har fotografi."""
+    fs = k.get("fotosett") or {}
+    if not fs.get("foto"):
+        return {}
+    return {"bildeFoto": f"cards-foto/{k['nr']:03d}.webp", "fotograf": fs["foto"]["fotograf"], "lisens": fs["foto"]["lisens"]}
+
+
 def main(app):
     kilde = json.loads((app / "kort.json").read_text(encoding="utf-8"))
     kort_inn = kilde["kort"]
-    (DOCS / "cards").mkdir(parents=True, exist_ok=True)
-    for f in (DOCS / "cards").glob("*.webp"):
-        f.unlink()
+    for mappe in ("cards", "cards-foto"):
+        (DOCS / mappe).mkdir(parents=True, exist_ok=True)
+        for f in (DOCS / mappe).glob("*.webp"):
+            f.unlink()
+    fotosett = kilde.get("fotosett")   # kortene med fotografier (valget «Fotografier» i innstillingene)
 
     # 1. bilder
     for k in kort_inn:
@@ -75,6 +85,20 @@ def main(app):
         hjelp.append({"id": f["id"], "navn": f.get("navn") or f.get("tittel"), "bilde": f"cards/{f['id']}.webp"})
     bakside = app / (kilde.get("bakside") or "bakside.webp")
     shutil.copy(bakside, DOCS / "cards" / "bakside.webp")
+    # fotosettet: bare kort som faktisk har fotografi kopieres; resten er like KI-kortene og gjenbrukes
+    hjelp_foto = []
+    if fotosett:
+        for k in kort_inn:
+            fs = k.get("fotosett")
+            if fs and fs.get("foto"):
+                shutil.copy(app / fs["kortbilde"], DOCS / "cards-foto" / f"{k['nr']:03d}.webp")
+        vanlige = {h["id"]: h for h in hjelp}
+        for f in fotosett.get("forklaringskort", []):
+            if f["id"] in vanlige and f.get("navn") == vanlige[f["id"]]["navn"]:
+                hjelp_foto.append(vanlige[f["id"]])        # samme forklaringskort som i KI-settet
+            else:                                           # f.eks. kortet Bildekreditering
+                shutil.copy(app / f["kortbilde"], DOCS / "cards-foto" / f"{f['id']}.webp")
+                hjelp_foto.append({"id": f["id"], "navn": f.get("navn") or f.get("tittel"), "bilde": f"cards-foto/{f['id']}.webp"})
 
     # 2. SETT-ruta: lik på alle kort, så bruk medianen (tåler et kort med grønt nær ruta)
     funn = [finn_sett(DOCS / "cards" / f"{k['nr']:03d}.webp") for k in kort_inn]
@@ -92,10 +116,13 @@ def main(app):
         "vingespenn": k["vingespenn"], "vekt": k["vekt"], "utbredelse": k["land"],
         "rodliste": (k.get("rodliste") or {}).get("navn", ""),
         "bilde": f"cards/{k['nr']:03d}.webp", "sett": sett,
+        **foto_felt(k),
     } for k in kort_inn]
     data = {"tittel": "Hagefugler", "antall": len(kort), "bakside": "cards/bakside.webp", "hjelp": hjelp,
             "sjeldenhet": {"1": "Vanlig", "2": "Regelmessig", "3": "Uvanlig", "4": "Sjelden", "5": "Svært sjelden"},
             "kort": kort}
+    if fotosett:
+        data["hjelpFoto"] = hjelp_foto
     assert len({k["key"] for k in kort}) == len(kort), "to kort har samme latinske navn"
     tidligere = ROT / "data" / "tidligere_nummer.json"
     if tidligere.exists():   # gamle avkrysninger lagret på kortnummer flyttes over på arten
@@ -116,6 +143,22 @@ def main(app):
     (DOCS / "sprites").mkdir(exist_ok=True)
     ark_kort.save(DOCS / "sprites" / "cards.webp", "WEBP", quality=76, method=4)
     ark_foto.save(DOCS / "sprites" / "photos.webp", "WEBP", quality=78, method=4)
+    # miniatyrer for fotosettet (KI-bildet der fotografi mangler)
+    for f in ("cards-foto.webp", "photos-foto.webp"):
+        (DOCS / "sprites" / f).unlink(missing_ok=True)
+    if fotosett:
+        for i, k in enumerate(kort_inn):
+            fs = k.get("fotosett") or {}
+            if not fs.get("foto"):
+                continue
+            x, y = i % kol, i // kol
+            ark_kort.paste(Image.open(app / fs["kortbilde"]).convert("RGBA").resize((150, 210), Image.LANCZOS), (x * 150, y * 210))
+            foto = Image.open(app / fs["bilde"]).convert("RGB")
+            s = min(foto.size)
+            foto = foto.crop(((foto.width - s) // 2, (foto.height - s) // 2, (foto.width + s) // 2, (foto.height + s) // 2))
+            ark_foto.paste(foto.resize((128, 128), Image.LANCZOS), (x * 128, y * 128))
+        ark_kort.save(DOCS / "sprites" / "cards-foto.webp", "WEBP", quality=76, method=4)
+        ark_foto.save(DOCS / "sprites" / "photos-foto.webp", "WEBP", quality=78, method=4)
     (DOCS / "icons").mkdir(exist_ok=True)
     ikon(bakside, 192).save(DOCS / "icons" / "icon-192.png")
     ikon(bakside, 512).save(DOCS / "icons" / "icon-512.png")
@@ -123,6 +166,9 @@ def main(app):
     ikon(bakside, 180).save(DOCS / "icons" / "apple-touch-icon.png")
 
     print(f"Hentet {len(kort)} kort, {len(hjelp)} forklaringskort og baksiden fra {app}")
+    if fotosett:
+        print(f"Fotosett: {sum(1 for k in kort if k.get('bildeFoto'))} kort med fotografi, "
+              f"{len(hjelp_foto)} forklaringskort (resten viser KI-bildet)")
     print(f"SETT-rute {sett['boks']}, datolinje {sett['linje']}")
     subprocess.run([sys.executable, str(ROT / "build.py")], check=True)
 

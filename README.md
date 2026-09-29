@@ -21,8 +21,9 @@ hagefugler/
     ├── manifest.webmanifest  Gjør at appen kan legges på hjemskjermen (PWA)
     ├── sw.js                 Gjør at appen virker uten nett etter første besøk
     ├── icons/                App-ikoner, laget av fuglen på baksiden
-    ├── cards/                Kortbildene 001–100, forklaringskortene 000a og 000b, og bakside.webp
-    └── sprites/              Små miniatyrer til søk og samlingen
+    ├── cards/                Kortbildene 001–100 med KI-illustrasjoner, forklaringskortene 000a og 000b, og bakside.webp
+    ├── cards-foto/           Kortene som har fotografi fra Artsdatabanken, og kortet Bildekreditering (000c)
+    └── sprites/              Små miniatyrer til søk og samlingen (cards/photos og cards-foto/photos-foto)
 ```
 
 ## Prøve lokalt
@@ -53,6 +54,14 @@ npx cap add ios && npx cap add android
 npx cap open ios        # eller: npx cap open android
 ```
 
+## Fotografier eller KI-illustrasjoner
+
+Fuglekort- lager to sett kort til appen: KI-illustrasjonene (`kort/`) og fotografiene fra mappen
+`bilder_artsdatabanken` (`kort_foto/`, med fotokreditering). Importen kopierer bare kortene som faktisk har
+fotografi til `docs/cards-foto/`; de andre er like KI-kortene og gjenbrukes. I `data/cards.json` har disse kortene
+`bildeFoto`, `fotograf` og `lisens`, og `hjelpFoto` er forklaringskortene med Bildekreditering. Begge settene
+lagres på telefonen, så man kan bytte også uten nett. Finnes ikke fotosettet, skjules tannhjulet.
+
 ## Lagring av avkrysninger
 
 All lagring går gjennom objektet `Store` øverst i skriptet i `src/app.html`:
@@ -68,7 +77,7 @@ Vil du ha synkronisering i den frittstående appen, bytter du ut `connectRemote(
 2. Her: `python3 importer_fuglekort.py sti/til/app`
 3. Commit og push. GitHub Pages oppdaterer appen, og telefonene henter de nye kortene selv.
 
-Skriptet kopierer kortene, de to forklaringskortene og baksiden, finner SETT-ruta og datolinja, lager `data/cards.json`, miniatyrene og app-ikonene, og kjører `build.py`. Avkrysningene lagres på artens latinske navn (f.eks. `parus-major`), ikke på kortnummeret, så de følger fuglen når kortene får ny rekkefølge. Avkrysninger fra før dette (lagret på kortnummer) flyttes over automatisk ved hjelp av `data/tidligere_nummer.json`.
+Skriptet kopierer kortene, de to forklaringskortene, baksiden og fotosettet (se under), finner SETT-ruta og datolinja, lager `data/cards.json`, miniatyrene og app-ikonene, og kjører `build.py`. Avkrysningene lagres på artens latinske navn (f.eks. `parus-major`), ikke på kortnummeret, så de følger fuglen når kortene får ny rekkefølge. Avkrysninger fra før dette (lagret på kortnummer) flyttes over automatisk ved hjelp av `data/tidligere_nummer.json`.
 
 Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort. Appen regner ut antall rader selv.
 
@@ -78,4 +87,5 @@ Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort
 - **Sveip fort** for å bla gjennom mange kort. Farten avtar av seg selv, og **et trykk** stopper blaingen.
 - **Trykk** på kortet for å snu det og se baksiden.
 - **?** øverst viser forklaringskortene (Om kortene og Tegnforklaring).
+- **Tannhjulet** åpner Innstillinger. Under «Bilder på kortene» velger du **KI-illustrasjoner** (standard, som på de trykte kortene) eller **Fotografier** fra Artsdatabanken. Arter uten fotografi viser illustrasjonen, og i fotovalget kommer kortet Bildekreditering med under **?**. Valget huskes på enheten og påvirker ikke avkrysningene.
 - Tastatur: ← → blar, mellomrom snur kortet, S krysser av, / åpner søk, ? viser forklaringskortene, Esc stopper blaing og lukker paneler.

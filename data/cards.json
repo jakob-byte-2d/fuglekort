@@ -82,7 +82,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/002.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 3,
@@ -113,7 +116,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/003.webp",
+   "fotograf": "Olga Hilmo",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 4,
@@ -144,7 +150,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/004.webp",
+   "fotograf": "Snorre Henriksen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 5,
@@ -175,7 +184,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/005.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 6,
@@ -206,7 +218,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/006.webp",
+   "fotograf": "Knut Anders Hovstad",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 7,
@@ -237,7 +252,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/007.webp",
+   "fotograf": "Wouter Koch",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 8,
@@ -361,7 +379,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/011.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 12,
@@ -423,7 +444,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/013.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 14,
@@ -454,7 +478,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/014.webp",
+   "fotograf": "Wouter Koch",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 15,
@@ -547,7 +574,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/017.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 18,
@@ -3121,6 +3151,23 @@
      0.392
     ]
    }
+  }
+ ],
+ "hjelpFoto": [
+  {
+   "id": "000a",
+   "navn": "Om kortene",
+   "bilde": "cards/000a.webp"
+  },
+  {
+   "id": "000b",
+   "navn": "Slik leser du kortene",
+   "bilde": "cards/000b.webp"
+  },
+  {
+   "id": "000c",
+   "navn": "Bildekreditering",
+   "bilde": "cards-foto/000c.webp"
   }
  ],
  "tidligereNr": {

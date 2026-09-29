@@ -58,6 +58,11 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
 assets = ["./", "index.html", "manifest.webmanifest", "sprites/photos.webp", "sprites/cards.webp",
           "icons/icon-192.png", "icons/icon-512.png", "icons/icon-512-maskable.png", "icons/apple-touch-icon.png"]
 assets += [data.get("bakside", "cards/bakside.webp")] + [h["bilde"] for h in data.get("hjelp", [])] + [c["bilde"] for c in data["kort"]]
+# begge bildesettene lagres på telefonen, så man kan bytte i innstillingene også uten nett
+if data.get("hjelpFoto"):
+    assets += ["sprites/cards-foto.webp", "sprites/photos-foto.webp"]
+    assets += [h["bilde"] for h in data["hjelpFoto"] if h["bilde"] not in assets]
+    assets += [c["bildeFoto"] for c in data["kort"] if c.get("bildeFoto")]
 # The cache name follows the content, so phones fetch new cards automatically after every change
 import hashlib
 h = hashlib.sha1((ROOT / "docs" / "index.html").read_bytes())
