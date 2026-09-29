@@ -1,6 +1,6 @@
 // Hagefugler – offline-støtte for den frittstående appen.
 // build.py setter versjonen ut fra innholdet, så telefonene henter alt på nytt etter hver endring.
-const CACHE = 'hagefugler-oslo-e6dbd0c09c';
+const CACHE = 'hagefugler-oslo-ee8724f779';
 const ASSETS = [
   "./",
   "index.html",
@@ -117,16 +117,54 @@ const ASSETS = [
   "sprites/cards-foto.webp",
   "sprites/photos-foto.webp",
   "cards-foto/000c.webp",
+  "cards-foto/001.webp",
   "cards-foto/002.webp",
   "cards-foto/003.webp",
   "cards-foto/004.webp",
   "cards-foto/005.webp",
   "cards-foto/006.webp",
   "cards-foto/007.webp",
+  "cards-foto/008.webp",
+  "cards-foto/009.webp",
+  "cards-foto/010.webp",
   "cards-foto/011.webp",
+  "cards-foto/012.webp",
   "cards-foto/013.webp",
   "cards-foto/014.webp",
-  "cards-foto/017.webp"
+  "cards-foto/015.webp",
+  "cards-foto/016.webp",
+  "cards-foto/017.webp",
+  "cards-foto/018.webp",
+  "cards-foto/019.webp",
+  "cards-foto/020.webp",
+  "cards-foto/021.webp",
+  "cards-foto/022.webp",
+  "cards-foto/023.webp",
+  "cards-foto/024.webp",
+  "cards-foto/025.webp",
+  "cards-foto/026.webp",
+  "cards-foto/027.webp",
+  "cards-foto/028.webp",
+  "cards-foto/029.webp",
+  "cards-foto/030.webp",
+  "cards-foto/031.webp",
+  "cards-foto/032.webp",
+  "cards-foto/033.webp",
+  "cards-foto/034.webp",
+  "cards-foto/035.webp",
+  "cards-foto/036.webp",
+  "cards-foto/037.webp",
+  "cards-foto/038.webp",
+  "cards-foto/039.webp",
+  "cards-foto/040.webp",
+  "cards-foto/041.webp",
+  "cards-foto/042.webp",
+  "cards-foto/043.webp",
+  "cards-foto/044.webp",
+  "cards-foto/047.webp",
+  "cards-foto/048.webp",
+  "cards-foto/049.webp",
+  "cards-foto/050.webp"
 ];
 
 self.addEventListener('install', event => {

@@ -51,7 +51,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/001.webp",
+   "fotograf": "Knut Bever Freng",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 2,
@@ -286,7 +289,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/008.webp",
+   "fotograf": "Ragnar Skrede",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 9,
@@ -317,7 +323,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/009.webp",
+   "fotograf": "Hildegunn Bjørgan",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 10,
@@ -348,7 +357,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/010.webp",
+   "fotograf": "Kjell A. Kristiansen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 11,
@@ -413,7 +425,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/012.webp",
+   "fotograf": "Jan Alsvik",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 13,
@@ -512,7 +527,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/015.webp",
+   "fotograf": "Manuela Bakker",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 16,
@@ -543,7 +561,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/016.webp",
+   "fotograf": "Åge Marberg",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 17,
@@ -608,7 +629,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/018.webp",
+   "fotograf": "Eirik Røtnes",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 19,
@@ -639,7 +663,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/019.webp",
+   "fotograf": "Atle Jektvik",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 20,
@@ -670,7 +697,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/020.webp",
+   "fotograf": "Walter Lemme",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 21,
@@ -701,7 +731,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/021.webp",
+   "fotograf": "Hauk Liebe",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 22,
@@ -732,7 +765,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/022.webp",
+   "fotograf": "David Kobbevik",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 23,
@@ -763,7 +799,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/023.webp",
+   "fotograf": "Kjartan Pedersen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 24,
@@ -794,7 +833,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/024.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 25,
@@ -825,7 +867,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/025.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 26,
@@ -856,7 +901,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/026.webp",
+   "fotograf": "Steven Henriksen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 27,
@@ -887,7 +935,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/027.webp",
+   "fotograf": "Åge Marberg",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 28,
@@ -918,7 +969,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/028.webp",
+   "fotograf": "John Kristiansen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 29,
@@ -949,7 +1003,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/029.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 30,
@@ -980,7 +1037,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/030.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 31,
@@ -1011,7 +1071,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/031.webp",
+   "fotograf": "Kjartan Pedersen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 32,
@@ -1042,7 +1105,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/032.webp",
+   "fotograf": "Richard Kjelaas",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 33,
@@ -1073,7 +1139,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/033.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 34,
@@ -1104,7 +1173,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/034.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 35,
@@ -1135,7 +1207,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/035.webp",
+   "fotograf": "Hans Karl Karlsen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 36,
@@ -1166,7 +1241,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/036.webp",
+   "fotograf": "Geir Høen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 37,
@@ -1197,7 +1275,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/037.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 38,
@@ -1228,7 +1309,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/038.webp",
+   "fotograf": "Tycho Anker-Nilssen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 39,
@@ -1259,7 +1343,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/039.webp",
+   "fotograf": "Helge Venaas",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 40,
@@ -1290,7 +1377,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/040.webp",
+   "fotograf": "Steinar Stueflotten",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 41,
@@ -1321,7 +1411,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/041.webp",
+   "fotograf": "Hildegunn Bjørgan",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 42,
@@ -1352,7 +1445,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/042.webp",
+   "fotograf": "Rune Zakariassen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 43,
@@ -1383,7 +1479,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/043.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 44,
@@ -1414,7 +1513,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/044.webp",
+   "fotograf": "Kjell A. Kristiansen",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 45,
@@ -1507,7 +1609,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/047.webp",
+   "fotograf": "Klaus Meyer",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 48,
@@ -1538,7 +1643,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/048.webp",
+   "fotograf": "Jan Ole Ødegård",
+   "lisens": "CC BY-SA 4.0"
   },
   {
    "nr": 49,
@@ -1569,7 +1677,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/049.webp",
+   "fotograf": "Ulf Stordalmo",
+   "lisens": "CC BY-SA 4.0"
   },
   {
    "nr": 50,
@@ -1600,7 +1711,10 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/050.webp",
+   "fotograf": "Rolv Lundheim",
+   "lisens": "CC BY 4.0"
   },
   {
    "nr": 51,

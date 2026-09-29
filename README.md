@@ -87,5 +87,5 @@ Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort
 - **Sveip fort** for å bla gjennom mange kort. Farten avtar av seg selv, og **et trykk** stopper blaingen.
 - **Trykk** på kortet for å snu det og se baksiden.
 - **?** øverst viser forklaringskortene (Om kortene og Tegnforklaring).
-- **Tannhjulet** åpner Innstillinger. Under «Bilder på kortene» velger du **KI-illustrasjoner** (standard, som på de trykte kortene) eller **Fotografier** fra Artsdatabanken. Arter uten fotografi viser illustrasjonen, og i fotovalget kommer kortet Bildekreditering med under **?**. Valget huskes på enheten og påvirker ikke avkrysningene.
+- **Tannhjulet** åpner Innstillinger. Under «Bilder på kortene» velger du **KI-illustrasjoner** (standard, som på de trykte kortene) eller **Fotografier** fra Artsdatabanken og Artsobservasjoner. Arter uten fotografi viser illustrasjonen, og i fotovalget kommer kortet Bildekreditering med under **?**. Valget huskes på enheten og påvirker ikke avkrysningene.
 - Tastatur: ← → blar, mellomrom snur kortet, S krysser av, / åpner søk, ? viser forklaringskortene, Esc stopper blaing og lukker paneler.

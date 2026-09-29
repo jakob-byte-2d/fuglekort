@@ -992,7 +992,7 @@ helpSheet.addEventListener('click', e => { if (!e.target.closest('.help-card, .h
 /* ---- innstillinger ---- */
 const setSheet = $('#settingsSheet');
 $('#openSettings').hidden = !HAR_FOTO;
-$('#fotoAntall').textContent = `Fotografier fra Artsdatabanken for ${CARDS.filter(c => c.bildeFoto).length} av ${N} arter. De andre viser illustrasjonen. Fotografene står på kortet Bildekreditering under ?.`;
+$('#fotoAntall').textContent = `Fotografier fra Artsdatabanken og Artsobservasjoner for ${CARDS.filter(c => c.bildeFoto).length} av ${N} arter. De andre viser illustrasjonen. Fotografene står på kortet Bildekreditering under ?.`;
 function paintSettings() { setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg)); }
 function openSettings() { paintSettings(); showSheet(setSheet); setTimeout(() => setSheet.querySelector('[aria-checked="true"]').focus(), 60); }
 function settBilder(v) {
