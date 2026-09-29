@@ -90,6 +90,33 @@ button{cursor:pointer}
   clip-path:inset(-30% 100% -30% 0);transition:clip-path .55s steps(14, end) .12s}
 .seen .hand{clip-path:inset(-30% -10% -30% 0)}
 .dato:focus-within{outline:2px solid var(--pen);outline-offset:1px;border-radius:1.5cqw}
+/* "× 7": how many days the bird has been seen, written by the SETT label */
+.antall{position:absolute;display:flex;align-items:center;font-family:var(--hand);font-weight:600;font-size:6.8cqw;line-height:1;
+  color:var(--pen);white-space:nowrap;transform:rotate(-4deg);pointer-events:none}
+.antall.pop{animation:pop .55s cubic-bezier(.3,1.7,.5,1)}
+@keyframes pop{from{transform:rotate(-14deg) scale(.3);opacity:0}to{transform:rotate(-4deg) scale(1);opacity:1}}
+
+/* back of the card: the days this bird was seen, on a note over the deck's back */
+.logg{position:absolute;left:6.5%;right:6.5%;top:32%;bottom:5%;display:flex;flex-direction:column;overflow:hidden;
+  background:color-mix(in srgb, var(--card-cream) 96%, transparent);color:var(--card-ink);border-radius:3.6cqw;
+  border:.35cqw solid rgba(20,35,29,.14);box-shadow:0 1.2cqw 5cqw -1cqw rgba(20,35,29,.4)}
+.logg[hidden]{display:none}
+.lh{display:grid;gap:.8cqw;padding:4.2cqw 5cqw 3cqw;border-bottom:.35cqw solid #e6e3cf}
+.lh b{font-size:6.6cqw;font-weight:700;letter-spacing:-.015em;line-height:1.05}
+.lh span{font-size:3.9cqw;color:#4c5c54}
+.llist{list-style:none;margin:0;padding:.5cqw 2.5cqw .5cqw 5cqw;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+.llist li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:3.4cqw;min-height:12.5cqw;border-bottom:.3cqw dashed #dcd8c2}
+.llist li:last-child{border-bottom:0}
+.ld{font-family:var(--hand);font-weight:600;font-size:7.4cqw;line-height:1;color:var(--pen);transform:rotate(-2deg)}
+.lw{font-size:3.6cqw;line-height:1.25;color:#56665e}
+.lw b{font-weight:700;color:var(--card-green)}
+.ldel{width:10.5cqw;height:10.5cqw;padding:0;border:0;border-radius:50%;background:none;display:grid;place-items:center;color:#6d7a72}
+.ldel svg{width:4.2cqw;height:4.2cqw}
+.ldel:hover{background:rgba(20,35,29,.07)}
+.ladd{position:relative;display:flex;align-items:center;justify-content:center;margin:2.4cqw 4cqw 4cqw;min-height:12cqw;border-radius:2.8cqw;
+  background:var(--card-green);color:#f3f8f2;font-weight:600;font-size:4.3cqw;cursor:pointer}
+.ladd input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;margin:0;padding:0;-webkit-appearance:none;appearance:none}
+.ladd:focus-within{outline:2px solid var(--pen);outline-offset:2px}
 
 /* back of the card: readable field notes */
 .stars{display:inline-flex;gap:.2em;color:var(--card-gold)}
@@ -259,6 +286,7 @@ button{cursor:pointer}
 @media (prefers-reduced-motion: reduce){
   .float{animation:none}
   .card,.card .inner,.sheet,.scrim,.tick path,.hand{transition-duration:.01s!important}
+  .antall.pop{animation:none}
 }
 </style>
 
@@ -389,23 +417,48 @@ const BACK = `<img src="${esc(DATA.bakside || 'cards/bakside.webp')}" alt="" dra
    One small adapter so the same page runs as a Claude artifact (shared db)
    and as a standalone app (localStorage). Swap `connectRemote` for your own
    backend when this becomes a separate app. */
+/* One entry per species with every day it was seen, oldest first. `date` is the first day; it stays in the
+   stored object so older versions of the app (which only knew one date) still read the list correctly. */
+const ISO = /^\d{4}-\d{2}-\d{2}$/;
+function entry(v) {
+  if (!v) return null;
+  const dager = [...new Set([...(Array.isArray(v.dager) ? v.dager : []), v.date].filter(d => typeof d === 'string' && ISO.test(d)))].sort();
+  return dager.length ? { date: dager[0], dager, ts: v.ts || 0 } : null;
+}
+function entries(raw) {
+  const out = {};
+  Object.keys(raw || {}).forEach(k => { const e = entry(raw[k]); if (e) out[k] = e; });
+  return out;
+}
 const Store = {
   KEY: 'hagefugler-oslo:sett:v1',
-  data: {},             // "001" -> { date: "2026-09-26", ts: 1727… }
+  data: {},             // "parus-major" -> { date: "2026-09-20", dager: ["2026-09-20", "2026-09-29"], ts: 1727… }
   mode: 'lokal',
   readOnly: false,
   db: null,
   subs: new Set(),
   queue: {},
   loadLocal() {
-    try { this.data = JSON.parse(lsGet(this.KEY) || '{}') || {}; } catch (e) { this.data = {}; }
-    if (migrateKeys(this.data).length) this.saveLocal();
+    let raw = {};
+    try { raw = JSON.parse(lsGet(this.KEY) || '{}') || {}; } catch (e) { raw = {}; }
+    this.data = entries(raw);
+    migrateKeys(this.data);
+    this.saveLocal();
   },
   saveLocal() { lsSet(this.KEY, JSON.stringify(this.data)); },
   emit() { this.subs.forEach(fn => fn()); },
   on(fn) { this.subs.add(fn); },
   has(id) { return !!this.data[id]; },
   get(id) { return this.data[id]; },
+  days(id) { return this.data[id] ? this.data[id].dager : []; },
+  /* the whole list of days for one species; an empty list removes it */
+  put(id, dager) {
+    const e = entry({ dager });
+    if (e) { e.ts = Date.now(); this.data[id] = e; } else delete this.data[id];
+    this.saveLocal(); this.emit(); this.push(id);
+  },
+  addDay(id, d) { const cur = this.days(id); if (cur.includes(d)) return false; this.put(id, [...cur, d]); return true; },
+  removeDay(id, d) { this.put(id, this.days(id).filter(x => x !== d)); },
   async connectRemote() {
     const c = window.claude;
     if (!c || typeof c.use !== 'function') return;
@@ -416,7 +469,7 @@ const Store = {
     let settled = false;
     db.collection('sett').onSnapshot(snap => {
       const next = {};
-      snap.docs.forEach(d => { if (d.exists) { const v = d.data(); if (v && v.date) next[d.id] = { date: v.date, ts: v.ts || 0 }; } });
+      snap.docs.forEach(d => { if (d.exists) { const e = entry(d.data()); if (e) next[d.id] = e; } });
       const moved = migrateKeys(next);          // old documents named by card number → the species
       if (!settled && !snap.metadata.fromCache) {
         settled = true;
@@ -431,8 +484,6 @@ const Store = {
       moved.forEach(([oldId, key]) => { this.push(key); this.push(oldId); });
     }, () => { this.mode = 'lokal'; this.emit(); });
   },
-  set(id, date) { this.data[id] = { date, ts: Date.now() }; this.saveLocal(); this.emit(); this.push(id); },
-  remove(id) { delete this.data[id]; this.saveLocal(); this.emit(); this.push(id); },
   replaceAll(obj) { const prev = Object.keys(this.data); this.data = obj; this.saveLocal(); this.emit(); new Set([...prev, ...Object.keys(obj)]).forEach(id => this.push(id)); },
   push(id) {
     if (!this.db || this.readOnly) return;
@@ -446,7 +497,7 @@ const Store = {
         const v = this.data[id];
         try {
           const ref = this.db.doc('sett/' + id);
-          if (v) await ref.set({ art: id, date: v.date, ts: v.ts }); else await ref.delete();
+          if (v) await ref.set({ art: id, date: v.date, dager: v.dager, ts: v.ts }); else await ref.delete();
         } catch (e) {
           if (e && (e.code === 'invalid_argument' || e.code === 'not_granted' || e.code === 'revoked')) {
             this.readOnly = true; this.mode = 'lokal'; this.emit();
@@ -472,7 +523,7 @@ function migrateKeys(obj) {
   Object.keys(obj).forEach(k => {
     if (!/^\d{3}$/.test(k)) return;
     const key = OLD_NR[k];
-    if (key && BY_KEY[key] != null && !obj[key]) obj[key] = obj[k];
+    if (key && BY_KEY[key] != null) obj[key] = obj[key] ? entry({ dager: [...obj[key].dager, ...obj[k].dager], ts: obj[key].ts }) : obj[k];
     delete obj[k];
     moved.push([k, key]);
   });
@@ -519,28 +570,65 @@ function makeCard(i) {
       <img src="${esc(bildeAv(c))}" alt="${esc(altTekst(c))}" draggable="false" decoding="async">
       <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
       <button class="ctl sett-hit" data-act="toggle" aria-pressed="false" aria-label="Sett ${esc(c.navn)}" style="left:${P(bx - 0.025)};top:${P(by - 0.012)};width:${P(bw + 0.22)};height:${P(bh + 0.024)}"></button>
+      <span class="antall" aria-hidden="true" style="left:${P(bx + bw + 0.14)};top:${P(by - 0.006)};height:${P(bh + 0.012)}"></span>
       <label class="ctl dato" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}">
         <span class="hand" style="left:${P((lx - dLeft + 0.012) / dW)}"></span>
-        <input type="date" data-act="date" aria-label="Dato du så ${esc(c.navn)}">
+        <input type="date" data-act="date" aria-label="Første gang du så ${esc(c.navn)}">
       </label>
     </div>
-    <div class="face back" aria-hidden="true">${BACK}
-    </div>
+    <div class="face back">${BACK}<div class="logg" hidden></div></div>
   </div>`;
+  el.querySelector('.back').inert = true;
   paintCard(el);
   return el;
 }
 
+const UKEDAG = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];
+const ukedag = iso => { const [y, m, d] = iso.split('-').map(Number); return UKEDAG[new Date(y, m - 1, d).getDay()]; };
+const dagerTekst = n => `${n} observasjonsdag${n === 1 ? '' : 'er'}`;
+const XMARK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+
 function paintCard(el) {
   const c = CARDS[+el.dataset.i];
   const s = Store.get(c.key);
+  const dager = s ? s.dager : [], t = todayISO();
   el.classList.toggle('seen', !!s);
-  el.querySelectorAll('[data-act="toggle"]').forEach(b => {
-    b.setAttribute('aria-pressed', s ? 'true' : 'false');
-    b.setAttribute('aria-label', s ? `${c.navn} er merket som sett ${fmtLong(s.date)}. Trykk for å fjerne` : `Merk ${c.navn} som sett i dag`);
-  });
+  const b = el.querySelector('[data-act="toggle"]');
+  b.setAttribute('aria-pressed', s ? 'true' : 'false');
+  b.setAttribute('aria-label', !s ? `Merk ${c.navn} som sett i dag`
+    : dager.includes(t) ? `${c.navn} er registrert i dag. Trykk for å se alle dagene`
+    : `Registrer ${c.navn} som sett i dag. ${dagerTekst(dager.length)} så langt`);
   el.querySelector('.hand').textContent = s ? fmtHand(s.date) : '';
-  el.querySelectorAll('input[type="date"]').forEach(inp => { inp.value = s ? s.date : ''; inp.max = todayISO(); });
+  // "× 7" by the SETT box once a bird has been seen on more than one day
+  const ant = el.querySelector('.antall'), before = ant.dataset.n == null ? null : +ant.dataset.n;
+  ant.dataset.n = dager.length;
+  ant.textContent = dager.length > 1 ? `× ${dager.length}` : '';
+  if (before != null && dager.length > before && dager.length > 1) { ant.classList.remove('pop'); void ant.offsetWidth; ant.classList.add('pop'); }
+  const inp = el.querySelector('[data-act="date"]');
+  inp.value = s ? s.date : ''; inp.max = t;
+  paintLogg(el, c, dager);
+}
+
+/* the back of the card: every day this bird was seen, newest first */
+function paintLogg(el, c, dager) {
+  const box = el.querySelector('.logg'), t = todayISO();
+  const sig = dager.join(',') + '|' + t;
+  if (box.dataset.sig === sig) return;
+  box.dataset.sig = sig;
+  box.hidden = !dager.length;
+  if (!dager.length) { box.innerHTML = ''; return; }
+  const rows = [...dager].reverse().map(d => `<li><span class="ld">${fmtHand(d)}</span>
+    <span class="lw">${d === t ? 'i dag' : ukedag(d)}${d === dager[0] ? '<br><b>første gang</b>' : ''}</span>
+    <button class="ctl ldel" data-act="delday" data-d="${d}" aria-label="Slett ${fmtLong(d)}">${XMARK}</button></li>`).join('');
+  box.innerHTML = `<div class="lh"><b>${esc(c.navn)}</b><span>${dagerTekst(dager.length)}</span></div>
+    <ol class="b-body llist" aria-label="Dager du har sett ${esc(c.navn)}">${rows}</ol>
+    <label class="ctl ladd"><span>+ Legg til en dag</span><input type="date" data-act="addday" max="${t}" aria-label="Legg til en dag du så ${esc(c.navn)}"></label>`;
+}
+function setFlipped(el, on) {
+  el.classList.toggle('flipped', on);
+  el.querySelector('.front').inert = on;
+  el.querySelector('.back').inert = !on;
+  if (on) { const l = el.querySelector('.llist'); if (l) l.scrollTop = 0; }
 }
 
 function metrics() {
@@ -595,7 +683,7 @@ function sync(opts = {}) {
     const s = slotOf(i);
     el.classList.toggle('is-top', s === 0);
     el.classList.remove('held');
-    if (s !== 0) el.classList.remove('flipped');
+    if (s !== 0 && el.classList.contains('flipped')) setFlipped(el, false);
     el.setAttribute('aria-hidden', s === 0 ? 'false' : 'true');
     el.inert = s !== 0;
     apply(el, pose(s, m));
@@ -617,7 +705,7 @@ function jump(i, how = 'deal') {
 }
 function flip() {
   const el = pool.get(cur); if (!el) return;
-  el.classList.toggle('flipped');
+  setFlipped(el, !el.classList.contains('flipped'));
   nudgeHint();
 }
 function announce() { const c = CARDS[cur]; $('#live').textContent = `Kort ${cur + 1} av ${N}: ${c.navn}${Store.has(c.key) ? ', sett' : ''}`; }
@@ -678,7 +766,9 @@ function setArmed(a) {
   if (a) haptic(14);
 }
 stage.addEventListener('pointerdown', e => {
-  if (e.button !== 0 || e.target.closest('.ctl')) return;
+  // controls on the card take taps, not drags; the delete buttons in the list of days sit where a swipe
+  // often starts, so a drag may begin on them (a tap on them still only deletes)
+  if (e.button !== 0 || e.target.closest('.ctl:not(.ldel)')) return;
   const stopped = stopRiffle();                           // a touch while riffling stops it
   if (stopped) sync();
   const top = pool.get(cur);
@@ -686,7 +776,7 @@ stage.addEventListener('pointerdown', e => {
   const r = top ? top.getBoundingClientRect() : { top: 0, height: 0 };
   const now = performance.now();
   drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, t0: now, dx: 0, dy: 0, moved: false, held: false, armed: 0,
-           stopped, onCard, upper: e.clientY < r.top + r.height / 2, inBody: !!e.target.closest('.b-body'),
+           stopped, onCard, upper: e.clientY < r.top + r.height / 2, inBody: !!e.target.closest('.b-body'), ctl: !!e.target.closest('.ctl'),
            hist: [[e.clientX, e.timeStamp || now]], m: metrics(), sr: stage.getBoundingClientRect() };
   if (onCard) drag.holdT = setTimeout(lift, 120);
 });
@@ -742,7 +832,7 @@ function endDrag(e, cancelled) {
   clearDragUi();
   if (!d.moved) {
     const quick = performance.now() - d.t0 < 450;
-    if (!cancelled && !d.stopped && d.onCard && quick) { sync(); flip(); } else sync();
+    if (!cancelled && !d.stopped && d.onCard && quick && !d.ctl) { sync(); flip(); } else sync();
     return;
   }
   const h = d.hist, a = h[0], b = h[h.length - 1];
@@ -786,38 +876,70 @@ if (matchMedia('(hover:hover) and (pointer:fine)').matches && !matchMedia('(pref
   stage.addEventListener('pointerleave', () => { deckEl.style.transform = ''; });
 }
 
-/* controls on the card (front SETT box, date line, back footer) */
+/* controls on the card: the SETT box and date line on the front, the list of days on the back */
 deckEl.addEventListener('click', e => {
-  const b = e.target.closest('[data-act="toggle"]'); if (!b) return;
+  const b = e.target.closest('[data-act="toggle"], [data-act="delday"]'); if (!b) return;
   const el = b.closest('.card'); if (!el || !el.classList.contains('is-top')) return;
   e.stopPropagation();
-  toggleSeen(CARDS[+el.dataset.i]);
+  const c = CARDS[+el.dataset.i];
+  if (b.dataset.act === 'toggle') trykkSett(c); else slettDag(c, b.dataset.d);
 });
 deckEl.addEventListener('click', e => {
   const inp = e.target.closest('input[type="date"]'); if (!inp) return;
   if (typeof inp.showPicker === 'function') { try { inp.showPicker(); } catch (err) {} }
 });
 deckEl.addEventListener('change', e => {
-  const inp = e.target.closest('input[type="date"]'); if (!inp) return;
-  const el = inp.closest('.card'); const c = CARDS[+el.dataset.i];
-  if (inp.value) { Store.set(c.key, inp.value); celebrate(c); }
+  const inp = e.target.closest('input[type="date"]'); if (!inp || !inp.value || !ISO.test(inp.value)) return;
+  const c = CARDS[+inp.closest('.card').dataset.i], d = inp.value;
+  if (d > todayISO()) { toast('Datoen kan ikke være fram i tid.'); paintCard(inp.closest('.card')); return; }
+  if (inp.dataset.act === 'addday') { inp.value = ''; leggTilDag(c, d); }
+  else flyttForsteDag(c, d);
 });
 
-function toggleSeen(c) {
-  const prev = Store.get(c.key);
-  if (prev) {
-    Store.remove(c.key);
-    toast(`${c.navn} er ikke lenger merket som sett.`, 'Angre', () => Store.set(c.key, prev.date));
-  } else {
-    Store.set(c.key, todayISO());
-    celebrate(c);
-  }
+/* Tapping SETT: the first time it ticks the box and writes the date; on a later day it adds that day.
+   A second tap on the same day shows the list of days instead of removing anything. */
+function trykkSett(c) {
+  const t = todayISO(), dager = Store.days(c.key);
+  if (!dager.length) { registrer(c, t); return; }
+  if (dager.includes(t)) { visLogg(c); toast(`${c.navn} er allerede registrert i dag.`); return; }
+  Store.addDay(c.key, t);
+  haptic(10);
+  toast(`${c.navn}: ${dager.length + 1}. observasjonsdag.`, 'Angre', () => Store.removeDay(c.key, t));
 }
-function celebrate(c) {
-  try { navigator.vibrate && navigator.vibrate(12); } catch (e) {}
+function registrer(c, d) {
+  Store.put(c.key, [d]);
+  haptic(12);
   const n = seenCount();
-  if (c.stjerner >= 4) toast(`${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i Oslo-hager. ${n} av ${N} sett.`);
-  else if (n === N) toast(`Alle ${N} kortene er krysset av. Hele kortstokken er komplett!`);
+  const msg = n === N ? `Alle ${N} artene er sett. Hele kortstokken er komplett!`
+    : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i Oslo-hager. ${n} av ${N} sett.`
+    : `${c.navn} er sett for første gang. ${n} av ${N} arter.`;
+  toast(msg, 'Angre', () => Store.put(c.key, []));
+}
+function leggTilDag(c, d) {
+  const gml = Store.days(c.key);
+  if (!gml.length) { registrer(c, d); return; }
+  if (gml.includes(d)) { toast(`${fmtHand(d)} er allerede registrert for ${c.navn}.`); return; }
+  Store.addDay(c.key, d);
+  toast(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.`, 'Angre', () => Store.put(c.key, gml));
+}
+function slettDag(c, d) {
+  const gml = Store.days(c.key);
+  Store.removeDay(c.key, d);
+  toast(gml.length === 1 ? `${c.navn} er ikke lenger merket som sett.` : `Slettet ${fmtHand(d)} for ${c.navn}.`, 'Angre', () => Store.put(c.key, gml));
+}
+/* the date line on the front is the first day: changing it moves that day */
+function flyttForsteDag(c, d) {
+  const gml = Store.days(c.key);
+  if (!gml.length) { registrer(c, d); return; }
+  if (gml[0] === d) return;
+  Store.put(c.key, [...gml.slice(1), d]);
+  toast(`Første gang flyttet fra ${fmtHand(gml[0])} til ${fmtHand(d)}.`, 'Angre', () => Store.put(c.key, gml));
+}
+function visLogg(c) {
+  const i = BY_KEY[c.key];
+  if (i !== cur) jump(i);
+  const el = pool.get(cur);
+  if (el && !el.classList.contains('flipped')) flip();
 }
 
 /* keyboard */
@@ -830,7 +952,7 @@ document.addEventListener('keydown', e => {
   else if ((e.key === ' ' || e.key === 'Enter') && !e.target.closest('button')) { e.preventDefault(); flip(); }
   else if (e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) { e.preventDefault(); openSearch(); }
   else if (e.key === '?') { e.preventDefault(); openHelp(); }
-  else if (e.key.toLowerCase() === 's' && !e.metaKey && !e.ctrlKey) { toggleSeen(CARDS[cur]); }
+  else if (e.key.toLowerCase() === 's' && !e.metaKey && !e.ctrlKey) { trykkSett(CARDS[cur]); }
 });
 $('#prevBtn').addEventListener('click', () => { stopRiffle(); go(-1); });
 $('#nextBtn').addEventListener('click', () => { stopRiffle(); go(1); });
@@ -960,7 +1082,7 @@ function renderSearch() {
       <span class="t"><span class="n">${terms.length ? hl(c.navn, IDX[i].navn, terms) : esc(c.navn)}</span>
         <span class="l">${terms.length ? hl(c.latin, IDX[i].latin, terms) : esc(c.latin)}</span>
         ${hit ? `<span class="sn"><em>${label}:</em> ${snippet(c[hit], IDX[i][hit], terms)}</span>` : ''}</span>
-      <span class="r">${s ? `<span class="okdot" title="Sett ${fmtLong(s.date)}">${CHECK}</span>` : `<span>${c.id}</span>`}${stars(c.stjerner)}</span>
+      <span class="r">${s ? `<span class="okdot" title="Sett første gang ${fmtLong(s.date)}, ${dagerTekst(s.dager.length)}">${CHECK}</span>` : `<span>${c.id}</span>`}${stars(c.stjerner)}</span>
     </button></li>`;
   }).join('');
 }
@@ -1029,8 +1151,13 @@ function renderStats() {
   ids.forEach(id => { const [y, m] = Store.data[id].date.split('-').map(Number); const b = months.find(x => x.y === y && x.m === m); if (b) b.n++; });
   const maxM = Math.max(1, ...months.map(x => x.n));
   const inYear = months.reduce((a, x) => a + x.n, 0);
-  const recent = ids.map(id => ({ id, ...Store.data[id] })).sort((a, b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : b.ts - a.ts)).slice(0, 6);
+  const last = id => Store.data[id].dager[Store.data[id].dager.length - 1];
+  const recent = ids.map(id => ({ id, d: last(id), ant: Store.data[id].dager.length, ts: Store.data[id].ts }))
+    .sort((a, b) => (b.d > a.d ? 1 : b.d < a.d ? -1 : b.ts - a.ts)).slice(0, 6);
   const cardOf = key => BY_KEY[key];
+  const obsDager = new Set(ids.flatMap(id => Store.data[id].dager)).size;
+  const regs = ids.reduce((a, id) => a + Store.data[id].dager.length, 0);
+  const most = ids.map(id => ({ c: CARDS[BY_KEY[id]], ant: Store.data[id].dager.length })).sort((a, b) => b.ant - a.ant || a.c.nr - b.c.nr)[0];
 
   sb.innerHTML = `
     <div class="hero"><span class="big">${n}</span><span class="of">av ${N} arter sett</span></div>
@@ -1038,6 +1165,8 @@ function renderStats() {
     <div class="kpis">
       <div class="kpi"><b>${pts} <small style="font-size:14px;color:var(--muted)">/ ${ptsMax}</small></b><span>Poeng. Hvert kort gir like mange poeng som det har stjerner.</span></div>
       <div class="kpi"><b>${rarest ? esc(rarest.navn) : '–'}</b><span>${rarest ? `Sjeldneste funn, ${rarest.stjerner} ${rarest.stjerner === 1 ? 'stjerne' : 'stjerner'}` : 'Sjeldneste funn vises her'}</span></div>
+      <div class="kpi"><b>${obsDager}</b><span>${obsDager === 1 ? 'Observasjonsdag' : 'Observasjonsdager'}, med ${regs} ${regs === 1 ? 'registrering' : 'registreringer'} i alt</span></div>
+      <div class="kpi"><b>${most && most.ant > 1 ? esc(most.c.navn) : '–'}</b><span>${most && most.ant > 1 ? `Sett flest dager, ${most.ant} i alt` : 'Fuglen du har sett flest dager, vises her'}</span></div>
     </div>
 
     <div class="s-sec"><h3>Etter sjeldenhet</h3><div class="rar">
@@ -1054,7 +1183,7 @@ function renderStats() {
     </div>
 
     ${recent.length ? `<div class="s-sec"><h3>Sist sett</h3><ul class="recent">
-      ${recent.map(r => { const i = cardOf(r.id), c = CARDS[i]; return `<li><button data-i="${i}"><span class="ph" style="background-position:${spritePos(i)}" aria-hidden="true"></span><span><b style="font-weight:600">${esc(c.navn)}</b><br><span style="font-size:12.5px;color:var(--muted)">${esc(RAR[c.stjerner])}</span></span><span class="d">${fmtHand(r.date)}</span></button></li>`; }).join('')}
+      ${recent.map(r => { const i = cardOf(r.id), c = CARDS[i]; return `<li><button data-i="${i}"><span class="ph" style="background-position:${spritePos(i)}" aria-hidden="true"></span><span><b style="font-weight:600">${esc(c.navn)}</b><br><span style="font-size:12.5px;color:var(--muted)">${esc(RAR[c.stjerner])} · ${dagerTekst(r.ant)}</span></span><span class="d">${fmtHand(r.d)}</span></button></li>`; }).join('')}
     </ul></div>` : ''}
 
     <div class="s-sec"><h3>Samlingen</h3><div class="album">
@@ -1079,7 +1208,7 @@ sb.addEventListener('click', async e => {
   const j = e.target.closest('[data-i]');
   if (j) { closeSheets(true); jump(+j.dataset.i); return; }
   if (e.target.id === 'copyBackup') {
-    const txt = JSON.stringify({ kortstokk: 'hagefugler-oslo', versjon: 2, sett: Store.data });
+    const txt = JSON.stringify({ kortstokk: 'hagefugler', versjon: 3, sett: Store.data });
     try { await navigator.clipboard.writeText(txt); toast('Sikkerhetskopien er kopiert. Lim den inn i et notat eller en e-post til deg selv.'); }
     catch (err) { $('#restoreBox').hidden = false; const t = $('#restoreTxt'); t.value = txt; t.select(); toast('Kopier teksten i feltet manuelt.'); }
   }
@@ -1087,10 +1216,20 @@ sb.addEventListener('click', async e => {
   if (e.target.id === 'doRestore') {
     try {
       const obj = JSON.parse($('#restoreTxt').value);
-      const src = { ...(obj.sett || obj) }; migrateKeys(src); let added = 0; const merged = { ...Store.data };
-      Object.keys(src).forEach(id => { if (BY_KEY[id] != null && src[id] && /^\d{4}-\d{2}-\d{2}$/.test(src[id].date) && !merged[id]) { merged[id] = { date: src[id].date, ts: src[id].ts || Date.now() }; added++; } });
-      Store.replaceAll(merged);
-      toast(added ? `La til ${added} avkrysninger.` : 'Ingen nye avkrysninger i sikkerhetskopien.');
+      // older copies have one date per bird, newer ones a list of days; either way the days are added to the ones here
+      const src = entries(obj.sett || obj); migrateKeys(src);
+      let arter = 0, dager = 0; const merged = { ...Store.data };
+      Object.keys(src).forEach(id => {
+        if (BY_KEY[id] == null) return;
+        const had = merged[id] ? merged[id].dager : [];
+        const nye = src[id].dager.filter(d => !had.includes(d));
+        if (!nye.length) return;
+        if (!had.length) arter++;
+        dager += nye.length;
+        merged[id] = { ...entry({ dager: [...had, ...nye] }), ts: Date.now() };
+      });
+      if (dager) Store.replaceAll(merged);
+      toast(dager ? `La til ${dager} ${dager === 1 ? 'dag' : 'dager'}${arter ? `, ${arter} ${arter === 1 ? 'ny art' : 'nye arter'}` : ''}.` : 'Ingen nye dager i sikkerhetskopien.');
     } catch (err) { toast('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
   }
 });

@@ -1,6 +1,6 @@
 # Hagefugler
 
-Kortstokk med 100 fuglekort fra Oslo. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, krysse av fuglene du har sett med dato og se statistikk. Knappen **?** viser de to forklaringskortene.
+Kortstokk med 100 fuglekort fra Oslo. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl og se statistikk. Knappen **?** viser de to forklaringskortene.
 
 Kortene lages i repoet **Fuglekort-** (Fuglekort-fabrikken). Dette repoet er appen som viser dem.
 
@@ -62,12 +62,13 @@ fotografi til `docs/cards-foto/`; de andre er like KI-kortene og gjenbrukes. I `
 `bildeFoto`, `fotograf` og `lisens`, og `hjelpFoto` er forklaringskortene med Bildekreditering. Begge settene
 lagres på telefonen, så man kan bytte også uten nett. Finnes ikke fotosettet, skjules tannhjulet.
 
-## Lagring av avkrysninger
+## Lagring av observasjoner
 
 All lagring går gjennom objektet `Store` øverst i skriptet i `src/app.html`:
 
-- **Som Claude-artifact** lagres avkrysningene i artifactens database (samlingen `sett`, ett dokument per art, f.eks. `sett/parus-major = { art, date, ts }`), så de følger med på alle enheter der du er logget inn.
-- **Som frittstående app** lagres de i nettleserens `localStorage` på enheten. Under «Lagring» i statistikkmenyen finnes «Kopier sikkerhetskopi» og «Gjenopprett», så du kan flytte listen mellom enheter.
+- **Som Claude-artifact** lagres observasjonene i artifactens database (samlingen `sett`, ett dokument per art, f.eks. `sett/parus-major = { art, date, dager, ts }`), så de følger med på alle enheter der du er logget inn. `dager` er alle dagene fuglen er sett, eldste først, og `date` er den første av dem (feltet er beholdt så eldre versjoner av appen fortsatt kan lese lista).
+- Avkrysninger fra før observasjonsdagene kom (bare `date`) blir automatisk fuglens første observasjonsdag.
+- **Som frittstående app** lagres de i nettleserens `localStorage` på enheten. Under «Lagring» i statistikkmenyen finnes «Kopier sikkerhetskopi» og «Gjenopprett», så du kan flytte listen mellom enheter. Gjenoppretting legger dagene i kopien til dem du har, og tar også imot eldre kopier med én dato per fugl.
 
 Vil du ha synkronisering i den frittstående appen, bytter du ut `connectRemote()` og `push()` i `Store` med kall mot din egen backend, for eksempel Firebase eller Supabase. Resten av appen trenger ingen endringer.
 
@@ -86,6 +87,8 @@ Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort
 - **Hold** på kortet, så løftes det og følger fingeren. **Dra det til kanten** og slipp for neste (venstre) eller forrige (høyre) kort.
 - **Sveip fort** for å bla gjennom mange kort. Farten avtar av seg selv, og **et trykk** stopper blaingen.
 - **Trykk** på kortet for å snu det og se baksiden.
+- **Trykk på SETT** når du ser fuglen. Første gang kommer haken og datoen på kortet. En senere dag legger et nytt trykk til en ny observasjonsdag, og tallet ved SETT (f.eks. «× 7») viser hvor mange dager du har sett den. Et nytt trykk samme dag viser lista over dagene. Du angrer i meldingen nederst.
+- **Baksiden** av et kort du har sett, viser alle dagene. Der kan du slette en dag (×) eller legge til en dag du glemte. Datoen på forsiden er første gang; endrer du den, flyttes den dagen.
 - **?** øverst viser forklaringskortene (Om kortene og Tegnforklaring).
 - **Tannhjulet** åpner Innstillinger. Under «Bilder på kortene» velger du **KI-illustrasjoner** (standard, som på de trykte kortene) eller **Fotografier** fra Artsdatabanken og Artsobservasjoner. Arter uten fotografi viser illustrasjonen, og i fotovalget kommer kortet Bildekreditering med under **?**. Valget huskes på enheten og påvirker ikke avkrysningene.
-- Tastatur: ← → blar, mellomrom snur kortet, S krysser av, / åpner søk, ? viser forklaringskortene, Esc stopper blaing og lukker paneler.
+- Tastatur: ← → blar, mellomrom snur kortet, S registrerer i dag, / åpner søk, ? viser forklaringskortene, Esc stopper blaing og lukker paneler.
