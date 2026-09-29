@@ -1,6 +1,6 @@
 # Hagefugler
 
-Kortstokk med 100 fuglekort fra Oslo. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen og se statistikk. Knappen **?** viser de to forklaringskortene.
+Kortstokk med 100 fuglekort fra Oslo. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen, samle glinskort og merker og se statistikk. Knappen **?** viser de to forklaringskortene.
 
 Kortene lages i repoet **Fuglekort-** (Fuglekort-fabrikken). Dette repoet er appen som viser dem.
 
@@ -71,6 +71,25 @@ Under statistikken (ringen øverst til høyre) finnes **Start telling**. Skriv g
 - **Avslutt** viser tallene i alfabetisk rekkefølge, som skjemaet på Fuglevennen.no. Har tellingen vart under én time, står det en påminnelse om at Fuglevennen anbefaler minst én time. Du kan fortsette eller avslutte og lagre. Da får alle fuglene i tellingen en observasjonsdag (datoen tellingen startet). Du angrer i meldingen nederst.
 - **Tidligere tellinger** ligger under Hagefugltelling i statistikken. Der kan du kopiere tallene som tekst, dele dem, åpne Fuglevennen.no eller slette tellingen.
 - Tellingen lagres fortløpende, så den fortsetter der du slapp hvis appen lukkes.
+
+## Glinskort og merker
+
+Et kort får glans når du har sett fuglen mange dager. Jo sjeldnere fugl, jo færre dager trengs:
+
+| Sjeldenhet | Glans | Glitter | Holo |
+|---|---|---|---|
+| ★ | 10 | 25 | 50 |
+| ★★ | 5 | 15 | 30 |
+| ★★★ | 3 | 8 | 15 |
+| ★★★★ | 1 | 3 | 6 |
+| ★★★★★ | Holo med én gang | | |
+
+- **Glans** har et lysskjær, **Glitter** har gyllent skjær og gnister, og **Holo** har regnbueskjær og gnister. Lyset glir sakte over kortet av seg selv, følger fingeren når du drar i kortet og musa på datamaskin.
+- **Vipping:** Under Innstillinger kan du la glinset følge telefonen når du vipper den. På Android er det på fra start; på iPhone må du slå det på, og telefonen spør om lov til å bruke bevegelsessensoren.
+- **Merker:** 10, 25 og 50 arter, hele kortstokken, sju dager på rad, 30 observasjonsdager, fire årstider (vår, sommer, høst og vinter), Tellekorps (en hagefugltelling på minst én time) og Flokk (minst 20 av én art i en telling).
+- Nivåer og merker regnes ut fra observasjonene og tellingene hver gang, så de lagres ikke for seg. Sletter du dager, kan et kort miste glansen igjen.
+- Når et kort får nytt nivå eller du får et merke, står det i meldingen nederst, og kortet blinker. Statistikken viser antall glinskort, hvilke kort som er nærmest neste nivå, og alle merkene med fremdrift. I samlingen har glinskortene sølv-, gull- eller regnbuekant.
+- Baksiden av et kort viser nivået og hvor mange dager som mangler til neste.
 
 ## Lagring av observasjoner
 

@@ -95,6 +95,7 @@ button{cursor:pointer;touch-action:manipulation}
 .antall{position:absolute;display:flex;align-items:center;font-family:var(--hand);font-weight:600;font-size:6.8cqw;line-height:1;
   color:var(--pen);white-space:nowrap;transform:rotate(-4deg);pointer-events:none}
 .antall.pop{animation:pop .55s cubic-bezier(.3,1.7,.5,1)}
+.antall.tre{font-size:5.4cqw}
 @keyframes pop{from{transform:rotate(-14deg) scale(.3);opacity:0}to{transform:rotate(-4deg) scale(1);opacity:1}}
 /* counting: the number of this species in the count, as a sticker on the corner of the card */
 .tall{position:absolute;right:-2.6cqw;top:-2.6cqw;min-width:13cqw;height:13cqw;padding:0 2.6cqw;border-radius:99px;display:none;place-items:center;
@@ -112,6 +113,12 @@ button{cursor:pointer;touch-action:manipulation}
 .lh{display:grid;gap:.8cqw;padding:4.2cqw 5cqw 3cqw;border-bottom:.35cqw solid #e6e3cf}
 .lh b{font-size:6.6cqw;font-weight:700;letter-spacing:-.015em;line-height:1.05}
 .lh span{font-size:3.9cqw;color:#4c5c54}
+.lniva{display:flex;align-items:center;gap:2cqw;margin-top:.6cqw}
+.nchip{font-style:normal;font-weight:700;font-size:3.3cqw;line-height:1.2;padding:.5cqw 2.2cqw;border-radius:99px;color:#1c2a22;letter-spacing:.02em;
+  box-shadow:inset 0 0 0 .25cqw rgba(20,35,29,.12)}
+.n1{background:linear-gradient(115deg,#dfe5ea,#ffffff 45%,#c9d2d8)}
+.n2{background:linear-gradient(115deg,#f3c95f,#fff3c4 45%,#e5ad2c)}
+.n3{background:linear-gradient(115deg,#ffb3b3,#fff1a8 20%,#b8ffb0 40%,#a8f3ff 60%,#c3b5ff 80%,#ffb3e6)}
 .llist{list-style:none;margin:0;padding:.5cqw 2.5cqw .5cqw 5cqw;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
 .llist li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:3.4cqw;min-height:12.5cqw;border-bottom:.3cqw dashed #dcd8c2}
 .llist li:last-child{border-bottom:0}
@@ -125,6 +132,48 @@ button{cursor:pointer;touch-action:manipulation}
   background:var(--card-green);color:#f3f8f2;font-weight:600;font-size:4.3cqw;cursor:pointer}
 .ladd input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;margin:0;padding:0;-webkit-appearance:none;appearance:none}
 .ladd:focus-within{outline:2px solid var(--pen);outline-offset:2px}
+
+
+/* ---------- glinskort: Glans (1), Glitter (2), Holo (3) ----------
+   Layers over the card picture. --mx/--my is where the light falls (0–100 %): it drifts slowly by itself,
+   and follows the finger, the mouse or (when allowed) the tilt of the phone. */
+@property --mx{syntax:'<percentage>';inherits:true;initial-value:50%}
+@property --my{syntax:'<percentage>';inherits:true;initial-value:50%}
+.glans{position:absolute;inset:0;border-radius:inherit;pointer-events:none;overflow:hidden;display:none;--mx:50%;--my:50%}
+.card[data-niva] .glans{display:block}
+.glans i{position:absolute;inset:0;border-radius:inherit;display:block}
+/* all levels: a glare where the light falls, darker away from it, and a diagonal streak */
+.gl-glare{background:radial-gradient(farthest-corner circle at var(--mx) var(--my), rgba(255,255,255,.75) 0%, rgba(255,255,255,.3) 18%, rgba(0,0,0,.04) 45%, rgba(0,0,0,.16) 100%);
+  mix-blend-mode:overlay}
+.gl-lys{background:linear-gradient(115deg, transparent 36%, rgba(255,255,255,.4) 45%, rgba(255,255,255,.7) 50%, rgba(255,255,255,.4) 55%, transparent 64%);
+  background-size:260% 260%;background-position:var(--mx) var(--my);mix-blend-mode:color-dodge;opacity:.65}
+/* Glitter and Holo: a tint where the light falls, and sparkles */
+.gl-tone,.gl-gnist{display:none!important}
+.card[data-niva="2"] .gl-tone,.card[data-niva="3"] .gl-tone,.card[data-niva="2"] .gl-gnist,.card[data-niva="3"] .gl-gnist{display:block!important}
+.card[data-niva="2"] .gl-tone{background:radial-gradient(farthest-corner circle at var(--mx) var(--my), rgba(255,200,60,.85) 0%, rgba(255,215,110,.45) 30%, transparent 70%);
+  mix-blend-mode:color;opacity:.42}
+.card[data-niva="3"] .gl-tone{background:repeating-linear-gradient(115deg, #ff5c5c 0%, #ffcf3d 5%, #5cff6a 10%, #3de7ff 15%, #5c6bff 20%, #d45cff 25%, #ff5c5c 30%);
+  background-size:400% 400%;background-position:var(--mx) var(--my);mix-blend-mode:color;opacity:.45;
+  -webkit-mask-image:radial-gradient(farthest-corner circle at var(--mx) var(--my), #000 0%, rgba(0,0,0,.6) 30%, rgba(0,0,0,.15) 75%);
+          mask-image:radial-gradient(farthest-corner circle at var(--mx) var(--my), #000 0%, rgba(0,0,0,.6) 30%, rgba(0,0,0,.15) 75%)}
+.card[data-niva="2"] .gl-lys{background-image:linear-gradient(115deg, transparent 34%, rgba(255,226,140,.45) 44%, rgba(255,245,200,.8) 50%, rgba(255,226,140,.45) 56%, transparent 66%)}
+.gl-gnist{background-image:
+    radial-gradient(circle, #fff 0 .3cqw, transparent .7cqw),
+    radial-gradient(circle, #fff3b0 0 .22cqw, transparent .55cqw),
+    radial-gradient(circle, #fff 0 .16cqw, transparent .42cqw);
+  background-size:6.1cqw 7.3cqw, 9.7cqw 5.9cqw, 4.3cqw 4.9cqw;
+  background-position:calc(var(--mx) * .3) calc(var(--my) * .2), calc(var(--my) * -.25) calc(var(--mx) * .35), 0 0;
+  mix-blend-mode:color-dodge;
+  -webkit-mask-image:radial-gradient(circle at var(--mx) var(--my), #000 0, rgba(0,0,0,.6) 25%, rgba(0,0,0,.08) 60%);
+          mask-image:radial-gradient(circle at var(--mx) var(--my), #000 0, rgba(0,0,0,.6) 25%, rgba(0,0,0,.08) 60%)}
+.card[data-niva="3"] .gl-gnist{mix-blend-mode:screen;opacity:.9}
+/* a slow drift when nothing steers the light */
+@keyframes drift{0%{--mx:15%;--my:20%}35%{--mx:70%;--my:45%}70%{--mx:40%;--my:85%}100%{--mx:90%;--my:70%}}
+.card.is-top[data-niva]:not(.styrt) .glans{animation:drift 11s ease-in-out infinite alternate}
+/* a flash when the card reaches a new level */
+.gl-blits{display:none!important;background:linear-gradient(115deg, transparent 35%, rgba(255,255,255,.95) 50%, transparent 65%);background-size:300% 300%;mix-blend-mode:overlay}
+.card.glinsny .gl-blits{display:block!important;animation:blits 1.3s ease-out forwards}
+@keyframes blits{0%{background-position:100% 100%;opacity:0}20%{opacity:1}100%{background-position:0% 0%;opacity:0}}
 
 /* back of the card: readable field notes */
 .stars{display:inline-flex;gap:.2em;color:var(--card-gold)}
@@ -284,6 +333,39 @@ button{cursor:pointer;touch-action:manipulation}
 .btn.pri{background:var(--spruce);border-color:var(--spruce);color:var(--on-spruce)}
 .restore{margin-top:10px;display:grid;gap:8px}
 a.btn{text-decoration:none;color:inherit;display:inline-block}
+/* glinskort and merker in the stats */
+.h3n{float:right;letter-spacing:.02em;text-transform:none;font-weight:600}
+.nivaer{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.nv{border-radius:14px;padding:12px 14px;color:#1c2a22;box-shadow:inset 0 0 0 1px rgba(20,35,29,.1)}
+.nv b{display:block;font-size:26px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.nv span{font-size:13px;font-weight:600;margin-top:4px;display:block}
+.stats .nchip{font-size:11.5px;padding:2px 8px}
+.nx{font-size:12.5px;color:var(--muted);text-align:right;display:grid;justify-items:end;gap:3px}
+.grenser{margin-top:14px;font-size:14px}
+.grenser summary{cursor:pointer;font-weight:600;color:var(--spruce-ink)}
+.grenser table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.grenser th,.grenser td{padding:7px 4px;text-align:center;border-bottom:1px solid var(--line)}
+.grenser td:first-child{text-align:left}
+.grenser .stars{font-size:11px;color:var(--gold)}
+.merker{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px}
+.merke{display:grid;justify-items:center;text-align:center;gap:3px;align-content:start}
+.merke .med{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:17px;letter-spacing:-.02em;margin-bottom:4px;
+  color:var(--muted);background:var(--surface-2);border:2px dashed var(--line)}
+.merke .med svg{width:26px;height:26px}
+.merke.ok .med{color:#3b2a00;border:0;background:radial-gradient(circle at 35% 30%, #fff6cf 0, #f7cf5a 38%, #d99a12 100%);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--gold) 35%, transparent), 0 6px 14px -6px rgba(140,90,0,.6)}
+.merke b{font-size:13px;line-height:1.2}
+.merke small{font-size:11.5px;line-height:1.3;color:var(--muted)}
+.merke.ok small{color:var(--gold-ink);font-weight:600}
+.mbar{display:block;width:70%;height:4px;border-radius:2px;background:var(--track);overflow:hidden;margin-top:3px}
+.mbar i{display:block;height:100%;background:var(--gold)}
+.merke small.mv{font-size:11px;font-variant-numeric:tabular-nums}
+.alb.g1 .th,.alb.g2 .th,.alb.g3 .th{outline-offset:1px}
+.alb.g1 .th{outline:2px solid #c9d2d8}
+.alb.g2 .th{outline:2px solid var(--gold)}
+.alb.g3::before{content:"";position:absolute;inset:-3px;border-radius:7px;background:linear-gradient(135deg,#ff8a8a,#ffe066,#8dff85,#7ee8ff,#9b8cff,#ff8ad8)}
+.alb .th::after{content:"";position:absolute;inset:0;border-radius:inherit;opacity:0}
+.alb.g1 .th::after,.alb.g2 .th::after,.alb.g3 .th::after{opacity:1;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);mix-blend-mode:soft-light}
 .restore textarea{width:100%;min-height:90px;border-radius:10px;border:1px solid var(--line);background:var(--bg-hi);padding:10px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
 /* counting sheets: start, list of species, summary */
 .lead{font-size:15px;line-height:1.5;margin:16px 0 0}
@@ -331,6 +413,14 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .valg button[aria-checked="true"] .rd::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--spruce-ink)}
 .valg b{font-size:16px;font-weight:600}
 .valg small{font-size:13px;line-height:1.35;color:var(--muted)}
+.bryter{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:14px;color:var(--ink)}
+.bryter span{display:grid;gap:4px}
+.bryter b{font-size:16px;font-weight:600}
+.bryter small{font-size:13px;line-height:1.35;color:var(--muted)}
+.bryter i{width:46px;height:28px;border-radius:14px;background:var(--track);position:relative;transition:background .2s}
+.bryter i::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}
+.bryter[aria-checked="true"] i{background:var(--spruce-ink)}
+.bryter[aria-checked="true"] i::after{transform:translateX(18px)}
 .valg-merk{font-size:13px;line-height:1.4;color:var(--muted);margin:12px 0 0}
 .help{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:center;gap:14px;
   padding:calc(env(safe-area-inset-top,0px) + 16px) 0 calc(env(safe-area-inset-bottom,0px) + 16px);
@@ -360,6 +450,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   .float{animation:none}
   .card,.card .inner,.sheet,.scrim,.tick path,.hand{transition-duration:.01s!important}
   .antall.pop{animation:none}
+  .card.is-top[data-niva]:not(.styrt) .glans,.card.glinsny .gl-blits{animation:none}
 }
 </style>
 
@@ -444,12 +535,15 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <h2 id="settingsTitle">Innstillinger</h2>
     <button class="textbtn" id="closeSettings">Lukk</button>
   </div>
-  <div class="s-sec"><h3 id="bildevalgTitle">Bilder på kortene</h3>
+  <div class="s-sec" id="bildeSek"><h3 id="bildevalgTitle">Bilder på kortene</h3>
     <div class="valg" role="radiogroup" aria-labelledby="bildevalgTitle">
       <button role="radio" data-bilder="ki" aria-checked="true"><span class="rd"></span><b>KI-illustrasjoner</b><small>Tegnede fuglebilder laget til kortstokken. Samme bilder som på de trykte kortene.</small></button>
       <button role="radio" data-bilder="foto" aria-checked="false"><span class="rd"></span><b>Fotografier</b><small id="fotoAntall"></small></button>
     </div>
     <p class="valg-merk">Valget gjelder bare på denne enheten. Avkrysningene dine påvirkes ikke.</p>
+  </div>
+  <div class="s-sec" id="vippSek" hidden><h3>Glinskort</h3>
+    <button class="bryter" id="vippBtn" role="switch" aria-checked="false"><span><b>Glinset følger telefonen</b><small>Lyset på glinskortene flytter seg når du vipper telefonen. Ellers følger det fingeren når du drar i kortet.</small></span><i aria-hidden="true"></i></button>
   </div>
 </section>
 
@@ -714,6 +808,61 @@ const Tell = Object.assign(samling({
 });
 Tell.loadLocal();
 
+/* ================= Glinskort og merker =================
+   Worked out from the sightings and counts every time, so they follow the data on every device.
+   A card gets shinier the more days the bird has been seen; rarer birds need fewer days. */
+const NIVA = ['', 'Glans', 'Glitter', 'Holo'];
+const GRENSER = { 1: [10, 25, 50], 2: [5, 15, 30], 3: [3, 8, 15], 4: [1, 3, 6], 5: [1, 1, 1] };
+const grenser = c => GRENSER[c.stjerner] || GRENSER[1];
+const nivaAv = c => { const n = Store.days(c.key).length; return grenser(c).filter(x => n >= x).length; };
+function nesteNiva(c) {
+  const n = Store.days(c.key).length, g = grenser(c), k = g.findIndex(x => n < x);
+  return k < 0 ? null : { niva: g.filter(x => x <= g[k]).length, mangler: g[k] - n };
+}
+function nokkeltall() {
+  const alle = [...new Set(Object.keys(Store.data).filter(k => BY_KEY[k] != null).flatMap(k => Store.data[k].dager))].sort();
+  let rekke = 0, lop = 0, forrige = null;
+  alle.forEach(d => {
+    const t = Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10)) / 864e5;
+    lop = forrige != null && t - forrige === 1 ? lop + 1 : 1; forrige = t; rekke = Math.max(rekke, lop);
+  });
+  const arstider = new Set(alle.map(d => [0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 0][+d.slice(5, 7) - 1])).size;   // vinter, vår, sommer, høst
+  const ferdige = Tell.ferdige().map(id => Tell.data[id]);
+  return {
+    arter: seenCount(), obsDager: alle.length, rekke, arstider,
+    langeTellinger: ferdige.filter(v => v.slutt - v.start >= 3600000).length,
+    flokk: Math.max(0, ...ferdige.flatMap(v => Object.keys(v.arter).filter(k => BY_KEY[k] != null).map(k => v.arter[k]))),
+  };
+}
+const MIKON = {
+  rekke: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m8.5 14.5 2.3 2.3 4.7-4.8"/></svg>',
+  arstider: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12V3.5A8.5 8.5 0 0 1 20.5 12z" opacity=".95"/><path d="M12 12h8.5A8.5 8.5 0 0 1 12 20.5z" opacity=".7"/><path d="M12 12v8.5A8.5 8.5 0 0 1 3.5 12z" opacity=".5"/><path d="M12 12H3.5A8.5 8.5 0 0 1 12 3.5z" opacity=".3"/></svg>',
+  telling: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 5v14M10 5v14M14 5v14M18 5v14M3.5 16.5 20.5 7.5"/></svg>',
+  flokk: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9c1.5-1.4 3-1.4 4.5 0C9 7.6 10.5 7.6 12 9M12 15c1.5-1.4 3-1.4 4.5 0 1.5-1.4 3-1.4 4.5 0M6 18.5c1.2-1.1 2.4-1.1 3.6 0 1.2-1.1 2.4-1.1 3.6 0M13.5 6c1.1-1 2.2-1 3.3 0 1.1-1 2.2-1 3.3 0"/></svg>',
+};
+const MERKER = [
+  { id: 'a10', navn: '10 arter', tekst: 'Sett 10 ulike arter', mal: 10, v: t => t.arter, ikon: '10' },
+  { id: 'a25', navn: '25 arter', tekst: 'Sett 25 ulike arter', mal: 25, v: t => t.arter, ikon: '25' },
+  { id: 'a50', navn: '50 arter', tekst: 'Sett 50 ulike arter', mal: 50, v: t => t.arter, ikon: '50' },
+  { id: 'aalle', navn: 'Hele kortstokken', tekst: `Sett alle ${N} artene`, mal: N, v: t => t.arter, ikon: String(N) },
+  { id: 'rekke', navn: 'Sju på rad', tekst: 'Observasjoner sju dager på rad', mal: 7, v: t => t.rekke, ikon: MIKON.rekke },
+  { id: 'd30', navn: '30 dager', tekst: '30 observasjonsdager', mal: 30, v: t => t.obsDager, ikon: '30' },
+  { id: 'arstider', navn: 'Fire årstider', tekst: 'Observasjoner vår, sommer, høst og vinter', mal: 4, v: t => t.arstider, ikon: MIKON.arstider },
+  { id: 'tellekorps', navn: 'Tellekorps', tekst: 'En hagefugltelling på minst én time', mal: 1, v: t => t.langeTellinger, ikon: MIKON.telling },
+  { id: 'flokk', navn: 'Flokk', tekst: 'Minst 20 av én art i en telling', mal: 20, v: t => t.flokk, ikon: MIKON.flokk },
+];
+function opptjent() {
+  const t = nokkeltall();
+  return { niva: Object.fromEntries(CARDS.map(c => [c.key, nivaAv(c)])), merker: new Set(MERKER.filter(m => m.v(t) >= m.mal).map(m => m.id)) };
+}
+/* what was reached since `for` (taken just before a change), as text for the message at the bottom */
+function nyheter(for_) {
+  const na = opptjent(), ut = [];
+  CARDS.forEach(c => { const n = na.niva[c.key]; if (n > for_.niva[c.key]) ut.push(`${c.navn} ble ${NIVA[n]}-kort!`); });
+  MERKER.forEach(m => { if (na.merker.has(m.id) && !for_.merker.has(m.id)) ut.push(`Nytt merke: ${m.navn}!`); });
+  return ut.length ? ' ' + ut.join(' ') : '';
+}
+
 /* ================= Search index ================= */
 function norm(s) {
   let out = ''; const map = [];
@@ -750,6 +899,7 @@ function makeCard(i) {
   <div class="inner">
     <div class="face front" style="background-position:${spritePos(i)}">
       <img src="${esc(bildeAv(c))}" alt="${esc(altTekst(c))}" draggable="false" decoding="async">
+      <span class="glans" aria-hidden="true"><i class="gl-tone"></i><i class="gl-glare"></i><i class="gl-lys"></i><i class="gl-gnist"></i><i class="gl-blits"></i></span>
       <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
       <button class="ctl sett-hit" data-act="toggle" aria-pressed="false" aria-label="Sett ${esc(c.navn)}" style="left:${P(bx - 0.025)};top:${P(by - 0.012)};width:${P(bw + 0.22)};height:${P(bh + 0.024)}"></button>
       <span class="tall" aria-hidden="true"></span>
@@ -786,9 +936,15 @@ function paintCard(el) {
   const ant = el.querySelector('.antall'), before = ant.dataset.n == null ? null : +ant.dataset.n;
   ant.dataset.n = dager.length;
   ant.textContent = dager.length > 1 ? `× ${dager.length}` : '';
+  ant.classList.toggle('tre', dager.length >= 100);
   if (before != null && dager.length > before && dager.length > 1) { ant.classList.remove('pop'); void ant.offsetWidth; ant.classList.add('pop'); }
   const inp = el.querySelector('[data-act="date"]');
   inp.value = s ? s.date : ''; inp.max = t;
+  // glinskort level; a flash when it goes up while the card is on screen
+  const niva = nivaAv(c);
+  if (niva) el.dataset.niva = niva; else delete el.dataset.niva;
+  if (el._niva != null && niva > el._niva) { el.classList.remove('glinsny'); void el.offsetWidth; el.classList.add('glinsny'); clearTimeout(el._glT); el._glT = setTimeout(() => el.classList.remove('glinsny'), 1400); }
+  el._niva = niva;
   const tall = el.querySelector('.tall'), n = Tell.antall(c.key), f = +tall.dataset.n || 0;
   tall.dataset.n = n; tall.textContent = n || ''; tall.classList.toggle('on', n > 0);
   if (n > f && f > 0) { tall.classList.remove('pop'); void tall.offsetWidth; tall.classList.add('pop'); }
@@ -806,7 +962,9 @@ function paintLogg(el, c, dager) {
   const rows = [...dager].reverse().map(d => `<li><span class="ld">${fmtHand(d)}</span>
     <span class="lw">${d === t ? 'i dag' : ukedag(d)}${d === dager[0] ? '<br><b>første gang</b>' : ''}</span>
     <button class="ctl ldel" data-act="delday" data-d="${d}" aria-label="Slett ${fmtLong(d)}">${XMARK}</button></li>`).join('');
-  box.innerHTML = `<div class="lh"><b>${esc(c.navn)}</b><span>${dagerTekst(dager.length)}</span></div>
+  const niva = nivaAv(c), neste = nesteNiva(c);
+  const nivaLinje = `${niva ? `<em class="nchip n${niva}">${NIVA[niva]}</em>` : ''}${neste ? `${neste.mangler} ${neste.mangler === 1 ? 'dag' : 'dager'} til ${NIVA[neste.niva]}` : 'Høyeste nivå'}`;
+  box.innerHTML = `<div class="lh"><b>${esc(c.navn)}</b><span>${dagerTekst(dager.length)}</span><span class="lniva">${nivaLinje}</span></div>
     <ol class="b-body llist" aria-label="Dager du har sett ${esc(c.navn)}">${rows}</ol>
     <label class="ctl ladd"><span>+ Legg til en dag</span><input type="date" data-act="addday" max="${t}" aria-label="Legg til en dag du så ${esc(c.navn)}"></label>`;
 }
@@ -982,6 +1140,7 @@ stage.addEventListener('pointermove', e => {
     lift();
   }
   e.preventDefault();
+  styrLys(0.5 - drag.dx / drag.m.W * 0.9, 0.5 - drag.dy / drag.m.W * 0.7);
   const fx = e.clientX - drag.sr.left, SW = drag.sr.width, W = drag.m.W;
   let armed = 0;
   if ((fx < SW * 0.15 && drag.dx < -40) || drag.dx < -W * 0.62) armed = 1;
@@ -1058,8 +1217,48 @@ if (matchMedia('(hover:hover) and (pointer:fine)').matches && !matchMedia('(pref
     const px = (e.clientX - (r.left + r.width / 2)) / r.width, py = (e.clientY - (r.top + r.height / 2)) / r.height;
     if (Math.abs(px) > 1.2 || Math.abs(py) > 1) { deckEl.style.transform = ''; return; }
     deckEl.style.transform = `perspective(1400px) rotateY(${(px * 5).toFixed(2)}deg) rotateX(${(-py * 4).toFixed(2)}deg)`;
+    styrLys(0.5 + px, 0.5 + py);
   });
   stage.addEventListener('pointerleave', () => { deckEl.style.transform = ''; });
+}
+
+/* ---- the light on glinskort follows the finger, the mouse, or the tilt of the phone ---- */
+let styrT = 0;
+function styrLys(px, py) {
+  const el = pool.get(cur); if (!el || !el.dataset.niva) return;
+  const g = el.querySelector('.glans'), cl = v => (Math.max(0, Math.min(1, v)) * 100).toFixed(1) + '%';
+  g.style.setProperty('--mx', cl(px)); g.style.setProperty('--my', cl(py));
+  if (!el.classList.contains('styrt')) pool.forEach(o => { if (o !== el) slipp(o); });
+  el.classList.add('styrt');
+  clearTimeout(styrT); styrT = setTimeout(() => pool.forEach(slipp), 2500);
+}
+function slipp(el) { el.classList.remove('styrt'); const g = el.querySelector('.glans'); g.style.removeProperty('--mx'); g.style.removeProperty('--my'); }
+const Vipp = {
+  stottet: 'DeviceOrientationEvent' in window && matchMedia('(pointer:coarse)').matches,
+  maaSporre: typeof window.DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function',
+  aktiv: false, base: null, px: .5, py: .5, raf: 0,
+};
+function vippHendelse(e) {
+  if (e.gamma == null || e.beta == null) return;
+  if (Vipp.base == null) Vipp.base = e.beta;
+  Vipp.base += (e.beta - Vipp.base) * 0.02;              // slowly follows how the phone is held
+  Vipp.px = 0.5 + e.gamma / 45; Vipp.py = 0.5 + (e.beta - Vipp.base) / 35;
+  if (!Vipp.raf) Vipp.raf = requestAnimationFrame(() => { Vipp.raf = 0; if (!drag && !riffle) styrLys(Vipp.px, Vipp.py); });
+}
+function startVipp() { if (Vipp.aktiv) return; Vipp.aktiv = true; Vipp.base = null; addEventListener('deviceorientation', vippHendelse); }
+function stoppVipp() { Vipp.aktiv = false; removeEventListener('deviceorientation', vippHendelse); pool.forEach(slipp); }
+const vippValg = () => { const v = lsGet('hagefugler:vipp'); return v ? v === 'på' : Vipp.stottet && !Vipp.maaSporre && !matchMedia('(prefers-reduced-motion: reduce)').matches; };
+async function slaPaVipp(fraBruker) {
+  if (!Vipp.stottet) return false;
+  if (Vipp.maaSporre) {
+    try { if (await DeviceOrientationEvent.requestPermission() !== 'granted') { if (fraBruker) toast('Appen fikk ikke lov til å bruke bevegelsessensoren. Glinset følger fingeren i stedet.'); return false; } }
+    catch (e) { return false; }                          // not from a tap: wait for the next one
+  }
+  startVipp(); return true;
+}
+if (vippValg()) {
+  if (Vipp.maaSporre) document.addEventListener('click', () => slaPaVipp(false), { once: true, capture: true });   // iPhone asks again after a reload, inside a tap
+  else slaPaVipp(false);
 }
 
 /* controls on the card: the SETT box and date line on the front, the list of days on the back */
@@ -1088,25 +1287,28 @@ function trykkSett(c) {
   const t = todayISO(), dager = Store.days(c.key);
   if (!dager.length) { registrer(c, t); return; }
   if (dager.includes(t)) { visLogg(c); toast(`${c.navn} er allerede registrert i dag.`); return; }
+  const for_ = opptjent();
   Store.addDay(c.key, t);
   haptic(10);
-  toast(`${c.navn}: ${dager.length + 1}. observasjonsdag.`, 'Angre', () => Store.removeDay(c.key, t));
+  toast(`${c.navn}: ${dager.length + 1}. observasjonsdag.${nyheter(for_)}`, 'Angre', () => Store.removeDay(c.key, t));
 }
 function registrer(c, d) {
+  const for_ = opptjent();
   Store.put(c.key, [d]);
   haptic(12);
   const n = seenCount();
   const msg = n === N ? `Alle ${N} artene er sett. Hele kortstokken er komplett!`
     : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i Oslo-hager. ${n} av ${N} sett.`
     : `${c.navn} er sett for første gang. ${n} av ${N} arter.`;
-  toast(msg, 'Angre', () => Store.put(c.key, []));
+  toast(msg + nyheter(for_), 'Angre', () => Store.put(c.key, []));
 }
 function leggTilDag(c, d) {
   const gml = Store.days(c.key);
   if (!gml.length) { registrer(c, d); return; }
   if (gml.includes(d)) { toast(`${fmtHand(d)} er allerede registrert for ${c.navn}.`); return; }
+  const for_ = opptjent();
   Store.addDay(c.key, d);
-  toast(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.`, 'Angre', () => Store.put(c.key, gml));
+  toast(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${nyheter(for_)}`, 'Angre', () => Store.put(c.key, gml));
 }
 function slettDag(c, d) {
   const gml = Store.days(c.key);
@@ -1302,10 +1504,20 @@ helpSheet.addEventListener('click', e => { if (!e.target.closest('.help-card, .h
 
 /* ---- innstillinger ---- */
 const setSheet = $('#settingsSheet');
-$('#openSettings').hidden = !HAR_FOTO;
+$('#openSettings').hidden = !HAR_FOTO && !Vipp.stottet;
+$('#bildeSek').hidden = !HAR_FOTO;
+$('#vippSek').hidden = !Vipp.stottet;
 $('#fotoAntall').textContent = `Fotografier fra Artsdatabanken og Artsobservasjoner for ${CARDS.filter(c => c.bildeFoto).length} av ${N} arter. De andre viser illustrasjonen. Fotografene står på kortet Bildekreditering under ?.`;
-function paintSettings() { setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg)); }
-function openSettings() { paintSettings(); showSheet(setSheet); setTimeout(() => setSheet.querySelector('[aria-checked="true"]').focus(), 60); }
+function paintSettings() {
+  setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg));
+  $('#vippBtn').setAttribute('aria-checked', Vipp.aktiv ? 'true' : 'false');
+}
+$('#vippBtn').addEventListener('click', async () => {
+  if (Vipp.aktiv) { stoppVipp(); lsSet('hagefugler:vipp', 'av'); }
+  else if (await slaPaVipp(true)) { lsSet('hagefugler:vipp', 'på'); toast('Vipp telefonen for å se glinset på glinskortene.'); }
+  paintSettings();
+});
+function openSettings() { paintSettings(); showSheet(setSheet); setTimeout(() => (HAR_FOTO ? setSheet.querySelector('[data-bilder][aria-checked="true"]') : $('#vippBtn')).focus(), 60); }
 function settBilder(v) {
   if (v === bildevalg || !HAR_FOTO) return;
   bildevalg = v; lsSet('hagefugler:bilder', v);
@@ -1345,6 +1557,9 @@ function renderStats() {
     .sort((a, b) => (b.d > a.d ? 1 : b.d < a.d ? -1 : b.ts - a.ts)).slice(0, 6);
   const cardOf = key => BY_KEY[key];
   const aktivT = Tell.aktiv(), ferdigeT = Tell.ferdige();
+  const nt = nokkeltall(), merkerOk = MERKER.filter(m => m.v(nt) >= m.mal).length;
+  const perNiva = [0, 0, 0, 0]; CARDS.forEach(c => perNiva[nivaAv(c)]++);
+  const naermest = CARDS.map((c, i) => ({ c, i, n: Store.has(c.key) && nesteNiva(c) })).filter(x => x.n).sort((a, b) => a.n.mangler - b.n.mangler || b.c.stjerner - a.c.stjerner).slice(0, 3);
   const obsDager = new Set(ids.flatMap(id => Store.data[id].dager)).size;
   const regs = ids.reduce((a, id) => a + Store.data[id].dager.length, 0);
   const most = ids.map(id => ({ c: CARDS[BY_KEY[id]], ant: Store.data[id].dager.length })).sort((a, b) => b.ant - a.ant || a.c.nr - b.c.nr)[0];
@@ -1357,6 +1572,20 @@ function renderStats() {
       <div class="kpi"><b>${rarest ? esc(rarest.navn) : '–'}</b><span>${rarest ? `Sjeldneste funn, ${rarest.stjerner} ${rarest.stjerner === 1 ? 'stjerne' : 'stjerner'}` : 'Sjeldneste funn vises her'}</span></div>
       <div class="kpi"><b>${obsDager}</b><span>${obsDager === 1 ? 'Observasjonsdag' : 'Observasjonsdager'}, med ${regs} ${regs === 1 ? 'registrering' : 'registreringer'} i alt</span></div>
       <div class="kpi"><b>${most && most.ant > 1 ? esc(most.c.navn) : '–'}</b><span>${most && most.ant > 1 ? `Sett flest dager, ${most.ant} i alt` : 'Fuglen du har sett flest dager, vises her'}</span></div>
+    </div>
+
+    <div class="s-sec"><h3>Glinskort</h3>
+      <div class="nivaer">${[1, 2, 3].map(k => `<div class="nv n${k}"><b>${perNiva[k]}</b><span>${NIVA[k]}</span></div>`).join('')}</div>
+      ${naermest.length ? `<p class="cap" style="margin:14px 0 6px">Nærmest neste nivå</p><ul class="recent">${naermest.map(x => `<li><button data-i="${x.i}"><span class="ph" style="background-position:${spritePos(x.i)}" aria-hidden="true"></span><span><b style="font-weight:600">${esc(x.c.navn)}</b><br><span style="font-size:12.5px;color:var(--muted)">${dagerTekst(Store.days(x.c.key).length)}</span></span><span class="nx">${x.n.mangler} ${x.n.mangler === 1 ? 'dag' : 'dager'} til <em class="nchip n${x.n.niva}">${NIVA[x.n.niva]}</em></span></button></li>`).join('')}</ul>` : ''}
+      <details class="grenser"><summary>Hvor mange dager trengs?</summary>
+        <p class="cap" style="margin:8px 0 10px">Kortet får glans når du har sett fuglen mange dager. Jo sjeldnere fugl, jo færre dager trengs.</p>
+        <table><thead><tr><th></th>${[1, 2, 3].map(k => `<th><em class="nchip n${k}">${NIVA[k]}</em></th>`).join('')}</tr></thead>
+        <tbody>${[1, 2, 3, 4, 5].map(r => `<tr><td>${stars(r)}</td>${r === 5 ? '<td colspan="3">Holo med én gang</td>' : GRENSER[r].map(x => `<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table>
+      </details>
+    </div>
+
+    <div class="s-sec"><h3>Merker <span class="h3n">${merkerOk} av ${MERKER.length}</span></h3>
+      <div class="merker">${MERKER.map(m => { const v = m.v(nt), ok = v >= m.mal; return `<div class="merke ${ok ? 'ok' : ''}" title="${esc(m.tekst)}"><span class="med ${m.ikon.startsWith('<') ? 'ik' : ''}">${m.ikon}</span><b>${esc(m.navn)}</b><small>${ok ? 'Oppnådd' : esc(m.tekst)}</small>${ok ? '' : `<i class="mbar" role="img" aria-label="${Math.min(v, m.mal)} av ${m.mal}"><i style="width:${(Math.min(v, m.mal) / m.mal * 100).toFixed(1)}%"></i></i><small class="mv">${Math.min(v, m.mal)} av ${m.mal}</small>`}</div>`; }).join('')}</div>
     </div>
 
     <div class="s-sec"><h3>Hagefugltelling</h3>
@@ -1383,7 +1612,7 @@ function renderStats() {
     </ul></div>` : ''}
 
     <div class="s-sec"><h3>Samlingen</h3><div class="album">
-      ${CARDS.map((c, i) => `<button class="alb ${Store.has(c.key) ? 's' : ''}" data-i="${i}" aria-label="${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.nr}</span><span class="okdot">${CHECK}</span></button>`).join('')}
+      ${CARDS.map((c, i) => { const nv = nivaAv(c); return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}${nv ? `, ${NIVA[nv]}-kort` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.nr}</span><span class="okdot">${CHECK}</span></button>`; }).join('')}
     </div></div>
 
     <div class="s-sec"><h3>Lagring</h3>
@@ -1587,11 +1816,12 @@ async function kopierTekst(txt) {
   } catch (e) { return false; }
 }
 function avsluttTelling() {
+  const for_ = opptjent();
   const id = Tell.avslutt(); if (!id) return;
   const v = Tell.data[id], dag = isoAv(v.start);
   const nye = Store.addDayMany(Object.keys(v.arter).filter(k => BY_KEY[k] != null), dag);
   renderSum();
-  toast(`Tellingen er lagret.${nye.length ? ` ${flertall(nye.length, 'art', 'arter')} fikk en observasjonsdag.` : ''}`, 'Angre', () => {
+  toast(`Tellingen er lagret.${nye.length ? ` ${flertall(nye.length, 'art', 'arter')} fikk en observasjonsdag.` : ''}${nyheter(for_)}`, 'Angre', () => {
     if (!Tell.data[id]) return;
     Tell.data[id].slutt = 0; Tell.lagre(id);
     nye.forEach(k => Store.removeDay(k, dag));
@@ -1624,7 +1854,7 @@ function toast(msg, action, fn) {
   b.hidden = !action; b.textContent = action || '';
   b.onclick = () => { t.classList.remove('on'); fn && fn(); };
   t.classList.add('on');
-  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), action ? 6000 : 3800);
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), (action ? 6000 : 3800) + (msg.length > 70 ? 2500 : 0));
 }
 
 /* ---- react to data ---- */
