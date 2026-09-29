@@ -21,7 +21,8 @@ hagefugler/
     ├── manifest.webmanifest  Gjør at appen kan legges på hjemskjermen (PWA)
     ├── sw.js                 Gjør at appen virker uten nett etter første besøk
     ├── icons/                App-ikoner, laget av fuglen på baksiden
-    ├── cards/                Kortbildene 001–100 med KI-illustrasjoner, forklaringskortene 000a og 000b, og bakside.webp
+    ├── cards/                Kortbildene 001–100 med KI-illustrasjoner, bonuskortene b01–b05, forklaringskortene 000a og 000b,
+    │                         bildekrediteringen for bonuskortene (b00) og bakside.webp
     ├── cards-foto/           Kortene som har fotografi fra Artsdatabanken, og kortet Bildekreditering (000c)
     └── sprites/              Små miniatyrer til søk og samlingen (cards/photos og cards-foto/photos-foto)
 ```
@@ -67,10 +68,22 @@ lagres på telefonen, så man kan bytte også uten nett. Finnes ikke fotosettet,
 Under statistikken (ringen øverst til høyre) finnes **Start telling**. Skriv gjerne inn området, og trykk Start.
 
 - **Mens du teller** går klokka i en linje under toppen. Under kortstokken står telleren for kortet du ser på: − og + (eller skriv inn tallet) for det høyeste antallet du har sett **samtidig**. Kort med antall får et gult merke i hjørnet. På tastatur: + og −.
-- **Telleliste** viser alle artene med hver sin teller, de vanligste hagefuglene først og **Ekorn** øverst (det står i skjemaet på Fuglevennen.no). Du kan søke etter en art. Trykker du på navnet, kommer du til kortet.
+- **Telleliste** viser alle artene med hver sin teller: **Ekorn** øverst (det står i skjemaet på Fuglevennen.no, og har nå sitt eget bonuskort), så de vanligste hagefuglene først, og til slutt de andre bonusdyrene. Du kan søke etter en art. Trykker du på navnet, kommer du til kortet. Tellinger fra før bonuskortene, der ekorn ble lagret som `ekorn`, flyttes over på ekornkortet (`sciurus-vulgaris`) når de leses.
 - **Avslutt** viser tallene i alfabetisk rekkefølge, som skjemaet på Fuglevennen.no. Har tellingen vart under én time, står det en påminnelse om at Fuglevennen anbefaler minst én time. Du kan fortsette eller avslutte og lagre. Da får alle fuglene i tellingen en observasjonsdag (datoen tellingen startet). Du angrer i meldingen nederst.
 - **Tidligere tellinger** ligger under Hagefugltelling i statistikken. Der kan du kopiere tallene som tekst, dele dem, åpne Fuglevennen.no eller slette tellingen.
 - Tellingen lagres fortløpende, så den fortsetter der du slapp hvis appen lukkes.
+
+## Bonuskort (andre dyr)
+
+Etter de 100 fuglekortene kommer fem bonuskort med de vanligste ville pattedyrene i hager: b01 ekorn, b02 rådyr,
+b03 hare, b04 elg og b05 rødrev (rangert etter Hagefugltellingen 2024–2026). De lages i Fuglekort- (arket
+Bonuskort) og kommer med i importen fra feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`,
+`id` som `b01` og `lengde` i stedet for `vingespenn`.
+
+- Man blar til dem etter kort 100 (og videre rundt til 001), søker på dem og registrerer observasjonsdager som for fuglene. De får også glinskant.
+- De teller ikke med i fuglelista: ringen, «av 100 fugler sett», poengene, sjeldenhetsstolpene og merkene gjelder bare fuglene. Statistikken har en egen del, «Bonuskort – andre dyr», og «Sist sett» viser begge.
+- Bildene er fotografier i begge bildevalgene. Fotografene og lisensen står på kortet «Bildekreditering bonuskort» (b00), som ligger sist under **?**.
+- `#b03` i adressen åpner et bonuskort direkte, som `#42` for fuglekortene.
 
 ## Glinskort og merker
 

@@ -8,7 +8,8 @@ der STI/TIL/app er mappen `ut/app` fra `python bygg.py` i Fuglekort-, eller den 
 «app»-nedlastingen fra Actions → Bygg fuglekort. Mappen skal ha kort.json, kort/, bilder/ og bakside.webp.
 
 Skriptet
-  1. kopierer kortbildene (001–NNN), de to forklaringskortene (000a, 000b) og baksiden til docs/cards/
+  1. kopierer kortbildene (001–NNN), bonuskortene (b01–b05, andre dyr), forklaringskortene (000a, 000b, og
+     bildekrediteringen for bonuskortene, b00) og baksiden til docs/cards/
   2. finner SETT-ruta og datolinja på kortene, så avkrysningen havner riktig
   3. lager data/cards.json (navn, sjeldenhet og korttekst til søket)
   4. lager miniatyrene i docs/sprites/ og app-ikonene i docs/icons/ (fra baksiden)
@@ -70,6 +71,8 @@ def foto_felt(k):
 def main(app):
     kilde = json.loads((app / "kort.json").read_text(encoding="utf-8"))
     kort_inn = kilde["kort"]
+    bonus = kilde.get("bonus") or {}          # bonuskortene (andre dyr): legges etter fuglekortene i kortstokken
+    bonus_inn = bonus.get("kort", [])
     for mappe in ("cards", "cards-foto"):
         (DOCS / mappe).mkdir(parents=True, exist_ok=True)
         for f in (DOCS / mappe).glob("*.webp"):
@@ -83,6 +86,13 @@ def main(app):
     for f in kilde.get("forklaringskort", []):
         shutil.copy(app / f["kortbilde"], DOCS / "cards" / f"{f['id']}.webp")
         hjelp.append({"id": f["id"], "navn": f.get("navn") or f.get("tittel"), "bilde": f"cards/{f['id']}.webp"})
+    # bonuskortene har fotografier i begge bildevalgene; bildekrediteringen deres (b00) står sist under ?
+    for k in bonus_inn:
+        shutil.copy(app / k["kortbilde"], DOCS / "cards" / f"{k['nr_tekst']}.webp")
+    hjelp_bonus = []
+    for f in bonus.get("forklaringskort", []):
+        shutil.copy(app / f["kortbilde"], DOCS / "cards" / f"{f['id']}.webp")
+        hjelp_bonus.append({"id": f["id"], "navn": f.get("navn") or f.get("tittel"), "bilde": f"cards/{f['id']}.webp"})
     bakside = app / (kilde.get("bakside") or "bakside.webp")
     shutil.copy(bakside, DOCS / "cards" / "bakside.webp")
     # fotosettet: bare kort som faktisk har fotografi kopieres; resten er like KI-kortene og gjenbrukes
@@ -118,7 +128,19 @@ def main(app):
         "bilde": f"cards/{k['nr']:03d}.webp", "sett": sett,
         **foto_felt(k),
     } for k in kort_inn]
-    data = {"tittel": "Hagefugler", "antall": len(kort), "bakside": "cards/bakside.webp", "hjelp": hjelp,
+    # bonuskortene (andre dyr): samme felt, men «lengde» i stedet for vingespenn, og alltid fotografi
+    kort += [{
+        "nr": k["nr"], "id": k["nr_tekst"], "bonus": True, "key": nokkel(k["latin"]), "navn": k["norsk"], "latin": k["latin"],
+        "stjerner": k["stjerner"], "status": k["stjernetekst"],
+        "kjennetegn": k["kjennetegn"], "nar": k["naar"], "mat": k["mat"], "fakta": k["funfact"],
+        "lengde": k["lengde"], "vekt": k["vekt"], "utbredelse": k["land"],
+        "rodliste": (k.get("rodliste") or {}).get("navn", ""),
+        "bilde": f"cards/{k['nr_tekst']}.webp", "sett": sett,
+        **({"fotograf": k["foto"]["fotograf"], "lisens": k["foto"]["lisens"]} if k.get("foto") else {}),
+    } for k in bonus_inn]
+    hjelp += hjelp_bonus
+    hjelp_foto += hjelp_bonus
+    data = {"tittel": "Hagefugler", "antall": len(kort_inn), "bonus": len(bonus_inn), "bakside": "cards/bakside.webp", "hjelp": hjelp,
             "sjeldenhet": {"1": "Vanlig", "2": "Regelmessig", "3": "Uvanlig", "4": "Sjelden", "5": "Svært sjelden"},
             "kort": kort}
     if fotosett:
@@ -129,7 +151,8 @@ def main(app):
         data["tidligereNr"] = json.loads(tidligere.read_text(encoding="utf-8"))["nummer"]
     (ROT / "data" / "cards.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
 
-    # 4. miniatyrer (10 kolonner) og ikoner
+    # 4. miniatyrer (10 kolonner) og ikoner – bonuskortene kommer etter fuglekortene, som i kortstokken
+    kort_inn = kort_inn + bonus_inn
     kol, rader = 10, (len(kort_inn) + 9) // 10
     ark_kort = Image.new("RGBA", (kol * 150, rader * 210), (0, 0, 0, 0))
     ark_foto = Image.new("RGB", (kol * 128, rader * 128), (220, 226, 220))
@@ -165,7 +188,8 @@ def main(app):
     ikon(bakside, 512, maskable=True).save(DOCS / "icons" / "icon-512-maskable.png")
     ikon(bakside, 180).save(DOCS / "icons" / "apple-touch-icon.png")
 
-    print(f"Hentet {len(kort)} kort, {len(hjelp)} forklaringskort og baksiden fra {app}")
+    print(f"Hentet {len(kort) - len(bonus_inn)} fuglekort, {len(bonus_inn)} bonuskort, {len(hjelp)} forklaringskort "
+          f"og baksiden fra {app}")
     if fotosett:
         print(f"Fotosett: {sum(1 for k in kort if k.get('bildeFoto'))} kort med fotografi, "
               f"{len(hjelp_foto)} forklaringskort (resten viser KI-bildet)")

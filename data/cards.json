@@ -1,6 +1,7 @@
 {
  "tittel": "Hagefugler",
  "antall": 100,
+ "bonus": 5,
  "bakside": "cards/bakside.webp",
  "hjelp": [
   {
@@ -12,6 +13,11 @@
    "id": "000b",
    "navn": "Slik leser du kortene",
    "bilde": "cards/000b.webp"
+  },
+  {
+   "id": "b00",
+   "navn": "Bildekreditering bonuskort",
+   "bilde": "cards/b00.webp"
   }
  ],
  "sjeldenhet": {
@@ -3265,6 +3271,176 @@
      0.392
     ]
    }
+  },
+  {
+   "nr": 1,
+   "id": "b01",
+   "bonus": true,
+   "key": "sciurus-vulgaris",
+   "navn": "Ekorn",
+   "latin": "Sciurus vulgaris",
+   "stjerner": 2,
+   "status": "Regelmessig hagegjest",
+   "kjennetegn": "Rødbrun eller gråbrun pels, busket hale og øredusker.",
+   "nar": "Hele året; mest synlig om høsten.",
+   "mat": "Kongler, nøtter, frø, sopp og fuglemat.",
+   "fakta": "Gjemmer nøtter om høsten; de glemte kan bli nye trær.",
+   "lengde": "20–25 cm",
+   "vekt": "250–480 g",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Russland, Sibir, Mongolia, Nord-Kina og Japan (Hokkaido)",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b01.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "fotograf": "Hege Røkenes",
+   "lisens": "CC BY 4.0"
+  },
+  {
+   "nr": 2,
+   "id": "b02",
+   "bonus": true,
+   "key": "capreolus-capreolus",
+   "navn": "Rådyr",
+   "latin": "Capreolus capreolus",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest",
+   "kjennetegn": "Lite, slankt hjortedyr med hvitt bakspeil.",
+   "nar": "Hele året; i hager mest om vinteren.",
+   "mat": "Knopper, blader og tulipaner.",
+   "fakta": "Bukken feller geviret i november–desember og får nytt til våren.",
+   "lengde": "95–130 cm",
+   "vekt": "25–35 kg",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia og Kaukasus",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b02.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "fotograf": "Hildegunn Bjørgan",
+   "lisens": "CC BY 4.0"
+  },
+  {
+   "nr": 3,
+   "id": "b03",
+   "bonus": true,
+   "key": "lepus-timidus",
+   "navn": "Hare",
+   "latin": "Lepus timidus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest",
+   "kjennetegn": "Hvit om vinteren, ellers gråbrun; svarte ørespisser.",
+   "nar": "Hele året; oftest i skumringen og om natta.",
+   "mat": "Gress, urter, kvister og bark.",
+   "fakta": "Ungene fødes med pels og åpne øyne.",
+   "lengde": "45–60 cm",
+   "vekt": "2–5 kg",
+   "utbredelse": "Norge, Sverige, Finland, Skottland, Irland, Alpene, Baltikum, Russland, Sibir, Mongolia, Nord-Kina og Japan (Hokkaido)",
+   "rodliste": "Nær truet",
+   "bilde": "cards/b03.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "fotograf": "Eirik Røtnes",
+   "lisens": "CC BY 4.0"
+  },
+  {
+   "nr": 4,
+   "id": "b04",
+   "bonus": true,
+   "key": "alces-alces",
+   "navn": "Elg",
+   "latin": "Alces alces",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest",
+   "kjennetegn": "Stor og langbeint med lang mule; oksen har gevir.",
+   "nar": "Hele året; i hager mest om vinteren.",
+   "mat": "Kvister, bark, knopper, blader og frukt.",
+   "fakta": "Norges største landpattedyr og en god svømmer.",
+   "lengde": "2,3–3,1 m",
+   "vekt": "280–700 kg",
+   "utbredelse": "Norge, Sverige, Finland, Baltikum, Polen, Russland, Sibir, Mongolia, Nord-Kina, Alaska, Canada og nordlige USA",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b04.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "fotograf": "Ragnar Skrede",
+   "lisens": "CC BY 4.0"
+  },
+  {
+   "nr": 5,
+   "id": "b05",
+   "bonus": true,
+   "key": "vulpes-vulpes",
+   "navn": "Rødrev",
+   "latin": "Vulpes vulpes",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest",
+   "kjennetegn": "Rødbrun pels og lang, busket hale med hvit spiss.",
+   "nar": "Hele året; mest om kvelden og natta.",
+   "mat": "Smågnagere, fugler, bær og matrester.",
+   "fakta": "Hører musa under snøen og hopper rett ned på den.",
+   "lengde": "60–80 cm",
+   "vekt": "5–10 kg",
+   "utbredelse": "Norge, hele Europa, Nord-Afrika, Midtøsten, Asia, Japan, Canada og USA; innført i Australia",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b05.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "fotograf": "Steinar Stueflotten",
+   "lisens": "CC BY 4.0"
   }
  ],
  "hjelpFoto": [
@@ -3282,6 +3458,11 @@
    "id": "000c",
    "navn": "Bildekreditering",
    "bilde": "cards-foto/000c.webp"
+  },
+  {
+   "id": "b00",
+   "navn": "Bildekreditering bonuskort",
+   "bilde": "cards/b00.webp"
   }
  ],
  "tidligereNr": {

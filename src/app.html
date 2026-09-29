@@ -240,6 +240,10 @@ button{cursor:pointer;touch-action:manipulation}
 .scrub i.x10{height:13px}
 .scrub i.s{background:var(--gold);height:16px}
 .scrub i.c{background:var(--ink);height:26px}
+.scrub i.bn{background:color-mix(in srgb, var(--spruce-ink) 40%, var(--track))}
+.scrub i.bn1{margin-left:4px}
+.scrub i.bn.s{background:var(--gold)}
+.scrub i.bn.c{background:var(--ink)}
 .hint{margin:0;font-size:12.5px;color:var(--muted);transition:opacity .4s}
 .telling .hint{display:none}
 
@@ -633,6 +637,9 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 const DATA = JSON.parse(document.getElementById('kortdata').textContent);
 const CARDS = DATA.kort;
 const N = CARDS.length;
+/* Bonuskortene (andre dyr, b01–b05) ligger etter fuglekortene i kortstokken, men teller ikke med i fuglelista */
+const BIRDS = CARDS.filter(c => !c.bonus), BONUS = CARDS.filter(c => c.bonus);
+const NB = BIRDS.length, NBON = BONUS.length;
 const RAR = DATA.sjeldenhet;
 const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -797,13 +804,18 @@ function migrateKeys(obj) {
   });
   return moved.filter(([, key]) => key);
 }
-const seenCount = () => Object.keys(Store.data).filter(k => BY_KEY[k] != null).length;
+const erFugl = k => BY_KEY[k] != null && !CARDS[BY_KEY[k]].bonus;
+const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          // fuglekortene
+const bonusSeen = () => BONUS.filter(c => Store.has(c.key)).length;
 Store.loadLocal();
 
 /* ================= Hagefugltelling =================
    A count keeps its start and end time, the area, and the highest number of each species seen at the
    same time. Counts are stored apart from the sightings; ending one gives each counted bird a day. */
-const EKSTRA = [{ key: 'ekorn', navn: 'Ekorn' }];      // not a bird, but on Fuglevennen's form
+const EKSTRA_ALLE = [{ key: 'ekorn', navn: 'Ekorn', art: 'sciurus-vulgaris' }];      // not a bird, but on Fuglevennen's form
+/* an extra species that has its own (bonus) card is counted on the card; older counts are moved over when read */
+const ALIAS = Object.fromEntries(EKSTRA_ALLE.filter(e => BY_KEY[e.art] != null).map(e => [e.key, e.art]));
+const EKSTRA = EKSTRA_ALLE.filter(e => !ALIAS[e.key]);
 const NAVN = Object.fromEntries([...CARDS.map(c => [c.key, c.navn]), ...EKSTRA.map(e => [e.key, e.navn])]);
 function tellinger(raw) {
   const out = {};
@@ -811,7 +823,7 @@ function tellinger(raw) {
     const v = raw[id];
     if (!v || !/^t\d+$/.test(id) || !Number.isFinite(v.start)) return;
     const arter = {};
-    Object.keys(v.arter || {}).forEach(k => { const n = Math.floor(+v.arter[k]); if (NAVN[k] && n > 0) arter[k] = Math.min(n, 9999); });
+    Object.keys(v.arter || {}).forEach(k0 => { const k = ALIAS[k0] || k0, n = Math.floor(+v.arter[k0]); if (NAVN[k] && n > 0) arter[k] = Math.max(arter[k] || 0, Math.min(n, 9999)); });
     out[id] = { start: v.start, slutt: Number.isFinite(v.slutt) && v.slutt > 0 ? v.slutt : 0, omrade: String(v.omrade || '').slice(0, 80), arter, ts: v.ts || 0 };
   });
   return out;
@@ -854,7 +866,7 @@ function nesteNiva(c) {
   return k < 0 ? null : { niva: g.filter(x => x <= g[k]).length, mangler: g[k] - n };
 }
 function nokkeltall() {
-  const alle = [...new Set(Object.keys(Store.data).filter(k => BY_KEY[k] != null).flatMap(k => Store.data[k].dager))].sort();
+  const alle = [...new Set(Object.keys(Store.data).filter(erFugl).flatMap(k => Store.data[k].dager))].sort();   // bonuskortene teller ikke
   let rekke = 0, lop = 0, forrige = null;
   alle.forEach(d => {
     const t = Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10)) / 864e5;
@@ -865,7 +877,7 @@ function nokkeltall() {
   return {
     arter: seenCount(), obsDager: alle.length, rekke, arstider,
     langeTellinger: ferdige.filter(v => v.slutt - v.start >= 3600000).length,
-    flokk: Math.max(0, ...ferdige.flatMap(v => Object.keys(v.arter).filter(k => BY_KEY[k] != null).map(k => v.arter[k]))),
+    flokk: Math.max(0, ...ferdige.flatMap(v => Object.keys(v.arter).filter(erFugl).map(k => v.arter[k]))),
   };
 }
 const MIKON = {
@@ -878,7 +890,7 @@ const MERKER = [
   { id: 'a10', navn: '10 arter', tekst: 'Sett 10 ulike arter', mal: 10, v: t => t.arter, ikon: '10' },
   { id: 'a25', navn: '25 arter', tekst: 'Sett 25 ulike arter', mal: 25, v: t => t.arter, ikon: '25' },
   { id: 'a50', navn: '50 arter', tekst: 'Sett 50 ulike arter', mal: 50, v: t => t.arter, ikon: '50' },
-  { id: 'aalle', navn: 'Hele kortstokken', tekst: `Sett alle ${N} artene`, mal: N, v: t => t.arter, ikon: String(N) },
+  { id: 'aalle', navn: 'Hele kortstokken', tekst: `Sett alle ${NB} fuglene`, mal: NB, v: t => t.arter, ikon: String(NB) },
   { id: 'rekke', navn: 'Sju på rad', tekst: 'Observasjoner sju dager på rad', mal: 7, v: t => t.rekke, ikon: MIKON.rekke },
   { id: 'd30', navn: '30 dager', tekst: '30 observasjonsdager', mal: 30, v: t => t.obsDager, ikon: '30' },
   { id: 'arstider', navn: 'Fire årstider', tekst: 'Observasjoner vår, sommer, høst og vinter', mal: 4, v: t => t.arstider, ikon: MIKON.arstider },
@@ -915,10 +927,12 @@ const IDX = CARDS.map(c => Object.fromEntries(FIELDS.map(([k]) => [k, norm(c[k])
 const stage = $('#stage'), deckEl = $('#deck');
 let cur = Math.min(N - 1, Math.max(0, parseInt(lsGet('hagefugler-oslo:kort') || '0', 10) || 0));
 const hashNr = /^#k?(\d{1,3})$/.exec(location.hash || '');
-if (hashNr && +hashNr[1] >= 1 && +hashNr[1] <= N) cur = +hashNr[1] - 1;
+if (hashNr && +hashNr[1] >= 1 && +hashNr[1] <= NB) cur = +hashNr[1] - 1;
+const hashBonus = /^#(b\d{2})$/i.exec(location.hash || '');
+if (hashBonus) { const i = CARDS.findIndex(c => c.id === hashBonus[1].toLowerCase()); if (i >= 0) cur = i; }
 const pool = new Map();
 
-const altTekst = c => `Fuglekort ${c.id}: ${c.navn}, ${c.latin}. ${c.status}.${foto() && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
+const altTekst = c => `${c.bonus ? 'Bonuskort' : 'Fuglekort'} ${c.id}: ${c.navn}, ${c.latin}. ${c.status}.${(foto() || c.bonus) && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
 function makeCard(i) {
   const c = CARDS[i];
   const [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje;
@@ -1086,7 +1100,7 @@ function flip() {
   setFlipped(el, !el.classList.contains('flipped'));
   nudgeHint();
 }
-function announce() { const c = CARDS[cur]; $('#live').textContent = `Kort ${cur + 1} av ${N}: ${c.navn}${Store.has(c.key) ? ', sett' : ''}`; }
+function announce() { const c = CARDS[cur]; $('#live').textContent = `${c.bonus ? `Bonuskort ${c.id} av ${NBON}` : `Kort ${c.nr} av ${NB}`}: ${c.navn}${Store.has(c.key) ? ', sett' : ''}`; }
 const haptic = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
 
 /* ---- momentum: a fast swipe riffles through many cards, slowing down; a tap stops it ---- */
@@ -1330,10 +1344,11 @@ function registrer(c, d) {
   const for_ = opptjent();
   Store.put(c.key, [d]);
   haptic(12);
-  const n = seenCount();
-  const msg = n === N ? `Alle ${N} artene er sett. Hele kortstokken er komplett!`
-    : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i norske hager. ${n} av ${N} sett.`
-    : `${c.navn} er sett for første gang. ${n} av ${N} arter.`;
+  const n = seenCount(), b = bonusSeen();
+  const msg = c.bonus ? (b === NBON ? `${c.navn}! Alle ${NBON} bonuskortene er sett.` : `${c.navn}! Bonuskort: ${b} av ${NBON} dyr sett.`)
+    : n === NB ? `Alle ${NB} fuglene er sett. Hele kortstokken er komplett!`
+    : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i norske hager. ${n} av ${NB} sett.`
+    : `${c.navn} er sett for første gang. ${n} av ${NB} arter.`;
   toast(msg + nyheter(for_), 'Angre', () => Store.put(c.key, []));
 }
 function leggTilDag(c, d) {
@@ -1386,7 +1401,7 @@ $('#nextBtn').addEventListener('click', () => { stopRiffle(); go(1); });
 const scrub = $('#scrub');
 scrub.style.gridTemplateColumns = `repeat(${N}, 1fr)`;
 scrub.setAttribute('aria-valuemax', N);
-scrub.innerHTML = CARDS.map((c, i) => `<i class="${(i + 1) % 10 === 0 ? 'x10' : ''}"></i>`).join('');
+scrub.innerHTML = CARDS.map((c, i) => `<i class="${c.bonus ? `bn${i === NB ? ' bn1' : ''}` : (i + 1) % 10 === 0 ? 'x10' : ''}"></i>`).join('');
 const ticks = [...scrub.children];
 const scrubIndex = e => { const r = scrub.getBoundingClientRect(); return Math.max(0, Math.min(N - 1, Math.floor((e.clientX - r.left) / r.width * N))); };
 let scrubbing = false;
@@ -1405,15 +1420,16 @@ scrub.addEventListener('keydown', e => {
 function paintChrome() {
   const c = CARDS[cur];
   const n = seenCount();
-  $('#sub').textContent = `Kort ${c.id} av ${pad3(N)} · ${n} sett`;
+  $('#sub').textContent = c.bonus ? `Bonuskort ${c.id} av ${String(NBON).padStart(2, '0')} · ${bonusSeen()} av ${NBON} sett`
+                                  : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
   $('#ringNum').textContent = n;
   const C = 2 * Math.PI * 14;
-  $('#ringArc').setAttribute('stroke-dasharray', `${(n / N * C).toFixed(2)} ${C.toFixed(2)}`);
-  $('#openStats').setAttribute('aria-label', `Statistikk: ${n} av ${N} sett`);
+  $('#ringArc').setAttribute('stroke-dasharray', `${(n / NB * C).toFixed(2)} ${C.toFixed(2)}`);
+  $('#openStats').setAttribute('aria-label', `Statistikk: ${n} av ${NB} fugler sett`);
   ticks.forEach((t, i) => { t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
   paintTeller();
   scrub.setAttribute('aria-valuenow', cur + 1);
-  scrub.setAttribute('aria-valuetext', `Kort ${cur + 1}: ${c.navn}`);
+  scrub.setAttribute('aria-valuetext', `${c.bonus ? `Bonuskort ${c.id}` : `Kort ${c.nr}`}: ${c.navn}`);
 }
 
 let hintCount = lsGet('hagefugler-oslo:hint') === 'ok' ? 99 : 0;
@@ -1542,7 +1558,8 @@ const setSheet = $('#settingsSheet');
 $('#openSettings').hidden = !HAR_FOTO && !Vipp.stottet;
 $('#bildeSek').hidden = !HAR_FOTO;
 $('#vippSek').hidden = !Vipp.stottet;
-$('#fotoAntall').textContent = `Fotografier fra Artsdatabanken og Artsobservasjoner for ${CARDS.filter(c => c.bildeFoto).length} av ${N} arter. De andre viser illustrasjonen. Fotografene står på kortet Bildekreditering under ?.`;
+$('#fotoAntall').textContent = `Fotografier fra Artsdatabanken og Artsobservasjoner for ${BIRDS.filter(c => c.bildeFoto).length} av ${NB} fugler. De andre viser illustrasjonen. Fotografene står på kortet Bildekreditering under ?.`
+  + (NBON ? ' Bonuskortene har alltid fotografi.' : '');
 function paintSettings() {
   setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg));
   $('#vippBtn').setAttribute('aria-checked', Vipp.aktiv ? 'true' : 'false');
@@ -1574,13 +1591,20 @@ const sb = $('#statsBody');
 function openStats() { showSheet($('#statsSheet')); renderStats(); setTimeout(() => $('#closeStats').focus(), 60); }
 $('#openStats').addEventListener('click', openStats);
 $('#closeStats').addEventListener('click', () => closeSheets());
+function albumKort(c, i) {
+  const nv = nivaAv(c);
+  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? esc(c.id) : c.nr}</span><span class="okdot">${CHECK}</span></button>`;
+}
 function renderStats() {
-  const ids = Object.keys(Store.data).filter(k => BY_KEY[k] != null);
+  // fuglelista: bare fuglekortene; bonuskortene (andre dyr) har sin egen del lenger ned
+  const alleIds = Object.keys(Store.data).filter(k => BY_KEY[k] != null);
+  const ids = alleIds.filter(erFugl);
   const n = ids.length;
-  const byRar = [1, 2, 3, 4, 5].map(r => ({ r, tot: CARDS.filter(c => c.stjerner === r).length, seen: CARDS.filter(c => c.stjerner === r && Store.has(c.key)).length }));
-  const ptsMax = CARDS.reduce((a, c) => a + c.stjerner, 0);
-  const pts = CARDS.reduce((a, c) => a + (Store.has(c.key) ? c.stjerner : 0), 0);
-  const rarest = CARDS.filter(c => Store.has(c.key)).sort((a, b) => b.stjerner - a.stjerner || a.nr - b.nr)[0];
+  const byRar = [1, 2, 3, 4, 5].map(r => ({ r, tot: BIRDS.filter(c => c.stjerner === r).length, seen: BIRDS.filter(c => c.stjerner === r && Store.has(c.key)).length }));
+  const ptsMax = BIRDS.reduce((a, c) => a + c.stjerner, 0);
+  const pts = BIRDS.reduce((a, c) => a + (Store.has(c.key) ? c.stjerner : 0), 0);
+  const rarest = BIRDS.filter(c => Store.has(c.key)).sort((a, b) => b.stjerner - a.stjerner || a.nr - b.nr)[0];
+  const nBonus = bonusSeen();
   // last 12 months
   const now = new Date(); const months = [];
   for (let k = 11; k >= 0; k--) { const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push({ y: d.getFullYear(), m: d.getMonth() + 1, n: 0 }); }
@@ -1588,7 +1612,7 @@ function renderStats() {
   const maxM = Math.max(1, ...months.map(x => x.n));
   const inYear = months.reduce((a, x) => a + x.n, 0);
   const last = id => Store.data[id].dager[Store.data[id].dager.length - 1];
-  const recent = ids.map(id => ({ id, d: last(id), ant: Store.data[id].dager.length, ts: Store.data[id].ts }))
+  const recent = alleIds.map(id => ({ id, d: last(id), ant: Store.data[id].dager.length, ts: Store.data[id].ts }))
     .sort((a, b) => (b.d > a.d ? 1 : b.d < a.d ? -1 : b.ts - a.ts)).slice(0, 6);
   const cardOf = key => BY_KEY[key];
   const aktivT = Tell.aktiv(), ferdigeT = Tell.ferdige();
@@ -1600,8 +1624,8 @@ function renderStats() {
   const most = ids.map(id => ({ c: CARDS[BY_KEY[id]], ant: Store.data[id].dager.length })).sort((a, b) => b.ant - a.ant || a.c.nr - b.c.nr)[0];
 
   sb.innerHTML = `
-    <div class="hero"><span class="big">${n}</span><span class="of">av ${N} arter sett</span></div>
-    <div class="bar" role="img" aria-label="${Math.round(n / N * 100)} prosent av kortstokken"><i style="width:${(n / N * 100).toFixed(1)}%"></i></div>
+    <div class="hero"><span class="big">${n}</span><span class="of">av ${NB} fugler sett</span></div>
+    <div class="bar" role="img" aria-label="${Math.round(n / NB * 100)} prosent av fuglekortene"><i style="width:${(n / NB * 100).toFixed(1)}%"></i></div>
     <div class="kpis">
       <div class="kpi"><b>${pts} <small style="font-size:14px;color:var(--muted)">/ ${ptsMax}</small></b><span>Poeng. Hvert kort gir like mange poeng som det har stjerner.</span></div>
       <div class="kpi"><b>${rarest ? esc(rarest.navn) : '–'}</b><span>${rarest ? `Sjeldneste funn, ${rarest.stjerner} ${rarest.stjerner === 1 ? 'stjerne' : 'stjerner'}` : 'Sjeldneste funn vises her'}</span></div>
@@ -1647,8 +1671,12 @@ function renderStats() {
     </ul></div>` : ''}
 
     <div class="s-sec"><h3>Samlingen</h3><div class="album">
-      ${CARDS.map((c, i) => { const nv = nivaAv(c); return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.nr}</span><span class="okdot">${CHECK}</span></button>`; }).join('')}
+      ${CARDS.map((c, i) => c.bonus ? '' : albumKort(c, i)).join('')}
     </div></div>
+
+    ${NBON ? `<div class="s-sec"><h3>Bonuskort – andre dyr <span class="h3n">${nBonus} av ${NBON}</span></h3><div class="album">
+      ${CARDS.map((c, i) => c.bonus ? albumKort(c, i) : '').join('')}
+    </div><p class="cap">Bonuskortene ligger etter fuglekortene i kortstokken. De får glinskant som fuglene, men teller ikke med i fuglelista, poengene eller merkene.</p></div>` : ''}
 
     <div class="s-sec"><h3>Lagring</h3>
       <p class="store ${Store.mode === 'delt' ? 'sky' : ''}"><i></i>${Store.mode === 'delt' ? 'Avkrysningene og tellingene lagres sammen med kortstokken og følger deg på alle enheter.' : 'Avkrysningene og tellingene lagres på denne enheten.'}</p>
@@ -1781,12 +1809,15 @@ const tlisteEl = $('#tliste'), lq = $('#lq');
 function openListe() { lq.value = ''; renderListe(); showSheet(listeSheet); listeSheet.scrollTop = 0; setTimeout(() => $('#closeListe').focus(), 60); }
 function renderListe() {
   const q = norm(lq.value.trim()).s;
-  const rader = [...EKSTRA.map(e => ({ key: e.key, navn: e.navn, i: null })), ...CARDS.map((c, i) => ({ key: c.key, navn: c.navn, i }))]
+  const forst = c => Object.values(ALIAS).includes(c.key);      // f.eks. ekorn: øverst som før, nå med eget kort
+  const kort = CARDS.map((c, i) => ({ key: c.key, navn: c.navn, i }));
+  const rader = [...kort.filter(r => forst(CARDS[r.i])), ...EKSTRA.map(e => ({ key: e.key, navn: e.navn, i: null })),
+    ...kort.filter(r => !CARDS[r.i].bonus), ...kort.filter(r => CARDS[r.i].bonus && !forst(CARDS[r.i]))]
     .filter(r => !q || norm(r.navn).s.includes(q));
   if (!rader.length) { tlisteEl.innerHTML = `<li class="empty">Ingen art passer til «${esc(lq.value)}».</li>`; return; }
   tlisteEl.innerHTML = rader.map(r => {
     const n = Tell.antall(r.key), fugl = r.i != null;
-    const inn = `${fugl ? `<span class="ph" style="background-position:${spritePos(r.i)}" aria-hidden="true"></span>` : `<span class="ph ekorn" aria-hidden="true">${EKORN_SVG}</span>`}<span><b>${esc(r.navn)}</b><small>${fugl ? esc(RAR[CARDS[r.i].stjerner]) : 'Med i skjemaet'}</small></span>`;
+    const inn = `${fugl ? `<span class="ph" style="background-position:${spritePos(r.i)}" aria-hidden="true"></span>` : `<span class="ph ekorn" aria-hidden="true">${EKORN_SVG}</span>`}<span><b>${esc(r.navn)}</b><small>${fugl ? `${CARDS[r.i].bonus ? 'Bonuskort · ' : ''}${esc(RAR[CARDS[r.i].stjerner])}` : 'Med i skjemaet'}</small></span>`;
     return `<li class="${n ? 'har' : ''}" data-k="${r.key}">
       ${fugl ? `<button class="tl-go" data-go="${r.i}" aria-label="Vis kortet for ${esc(r.navn)}">${inn}</button>` : `<div class="tl-go">${inn}</div>`}
       <div class="step sm"><button class="st-btn" data-d="-1" aria-label="En færre ${esc(r.navn)}">−</button><input type="number" inputmode="numeric" min="0" max="9999" enterkeyhint="done" value="${n}" aria-label="Flest samtidig av ${esc(r.navn)}"><button class="st-btn plus" data-d="1" aria-label="En til ${esc(r.navn)}">+</button></div>
