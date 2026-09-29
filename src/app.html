@@ -143,19 +143,19 @@ button{cursor:pointer;touch-action:manipulation}
 .mkant{position:absolute;inset:0;border-radius:inherit;padding:3.75cqw;pointer-events:none;display:none;--mx:30%;--my:50%;
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
           mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
-.card[data-niva] .mkant{display:block}
+[data-niva] .mkant{display:block}
 .mkant i{position:absolute;inset:0;border-radius:inherit;display:block}
 .mkant::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 .35cqw rgba(0,0,0,.18)}
 .mkant::before{content:"";position:absolute;inset:3.75cqw;border-radius:1.4cqw;box-shadow:0 0 0 .3cqw rgba(0,0,0,.15)}
-.card[data-niva="1"] .mk-metall{background:linear-gradient(135deg,#7f878d 0%,#eef1f3 16%,#a7afb5 30%,#fbfcfd 46%,#949ca2 60%,#e3e7ea 78%,#7a8288 100%)}
-.card[data-niva="2"] .mk-metall{background:linear-gradient(135deg,#7d4f06 0%,#f7d97d 16%,#b67f1a 30%,#fff3c2 46%,#a36c0e 60%,#f2cb58 78%,#6f4605 100%)}
-.card[data-niva="3"] .mk-metall{background:linear-gradient(115deg,#ff7b7b,#ffd76b,#8dff8a,#72e5ff,#8b87ff,#ff86d8,#ff7b7b,#ffd76b,#8dff8a,#72e5ff);
+[data-niva="1"] .mk-metall{background:linear-gradient(135deg,#7f878d 0%,#eef1f3 16%,#a7afb5 30%,#fbfcfd 46%,#949ca2 60%,#e3e7ea 78%,#7a8288 100%)}
+[data-niva="2"] .mk-metall{background:linear-gradient(135deg,#7d4f06 0%,#f7d97d 16%,#b67f1a 30%,#fff3c2 46%,#a36c0e 60%,#f2cb58 78%,#6f4605 100%)}
+[data-niva="3"] .mk-metall{background:linear-gradient(115deg,#ff7b7b,#ffd76b,#8dff8a,#72e5ff,#8b87ff,#ff86d8,#ff7b7b,#ffd76b,#8dff8a,#72e5ff);
   background-size:300% 300%;background-position:var(--mx) var(--my)}
-.card[data-niva="3"] .mk-metall::after{content:"";position:absolute;inset:0;border-radius:inherit;
+[data-niva="3"] .mk-metall::after{content:"";position:absolute;inset:0;border-radius:inherit;
   background:linear-gradient(135deg,rgba(255,255,255,.35),rgba(255,255,255,0) 40%,rgba(255,255,255,.3) 70%,rgba(255,255,255,0));mix-blend-mode:soft-light}
 .mk-lys{background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.95) 50%,transparent 62%);background-size:300% 300%;
   background-position:var(--mx) var(--my);mix-blend-mode:overlay}
-.card[data-niva="3"] .mk-lys{mix-blend-mode:soft-light}
+[data-niva="3"] .mk-lys{mix-blend-mode:soft-light}
 /* the light drifts slowly back and forth when nothing steers it */
 @keyframes drift{0%{--mx:0%;--my:20%}50%{--mx:60%;--my:70%}100%{--mx:100%;--my:40%}}
 .card.is-top[data-niva]:not(.styrt) .mkant{animation:drift 7s ease-in-out infinite alternate}
@@ -163,6 +163,46 @@ button{cursor:pointer;touch-action:manipulation}
 .mk-blits{opacity:0;background:linear-gradient(115deg,transparent 35%,#fff 50%,transparent 65%);background-size:300% 300%}
 .card.glinsny .mk-blits{animation:blits 1.3s ease-out forwards}
 @keyframes blits{0%{background-position:100% 100%;opacity:0}20%{opacity:1}100%{background-position:0% 0%;opacity:0}}
+
+/* ---------- the celebration when a card gets sølv-, gull- or holokant ----------
+   The card comes forward over everything, light rays turn behind it, the new border lights up and the
+   level is named. Tap to close; it closes by itself after a few seconds. */
+.fest{position:fixed;inset:0;z-index:55;display:grid;place-items:center;align-content:center;gap:18px;padding:24px 16px;
+  background:rgba(6,14,10,.84);opacity:0;visibility:hidden;transition:opacity .35s, visibility 0s .35s;overflow:hidden;cursor:pointer;
+  --glod:#e9eef1;--straale:rgba(235,242,246,.22)}
+.fest.on{opacity:1;visibility:visible;transition:opacity .35s}
+.fest[hidden]{display:none}
+.fest[data-niva="2"]{--glod:#f6c64a;--straale:rgba(255,205,90,.26)}
+.fest[data-niva="3"]{--glod:#b9a4ff;--straale:rgba(190,170,255,.26)}
+.fest-straaler{position:absolute;left:50%;top:50%;width:170vmax;height:170vmax;margin:-85vmax 0 0 -85vmax;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg, transparent 0deg 7deg, var(--straale) 7deg 14deg);
+  -webkit-mask-image:radial-gradient(circle, #000 0, rgba(0,0,0,.6) 22%, transparent 48%);mask-image:radial-gradient(circle, #000 0, rgba(0,0,0,.6) 22%, transparent 48%);
+  transform:scale(.4);opacity:0}
+.fest.on .fest-straaler{animation:straaler-inn .9s cubic-bezier(.2,.8,.2,1) forwards, snurr 24s linear infinite}
+.fest[data-niva="3"].on .fest-straaler{animation:straaler-inn .9s cubic-bezier(.2,.8,.2,1) forwards, snurr 24s linear infinite, regnbue 4s linear infinite}
+@keyframes straaler-inn{to{opacity:1;transform:scale(1)}}
+@keyframes snurr{from{rotate:0deg}to{rotate:360deg}}
+@keyframes regnbue{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}
+.fest-kort{position:relative;margin:0;width:min(74vw, 46vh, 360px);aspect-ratio:750/1050;container-type:inline-size;border-radius:5.07cqw;
+  transform:scale(.35) rotate(-8deg);opacity:0}
+.fest.on .fest-kort{animation:kort-inn .9s cubic-bezier(.25,1.45,.45,1) .05s forwards, glod 2.4s ease-in-out .9s infinite}
+@keyframes kort-inn{60%{opacity:1}to{opacity:1;transform:none}}
+@keyframes glod{0%,100%{filter:drop-shadow(0 0 10px var(--glod)) drop-shadow(0 0 2px var(--glod))}50%{filter:drop-shadow(0 0 34px var(--glod)) drop-shadow(0 0 8px var(--glod))}}
+.fest-kort img{display:block;width:100%;height:100%;border-radius:inherit}
+.fest-kort .mkant{--mx:0%;--my:30%}
+.fest.on .fest-kort .mkant{animation:drift 3.2s ease-in-out .5s infinite alternate}
+.fest-kort .mk-blits{opacity:0}
+.fest.on .fest-kort .mk-blits{animation:blits 1.1s ease-out .75s 2}
+.fest-tekst{position:relative;display:grid;justify-items:center;gap:4px;text-align:center;color:#f3f8f2;opacity:0;transform:translateY(14px) scale(.9)}
+.fest.on .fest-tekst{animation:tekst-inn .6s cubic-bezier(.2,1.4,.4,1) .55s forwards}
+@keyframes tekst-inn{to{opacity:1;transform:none}}
+.fest-tekst b{font-size:clamp(30px, 9vw, 44px);font-weight:800;letter-spacing:-.01em;line-height:1;padding:8px 22px 10px;border-radius:999px;color:#1c2a22;
+  box-shadow:0 10px 30px -10px rgba(0,0,0,.6), inset 0 0 0 2px rgba(255,255,255,.35)}
+.fest[data-niva="1"] .fest-tekst b{background:linear-gradient(135deg,#8b9399,#f4f7f9 30%,#aeb6bc 55%,#ffffff 75%,#8b9399)}
+.fest[data-niva="2"] .fest-tekst b{background:linear-gradient(135deg,#8a5a0a,#f9dc86 30%,#c08a1f 55%,#fff4c6 75%,#7d4f06)}
+.fest[data-niva="3"] .fest-tekst b{background:linear-gradient(115deg,#ffa0a0,#ffe38a,#aaffa8,#96ecff,#b0a8ff,#ffa6e3)}
+.fest-tekst span{font-size:15px;opacity:.9}
+.fest-tekst small{font-size:12.5px;opacity:.6;margin-top:6px}
 
 /* back of the card: readable field notes */
 .stars{display:inline-flex;gap:.2em;color:var(--card-gold)}
@@ -437,6 +477,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   .float{animation:none}
   .card,.card .inner,.sheet,.scrim,.tick path,.hand{transition-duration:.01s!important}
   .antall.pop{animation:none}
+  .fest.on .fest-straaler,.fest.on .fest-kort,.fest.on .fest-tekst,.fest.on .fest-kort .mkant,.fest.on .fest-kort .mk-blits{animation:none;opacity:1;transform:none}
   .card.is-top[data-niva]:not(.styrt) .mkant,.card.glinsny .mk-blits{animation:none}
 }
 </style>
@@ -578,6 +619,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   </div>
 </section>
 
+<div class="fest" id="fest" role="dialog" aria-modal="true" aria-labelledby="festNavn" hidden>
+  <div class="fest-straaler"></div>
+  <figure class="fest-kort seen"><img id="festBilde" alt=""><span id="festMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></figure>
+  <div class="fest-tekst"><b id="festNavn"></b><span id="festArt"></span><small>Trykk for å fortsette</small></div>
+</div>
 <div class="toast" id="toast" role="status"><span id="toastMsg"></span><button id="toastBtn" hidden>Angre</button></div>
 
 <script type="application/json" id="kortdata">__CARDS_JSON__</script>
@@ -846,7 +892,7 @@ function opptjent() {
 /* what was reached since `for` (taken just before a change), as text for the message at the bottom */
 function nyheter(for_) {
   const na = opptjent(), ut = [];
-  CARDS.forEach(c => { const n = na.niva[c.key]; if (n > for_.niva[c.key]) ut.push(`${c.navn} fikk ${kantNavn(n)}!`); });
+  CARDS.forEach(c => { const n = na.niva[c.key]; if (n > for_.niva[c.key]) { ut.push(`${c.navn} fikk ${kantNavn(n)}!`); feir(c, n); } });
   MERKER.forEach(m => { if (na.merker.has(m.id) && !for_.merker.has(m.id)) ut.push(`Nytt merke: ${m.navn}!`); });
   return ut.length ? ' ' + ut.join(' ') : '';
 }
@@ -1286,7 +1332,7 @@ function registrer(c, d) {
   haptic(12);
   const n = seenCount();
   const msg = n === N ? `Alle ${N} artene er sett. Hele kortstokken er komplett!`
-    : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i Oslo-hager. ${n} av ${N} sett.`
+    : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i norske hager. ${n} av ${N} sett.`
     : `${c.navn} er sett for første gang. ${n} av ${N} arter.`;
   toast(msg + nyheter(for_), 'Angre', () => Store.put(c.key, []));
 }
@@ -1320,6 +1366,7 @@ function visLogg(c) {
 
 /* keyboard */
 document.addEventListener('keydown', e => {
+  if (festAapen) { if (['Escape', 'Enter', ' '].includes(e.key)) { e.preventDefault(); lukkFest(); } return; }
   if (e.target.closest('input, textarea')) { if (e.key === 'Escape') closeSheets(); return; }
   if (openSheet) { if (e.key === 'Escape') closeSheets(); return; }
   if (e.key === 'ArrowRight') { e.preventDefault(); stopRiffle(); go(1); }
@@ -1833,6 +1880,49 @@ sumSheet.addEventListener('click', async e => {
   else if (id === 'sumDel' && v) { try { await navigator.share({ title: 'Hagefugltelling', text: somTekst(v) }); } catch (err) {} }
 });
 $('#tSlutt').addEventListener('click', () => openSum(Tell.aktivId()));
+
+/* ---- celebration: one at a time, in order ---- */
+const festEl = $('#fest'), festKo = [];
+let festT = 0, festAapen = false, festPlanlagt = false, festFokus = null;
+function feir(c, niva) {
+  festKo.push({ c, niva });
+  if (!festAapen && !festPlanlagt) { festPlanlagt = true; setTimeout(nesteFest, 250); }
+}
+function nesteFest() {
+  festPlanlagt = false;
+  if (festAapen) return;
+  const f = festKo.shift(); if (!f) return;
+  festAapen = true;
+  festFokus = document.activeElement;
+  festEl.dataset.niva = f.niva;
+  festEl.querySelector('.fest-kort').dataset.niva = f.niva;
+  $('#festBilde').src = bildeAv(f.c);
+  // the pen marks as on the card itself: tick, "× N" and the date of the first sighting
+  const c = f.c, s = Store.get(c.key), n = Store.days(c.key).length;
+  const [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje, P = v => (v * 100).toFixed(3) + '%', dLeft = lx - 0.13, dW = lw + 0.15;
+  $('#festMerker').innerHTML = s ? `<svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
+    <span class="antall ${n >= 100 ? 'tre' : ''}" style="left:${P(bx + bw + 0.14)};top:${P(by - 0.006)};height:${P(bh + 0.012)}">${n > 1 ? `× ${n}` : ''}</span>
+    <span class="dato" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}"><span class="hand" style="left:${P((lx - dLeft + 0.012) / dW)}">${fmtHand(s.date)}</span></span>` : '';
+  $('#festNavn').textContent = stor(kantNavn(f.niva)) + '!';
+  $('#festArt').textContent = `${f.c.navn} · ${dagerTekst(Store.days(f.c.key).length)}`;
+  festEl.hidden = false; festEl.classList.remove('on'); void festEl.offsetWidth; festEl.classList.add('on');
+  haptic([18, 70, 28, 70, 40]);
+  $('#live').textContent = `${f.c.navn} fikk ${kantNavn(f.niva)}.`;
+  setTimeout(() => festEl.focus && festEl.focus(), 50);
+  clearTimeout(festT); festT = setTimeout(lukkFest, 4200);
+}
+function lukkFest() {
+  if (!festAapen) return;
+  clearTimeout(festT);
+  festEl.classList.remove('on');
+  setTimeout(() => {
+    festEl.hidden = true; festAapen = false;
+    if (festKo.length) nesteFest(); else if (festFokus && festFokus.focus && !openSheet) festFokus.focus();
+  }, 350);
+}
+festEl.tabIndex = -1;
+festEl.addEventListener('click', lukkFest);
+festEl.addEventListener('keydown', e => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); lukkFest(); } });
 
 /* ---- toast ---- */
 let toastT = 0;

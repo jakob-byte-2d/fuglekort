@@ -1,6 +1,6 @@
 # Hagefugler
 
-Kortstokk med 100 fuglekort fra Oslo. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen, samle glinskort og merker og se statistikk. Knappen **?** viser de to forklaringskortene.
+Kortstokk med 100 fuglekort med hagefugler i Norge. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen, samle glinskort og merker og se statistikk. Knappen **?** viser de to forklaringskortene.
 
 Kortene lages i repoet **Fuglekort-** (Fuglekort-fabrikken). Dette repoet er appen som viser dem.
 
@@ -88,7 +88,7 @@ Kanten på et kort blir sølv, gull eller holo når du har sett fuglen mange dag
 - **Vipping:** Under Innstillinger kan du la lyset følge telefonen når du vipper den. På Android er det på fra start; på iPhone må du slå det på, og telefonen spør om lov til å bruke bevegelsessensoren.
 - **Merker:** 10, 25 og 50 arter, hele kortstokken, sju dager på rad, 30 observasjonsdager, fire årstider (vår, sommer, høst og vinter), Tellekorps (en hagefugltelling på minst én time) og Flokk (minst 20 av én art i en telling).
 - Nivåer og merker regnes ut fra observasjonene og tellingene hver gang, så de lagres ikke for seg. Sletter du dager, kan et kort miste kanten igjen.
-- Når et kort får nytt nivå eller du får et merke, står det i meldingen nederst, og kortet blinker. Statistikken viser antall glinskort, hvilke kort som er nærmest neste nivå, og alle merkene med fremdrift. I samlingen har glinskortene sølv-, gull- eller holokant.
+- Når et kort får sølv-, gull- eller holokant, kommer kortet fram over alt annet med lysstråler bak, den nye kanten lyser opp, og nivået står med store bokstaver. Trykk for å fortsette (det lukker seg selv etter noen sekunder). Får flere kort nytt nivå samtidig, for eksempel etter en telling, vises de etter hverandre. Nye merker står i meldingen nederst. Statistikken viser antall glinskort, hvilke kort som er nærmest neste nivå, og alle merkene med fremdrift. I samlingen har glinskortene sølv-, gull- eller holokant.
 - Baksiden av et kort viser nivået og hvor mange dager som mangler til neste.
 
 ## Lagring av observasjoner
