@@ -1,6 +1,6 @@
 # Hagefugler
 
-Kortstokk med 100 fuglekort med hagefugler i Norge. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen, samle glinskort og merker og se statistikk. Knappen **?** viser de to forklaringskortene.
+Kortstokk med 100 fuglekort med hagefugler i Norge. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen, samle glinskort og merker og se statistikk. Menyen øverst til høyre har søk, forklaringskortene og innstillingene.
 
 Kortene lages i repoet **Fuglekort-** (Fuglekort-fabrikken). Dette repoet er appen som viser dem.
 
@@ -61,7 +61,7 @@ Fuglekort- lager to sett kort til appen: KI-illustrasjonene (`kort/`) og fotogra
 `bilder_artsdatabanken` (`kort_foto/`, med fotokreditering). Importen kopierer bare kortene som faktisk har
 fotografi til `docs/cards-foto/`; de andre er like KI-kortene og gjenbrukes. I `data/cards.json` har disse kortene
 `bildeFoto`, `fotograf` og `lisens`, og `hjelpFoto` er forklaringskortene med Bildekreditering. Begge settene
-lagres på telefonen, så man kan bytte også uten nett. Finnes ikke fotosettet, skjules tannhjulet.
+lagres på telefonen, så man kan bytte også uten nett. Finnes ikke fotosettet, skjules bildevalget i Innstillinger.
 
 ## Hagefugltelling
 
@@ -69,7 +69,7 @@ Under statistikken (ringen øverst til høyre) finnes **Start telling**. Skriv g
 
 - **Mens du teller** går klokka i en linje under toppen. Under kortstokken står telleren for kortet du ser på: − og + (eller skriv inn tallet) for det høyeste antallet du har sett **samtidig**. Kort med antall får et gult merke i hjørnet. På tastatur: + og −.
 - **Telleliste** viser alle artene med hver sin teller: **Ekorn** øverst (det står i skjemaet på Fuglevennen.no; når ekornkortet er funnet, telles det på kortet), så de vanligste hagefuglene først, og til slutt bonusdyrene du har funnet. Du kan søke etter en art. Trykker du på navnet, kommer du til kortet. Tellinger fra før bonuskortene, der ekorn ble lagret som `ekorn`, flyttes over på ekornkortet (`sciurus-vulgaris`) når de leses.
-- **Avslutt** viser tallene i alfabetisk rekkefølge, som skjemaet på Fuglevennen.no. Har tellingen vart under én time, står det en påminnelse om at Fuglevennen anbefaler minst én time. Du kan fortsette eller avslutte og lagre. Da får alle fuglene i tellingen en observasjonsdag (datoen tellingen startet). Du angrer i meldingen nederst.
+- **Avslutt** viser tallene i alfabetisk rekkefølge, som skjemaet på Fuglevennen.no. Har tellingen vart under én time, står det en påminnelse om at Fuglevennen anbefaler minst én time. Du kan fortsette eller avslutte og lagre. Da får alle fuglene i tellingen en observasjonsdag (datoen tellingen startet). Frøene flyr til frøtallet når du lukker sammendraget. En lagret telling kan slettes fra sammendraget (appen spør først); dagene den ga, blir liggende.
 - **Tidligere tellinger** ligger under Hagefugltelling i statistikken. Der kan du kopiere tallene som tekst, dele dem, åpne Fuglevennen.no eller slette tellingen.
 - Tellingen lagres fortløpende, så den fortsetter der du slapp hvis appen lukkes.
 
@@ -82,12 +82,12 @@ feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`, `id` som
 **De er en belønning og en overraskelse.** Et bonuskort finnes ikke i appen før det er fortjent:
 
 - Et bonuskort ved 5, 10, 20, 40 og 60 registreringer av fugler (`BONUS_GRENSER` i `src/app.html`), i rekkefølgen b01, b02 … En registrering er én observasjonsdag for én fugl, også de som kommer fra en hagefugltelling. Bonusdyrene teller ikke.
-- Før det er fortjent, vises det ingen steder: ikke i kortstokken, scrubberen, søket, samlingen, «Sist sett», glinskortene, telleliste (ekorn står der som en vanlig rad, siden det er med i skjemaet) eller under **?**. `#b03` i adressen virker først når kortet er funnet. Kortet «Bildekreditering bonuskort» (b00) kommer under **?** når alle er funnet.
-- Hint uten å si hva: statistikken har delen «Bonus» med et kort med spørsmålstegn og hvor mange registreringer som mangler, og meldingen nederst sier «To registreringer til en bonus!» og «Én registrering til en bonus!».
+- Før det er fortjent, vises det ingen steder: ikke i kortstokken, scrubberen, søket, samlingen, «Sist sett», glinskortene, telleliste (ekorn står der som en vanlig rad, siden det er med i skjemaet) eller under **Om kortene**. `#b03` i adressen virker først når kortet er funnet. Kortet «Bildekreditering bonuskort» (b00) kommer under **?** når alle er funnet.
+- Hint uten å si hva: statistikken har delen «Bonus» med et kort med spørsmålstegn og hvor mange registreringer som mangler, og skjermleseren sier «To registreringer til en bonus!» og «Én registrering til en bonus!».
 - **Når et bonuskort er fortjent**, faller et kort med baksiden opp inn på skjermen og vugger, med et lysende spørsmålstegn. Trykk, så snur det seg: blader virvler ut, et stempel sier BONUSKORT, og det står hvilke kort det er stokket inn blant. Trykk igjen, så viser kortstokken hvor det havnet, og kortet lyser opp. Ingenting skjer av seg selv; hvert steg venter på et trykk. Avsløringen vises én gang (i Claude lagres det i samlingen `bonusvist`); bonuskort fortjent før denne versjonen avsløres første gang appen åpnes.
 - Kortet stokkes inn blant fuglekortene med like mange stjerner, et sted mellom to av dem. Plassen er fast (regnes ut fra artsnavnet), så den er lik hver gang og på alle enheter. Ekorn (★★) havner blant kortene 018–032, rådyr (★★★) blant 033–048, og hare, elg og rødrev (★★★★) blant 049–068.
 - Et **BONUS-merke** ligger nederst til høyre på kortet, over det trykte kortnummeret. Overskriften viser «Bonuskort» uten nummer, og samlingen viser «Bonus» på kortene som ikke er sett.
-- Angrer du registreringen som ga et bonuskort, eller sletter dager så du kommer under grensen, forsvinner kortet igjen, og det avsløres på nytt når det er fortjent.
+- Sletter du dager så du kommer under grensen, forsvinner kortet igjen, og det avsløres på nytt når det er fortjent.
 - Bonuskortene får observasjonsdager og glinskant som fuglene, men teller ikke med i fuglelista: ringen, «av 100 fugler sett», poengene, sjeldenhetsstolpene og merkene gjelder bare fuglene.
 - De har KI-illustrasjoner og fotografier som fuglene: KI-kortene i `docs/cards/`, kortene med fotografi i `docs/cards-foto/` (med `bildeFoto`, `fotograf` og `lisens` i `cards.json`). Med fotografier står fotografen og lisensen også nederst på baksiden av kortet.
 
@@ -96,12 +96,12 @@ feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`, `id` som
 Man tjener solsikkefrø og bruker dem til å låse opp kort. Alle tallene står samlet i `FRO` øverst i frødelen av `src/app.html`.
 
 - **Åpne kort:** 001–025 er åpne fra start. 026–100 er grå kort: på sin plass i kortstokken, men bare navnet, stjernene, prisen og en lås vises. Bildet og teksten er skjult, også i samlingen, søket (grå kort finnes bare på navn), «Sist sett» og tellelista.
-- **Tjene frø:** registrering (én observasjonsdag) 100 × stjerner, første gang man ser en art 1 000 × stjerner, sølv-/gull-/holokant 2 000 / 5 000 / 15 000, bonuskort 10 000, og merkene: 10 arter 2 500, 25 arter 5 000, 50 arter 15 000, hele kortstokken 50 000, sju på rad 5 000, 30 dager 7 500, fire årstider 10 000, Tellekorps 7 500, Flokk 7 500. Meldingen nederst viser f.eks. «+300 frø», og frøtallet øverst teller opp.
+- **Tjene frø:** registrering (én observasjonsdag) 100 × stjerner, første gang man ser en art 1 000 × stjerner, sølv-/gull-/holokant 2 000 / 5 000 / 15 000, bonuskort 10 000, og merkene: 10 arter 2 500, 25 arter 5 000, 50 arter 15 000, hele kortstokken 50 000, sju på rad 5 000, 30 dager 7 500, fire årstider 10 000, Tellekorps 7 500, Flokk 7 500. Frøene flyr fra SETT-ruta på kortet opp til frøtallet, som teller opp mens de lander. Frø som låses til et grått kort, flyr til «frø venter»-merket på kortet i stedet.
 - **Grå kort:** Man kan registrere en fugl med grått kort, men får en advarsel hver gang og bare halvparten av frøene (registrering, første gang og nivåer). De frøene er låst til kortet («1 100 frø venter på kortet») og frigjøres når kortet låses opp. Registreringer på grå kort teller fullt mot bonuskort og merker. Glinskant vises først når kortet er åpnet.
 - **Priser:** `pris = 3 000 × 1,035^(kortnr − 26) × stjernefaktor` (★★ 1,35 · ★★★ 1,8 · ★★★★ 2,4 · ★★★★★ 3,2), i hele frø uten avrunding (desimalene kuttes). Alle prisene er forskjellige og stiger bakover i kortstokken (appen sjekker det ved oppstart). Fra 026 Svartmeis 4 050 til 100 Lappugle 122 421, rundt 3 millioner til sammen.
-- **Kjøpe:** Trykk på et grått kort («Lås opp Nøtteskrike for 7 359 frø?»), eller åpne Frøbutikken fra frøtallet øverst. Opplåsingen har sin egen hendelse: fargene fyller kortet nedenfra og frø drysser; den står til man trykker.
-- **Statistikk:** delen «Solsikkefrø» viser saldo, tjent i alt, brukt, frø som venter på grå kort, åpne kort og hva frøene kom fra. Merkene viser hvor mange frø de gir. Innstillinger (tannhjulet) ligger nå øverst i statistikken, for å gi plass til frøtallet.
-- **Lagring:** Saldoen regnes ut hver gang: tjent (fra observasjonene, nivåene, merkene og bonuskortene) minus brukt. Bare kjøpene lagres, i samlingen `kjop` (`kjop/garrulus-glandarius = { pris, dato, ts }`); i Claude deles de, på telefonen ligger de i `localStorage` (`hagefugler:kjop:v1`), og de er med i sikkerhetskopien. Frø fra dager før kjøpsdatoen gir halv verdi; dager fra og med kjøpsdatoen full verdi. Angrer man en registrering, går saldoen ned av seg selv; kjøpte kort beholdes også om saldoen havner under null.
+- **Kjøpe:** Trykk på et grått kort («Lås opp Nøtteskrike for 7 359 frø?»), eller åpne Frøbutikken fra frøtallet øverst. Prisen trekkes fra frøtallet med en gang. Opplåsingen har sin egen hendelse: fargene fyller kortet nedenfra og frø drysser; den står til man trykker. Etterpå flyr frøene som ventet på kortet, til frøtallet.
+- **Statistikk:** delen «Solsikkefrø» viser saldo, tjent i alt, brukt, frø som venter på grå kort, åpne kort og hva frøene kom fra. Merkene viser hvor mange frø de gir.
+- **Lagring:** Saldoen regnes ut hver gang: tjent (fra observasjonene, nivåene, merkene og bonuskortene) minus brukt. Bare kjøpene lagres, i samlingen `kjop` (`kjop/garrulus-glandarius = { pris, dato, ts, graaDag? }`); i Claude deles de, på telefonen ligger de i `localStorage` (`hagefugler:kjop:v1`), og de er med i sikkerhetskopien. Frø fra dager før kjøpsdatoen gir halv verdi; dager fra og med kjøpsdatoen full verdi. Var fuglen allerede registrert på kjøpsdagen mens kortet var grått, lagres `graaDag: true`, og den dagen gir også halv verdi (ellers kunne man registrere grått og kjøpe samme dag for å få full verdi). Sletter man en dag, går saldoen ned av seg selv; kjøpte kort beholdes også om saldoen havner under null.
 - **Tempo:** En simulering med fem registreringer om dagen gir omtrent 38 åpne kort etter en uke, 46 etter en måned, 56 etter tre måneder, 65 etter et halvt år og 78 etter ett år.
 
 ## Testmodus
@@ -153,8 +153,8 @@ Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort
 - **Hold** på kortet, så løftes det og følger fingeren. **Dra det til kanten** og slipp for neste (venstre) eller forrige (høyre) kort.
 - **Sveip fort** for å bla gjennom mange kort. Farten avtar av seg selv, og **et trykk** stopper blaingen.
 - **Trykk** på kortet for å snu det og se baksiden.
-- **Trykk på SETT** når du ser fuglen. Første gang kommer haken og datoen på kortet. En senere dag legger et nytt trykk til en ny observasjonsdag, og tallet ved SETT (f.eks. «× 7») viser hvor mange dager du har sett den. Et nytt trykk samme dag viser lista over dagene. Du angrer i meldingen nederst.
+- **Trykk på SETT** når du ser fuglen. Første gang kommer haken og datoen på kortet. En senere dag legger et nytt trykk til en ny observasjonsdag, og tallet ved SETT (f.eks. «× 7») viser hvor mange dager du har sett den. Et nytt trykk samme dag viser lista over dagene. Det er ingen meldinger nederst på skjermen og ingen angreknapp; en registrering fjernes ved å slette dagen på baksiden. Det som skjer, leses opp for skjermlesere.
 - **Baksiden** av et kort du har sett, viser alle dagene. Der kan du slette en dag (×) eller legge til en dag du glemte. Datoen på forsiden er første gang; endrer du den, flyttes den dagen.
-- **?** øverst viser forklaringskortene (Om kortene og Tegnforklaring).
-- **Tannhjulet** åpner Innstillinger. Under «Bilder på kortene» velger du **KI-illustrasjoner** (standard, som på de trykte kortene) eller **Fotografier** fra Artsdatabanken og Artsobservasjoner. Arter uten fotografi viser illustrasjonen, og i fotovalget kommer kortet Bildekreditering med under **?**. Valget huskes på enheten og påvirker ikke avkrysningene.
+- **Menyen** (☰ øverst til høyre) samler **Søk etter fugl**, **Om kortene** (forklaringskortene: Om kortene og Tegnforklaring) og **Innstillinger**. Øverst ellers: frøtallet (åpner Frøbutikken) og ringen (statistikken).
+- **Innstillinger**: Under «Bilder på kortene» velger du **KI-illustrasjoner** (standard, som på de trykte kortene) eller **Fotografier** fra Artsdatabanken og Artsobservasjoner. Arter uten fotografi viser illustrasjonen, og i fotovalget kommer kortet Bildekreditering med under **Om kortene**. Valget huskes på enheten og påvirker ikke avkrysningene.
 - Tastatur: ← → blar, mellomrom snur kortet, S registrerer i dag, / åpner søk, ? viser forklaringskortene, Esc stopper blaing og lukker paneler.

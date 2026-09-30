@@ -191,6 +191,25 @@ button{cursor:pointer;touch-action:manipulation}
 .frobtn .froikon{width:18px;height:18px}
 .frobtn.pluss{animation:froplus .6s ease-out}
 @keyframes froplus{30%{background:color-mix(in srgb, var(--gold) 45%, var(--surface));transform:scale(1.08)}}
+/* seeds flying from the card to the counter */
+.frolag{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.flyfro{position:absolute;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;will-change:transform,opacity;filter:drop-shadow(0 0 1.5px rgba(255,255,255,.9)) drop-shadow(0 2px 3px rgba(0,0,0,.3))}
+.flyfro .froikon{width:100%;height:100%;display:block}
+/* the menu at the top right */
+.meny-bak{position:fixed;inset:0;z-index:44}
+.meny{position:fixed;z-index:45;min-width:228px;padding:6px;border-radius:16px;background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  box-shadow:0 18px 40px -12px rgba(var(--shadow),.45),0 2px 6px rgba(var(--shadow),.12);transform-origin:top right;opacity:0;transform:scale(.94) translateY(-6px);
+  transition:opacity .16s, transform .2s cubic-bezier(.2,.8,.2,1)}
+.meny.on{opacity:1;transform:none}
+.meny[hidden],.meny-bak[hidden],.meny button[hidden]{display:none}
+.meny button{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:10px 12px;border:0;border-radius:11px;background:none;color:inherit;font:inherit;font-size:15.5px;font-weight:600;text-align:left}
+.meny button:hover,.meny button:focus-visible{background:var(--surface-2);outline:none}
+.meny .mi{width:24px;height:24px;display:grid;place-items:center;color:var(--muted);flex-shrink:0}
+.meny .mi svg{width:21px;height:21px}
+.meny .mi.q{font-size:19px;font-weight:800;line-height:1}
+.meny .mt{flex:1}
+.meny kbd{font:inherit;font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px}
+@media (hover:none){.meny kbd{display:none}}
 .brand h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:400px){.top{gap:5px}.iconbtn{width:38px;height:38px}.frobtn{height:38px;padding:0 9px 0 7px;gap:4px;font-size:13px}.frobtn .froikon{width:16px;height:16px}.brand h1{font-size:16px}}
 @media (max-width:370px){.iconbtn{width:36px;height:36px}.frobtn{height:36px}.brand h1{font-size:15px}}
@@ -506,8 +525,6 @@ button{cursor:pointer;touch-action:manipulation}
 .stats.on{transform:translateX(0)}
 .s-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .s-head h2{margin:0;font-size:20px;letter-spacing:-.01em}
-.s-head-r{display:flex;align-items:center;gap:6px}
-.iconbtn.sm{width:38px;height:38px}
 .s-sec{margin-top:26px}
 .s-sec h3{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .hero{display:flex;align-items:baseline;gap:10px;margin-top:18px}
@@ -626,7 +643,6 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .tl-hist .ph.tdato{display:grid;place-items:center;background:var(--surface-2);font-size:12px;font-weight:700;line-height:1.1;text-align:center;color:var(--ink)}
 .tl-hist .ph.tdato small{display:block;font-size:10px;font-weight:600;color:var(--muted)}
 
-.iconbtn.qmark{font-size:19px;font-weight:700;line-height:1}
 /* innstillinger: valg av bildesett */
 .valg{display:grid;gap:10px}
 .valg button{display:grid;grid-template-columns:22px 1fr;gap:4px 12px;align-items:start;text-align:left;width:100%;
@@ -663,12 +679,6 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .help-dots button[aria-selected="true"]{background:#fff;transform:scale(1.25)}
 .help-close{border:0;border-radius:999px;padding:9px 18px;font-weight:600;background:rgba(255,255,255,.92);color:#15251e}
 .help ~ .scrim, .scrim.dark{background:rgba(6,14,10,.72)}
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:60;
-  background:var(--ink);color:var(--bg);border-radius:14px;padding:10px 10px 10px 16px;font-size:14px;display:flex;gap:12px;align-items:center;
-  width:max-content;max-width:calc(100% - 32px);transition:opacity .25s, transform .25s}
-.toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
-.toast button{border:0;background:color-mix(in srgb, var(--bg) 18%, transparent);color:inherit;border-radius:9px;padding:7px 11px;font-weight:700}
-.toast button[hidden]{display:none}
 
 @media (prefers-reduced-motion: reduce){
   .float{animation:none}
@@ -690,14 +700,13 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
       <h1>Hagefugler</h1>
       <p id="sub">Kort 001 av 060</p>
     </div>
-    <button class="iconbtn qmark" id="openHelp" aria-label="Om kortene og tegnforklaring" title="Om kortene (?)">?</button>
-    <button class="iconbtn" id="openSearch" aria-label="Søk etter fugl" title="Søk (/)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>
-    </button>
     <button class="frobtn" id="openFro" aria-label="Solsikkefrø" title="Frøbutikken"><span id="froIkon"></span><b id="froTall">0</b></button>
     <button class="iconbtn ring" id="openStats" aria-label="Statistikk" title="Statistikk">
       <svg viewBox="0 0 34 34" aria-hidden="true"><circle class="trk" cx="17" cy="17" r="14"/><circle class="arc" id="ringArc" cx="17" cy="17" r="14" stroke-dasharray="0 88"/></svg>
       <b id="ringNum">0</b>
+    </button>
+    <button class="iconbtn" id="openMeny" aria-label="Meny" title="Meny" aria-haspopup="menu" aria-expanded="false" aria-controls="meny">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg>
     </button>
   </header>
 
@@ -733,6 +742,17 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 
 <div class="scrim" id="scrim"></div>
 
+<!-- the menu at the top right: search, about the cards, settings -->
+<div class="meny-bak" id="menyBak" hidden></div>
+<div class="meny" id="meny" role="menu" aria-label="Meny" hidden>
+  <button role="menuitem" id="openSearch"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg></span><span class="mt">Søk etter fugl</span><kbd aria-hidden="true">/</kbd></button>
+  <button role="menuitem" id="openHelp"><span class="mi q" aria-hidden="true">?</span><span class="mt">Om kortene</span><kbd aria-hidden="true">?</kbd></button>
+  <button role="menuitem" id="openSettings"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span><span class="mt">Innstillinger</span></button>
+</div>
+
+<!-- sunflower seeds flying from a card to the counter -->
+<div class="frolag" id="froLag" aria-hidden="true"></div>
+
 <section class="sheet search" id="searchSheet" role="dialog" aria-modal="true" aria-label="Søk">
   <div class="qrow">
     <div class="qbox">
@@ -753,10 +773,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <section class="sheet stats" id="statsSheet" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
   <div class="s-head">
     <h2 id="statsTitle">Min fugleliste</h2>
-    <span class="s-head-r"><button class="iconbtn sm" id="openSettings" aria-label="Innstillinger" title="Innstillinger" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-    </button>
-    <button class="textbtn" id="closeStats">Lukk</button></span>
+    <button class="textbtn" id="closeStats">Lukk</button>
   </div>
   <div id="statsBody"></div>
 </section>
@@ -869,7 +886,6 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <div class="bf-t2"><span class="bf-stempel">Bonuskort</span><span class="bf-art" id="bfArt"></span><span class="bf-info" id="bfInfo"></span><small>Trykk for å se kortet i kortstokken</small></div>
   </div>
 </div>
-<div class="toast" id="toast" role="status"><span id="toastMsg"></span><button id="toastBtn" hidden>Angre</button></div>
 
 <script type="application/json" id="kortdata">{"tittel":"Hagefugler","antall":100,"bonus":5,"bakside":"cards/bakside.webp","hjelp":[{"id":"000a","navn":"Om kortene","bilde":"cards/000a.webp"},{"id":"000b","navn":"Slik leser du kortene","bilde":"cards/000b.webp"}],"sjeldenhet":{"1":"Vanlig","2":"Regelmessig","3":"Uvanlig","4":"Sjelden","5":"Svært sjelden"},"kort":[{"nr":1,"id":"001","key":"parus-major","navn":"Kjøttmeis","latin":"Parus major","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Gul buk, svart hode og bred svart stripe ned brystet.","nar":"Hele året.","mat":"Frø, nøtter, insekter og larver.","fakta":"Kan lære nye måter å finne mat av andre kjøttmeiser.","vingespenn":"22–25 cm","vekt":"15–22 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia og øvrige Europa; Marokko–Tunisia, Tyrkia, Kaukasus, Russland, Kasakhstan, Mongolia og nordlige/vestlige Kina","rodliste":"Livskraftig","bilde":"cards/001.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/001.webp","fotograf":"Wouter Koch","lisens":"CC BY 4.0"},{"nr":2,"id":"002","key":"cyanistes-caeruleus","navn":"Blåmeis","latin":"Cyanistes caeruleus","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Blå hette og vinger, gult bryst og hvite kinn.","nar":"Hele året.","mat":"Insekter, larver, frø og fett.","fakta":"Henger gjerne opp-ned på tynne kvister når den leter mat.","vingespenn":"18–20 cm","vekt":"9–12 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Frankrike, Spania, Tyskland, Polen, Italia, Balkan og Tyrkia","rodliste":"Livskraftig","bilde":"cards/002.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/002.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":3,"id":"003","key":"turdus-merula","navn":"Svarttrost","latin":"Turdus merula","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Hann svart med gult nebb; hunn brun og mer dempet.","nar":"Hele året, flest vår–høst.","mat":"Meitemark, insekter, bær og frukt.","fakta":"Synger ofte fra hustak eller tretopper tidlig om morgenen.","vingespenn":"34–38 cm","vekt":"80–125 g","utbredelse":"Norge og store deler av Europa, Nord-Afrika, Tyrkia, Kaukasus og Sentral-Asia; innført i Australia og New Zealand","rodliste":"Livskraftig","bilde":"cards/003.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/003.webp","fotograf":"Olga Hilmo","lisens":"CC BY 4.0"},{"nr":4,"id":"004","key":"motacilla-alba","navn":"Linerle","latin":"Motacilla alba","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Svart-hvit-grå med svært lang stjert som stadig vipper.","nar":"April–oktober.","mat":"Insekter og andre smådyr.","fakta":"Løper ofte på bakken og fanger insekter med raske utfall.","vingespenn":"25–30 cm","vekt":"17–25 g","utbredelse":"Norge, resten av Europa, Nord-Afrika, Russland, Sentral- og Øst-Asia og Japan; også Grønland og vestlige Alaska; vinterstid Afrika og Sør-Asia","rodliste":"Livskraftig","bilde":"cards/004.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/004.webp","fotograf":"Snorre Henriksen","lisens":"CC BY 4.0"},{"nr":5,"id":"005","key":"pica-pica","navn":"Skjære","latin":"Pica pica","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Svart-hvit; svært lang stjert med grønnblå glans.","nar":"Hele året.","mat":"Alteter: smådyr, egg, frø og matrester.","fakta":"Bygger store kvistreir med et tydelig tak over reirskålen.","vingespenn":"52–60 cm","vekt":"200–250 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Russland, Kasakhstan og Mongolia; østasiatiske og nordafrikanske skjærer regnes nå som andre arter","rodliste":"Livskraftig","bilde":"cards/005.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/005.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":6,"id":"006","key":"chloris-chloris","navn":"Grønnfink","latin":"Chloris chloris","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Kraftig fink med olivengrønn kropp og gule vingefelt.","nar":"Hele året.","mat":"Frø og knopper; også noe insekter.","fakta":"Hannen viser seg fram i en langsom, flagrende sangflukt.","vingespenn":"25–28 cm","vekt":"24–34 g","utbredelse":"Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia og Nord-Afrika","rodliste":"Sårbar","bilde":"cards/006.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/006.webp","fotograf":"Knut Anders Hovstad","lisens":"CC BY 4.0"},{"nr":7,"id":"007","key":"fringilla-coelebs","navn":"Bokfink","latin":"Fringilla coelebs","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Hann rustrød og blågrå; begge kjønn har hvite vingebånd.","nar":"Mest vår–høst; noen overvintrer.","mat":"Frø om vinteren, insekter i hekketiden.","fakta":"Sangen ender gjerne med en tydelig, energisk sluttrille.","vingespenn":"24–28 cm","vekt":"18–29 g","utbredelse":"Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Baltikum, Frankrike, Spania, Italia, Tyrkia, Kaukasus og deler av Sentral-Asia","rodliste":"Livskraftig","bilde":"cards/007.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/007.webp","fotograf":"Wouter Koch","lisens":"CC BY 4.0"},{"nr":8,"id":"008","key":"corvus-cornix","navn":"Kråke","latin":"Corvus cornix","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Grå kropp med svart hode, vinger, bryst og stjert.","nar":"Hele året.","mat":"Alteter: smådyr, åtsel, avfall og frø.","fakta":"Svært lærenem og flink til å utnytte nye matkilder.","vingespenn":"93–104 cm","vekt":"370–650 g","utbredelse":"Norge, Sverige, Finland, Danmark, Irland, Tyskland, Polen, Baltikum, Italia, Balkan, Russland, Tyrkia og Midtøsten","rodliste":"Livskraftig","bilde":"cards/008.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/008.webp","fotograf":"Ragnar Skrede","lisens":"CC BY 4.0"},{"nr":9,"id":"009","key":"turdus-pilaris","navn":"Gråtrost","latin":"Turdus pilaris","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Grått hode og overgump, brun rygg og prikket bryst.","nar":"Hele året, ofte flokker høst–vinter.","mat":"Mark, insekter, bær og frukt.","fakta":"Kan forsvare reir ved å slippe avføring på inntrengere.","vingespenn":"39–42 cm","vekt":"80–130 g","utbredelse":"Norge, Sverige, Finland, Baltikum, Polen og Russland i hekketiden; vinterstid Vest-/Sør-Europa, Nord-Afrika, Tyrkia og deler av Sørvest-Asia","rodliste":"Livskraftig","bilde":"cards/009.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/009.webp","fotograf":"Hans Karl Karlsen","lisens":"CC BY 4.0"},{"nr":10,"id":"010","key":"sitta-europaea","navn":"Spettmeis","latin":"Sitta europaea","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Blågrå rygg, hvit buk, rødbrune sider og svart øyestrek.","nar":"Hele året.","mat":"Insekter, frø og nøtter.","fakta":"Kan klatre nedover trestammer med hodet først.","vingespenn":"22–27 cm","vekt":"20–25 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kaukasus, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/010.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/010.webp","fotograf":"Kjell A. Kristiansen","lisens":"CC BY 4.0"},{"nr":11,"id":"011","key":"passer-domesticus","navn":"Gråspurv","latin":"Passer domesticus","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Kraftig spurv; hann med grå isse og svart strupeflekk.","nar":"Hele året.","mat":"Frø, korn, matrester og insekter.","fakta":"Lever tett på mennesker og hekker ofte i hulrom i hus.","vingespenn":"21–25 cm","vekt":"24–38 g","utbredelse":"Norge, Sverige, Danmark, Finland, Europa ellers, Nord-Afrika, Midtøsten og Asia; også innført i Nord- og Sør-Amerika, Sør-Afrika, Australia og New Zealand","rodliste":"Nær truet","bilde":"cards/011.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/011.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":12,"id":"012","key":"phylloscopus-trochilus","navn":"Løvsanger","latin":"Phylloscopus trochilus","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Liten olivengrønn sanger, lyst øyebryn og bleke bein.","nar":"Slutten av april–september.","mat":"Insekter og små edderkoppdyr.","fakta":"En av Norges vanligste hekkefugler; overvintrer i Afrika.","vingespenn":"17–22 cm","vekt":"7–12 g","utbredelse":"Norge, Sverige, Finland, Storbritannia, Tyskland, Polen, Baltikum og Russland; vinterstid Vest-, Øst- og Sør-Afrika","rodliste":"Livskraftig","bilde":"cards/012.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/012.webp","fotograf":"Hans Marius Molstad","lisens":"CC BY 4.0"},{"nr":13,"id":"013","key":"pyrrhula-pyrrhula","navn":"Dompap","latin":"Pyrrhula pyrrhula","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Kraftig fink med svart hette; hann har klart rødt bryst.","nar":"Hele året; lettest å se høst–vinter.","mat":"Frø, knopper, bær; insekter til ungene.","fakta":"Den myke plystrelyden høres ofte før fuglen sees.","vingespenn":"22–26 cm","vekt":"21–27 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Kasakhstan, Mongolia, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/013.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/013.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":14,"id":"014","key":"sturnus-vulgaris","navn":"Stær","latin":"Sturnus vulgaris","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Metallglinsende mørk med lyse prikker; gult nebb om våren.","nar":"Vår–høst; enkelte vinter.","mat":"Insekter, larver, mark, frukt og bær.","fakta":"Dyktig imitator som kan herme etter andre fugler og lyder.","vingespenn":"37–42 cm","vekt":"75–90 g","utbredelse":"Norge, Sverige, Danmark, Finland, Storbritannia, Europa ellers, Russland og Vest-Asia; også innført i Nord-Amerika, Sør-Afrika, Australia og New Zealand","rodliste":"Nær truet","bilde":"cards/014.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/014.webp","fotograf":"Wouter Koch","lisens":"CC BY 4.0"},{"nr":15,"id":"015","key":"erithacus-rubecula","navn":"Rødstrupe","latin":"Erithacus rubecula","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Oransjerødt ansikt og bryst, brun rygg, store mørke øyne.","nar":"Hele året, flest vår–høst.","mat":"Insekter, mark, smådyr og bær.","fakta":"Liten og rund, men forsvarer reviret sitt svært energisk.","vingespenn":"20–22 cm","vekt":"16–22 g","utbredelse":"Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia og Nordvest-Afrika","rodliste":"Livskraftig","bilde":"cards/015.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/015.webp","fotograf":"Manuela Bakker","lisens":"CC BY 4.0"},{"nr":16,"id":"016","key":"passer-montanus","navn":"Pilfink","latin":"Passer montanus","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Kastanjebrun hette, hvite kinn og tydelig svart kinnflekk.","nar":"Hele året.","mat":"Frø, korn og insekter.","fakta":"Hann og hunn ser like ut, i motsetning til hos gråspurven.","vingespenn":"20–22 cm","vekt":"19–25 g","utbredelse":"Norge, Sverige, Finland, Danmark, Tyskland, Polen, Baltikum, Russland, Kasakhstan, Mongolia, Kina, Korea og Japan","rodliste":"Livskraftig","bilde":"cards/016.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/016.webp","fotograf":"Åge Marberg","lisens":"CC BY 4.0"},{"nr":17,"id":"017","key":"ficedula-hypoleuca","navn":"Svarthvit fluesnapper","latin":"Ficedula hypoleuca","stjerner":1,"status":"Vanlig hagegjest","kjennetegn":"Hann svart-hvit om våren; hunn brungrå, hvite vingefelt.","nar":"Slutten av april–august.","mat":"Flygende insekter, larver, edderkopper.","fakta":"Tar gjerne fuglekasser og forsvarer dem energisk.","vingespenn":"21–24 cm","vekt":"11–16 g","utbredelse":"Norge, Sverige, Finland, Storbritannia, Sentral-/Øst-Europa og Vest-Sibir; vinterstid særlig fra Vest-Afrika østover mot Sentral-Afrika","rodliste":"Livskraftig","bilde":"cards/017.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/017.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":18,"id":"018","key":"dendrocopos-major","navn":"Flaggspett","latin":"Dendrocopos major","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Svart-hvit hakkespett, rød undergump; hann har rød nakke.","nar":"Hele året.","mat":"Insekter, frø, kongler og fett.","fakta":"Kiler ofte fast kongler i en sprekk for å hakke ut frøene.","vingespenn":"34–39 cm","vekt":"70–98 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kina, Korea og Japan","rodliste":"Livskraftig","bilde":"cards/018.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/018.webp","fotograf":"Per Harald Olsen","lisens":"CC BY 2.0"},{"nr":19,"id":"019","key":"columba-palumbus","navn":"Ringdue","latin":"Columba palumbus","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Stor due med hvit halsflekk og hvite vingefelt i flukt.","nar":"Vår–høst; stadig flere vinterfugler.","mat":"Frø, korn, blader, knopper og bær.","fakta":"Vingene klapper høyt når hannen viser seg fram i flukt.","vingespenn":"75–80 cm","vekt":"480–550 g","utbredelse":"Norge og resten av Europa, Nordvest-Afrika, Tyrkia, Kaukasus, Iran og Sentral-Asia; enkelte asiatiske bestander overvintrer mot Nord-India og Nepal","rodliste":"Livskraftig","bilde":"cards/019.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/019.webp","fotograf":"Atle Jektvik","lisens":"CC BY 4.0"},{"nr":20,"id":"020","key":"sylvia-atricapilla","navn":"Munk","latin":"Sylvia atricapilla","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Grå sanger; hann med svart hette, hunn med rustbrun hette.","nar":"April–september; sjelden om vinteren.","mat":"Insekter og bær.","fakta":"Noen munker har begynt å overvintre i hager i Vest-Europa.","vingespenn":"20–23 cm","vekt":"15–21 g","utbredelse":"Norge, Sverige, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia, Kaukasus og Nord-Afrika","rodliste":"Livskraftig","bilde":"cards/020.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/020.webp","fotograf":"Atle Jektvik","lisens":"CC BY 4.0"},{"nr":21,"id":"021","key":"turdus-iliacus","navn":"Rødvingetrost","latin":"Turdus iliacus","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Kremhvitt øyebryn og rustrøde flanker.","nar":"April–oktober; mange på trekk.","mat":"Mark, insekter, bær og frukt.","fakta":"Store trekkflokker kan fylle natten med tynne siih-lyder.","vingespenn":"33–35 cm","vekt":"50–75 g","utbredelse":"Norge, Sverige, Finland, Island og Russland; vinterstid Storbritannia, Vest- og Sør-Europa, Nord-Afrika og deler av Midtøsten","rodliste":"Livskraftig","bilde":"cards/021.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/021.webp","fotograf":"Eirik Røtnes","lisens":"CC BY 4.0"},{"nr":22,"id":"022","key":"turdus-philomelos","navn":"Måltrost","latin":"Turdus philomelos","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Brun overside, lys underside med mørke pilformede flekker.","nar":"Vår–høst.","mat":"Mark, insekter, snegler og bær.","fakta":"Bruker en fast stein som ambolt for å knuse sneglehus.","vingespenn":"33–36 cm","vekt":"64–90 g","utbredelse":"Norge, Sverige, Danmark, Finland, Storbritannia, Sentral-/Øst-Europa og Vest-Russland; vinterstid bl.a. Frankrike, Iberia, Italia, Nord-Afrika og Tyrkia","rodliste":"Livskraftig","bilde":"cards/022.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/022.webp","fotograf":"David Kobbevik","lisens":"CC BY 4.0"},{"nr":23,"id":"023","key":"spinus-spinus","navn":"Grønnsisik","latin":"Spinus spinus","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Liten gulgrønn fink med mørke vinger og gule vingefelt.","nar":"Hele året, ofte flokker vinter.","mat":"Frø fra or, bjørk og bartrær.","fakta":"Kan henge akrobatisk i orekongler mens den plukker frø.","vingespenn":"20–23 cm","vekt":"11–15 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Tyrkia, Kaukasus, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/023.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/023.webp","fotograf":"Kjartan Pedersen","lisens":"CC BY 4.0"},{"nr":24,"id":"024","key":"poecile-montanus","navn":"Granmeis","latin":"Poecile montanus","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Matt svart hette, lyst vingefelt og kraftig nakke.","nar":"Hele året.","mat":"Insekter, frø og små edderkoppdyr.","fakta":"Hakker ofte ut sitt eget reirhull i mykt, råttent treverk.","vingespenn":"18–21 cm","vekt":"11–14 g","utbredelse":"Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Russland, Kasakhstan, Mongolia, Kina og Japan","rodliste":"Sårbar","bilde":"cards/024.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/024.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":25,"id":"025","key":"emberiza-citrinella","navn":"Gulspurv","latin":"Emberiza citrinella","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Hann tydelig gul på hode og underside; brunstripet rygg.","nar":"Hele året, ofte vinterflokker.","mat":"Frø og korn; insekter til ungene.","fakta":"Sangen huskes ofte som en-to-tre-fire-fem-seks-syyyyv.","vingespenn":"23–29 cm","vekt":"23–29 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Balkan, Russland og Vest-Asia; også innført på New Zealand","rodliste":"Sårbar","bilde":"cards/025.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/025.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":26,"id":"026","key":"periparus-ater","navn":"Svartmeis","latin":"Periparus ater","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Liten meis med svart hode, hvite kinn og hvit nakkeflekk.","nar":"Hele året.","mat":"Insekter og frø fra bartrær.","fakta":"Gjemmer ofte frø i barksprekker som matlager til senere.","vingespenn":"17–21 cm","vekt":"8–10 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Alpene, Balkan, Tyrkia, Russland, Himalaya, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/026.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/026.webp","fotograf":"Tore Holmen","lisens":"CC BY 4.0"},{"nr":27,"id":"027","key":"carduelis-carduelis","navn":"Stillits","latin":"Carduelis carduelis","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Rødt ansikt, svart-hvitt hode og kraftig gult vingebånd.","nar":"Hele året, særlig sensommer–vinter.","mat":"Små frø; også insekter om sommeren.","fakta":"Det spisse nebbet er som en pinsett for frø i frøstander.","vingespenn":"21–26 cm","vekt":"14–19 g","utbredelse":"Norge, Sverige, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia, Nord-Afrika og deler av Sentral-Asia","rodliste":"Livskraftig","bilde":"cards/027.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/027.webp","fotograf":"Åge Marberg","lisens":"CC BY 4.0"},{"nr":28,"id":"028","key":"phylloscopus-collybita","navn":"Gransanger","latin":"Phylloscopus collybita","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Liten olivengrå sanger; mørkere bein enn løvsanger.","nar":"April–oktober.","mat":"Små insekter og edderkopper.","fakta":"Den enkle sangen høres ut som et gjentatt tjiff-tjaff.","vingespenn":"15–21 cm","vekt":"6–10 g","utbredelse":"Norge, Sverige, Danmark, Storbritannia, Sentral-/Øst-Europa, Tyrkia og Russland; vinterstid Vest- og Sør-Europa, Nord-Afrika, Midtøsten og deler av Sør-Asia","rodliste":"Livskraftig","bilde":"cards/028.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/028.webp","fotograf":"John Kristiansen","lisens":"CC BY 4.0"},{"nr":29,"id":"029","key":"acanthis-flammea","navn":"Gråsisik","latin":"Acanthis flammea","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Liten stripet fink med rød panne; hann ofte rosa bryst.","nar":"Mest høst og vinter.","mat":"Små frø, særlig fra bjørk og or.","fakta":"Flokker vandrer etter frø, så antallet varierer mye.","vingespenn":"20–24 cm","vekt":"12–20 g","utbredelse":"Norge, Sverige, Finland, Island, Russland, Canada, Alaska og andre nordlige områder; vinterstid sørover i Europa, Asia og Nord-Amerika","rodliste":"Livskraftig","bilde":"cards/029.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/029.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":30,"id":"030","key":"muscicapa-striata","navn":"Gråfluesnapper","latin":"Muscicapa striata","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Gråbrun, oppreist og svakt stripet på panne og bryst.","nar":"Mai–august.","mat":"Flygende insekter.","fakta":"Sitter på fast utkikkspost og tar insekter i korte utfall.","vingespenn":"23–25 cm","vekt":"14–19 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan og Vest-Asia; vinterstid Afrika sør for Sahara","rodliste":"Livskraftig","bilde":"cards/030.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/030.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":31,"id":"031","key":"curruca-curruca","navn":"Møller","latin":"Curruca curruca","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Grå sanger med mørk kinnflekk og hvit strupe.","nar":"Mai–august.","mat":"Insekter, larver og bær.","fakta":"Trekker sørøstover via Midtøsten til Øst-Afrika.","vingespenn":"16–20 cm","vekt":"10–16 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Russland, Sibir, Kasakhstan og Mongolia; vinterstid Nordøst-Afrika, Arabia og India","rodliste":"Livskraftig","bilde":"cards/031.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/031.webp","fotograf":"Kjartan Pedersen","lisens":"CC BY 4.0"},{"nr":32,"id":"032","key":"sylvia-borin","navn":"Hagesanger","latin":"Sylvia borin","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Anonym gråbrun sanger uten vingebånd eller hodetegninger.","nar":"Mai–august.","mat":"Insekter og bær.","fakta":"Den rike, boblende sangen er lettere å kjenne enn drakten.","vingespenn":"20–24 cm","vekt":"16–22 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Sentral-/Øst-Europa og Russland til Jenisej; vinterstid Vest-, Sentral-, Øst- og Sør-Afrika","rodliste":"Livskraftig","bilde":"cards/032.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/032.webp","fotograf":"Richard Kjelaas","lisens":"CC BY 4.0"},{"nr":33,"id":"033","key":"prunella-modularis","navn":"Jernspurv","latin":"Prunella modularis","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Spurvelik, men med tynt nebb og blygrått hode og bryst.","nar":"Mars–oktober; noen få overvintrer.","mat":"Små insekter, edderkopper og frø.","fakta":"Beveger seg musaktig på bakken under busker og fuglebrett.","vingespenn":"19–21 cm","vekt":"19–24 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia og Kaukasus; vinterstid Sør-Europa, Nord-Afrika og Midtøsten","rodliste":"Livskraftig","bilde":"cards/033.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/033.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":34,"id":"034","key":"troglodytes-troglodytes","navn":"Gjerdesmett","latin":"Troglodytes troglodytes","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Knøttliten brun fugl; den korte stjerten peker ofte opp.","nar":"Hele året, men færre i kalde vintre.","mat":"Insekter og edderkopper, litt frø.","fakta":"Har overraskende kraftig sang i forhold til størrelsen.","vingespenn":"13–17 cm","vekt":"7–12 g","utbredelse":"Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Tyrkia, Russland, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/034.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/034.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":35,"id":"035","key":"garrulus-glandarius","navn":"Nøtteskrike","latin":"Garrulus glandarius","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Rosa-brun kråkefugl med blåsvart stripet vingefelt.","nar":"Hele året.","mat":"Eikenøtter, frø, insekter, egg, smådyr.","fakta":"Graver ned eikenøtter og bidrar dermed til å spre eik.","vingespenn":"52–58 cm","vekt":"140–190 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Russland, Himalaya, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/035.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/035.webp","fotograf":"Klaus Meyer","lisens":"CC BY 4.0"},{"nr":36,"id":"036","key":"delichon-urbicum","navn":"Taksvale","latin":"Delichon urbicum","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Blåsvart og hvit med hvit overgump og kort kløftet stjert.","nar":"Mai–september.","mat":"Flygende insekter.","fakta":"Et reir kan bestå av rundt tusen små klumper med leire.","vingespenn":"26–29 cm","vekt":"16–20 g","utbredelse":"Norge, Sverige, Finland, Danmark og resten av Europa; Nord-Afrika, Tyrkia, Kaukasus, Russland og Vest-/Sentral-Asia; vinterstid særlig Afrika sør for Sahara","rodliste":"Nær truet","bilde":"cards/036.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/036.webp","fotograf":"Geir Høen","lisens":"CC BY 4.0"},{"nr":37,"id":"037","key":"fringilla-montifringilla","navn":"Bjørkefink","latin":"Fringilla montifringilla","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Oransje bryst og skuldre, mørke vinger og hvit buk.","nar":"Trekk og vinter, særlig gode frøår.","mat":"Frø og insekter.","fakta":"Kan danne enorme vinterflokker der mattilgangen er god.","vingespenn":"25–28 cm","vekt":"21–29 g","utbredelse":"Norge, Sverige, Finland og Russland i hekketiden; vinterstid store deler av Europa, Middelhavsområdet, Tyrkia, Kina, Korea og Japan","rodliste":"Livskraftig","bilde":"cards/037.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/037.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":38,"id":"038","key":"larus-canus","navn":"Fiskemåke","latin":"Larus canus","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Mellomstor måke med tynt gulgrønt nebb og mørke øyne.","nar":"Hele året, flest mars–oktober.","mat":"Mark, insekter, fisk og matrester.","fakta":"Tramper på plenen for å lokke meitemark opp av jorda.","vingespenn":"110–125 cm","vekt":"300–480 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Island, Baltikum og Russland/Sibir; vinterstid Vest- og Sør-Europa og Øst-Asia","rodliste":"Sårbar","bilde":"cards/038.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/038.webp","fotograf":"Tycho Anker-Nilssen","lisens":"CC BY 4.0"},{"nr":39,"id":"039","key":"phoenicurus-phoenicurus","navn":"Rødstjert","latin":"Phoenicurus phoenicurus","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Hann med svart ansikt, hvit panne og oransjerød stjert.","nar":"Mai–september.","mat":"Insekter, larver og bær.","fakta":"Den rustrøde stjerten dirrer ofte når den sitter stille.","vingespenn":"20–24 cm","vekt":"12–16 g","utbredelse":"Norge, Sverige, Finland, Danmark, Sentral-/Øst-Europa, Russland, Iran og Sentral-Asia; vinterstid særlig Sahel/Vest-Afrika og deler av Den arabiske halvøy","rodliste":"Livskraftig","bilde":"cards/039.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/039.webp","fotograf":"Steven Henriksen","lisens":"CC BY 4.0"},{"nr":40,"id":"040","key":"streptopelia-decaocto","navn":"Tyrkerdue","latin":"Streptopelia decaocto","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Lys sandbrun due med smal svart halvring i nakken.","nar":"Hele året.","mat":"Frø og korn, gjerne under fuglebrettet.","fakta":"Kom fra Balkan; hekket første gang i Norge i Oslo i 1952.","vingespenn":"47–55 cm","vekt":"150–220 g","utbredelse":"Norge, Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia, Midtøsten, India og Kina; innført i USA og Karibia","rodliste":"Nær truet","bilde":"cards/040.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/040.webp","fotograf":"Steinar Stueflotten","lisens":"CC BY 4.0"},{"nr":41,"id":"041","key":"coccothraustes-coccothraustes","navn":"Kjernebiter","latin":"Coccothraustes coccothraustes","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Stor fink med enormt nebb, brun kropp, svart ansiktsmaske.","nar":"Hele året, tydeligst vinter–vår.","mat":"Harde frø, kjerner, knopper, insekter.","fakta":"Nebbet kan knuse harde fruktsteiner og frøskall.","vingespenn":"29–33 cm","vekt":"48–62 g","utbredelse":"Norge, Sverige, Danmark, Tyskland, Polen, Baltikum, Frankrike, Italia, Balkan, Tyrkia, Russland, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/041.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/041.webp","fotograf":"Hildegunn Bjørgan","lisens":"CC BY 4.0"},{"nr":42,"id":"042","key":"coloeus-monedula","navn":"Kaie","latin":"Coloeus monedula","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Liten svart kråkefugl med grå nakke og lyse øyne.","nar":"Hele året.","mat":"Insekter, frø, bær og matrester.","fakta":"Hekker ofte i skorsteiner; parene er trofaste livet ut.","vingespenn":"67–74 cm","vekt":"220–270 g","utbredelse":"Norge, Sverige, Danmark, Finland, Storbritannia, Europa ellers, Marokko, Tyrkia, Kaukasus, Iran og Sentral-Asia","rodliste":"Livskraftig","bilde":"cards/042.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/042.webp","fotograf":"Rune Zakariassen","lisens":"CC BY 4.0"},{"nr":43,"id":"043","key":"hirundo-rustica","navn":"Låvesvale","latin":"Hirundo rustica","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Blåsvart, rustrød panne og strupe, lange stjertspisser.","nar":"Mai–september.","mat":"Flygende insekter.","fakta":"Bygger skålformet leirreir inne i låver og uthus.","vingespenn":"32–35 cm","vekt":"16–25 g","utbredelse":"Norge og resten av Europa, Nord-Afrika, store deler av Asia og Nord-Amerika; vinterstid Afrika, Sør- og Sørøst-Asia og Mellom- og Sør-Amerika","rodliste":"Livskraftig","bilde":"cards/043.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/043.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":44,"id":"044","key":"hippolais-icterina","navn":"Gulsanger","latin":"Hippolais icterina","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Gulgrønn sanger med kraftig nebb og lyst vingefelt.","nar":"Slutten av mai–august.","mat":"Insekter, larver og noe bær.","fakta":"Hermer etter andre fugler i den lange, skravlete sangen.","vingespenn":"20–24 cm","vekt":"11–16 g","utbredelse":"Norge, Sverige, Finland, Danmark, Tyskland, Polen, Frankrike, Balkan, Russland og Vest-Sibir; vinterstid sørlige Afrika","rodliste":"Livskraftig","bilde":"cards/044.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/044.webp","fotograf":"Kjell A. Kristiansen","lisens":"CC BY 4.0"},{"nr":45,"id":"045","key":"larus-argentatus","navn":"Gråmåke","latin":"Larus argentatus","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Stor måke med lysegrå rygg, rosa bein og rød nebbflekk.","nar":"Hele året.","mat":"Fisk, smådyr, åtsel og avfall.","fakta":"Ungene hakker på den røde nebbflekken for å få mat.","vingespenn":"130–150 cm","vekt":"800–1250 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Irland, Island, Frankrike, Tyskland, Baltikum og Kolahalvøya","rodliste":"Sårbar","bilde":"cards/045.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":46,"id":"046","key":"accipiter-nisus","navn":"Spurvehauk","latin":"Accipiter nisus","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Slank rovfugl med lang stjert og tverrstripet underside.","nar":"Hele året, ofte synlig vinter.","mat":"Små og mellomstore fugler.","fakta":"Dukker opp lynraskt ved fuglematen på jakt etter småfugl.","vingespenn":"58–80 cm","vekt":"105–350 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Nord-Afrika, Russland, Sentral-Asia, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/046.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":47,"id":"047","key":"poecile-palustris","navn":"Løvmeis","latin":"Poecile palustris","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Blank svart hette, liten svart hakeflekk og brungrå rygg.","nar":"Hele året.","mat":"Frø, nøtter og insekter.","fakta":"Lokkelyden «pitsjuu» skiller den lettest fra granmeisen.","vingespenn":"18–20 cm","vekt":"10–13 g","utbredelse":"Sør-Norge, Sør-Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia og Kaukasus; også Øst-Asia med Kina, Korea og Japan","rodliste":"Livskraftig","bilde":"cards/047.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/047.webp","fotograf":"Klaus Meyer","lisens":"CC BY 4.0"},{"nr":48,"id":"048","key":"picus-viridis","navn":"Grønnspett","latin":"Picus viridis","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Stor grønn hakkespett med rød isse og gulgrønn overgump.","nar":"Hele året.","mat":"Maur og andre insekter.","fakta":"Leter etter maur på bakken med svært lang, klebrig tunge.","vingespenn":"40–42 cm","vekt":"180–250 g","utbredelse":"Norge, Sverige, Danmark, Storbritannia, Frankrike, Spania, Tyskland, Polen, Italia, Balkan og deler av Vest-Asia","rodliste":"Livskraftig","bilde":"cards/048.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/048.webp","fotograf":"Jan Ole Ødegård","lisens":"CC BY-SA 4.0"},{"nr":49,"id":"049","key":"apus-apus","navn":"Tårnseiler","latin":"Apus apus","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Mørk, sigdformet fugl med lange smale vinger, kort stjert.","nar":"Mai–august.","mat":"Flygende insekter og edderkopper.","fakta":"Lever nesten hele livet i lufta og kan sove mens den flyr.","vingespenn":"42–48 cm","vekt":"31–56 g","utbredelse":"Norge, Sverige, Finland, Danmark og resten av Europa; Nord-Afrika, Russland, Sentral-Asia, Mongolia og Nord-Kina; vinterstid Sentral-, Øst- og Sør-Afrika","rodliste":"Nær truet","bilde":"cards/049.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/049.webp","fotograf":"Ulf Stordalmo","lisens":"CC BY-SA 4.0"},{"nr":50,"id":"050","key":"regulus-regulus","navn":"Fuglekonge","latin":"Regulus regulus","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Bitteliten, olivengrønn; gul/oransje isse kantet i svart.","nar":"Hele året.","mat":"Svært små insekter og edderkopper.","fakta":"Er Norges minste fugl og veier bare noen få gram.","vingespenn":"13–16 cm","vekt":"5–6 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Alpene, Balkan, Russland, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/050.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/050.webp","fotograf":"Rolv Lundheim","lisens":"CC BY 4.0"},{"nr":51,"id":"051","key":"certhia-familiaris","navn":"Trekryper","latin":"Certhia familiaris","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Spraglete brun rygg, hvit underside og tynt, bøyd nebb.","nar":"Hele året.","mat":"Små insekter og edderkopper i bark.","fakta":"Kryper oppover stammen og flyr ned til foten av neste tre.","vingespenn":"17–21 cm","vekt":"8–10 g","utbredelse":"Norge, Sverige, Finland, Danmark, Sentral- og Øst-Europa, Russland, Kasakhstan, Mongolia, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/051.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":52,"id":"052","key":"lophophanes-cristatus","navn":"Toppmeis","latin":"Lophophanes cristatus","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Spiss svart-hvit topp, mønstret ansikt og brungrå kropp.","nar":"Hele året.","mat":"Insekter, edderkopper og frø.","fakta":"Holder seg i barskog og avslører seg med trillende lyder.","vingespenn":"17–20 cm","vekt":"10–13 g","utbredelse":"Norge, Sverige, Finland, Danmark, Frankrike, Spania, Tyskland, Polen, Baltikum og vestlige deler av Russland","rodliste":"Livskraftig","bilde":"cards/052.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":53,"id":"053","key":"cuculus-canorus","navn":"Gjøk","latin":"Cuculus canorus","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Grå, falkelik fugl med lang stjert og tverrstripet buk.","nar":"Mai–juli; høres mest i mai.","mat":"Hårete larver og andre insekter.","fakta":"Legger eggene i andre fuglers reir og lar dem fø ungen.","vingespenn":"54–60 cm","vekt":"110–130 g","utbredelse":"Norge og resten av Europa, Nord-Afrika, Tyrkia og store deler av Asia til Kina og Japan; vinterstid Afrika sør for Sahara","rodliste":"Nær truet","bilde":"cards/053.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":54,"id":"054","key":"corvus-corax","navn":"Ravn","latin":"Corvus corax","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Stor helsvart kråkefugl; kileformet stjert og tykt nebb.","nar":"Hele året.","mat":"Åtsel, smådyr, egg og avfall.","fakta":"Verdens største spurvefugl; kan leke og tumle i lufta.","vingespenn":"115–150 cm","vekt":"800–1500 g","utbredelse":"Norge, Europa, Nord-Afrika, Midtøsten, Himalaya, Russland, Kina, Grønland og Nord- og Mellom-Amerika","rodliste":"Livskraftig","bilde":"cards/054.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":55,"id":"055","key":"carpodacus-erythrinus","navn":"Rosenfink","latin":"Carpodacus erythrinus","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Hann rød på hode, bryst og overgump; hunn brungrå.","nar":"Mai–august.","mat":"Frø, knopper, bær og insekter.","fakta":"På engelsk gjengis sangen ofte som «pleased to see you».","vingespenn":"22–26 cm","vekt":"21–33 g","utbredelse":"Norge, Sverige, Finland, Baltikum, Polen, Russland, Kasakhstan og Sentral-Asia; vinterstid Pakistan, India, Nepal, Bangladesh og videre østover mot Sørøst-Asia","rodliste":"Nær truet","bilde":"cards/055.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":56,"id":"056","key":"bombycilla-garrulus","navn":"Sidensvans","latin":"Bombycilla garrulus","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Gråbrun med topp og svart maske; gule stjertspisser.","nar":"Sen høst–vinter.","mat":"Bær og frukt; insekter om sommeren.","fakta":"Flokker kan tømme et rognebærtre på kort tid.","vingespenn":"32–35 cm","vekt":"45–70 g","utbredelse":"Norge, Sverige, Finland, Russland, Canada og Alaska; vinterstid store deler av Europa, USA, Kina, Korea og Japan","rodliste":"Livskraftig","bilde":"cards/056.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":57,"id":"057","key":"aegithalos-caudatus","navn":"Stjertmeis","latin":"Aegithalos caudatus","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Liten rund meis med svært lang stjert; hvitt hode i Norge.","nar":"Hele året, mest synlig høst–vinter.","mat":"Små insekter, edderkopper og fett.","fakta":"Lager et kuleformet reir av mose, lav og opptil 2000 fjær.","vingespenn":"16–19 cm","vekt":"7–9 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia, Russland, Kasakhstan, Kina, Korea og Japan","rodliste":"Livskraftig","bilde":"cards/057.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":58,"id":"058","key":"jynx-torquilla","navn":"Vendehals","latin":"Jynx torquilla","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Spett med barkfarget, spraglete drakt og lang stjert.","nar":"Mai–august.","mat":"Maur, maurlarver og puper.","fakta":"Vrir og vender på hodet som en slange når den blir truet.","vingespenn":"25–27 cm","vekt":"30–45 g","utbredelse":"Norge, Sverige, Finland, Europa ellers, Russland, Sibir, Kina og Japan; vinterstid Afrika sør for Sahara og Sør-Asia","rodliste":"Livskraftig","bilde":"cards/058.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":59,"id":"059","key":"strix-aluco","navn":"Kattugle","latin":"Strix aluco","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Kompakt ugle med mørke øyne og brun eller grå drakt.","nar":"Hele året; høres mest kveld/natt.","mat":"Smågnagere, småfugl og frosk.","fakta":"Hannen hoer; hunnen svarer ofte med skarpt «kewick».","vingespenn":"94–104 cm","vekt":"350–590 g","utbredelse":"Norge, Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia, Kaukasus og deler av Vest- og Sentral-Asia","rodliste":"Livskraftig","bilde":"cards/059.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":60,"id":"060","key":"anthus-trivialis","navn":"Trepiplerke","latin":"Anthus trivialis","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Brunstripet piplerke med gulbrunt, stripet bryst.","nar":"Mai–september.","mat":"Insekter og frø.","fakta":"Daler syngende ned fra tretoppen som en liten fallskjerm.","vingespenn":"25–27 cm","vekt":"20–25 g","utbredelse":"Norge, Sverige, Finland, Storbritannia, Europa ellers, Tyrkia, Sentral-Asia og Sibir; vinterstid Afrika og India","rodliste":"Livskraftig","bilde":"cards/060.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":61,"id":"061","key":"motacilla-cinerea","navn":"Vintererle","latin":"Motacilla cinerea","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Lang stjert, grå rygg og gul underside, særlig bak.","nar":"Vår–høst; enkelte overvintrer.","mat":"Insekter og edderkopper ved vann.","fakta":"Holder til ved stryk og bekker, også i kalde perioder.","vingespenn":"25–28 cm","vekt":"13–22 g","utbredelse":"Norge, Sverige, Storbritannia, Europa ellers, Nord-Afrika, Tyrkia, Kaukasus, Himalaya, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/061.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":62,"id":"062","key":"turdus-viscivorus","navn":"Duetrost","latin":"Turdus viscivorus","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Stor, blek trost med runde svarte flekker på brystet.","nar":"Mars–oktober; enkelte om vinteren.","mat":"Mark, insekter og bær.","fakta":"Synger fra høye trær, gjerne i regn og sterk vind.","vingespenn":"42–48 cm","vekt":"110–140 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Nordvest-Afrika, Tyrkia, Iran, Sentral-Asia, Himalaya og Vest-Sibir","rodliste":"Livskraftig","bilde":"cards/062.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":63,"id":"063","key":"columba-oenas","navn":"Skogdue","latin":"Columba oenas","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Blågrå due uten hvitt; grønnglinsende halsflekk.","nar":"Mars–oktober.","mat":"Frø, korn og blader.","fakta":"Hekker i hule trær, ofte i gamle svartspetthull.","vingespenn":"63–69 cm","vekt":"290–330 g","utbredelse":"Sør-Norge, Sverige, Danmark, Storbritannia, Europa ellers, Nordvest-Afrika, Tyrkia og Sentral-Asia","rodliste":"Livskraftig","bilde":"cards/063.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":64,"id":"064","key":"dryobates-minor","navn":"Dvergspett","latin":"Dryobates minor","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Vår minste hakkespett, svart-hvit uten rød undergump.","nar":"Hele året.","mat":"Insekter og larver på tynne greiner.","fakta":"På størrelse med en spurv; jobber ofte høyt i trekronene.","vingespenn":"24–29 cm","vekt":"19–23 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Kasakhstan, Kina og Japan","rodliste":"Livskraftig","bilde":"cards/064.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":65,"id":"065","key":"phylloscopus-sibilatrix","navn":"Bøksanger","latin":"Phylloscopus sibilatrix","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Gulgrønn sanger med gult bryst og hvit buk.","nar":"Mai–august.","mat":"Små insekter og edderkopper.","fakta":"Sangen er en skjelvende trille som går stadig fortere.","vingespenn":"19–24 cm","vekt":"8–13 g","utbredelse":"Norge, Sverige, Finland, Storbritannia, Europa ellers, Russland og Vest-Sibir; vinterstid Vest- og Sentral-Afrika","rodliste":"Livskraftig","bilde":"cards/065.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":66,"id":"066","key":"dryocopus-martius","navn":"Svartspett","latin":"Dryocopus martius","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Svært stor, helt svart hakkespett med rød isseflekk.","nar":"Hele året.","mat":"Maur, billelarver og insekter i ved.","fakta":"Hakker store reirhull som senere brukes av andre arter.","vingespenn":"64–68 cm","vekt":"300–350 g","utbredelse":"Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Balkan, Russland, Kina, Korea og Japan","rodliste":"Livskraftig","bilde":"cards/066.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":67,"id":"067","key":"picus-canus","navn":"Gråspett","latin":"Picus canus","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Grønnlig kropp, grått hode; hann har liten rød panneflekk.","nar":"Hele året; oftere ved hus om vinteren.","mat":"Maur og andre insekter.","fakta":"Ligner grønnspett, men mindre og med lite rødt på hodet.","vingespenn":"38–42 cm","vekt":"130–160 g","utbredelse":"Norge, Sverige, Finland, Sentral- og Øst-Europa, Balkan, Russland, Himalaya, Kina, Korea og Japan","rodliste":"Livskraftig","bilde":"cards/067.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":68,"id":"068","key":"loxia-curvirostra","navn":"Grankorsnebb","latin":"Loxia curvirostra","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Kraftig fink med krysset nebb; hannen er rødlig.","nar":"Hele året, antall varierer.","mat":"Frø fra gran og andre bartrær.","fakta":"Det kryssede nebbet brukes som tang til å åpne kongler.","vingespenn":"27–30 cm","vekt":"35–50 g","utbredelse":"Norge, Sverige, Finland, Storbritannia, Alpene og resten av Europa; Atlasfjellene, Russland, Sentral-/Øst-Asia, Himalaya, Japan og store deler av Nord-Amerika","rodliste":"Livskraftig","bilde":"cards/068.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":69,"id":"069","key":"falco-tinnunculus","navn":"Tårnfalk","latin":"Falco tinnunculus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Liten, rustbrun falk som ofte står stille i lufta.","nar":"April–september.","mat":"Smågnagere, insekter og småfugl.","fakta":"Bygger ikke eget reir; bruker gamle kråkereir og hulrom.","vingespenn":"65–82 cm","vekt":"150–250 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, store deler av Afrika og Asia til Kina og Japan","rodliste":"Livskraftig","bilde":"cards/069.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":70,"id":"070","key":"nucifraga-caryocatactes","navn":"Nøttekråke","latin":"Nucifraga caryocatactes","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Mørk kråkefugl tett besatt med lyse dråpeflekker.","nar":"Hele året; noen år mer synlig.","mat":"Hasselnøtter, barfrø og smådyr.","fakta":"Gjemmer tusenvis av frø og husker mange av lagerplassene.","vingespenn":"52–58 cm","vekt":"150–190 g","utbredelse":"Norge, Sverige, Finland, Alpene, Karpatene, Balkan, Russland, Sibir, Kina, Korea og Japan","rodliste":"Livskraftig","bilde":"cards/070.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":71,"id":"071","key":"anas-platyrhynchos","navn":"Stokkand","latin":"Anas platyrhynchos","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Hann med grønt hode og hvit halsring; hunn brunspraglet.","nar":"Hele året.","mat":"Planter, frø, insekter og smådyr.","fakta":"Stamfar til nesten alle tamender.","vingespenn":"81–98 cm","vekt":"750–1500 g","utbredelse":"Norge, Europa, Nord-Afrika, store deler av Asia og Nord-Amerika; innført i Australia og New Zealand","rodliste":"Livskraftig","bilde":"cards/071.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":72,"id":"072","key":"astur-gentilis","navn":"Hønsehauk","latin":"Astur gentilis","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Kraftig hauk med bredt bryst, lang stjert, hvitt øyebryn.","nar":"Hele året.","mat":"Fugler og mellomstore pattedyr.","fakta":"Større og kraftigere enn spurvehauk, sjeldnere i hager.","vingespenn":"90–120 cm","vekt":"520–2200 g","utbredelse":"Norge, Sverige, Finland og øvrige Europa; Nord-Marokko, Russland/Sibir, Kaukasus, Iran, Himalaya, Kina, Korea og Japan","rodliste":"Sårbar","bilde":"cards/072.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":73,"id":"073","key":"cinclus-cinclus","navn":"Fossekall","latin":"Cinclus cinclus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Rund, mørkebrun fugl med stor hvit smekke.","nar":"Hele året; mest synlig om vinteren.","mat":"Vanninsekter og larver fra bunnen.","fakta":"Norges nasjonalfugl; går under vann i bekker og elver.","vingespenn":"25–30 cm","vekt":"55–75 g","utbredelse":"Norge, Sverige, Finland, Storbritannia, Alpene, Pyreneene, Balkan, Nordvest-Afrika, Tyrkia, Kaukasus, Sentral-Asia og Himalaya","rodliste":"Livskraftig","bilde":"cards/073.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":74,"id":"074","key":"buteo-buteo","navn":"Musvåk","latin":"Buteo buteo","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Bredvinget rovfugl som sirkler; drakten varierer mye.","nar":"Mars–oktober; få om vinteren.","mat":"Smågnagere, fugler, mark og åtsel.","fakta":"Sirkler på varm luft og roper et klagende «pijæh».","vingespenn":"110–130 cm","vekt":"550–1000 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia, Kaukasus og Vest-Sibir; østlige bestander overvintrer i Afrika","rodliste":"Livskraftig","bilde":"cards/074.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":75,"id":"075","key":"ardea-cinerea","navn":"Gråhegre","latin":"Ardea cinerea","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Stor grå hegre med lang hals og svart stripe over øyet.","nar":"Hele året.","mat":"Fisk, frosk, mus og insekter.","fakta":"Står bomstille og kan tømme en hagedam for fisk.","vingespenn":"175–195 cm","vekt":"1–2 kg","utbredelse":"Norge, Europa, store deler av Afrika og Asia til Kina, Japan og Indonesia","rodliste":"Livskraftig","bilde":"cards/075.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":76,"id":"076","key":"scolopax-rusticola","navn":"Rugde","latin":"Scolopax rusticola","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Løvbrun skogvadefugl med langt nebb og tverrstripet isse.","nar":"Mars–oktober; sees mest i skumringen.","mat":"Meitemark og insektlarver.","fakta":"Øynene sitter så langt bak at den ser nesten 360 grader.","vingespenn":"56–60 cm","vekt":"240–420 g","utbredelse":"Norge, Sverige, Finland, Storbritannia, Europa ellers, Russland, Sibir og Japan; vinterstid Vest- og Sør-Europa, Nord-Afrika og Sør-Asia","rodliste":"Livskraftig","bilde":"cards/076.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":77,"id":"077","key":"gallinago-gallinago","navn":"Enkeltbekkasin","latin":"Gallinago gallinago","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Brunstripet vadefugl med svært langt, rett nebb.","nar":"April–september.","mat":"Mark, insektlarver og små snegler.","fakta":"Stjertfjærene lager en «mekrende» lyd i stupflukten.","vingespenn":"44–47 cm","vekt":"80–120 g","utbredelse":"Norge, Europa, Island, Russland og Sibir; vinterstid Vest- og Sør-Europa, Afrika og Sør-Asia","rodliste":"Livskraftig","bilde":"cards/077.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":78,"id":"078","key":"loxia-pytyopsittacus","navn":"Furukorsnebb","latin":"Loxia pytyopsittacus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Stor korsnebb med svært kraftig, papegøyeaktig nebb.","nar":"Hele året, antall varierer.","mat":"Frø fra furukongler.","fakta":"Det kraftige nebbet klarer å åpne harde furukongler.","vingespenn":"27–31 cm","vekt":"45–60 g","utbredelse":"Norge, Sverige, Finland, Baltikum og Nordvest-Russland; små bestander i Skottland","rodliste":"Livskraftig","bilde":"cards/078.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":79,"id":"079","key":"lyrurus-tetrix","navn":"Orrfugl","latin":"Lyrurus tetrix","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Hanen blåsvart med lyreformet stjert; høna brunspraglet.","nar":"Hele året; spill på myrer april–mai.","mat":"Bjørkeknopper, rakler, bær og skudd.","fakta":"Orrhanene samles på myra om våren og kurrer og blåser.","vingespenn":"65–80 cm","vekt":"750–1400 g","utbredelse":"Norge, Sverige, Finland, Storbritannia, Alpene, Baltikum, Polen, Russland, Sibir, Mongolia og Nord-Kina","rodliste":"Livskraftig","bilde":"cards/079.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":80,"id":"080","key":"pinicola-enucleator","navn":"Konglebit","latin":"Pinicola enucleator","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Stor, tung fink; hann rosenrød, hunn gulgrønn.","nar":"Vinter i invasjonsår.","mat":"Knopper, bær og frø.","fakta":"Kan opptre svært tamt når vinterflokker vandrer sørover.","vingespenn":"33–35 cm","vekt":"47–64 g","utbredelse":"Norge, Sverige, Finland, Russland, Canada og Alaska; enkelte vintre sørover i Europa, Asia og USA","rodliste":"Nær truet","bilde":"cards/080.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":81,"id":"081","key":"glaucidium-passerinum","navn":"Spurveugle","latin":"Glaucidium passerinum","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Bitteliten ugle med gule øyne og «falske øyne» i nakken.","nar":"Hele året; oftest sett om vinteren.","mat":"Småfugl og smågnagere.","fakta":"Jakter ved fuglebrett og lagrer bytte i hule trær.","vingespenn":"32–39 cm","vekt":"50–80 g","utbredelse":"Norge, Sverige, Finland, Alpene, Karpatene, Baltikum, Russland, Sibir, Nordøst-Kina og Sakhalin","rodliste":"Livskraftig","bilde":"cards/081.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":82,"id":"082","key":"picoides-tridactylus","navn":"Tretåspett","latin":"Picoides tridactylus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Svart-hvit spett uten rødt; hannen har gul isse.","nar":"Hele året.","mat":"Barkbillelarver og andre insekter.","fakta":"Hakker ringer av små hull i barken og drikker sevje.","vingespenn":"32–35 cm","vekt":"55–75 g","utbredelse":"Norge, Sverige, Finland, Alpene, Karpatene, Balkan, Baltikum, Russland, Sibir, Nordøst-Kina og Hokkaido","rodliste":"Nær truet","bilde":"cards/082.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":83,"id":"083","key":"bucephala-clangula","navn":"Kvinand","latin":"Bucephala clangula","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Hann svart-hvit, rund hvit kinnflekk; hunn grå, brunhodet.","nar":"Hele året på åpne vann.","mat":"Muslinger, snegler og insektlarver.","fakta":"Hekker i hule trær og fuglekasser; ungene hopper ned.","vingespenn":"77–83 cm","vekt":"800–1200 g","utbredelse":"Norge, Sverige, Finland, Baltikum, Russland, Sibir, Canada og Alaska; vinterstid Vest-Europa, Øst-Asia og USA","rodliste":"Livskraftig","bilde":"cards/083.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":84,"id":"084","key":"lanius-excubitor","navn":"Varsler","latin":"Lanius excubitor","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Grå, svart og hvit med svart øyemaske og lang stjert.","nar":"Oktober–april.","mat":"Smågnagere, småfugl og store insekter.","fakta":"Spidder byttet på torner og kvister som et spiskammer.","vingespenn":"30–36 cm","vekt":"50–80 g","utbredelse":"Norge, Sverige, Finland, Russland og Vest-Sibir; også Sentral-Europa; om vinteren sørover i Europa","rodliste":"Livskraftig","bilde":"cards/084.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":85,"id":"085","key":"tringa-ochropus","navn":"Skogsnipe","latin":"Tringa ochropus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Mørk vadefugl med hvit overgump som lyser når den letter.","nar":"April–september.","mat":"Insekter, larver og små krepsdyr.","fakta":"Hekker i gamle trostereir oppe i trær, ikke på bakken.","vingespenn":"41–46 cm","vekt":"70–110 g","utbredelse":"Norge, Sverige, Finland, Baltikum, Russland og Sibir; vinterstid Vest-Europa, Afrika, Midtøsten og Sør-Asia","rodliste":"Livskraftig","bilde":"cards/085.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":86,"id":"086","key":"surnia-ulula","navn":"Haukugle","latin":"Surnia ulula","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Langstjertet ugle, gule øyne og tverrstripet underside.","nar":"Sjelden, oftest høst–vinter.","mat":"Smågnagere og småfugl.","fakta":"Jakter ofte om dagen og sitter åpent i tretoppene.","vingespenn":"69–82 cm","vekt":"240–450 g","utbredelse":"Norge, Sverige, Finland, Russland/Sibir, Canada og Alaska; i gode smågnagerår kan den vandre sørover","rodliste":"Livskraftig","bilde":"cards/086.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":87,"id":"087","key":"loxia-leucoptera","navn":"Båndkorsnebb","latin":"Loxia leucoptera","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Korsnebb med to hvite vingebånd; hannen rosa-rød.","nar":"Uregelmessig, mest høst–vinter.","mat":"Frø fra lerk og andre bartrær, og bær.","fakta":"Kommer i invasjoner fra øst noen år og mangler andre år.","vingespenn":"26–30 cm","vekt":"25–40 g","utbredelse":"Canada og Alaska; Nord-Skandinavia, Finland og Russland/Sibir østover mot Nordvest-Kina; i invasjonsår sørover i Europa, USA og Asia","rodliste":"Sårbar","bilde":"cards/087.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":88,"id":"088","key":"falco-peregrinus","navn":"Vandrefalk","latin":"Falco peregrinus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Kraftig falk med mørk hjelm og tverrstripet underside.","nar":"Hele året.","mat":"Fugler, særlig duer, fanget i lufta.","fakta":"Verdens raskeste dyr; kan stupe i over 300 km/t.","vingespenn":"95–115 cm","vekt":"600–1300 g","utbredelse":"Finnes på alle kontinenter unntatt Antarktis, fra arktisk tundra til tropiske strøk","rodliste":"Livskraftig","bilde":"cards/088.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":89,"id":"089","key":"grus-grus","navn":"Trane","latin":"Grus grus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Svært stor, grå fugl med lang hals og svart-hvitt hode.","nar":"Trekk over Oslo i april og september.","mat":"Planter, frø, korn, insekter og smådyr.","fakta":"Trompetropet kan høres flere kilometer unna.","vingespenn":"180–240 cm","vekt":"4,5–6 kg","utbredelse":"Norge, Sverige, Finland, Baltikum, Polen, Tyskland, Russland og Sibir; vinterstid Spania, Frankrike, Nord-Afrika, Midtøsten, India og Kina","rodliste":"Livskraftig","bilde":"cards/089.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":90,"id":"090","key":"tetrao-urogallus","navn":"Storfugl","latin":"Tetrao urogallus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Stor skogshøne; tiuren svart med vifte, røya brunspraglet.","nar":"Hele året; spill i april–mai.","mat":"Furunåler om vinteren, blåbær og skudd.","fakta":"Tiuren spiller om våren med knepping og sliping.","vingespenn":"70–125 cm","vekt":"1,5–5 kg","utbredelse":"Norge, Sverige, Finland, Skottland, Alpene, Pyreneene, Karpatene, Baltikum, Russland og Sibir til Baikal","rodliste":"Livskraftig","bilde":"cards/090.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":91,"id":"091","key":"pernis-apivorus","navn":"Vepsevåk","latin":"Pernis apivorus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Ligner musvåk, men har smalt hode og lang stjert.","nar":"Mai–august.","mat":"Vepselarver og humlelarver fra bol.","fakta":"Graver ut vepsebol; tette ansiktsfjær beskytter mot stikk.","vingespenn":"135–150 cm","vekt":"510–1050 g","utbredelse":"Norge, Sverige, Finland, Danmark, Europa ellers, Tyrkia og Vest-Sibir; vinterstid Vest- og Sentral-Afrika","rodliste":"Nær truet","bilde":"cards/091.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":92,"id":"092","key":"aegolius-funereus","navn":"Perleugle","latin":"Aegolius funereus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Liten ugle med stort, lyst ansikt og gule øyne.","nar":"Hele året; høres mest i mars–april.","mat":"Smågnagere og noe småfugl.","fakta":"Navnet kommer av de hvite «perlene» på ryggen.","vingespenn":"50–62 cm","vekt":"90–200 g","utbredelse":"Norge, Sverige, Finland, Alpene, Baltikum, Russland, Sibir, Canada, Alaska og Klippefjellene i USA","rodliste":"Livskraftig","bilde":"cards/092.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":93,"id":"093","key":"upupa-epops","navn":"Hærfugl","latin":"Upupa epops","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Oransjebrun med viftetopp og brede svart-hvite vingebånd.","nar":"Sjelden vår–høst.","mat":"Store insekter og larver på bakken.","fakta":"Toppen foldes ut som en vifte når fuglen blir opphisset.","vingespenn":"44–48 cm","vekt":"46–89 g","utbredelse":"Spania, Portugal, Frankrike, Italia, Balkan, Tyrkia, store deler av Afrika, Midtøsten, Sentral-Asia, India og Kina; sjelden gjest i Norge","rodliste":"Ikke vurdert","bilde":"cards/093.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":94,"id":"094","key":"regulus-ignicapilla","navn":"Rødtoppfuglekonge","latin":"Regulus ignicapilla","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Bitteliten; hvitt øyebryn, svart øyestrek, oransje isse.","nar":"Særlig trekk vår/høst.","mat":"Små insekter og edderkopper.","fakta":"Første hekkefunn i Norge var i Sørkedalen i Oslo i 2019.","vingespenn":"13–16 cm","vekt":"5–7 g","utbredelse":"Storbritannia, Frankrike, Spania, Portugal, Tyskland, Italia, Balkan, Marokko, Algerie, Tunisia og Tyrkia; sjelden gjest nord til Norge","rodliste":"Ikke egnet","bilde":"cards/094.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":95,"id":"095","key":"tetrastes-bonasia","navn":"Jerpe","latin":"Tetrastes bonasia","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Duestor, gråspraglet skogshøne; hanen har svart strupe.","nar":"Hele året.","mat":"Knopper, rakler, bær og insekter.","fakta":"Den tynne, høye plystringen kan etterlignes med fløyte.","vingespenn":"48–54 cm","vekt":"350–500 g","utbredelse":"Norge, Sverige, Finland, Alpene, Karpatene, Baltikum, Russland, Sibir, Nordøst-Kina, Korea og Hokkaido","rodliste":"Livskraftig","bilde":"cards/095.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":96,"id":"096","key":"pandion-haliaetus","navn":"Fiskeørn","latin":"Pandion haliaetus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Brun over, hvit under, med mørk stripe gjennom øyet.","nar":"April–september.","mat":"Fisk, fanget i stup med beina først.","fakta":"Kan vende ytre tå bakover for å holde godt på glatt fisk.","vingespenn":"145–170 cm","vekt":"1,2–2 kg","utbredelse":"Europa, Asia, Afrika og Amerika; i Norge hekker den særlig på Østlandet og i Trøndelag","rodliste":"Sårbar","bilde":"cards/096.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":97,"id":"097","key":"gavia-arctica","navn":"Storlom","latin":"Gavia arctica","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Elegant lom med grått hode, svart strupe og stripet hals.","nar":"April–oktober på Marka-vannene.","mat":"Fisk, som den fanger under vann.","fakta":"Det klagende, ulende ropet høres langt over Marka-vannene.","vingespenn":"110–130 cm","vekt":"1,3–3,4 kg","utbredelse":"Norge, Sverige, Finland, Skottland, Russland og Sibir; vinterstid langs kysten av Europa og Øst-Asia","rodliste":"Livskraftig","bilde":"cards/097.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":98,"id":"098","key":"alcedo-atthis","navn":"Isfugl","latin":"Alcedo atthis","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Glinsende blå rygg, oransje bryst og langt, spisst nebb.","nar":"Mest vinter ved åpne elver.","mat":"Småfisk og vanninsekter.","fakta":"Stuper fra en gren og tar fisk med lynrask presisjon.","vingespenn":"24–26 cm","vekt":"34–46 g","utbredelse":"Sør-Norge, Sverige, Danmark, Storbritannia, Europa ellers, Nordvest-Afrika, Midtøsten og Asia til Japan og Indonesia","rodliste":"Ikke egnet","bilde":"cards/098.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":99,"id":"099","key":"phylloscopus-inornatus","navn":"Gulbrynsanger","latin":"Phylloscopus inornatus","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Bitteliten grønn sanger, gult øyebryn, to vingebånd.","nar":"September–oktober, ellers sjelden.","mat":"Små insekter og edderkopper.","fakta":"Hekker i Sibir, men dukker årlig opp i Vest-Europa.","vingespenn":"14–17 cm","vekt":"5,5–8 g","utbredelse":"Russland/Sibir, Mongolia og Nordøst-Kina i hekketiden; vinterstid Kina, India og Sørøst-Asia; regelmessig trekkgjest til Europa","rodliste":"Ikke vurdert","bilde":"cards/099.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":100,"id":"100","key":"strix-nebulosa","navn":"Lappugle","latin":"Strix nebulosa","stjerner":5,"status":"Svært sjelden hagegjest","kjennetegn":"Svær grå ugle med stort, ringet ansikt og gule øyne.","nar":"Hele året; oftest i gode smågnagerår.","mat":"Smågnagere, særlig markmus.","fakta":"Hører smågnagere under snøen og slår ned gjennom den.","vingespenn":"130–150 cm","vekt":"700–1700 g","utbredelse":"Norge, Sverige, Finland, Russland, Sibir, Mongolia, Canada, Alaska og fjellskogene i det vestlige USA","rodliste":"Sårbar","bilde":"cards/100.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]}},{"nr":1,"id":"b01","bonus":true,"key":"sciurus-vulgaris","navn":"Ekorn","latin":"Sciurus vulgaris","stjerner":2,"status":"Regelmessig hagegjest","kjennetegn":"Rødbrun eller gråbrun pels, busket hale og øredusker.","nar":"Hele året; mest synlig om høsten.","mat":"Kongler, nøtter, frø, sopp og fuglemat.","fakta":"Gjemmer nøtter om høsten; de glemte kan bli nye trær.","lengde":"20–25 cm","vekt":"250–480 g","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Russland, Sibir, Mongolia, Nord-Kina og Japan (Hokkaido)","rodliste":"Livskraftig","bilde":"cards/b01.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/b01.webp","fotograf":"Hege Røkenes","lisens":"CC BY 4.0"},{"nr":2,"id":"b02","bonus":true,"key":"capreolus-capreolus","navn":"Rådyr","latin":"Capreolus capreolus","stjerner":3,"status":"Uvanlig hagegjest","kjennetegn":"Lite, slankt hjortedyr med hvitt bakspeil.","nar":"Hele året; i hager mest om vinteren.","mat":"Knopper, blader og tulipaner.","fakta":"Bukken feller geviret i november–desember og får nytt til våren.","lengde":"95–130 cm","vekt":"25–35 kg","utbredelse":"Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia og Kaukasus","rodliste":"Livskraftig","bilde":"cards/b02.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/b02.webp","fotograf":"Hildegunn Bjørgan","lisens":"CC BY 4.0"},{"nr":3,"id":"b03","bonus":true,"key":"lepus-timidus","navn":"Hare","latin":"Lepus timidus","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Hvit om vinteren, ellers gråbrun; svarte ørespisser.","nar":"Hele året; oftest i skumringen og om natta.","mat":"Gress, urter, kvister og bark.","fakta":"Ungene fødes med pels og åpne øyne.","lengde":"45–60 cm","vekt":"2–5 kg","utbredelse":"Norge, Sverige, Finland, Skottland, Irland, Alpene, Baltikum, Russland, Sibir, Mongolia, Nord-Kina og Japan (Hokkaido)","rodliste":"Nær truet","bilde":"cards/b03.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/b03.webp","fotograf":"Eirik Røtnes","lisens":"CC BY 4.0"},{"nr":4,"id":"b04","bonus":true,"key":"alces-alces","navn":"Elg","latin":"Alces alces","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Stor og langbeint med lang mule; oksen har gevir.","nar":"Hele året; i hager mest om vinteren.","mat":"Kvister, bark, knopper, blader og frukt.","fakta":"Norges største landpattedyr og en god svømmer.","lengde":"2,3–3,1 m","vekt":"280–700 kg","utbredelse":"Norge, Sverige, Finland, Baltikum, Polen, Russland, Sibir, Mongolia, Nord-Kina, Alaska, Canada og nordlige USA","rodliste":"Livskraftig","bilde":"cards/b04.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/b04.webp","fotograf":"Ragnar Skrede","lisens":"CC BY 4.0"},{"nr":5,"id":"b05","bonus":true,"key":"vulpes-vulpes","navn":"Rødrev","latin":"Vulpes vulpes","stjerner":4,"status":"Sjelden hagegjest","kjennetegn":"Rødbrun pels og lang, busket hale med hvit spiss.","nar":"Hele året; mest om kvelden og natta.","mat":"Smågnagere, fugler, bær og matrester.","fakta":"Hører musa under snøen og hopper rett ned på den.","lengde":"60–80 cm","vekt":"5–10 kg","utbredelse":"Norge, hele Europa, Nord-Afrika, Midtøsten, Asia, Japan, Canada og USA; innført i Australia","rodliste":"Livskraftig","bilde":"cards/b05.webp","sett":{"boks":[0.0747,0.88,0.0707,0.0495],"linje":[0.532,0.9152,0.392]},"bildeFoto":"cards-foto/b05.webp","fotograf":"Steinar Stueflotten","lisens":"CC BY 4.0"}],"hjelpFoto":[{"id":"000a","navn":"Om kortene","bilde":"cards/000a.webp"},{"id":"000b","navn":"Slik leser du kortene","bilde":"cards/000b.webp"},{"id":"000c","navn":"Bildekreditering","bilde":"cards-foto/000c.webp"},{"id":"b00","navn":"Bildekreditering bonuskort","bilde":"cards-foto/b00.webp"}],"tidligereNr":{"001":"parus-major","002":"cyanistes-caeruleus","003":"turdus-merula","004":"pica-pica","005":"passer-montanus","006":"passer-domesticus","007":"sitta-europaea","008":"pyrrhula-pyrrhula","009":"erithacus-rubecula","010":"chloris-chloris","011":"fringilla-coelebs","012":"dendrocopos-major","013":"corvus-cornix","014":"columba-palumbus","015":"acanthis-flammea","016":"spinus-spinus","017":"carduelis-carduelis","018":"coccothraustes-coccothraustes","019":"periparus-ater","020":"poecile-montanus","021":"lophophanes-cristatus","022":"certhia-familiaris","023":"regulus-regulus","024":"troglodytes-troglodytes","025":"garrulus-glandarius","026":"turdus-pilaris","027":"turdus-philomelos","028":"turdus-iliacus","029":"sturnus-vulgaris","030":"motacilla-alba","031":"phylloscopus-trochilus","032":"phylloscopus-collybita","033":"sylvia-atricapilla","034":"sylvia-borin","035":"ficedula-hypoleuca","036":"muscicapa-striata","037":"phoenicurus-phoenicurus","038":"apus-apus","039":"hirundo-rustica","040":"delichon-urbicum","041":"loxia-curvirostra","042":"fringilla-montifringilla","043":"bombycilla-garrulus","044":"emberiza-citrinella","045":"picus-viridis","046":"dryocopus-martius","047":"dryobates-minor","048":"accipiter-nisus","049":"astur-gentilis","050":"strix-aluco","051":"nucifraga-caryocatactes","052":"pinicola-enucleator","053":"carpodacus-erythrinus","054":"motacilla-cinerea","055":"picus-canus","056":"regulus-ignicapilla","057":"phylloscopus-inornatus","058":"loxia-leucoptera","059":"upupa-epops","060":"surnia-ulula","061":"coloeus-monedula","062":"aegithalos-caudatus","063":"curruca-curruca","064":"larus-canus","065":"larus-argentatus","066":"prunella-modularis","067":"streptopelia-decaocto","068":"hippolais-icterina","069":"turdus-viscivorus","070":"corvus-corax","071":"buteo-buteo","072":"ardea-cinerea","073":"anas-platyrhynchos","074":"columba-oenas","075":"poecile-palustris","076":"glaucidium-passerinum","077":"falco-tinnunculus","078":"falco-peregrinus","079":"cuculus-canorus","080":"grus-grus","081":"lanius-excubitor","082":"jynx-torquilla","083":"anthus-trivialis","084":"phylloscopus-sibilatrix","085":"picoides-tridactylus","086":"scolopax-rusticola","087":"loxia-pytyopsittacus","088":"cinclus-cinclus","089":"bucephala-clangula","090":"pandion-haliaetus","091":"pernis-apivorus","092":"alcedo-atthis","093":"aegolius-funereus","094":"strix-nebulosa","095":"tringa-ochropus","096":"gallinago-gallinago","097":"gavia-arctica","098":"tetrastes-bonasia","099":"lyrurus-tetrix","100":"tetrao-urogallus"}}</script>
 <script>
@@ -992,11 +1008,11 @@ function samling({ col, key, norm, toDoc, migrate, hva }) {
           } catch (e) {
             if (e && (e.code === 'invalid_argument' || e.code === 'not_granted' || e.code === 'revoked')) {
               this.readOnly = true; this.mode = 'lokal'; this.emit();
-              toast(`Denne visningen kan ikke lagre i den delte lista. ${hva} ligger bare på denne enheten.`);
+              si(`Denne visningen kan ikke lagre i den delte lista. ${hva} ligger bare på denne enheten.`);
               break;
             }
             if (tries++ < 1) { await new Promise(r => setTimeout(r, 900 + Math.random() * 900)); q.again = true; }
-            else { toast('Fikk ikke lagret akkurat nå. Endringen ligger på denne enheten.'); }
+            else { si('Fikk ikke lagret akkurat nå. Endringen ligger på denne enheten.'); }
           }
           if (!q.again) break;
         }
@@ -1053,7 +1069,7 @@ const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          
    While the app is being tested, old data is not kept. Change TESTMERKE to wipe everything stored on each
    device the next time the app opens (the shared database in Claude is emptied separately when publishing).
    Settings also has a button «Nullstill alt (test)». */
-const TESTMERKE = '2026-09-30-fro1';
+const TESTMERKE = '2026-09-30-meny';
 const DATANOKLER = ['hagefugler-oslo:sett:v1', 'hagefugler:tellinger:v1', 'hagefugler:bonusvist:v1', 'hagefugler:kjop:v1'];
 if (lsGet('hagefugler:testmerke') !== TESTMERKE) {
   DATANOKLER.forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
@@ -1133,10 +1149,11 @@ const PRIS = Object.fromEntries(BIRDS.filter(c => c.nr > FRO.apneFraStart).map(c
 const Kjop = Object.assign(samling({
   col: 'kjop', key: 'hagefugler:kjop:v1', hva: 'Kjøpet',
   norm: raw => Object.fromEntries(Object.keys(raw || {}).filter(k => PRIS[k] != null && raw[k] && Number.isFinite(+raw[k].pris) && ISO.test(raw[k].dato))
-    .map(k => [k, { pris: Math.floor(+raw[k].pris), dato: raw[k].dato, ts: +raw[k].ts || 0 }])),
-  toDoc: (id, v) => ({ pris: v.pris, dato: v.dato, ts: v.ts }),
+    .map(k => [k, { pris: Math.floor(+raw[k].pris), dato: raw[k].dato, ts: +raw[k].ts || 0, ...(raw[k].graaDag ? { graaDag: true } : {}) }])),
+  toDoc: (id, v) => ({ pris: v.pris, dato: v.dato, ts: v.ts, ...(v.graaDag ? { graaDag: true } : {}) }),
 }), {
-  kjop(k, pris) { this.data[k] = { pris, dato: todayISO(), ts: Date.now() }; this.saveLocal(); this.emit(); this.push(k); },
+  // graaDag: the bird was already registered on the day of purchase, while the card was grey
+  kjop(k, pris) { const d = todayISO(); this.data[k] = { pris, dato: d, ts: Date.now(), ...(Store.days(k).includes(d) ? { graaDag: true } : {}) }; this.saveLocal(); this.emit(); this.push(k); },
 });
 Kjop.loadLocal();
 const erLaast = c => PRIS[c.key] != null && !Kjop.data[c.key];
@@ -1152,12 +1169,12 @@ function froRegnskap() {
   CARDS.forEach(c => {
     if (c.bonus && !erApen(c)) return;                     // a hidden bonus card gives nothing until it is found
     const dager = Store.days(c.key); if (!dager.length) return;
-    const s = c.stjerner, kjopbar = PRIS[c.key] != null, kd = Kjop.data[c.key] ? Kjop.data[c.key].dato : null;
+    const s = c.stjerner, kjopbar = PRIS[c.key] != null, kv = Kjop.data[c.key], kd = kv ? kv.dato : null;
     const hendelser = dager.map(d => ['reg', d, FRO.registrering * s]);
     hendelser.push(['forste', dager[0], FRO.forsteGang * s]);
     grenser(c).forEach((g, k) => { if (dager.length >= g) hendelser.push(['niva', dager[g - 1], FRO.niva[k]]); });
     hendelser.forEach(([type, d, v]) => {
-      if (!kjopbar || (kd && d >= kd)) { r[type] += v; return; }   // open that day: full value
+      if (!kjopbar || (kd && (d > kd || (d === kd && !kv.graaDag)))) { r[type] += v; return; }   // open that day: full value
       const halv = Math.floor(v * FRO.laastAndel);                 // grey that day: half, held on the card
       if (kd) r.frigjort += halv; else { r.holdt += halv; r.holdtPer[c.key] = (r.holdtPer[c.key] || 0) + halv; }
     });
@@ -1712,7 +1729,7 @@ const vippValg = () => { const v = lsGet('hagefugler:vipp'); return v ? v === 'p
 async function slaPaVipp(fraBruker) {
   if (!Vipp.stottet) return false;
   if (Vipp.maaSporre) {
-    try { if (await DeviceOrientationEvent.requestPermission() !== 'granted') { if (fraBruker) toast('Appen fikk ikke lov til å bruke bevegelsessensoren. Glinset følger fingeren i stedet.'); return false; } }
+    try { if (await DeviceOrientationEvent.requestPermission() !== 'granted') { if (fraBruker) si('Appen fikk ikke lov til å bruke bevegelsessensoren. Glinset følger fingeren i stedet.'); return false; } }
     catch (e) { return false; }                          // not from a tap: wait for the next one
   }
   startVipp(); return true;
@@ -1737,7 +1754,7 @@ deckEl.addEventListener('click', e => {
 deckEl.addEventListener('change', e => {
   const inp = e.target.closest('input[type="date"]'); if (!inp || !inp.value || !ISO.test(inp.value)) return;
   const c = CARDS[+inp.closest('.card').dataset.i], d = inp.value;
-  if (d > todayISO()) { toast('Datoen kan ikke være fram i tid.'); paintCard(inp.closest('.card')); return; }
+  if (d > todayISO()) { si('Datoen kan ikke være fram i tid.'); paintCard(inp.closest('.card')); return; }
   if (inp.dataset.act === 'addday') { inp.value = ''; leggTilDag(c, d); }
   else flyttForsteDag(c, d);
 });
@@ -1746,7 +1763,7 @@ deckEl.addEventListener('change', e => {
    A second tap on the same day shows the list of days instead of removing anything. */
 function trykkSett(c) {
   const t = todayISO(), dager = Store.days(c.key);
-  if (dager.includes(t)) { visLogg(c); toast(`${c.navn} er allerede registrert i dag.`); return; }
+  if (dager.includes(t)) { visLogg(c); si(`${c.navn} er allerede registrert i dag.`); return; }
   if (erLaast(c)) { advarLaast(c, () => settIDag(c)); return; }
   settIDag(c);
 }
@@ -1755,12 +1772,15 @@ function settIDag(c) {
   if (!dager.length) { registrer(c, t); return; }
   if (dager.includes(t)) return;
   const for_ = opptjent(), f0 = froFor();
+  froFrys();
   Store.addDay(c.key, t);
   haptic(10);
-  toast(`${c.navn}: ${dager.length + 1}. observasjonsdag.${froTekst(f0)}${nyheter(for_)}${bonusHint()}`, 'Angre', () => Store.removeDay(c.key, t));
+  si(`${c.navn}: ${dager.length + 1}. observasjonsdag.${froTekst(f0)}${nyheter(for_)}${bonusHint()}`);
+  froEffekt(c, f0);
 }
 function registrer(c, d) {
   const for_ = opptjent(), f0 = froFor();
+  froFrys();
   Store.put(c.key, [d]);
   haptic(12);
   const n = seenCount();
@@ -1768,21 +1788,24 @@ function registrer(c, d) {
     : n === NB ? `Alle ${NB} fuglene er sett. Hele kortstokken er komplett!`
     : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i norske hager. ${n} av ${NB} sett.`
     : `${c.navn} er sett for første gang. ${n} av ${NB} arter.`;
-  toast(msg + froTekst(f0) + nyheter(for_) + bonusHint(), 'Angre', () => Store.put(c.key, []));
+  si(msg + froTekst(f0) + nyheter(for_) + bonusHint());
+  froEffekt(c, f0);
 }
 function leggTilDag(c, d, sjekket) {
   const gml = Store.days(c.key);
-  if (gml.includes(d)) { toast(`${fmtHand(d)} er allerede registrert for ${c.navn}.`); return; }
+  if (gml.includes(d)) { si(`${fmtHand(d)} er allerede registrert for ${c.navn}.`); return; }
   if (erLaast(c) && !sjekket) { advarLaast(c, () => leggTilDag(c, d, true)); return; }
   if (!gml.length) { registrer(c, d); return; }
   const for_ = opptjent(), f0 = froFor();
+  froFrys();
   Store.addDay(c.key, d);
-  toast(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${froTekst(f0)}${nyheter(for_)}${bonusHint()}`, 'Angre', () => Store.put(c.key, gml));
+  si(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${froTekst(f0)}${nyheter(for_)}${bonusHint()}`);
+  froEffekt(c, f0);
 }
 function slettDag(c, d) {
   const gml = Store.days(c.key);
   Store.removeDay(c.key, d);
-  toast(gml.length === 1 ? `${c.navn} er ikke lenger merket som sett.` : `Slettet ${fmtHand(d)} for ${c.navn}.`, 'Angre', () => Store.put(c.key, gml));
+  si(gml.length === 1 ? `${c.navn} er ikke lenger merket som sett.` : `Slettet ${fmtHand(d)} for ${c.navn}.`);
 }
 /* the date line on the front is the first day: changing it moves that day */
 function flyttForsteDag(c, d) {
@@ -1790,7 +1813,7 @@ function flyttForsteDag(c, d) {
   if (!gml.length) { registrer(c, d); return; }
   if (gml[0] === d) return;
   Store.put(c.key, [...gml.slice(1), d]);
-  toast(`Første gang flyttet fra ${fmtHand(gml[0])} til ${fmtHand(d)}.`, 'Angre', () => Store.put(c.key, gml));
+  si(`Første gang flyttet fra ${fmtHand(gml[0])} til ${fmtHand(d)}.`);
 }
 function visLogg(c) {
   const i = BY_KEY[c.key];
@@ -1876,8 +1899,41 @@ function closeSheets(silent) {
   openSheet.classList.remove('on'); scrim.classList.remove('on', 'dark'); app.inert = false;
   openSheet = null;
   if (!silent && lastFocus && lastFocus.focus) lastFocus.focus();
+  froVentKjor(380);
 }
 scrim.addEventListener('click', () => closeSheets());
+
+/* ---- the menu at the top right: search, about the cards, settings ---- */
+const menyEl = $('#meny'), menyBak = $('#menyBak'), menyBtn = $('#openMeny');
+const menyApen = () => !menyEl.hidden;
+const menyValg = () => [...menyEl.querySelectorAll('[role="menuitem"]')].filter(b => !b.hidden);
+function apneMeny() {
+  const r = menyBtn.getBoundingClientRect();
+  menyEl.style.top = `${Math.round(r.bottom + 8)}px`;
+  menyEl.style.right = `${Math.max(8, Math.round(document.documentElement.clientWidth - r.right))}px`;
+  menyBak.hidden = menyEl.hidden = false; void menyEl.offsetWidth; menyEl.classList.add('on');
+  menyBtn.setAttribute('aria-expanded', 'true');
+  setTimeout(() => { const b = menyValg()[0]; b && b.focus(); }, 30);
+}
+function lukkMeny(fokus) {
+  if (!menyApen()) return;
+  menyEl.classList.remove('on'); menyBak.hidden = menyEl.hidden = true;
+  menyBtn.setAttribute('aria-expanded', 'false');
+  if (fokus) menyBtn.focus();
+}
+menyBtn.addEventListener('click', () => (menyApen() ? lukkMeny(true) : apneMeny()));
+menyBak.addEventListener('click', () => lukkMeny());
+// a choice closes the menu first; the sheet it opens then gives focus back to the menu button
+menyEl.addEventListener('click', e => { if (e.target.closest('[role="menuitem"]')) lukkMeny(true); }, true);
+menyEl.addEventListener('keydown', e => {
+  const v = menyValg(), i = v.indexOf(document.activeElement);
+  if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); lukkMeny(true); }
+  else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); e.stopPropagation(); v[(i + (e.key === 'ArrowDown' ? 1 : -1) + v.length) % v.length].focus(); }
+  else if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); e.stopPropagation(); v[e.key === 'Home' ? 0 : v.length - 1].focus(); }
+  else if (e.key === 'Tab') lukkMeny();
+  else e.stopPropagation();                                 // Enter and Space press the item; no deck shortcuts meanwhile
+});
+addEventListener('resize', () => lukkMeny());
 
 /* ---- search ---- */
 const qEl = $('#q'), resEl = $('#results');
@@ -1982,7 +2038,6 @@ helpSheet.addEventListener('click', e => { if (!e.target.closest('.help-card, .h
 
 /* ---- innstillinger ---- */
 const setSheet = $('#settingsSheet');
-$('#openSettings').hidden = !HAR_FOTO && !Vipp.stottet;
 $('#bildeSek').hidden = !HAR_FOTO;
 $('#vippSek').hidden = !Vipp.stottet;
 // only the bonus cards already found are mentioned
@@ -1996,7 +2051,7 @@ function paintSettings() {
 }
 $('#vippBtn').addEventListener('click', async () => {
   if (Vipp.aktiv) { stoppVipp(); lsSet('hagefugler:vipp', 'av'); }
-  else if (await slaPaVipp(true)) { lsSet('hagefugler:vipp', 'på'); toast('Vipp telefonen for å se glinset på glinskortene.'); }
+  else if (await slaPaVipp(true)) { lsSet('hagefugler:vipp', 'på'); si('Vipp telefonen for å se glinset på glinskortene.'); }
   paintSettings();
 });
 function openSettings() { paintSettings(); showSheet(setSheet); setTimeout(() => (HAR_FOTO ? setSheet.querySelector('[data-bilder][aria-checked="true"]') : $('#vippBtn')).focus(), 60); }
@@ -2006,7 +2061,7 @@ function settBilder(v) {
   settSprites();
   pool.forEach(el => { const c = CARDS[+el.dataset.i], img = el.querySelector('.front img'); img.src = bildeAv(c); img.alt = altTekst(c); paintCard(el); });
   renderHelp(); paintSettings(); setTimeout(warm, 300);
-  toast(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
+  si(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
 }
 $('#openSettings').addEventListener('click', openSettings);
 $('#closeSettings').addEventListener('click', () => closeSheets());
@@ -2141,6 +2196,7 @@ function renderStats() {
         <label for="restoreTxt" style="font-size:13px;color:var(--muted)">Lim inn en sikkerhetskopi. Avkrysningene i den legges til de du har.</label>
         <textarea id="restoreTxt" spellcheck="false"></textarea>
         <div><button class="btn pri" id="doRestore">Legg til avkrysningene</button></div>
+        <p class="cap" id="restoreMld" role="status"></p>
       </div>
     </div>`;
 
@@ -2158,8 +2214,8 @@ sb.addEventListener('click', async e => {
   if (e.target.id === 'goTell') { closeSheets(); return; }
   if (e.target.id === 'copyBackup') {
     const txt = JSON.stringify({ kortstokk: 'hagefugler', versjon: 5, sett: Store.data, tellinger: Tell.data, kjop: Kjop.data });
-    try { await navigator.clipboard.writeText(txt); toast('Sikkerhetskopien er kopiert. Lim den inn i et notat eller en e-post til deg selv.'); }
-    catch (err) { $('#restoreBox').hidden = false; const t = $('#restoreTxt'); t.value = txt; t.select(); toast('Kopier teksten i feltet manuelt.'); }
+    try { await navigator.clipboard.writeText(txt); kvittering(e.target, 'Kopiert!'); si('Sikkerhetskopien er kopiert.'); }
+    catch (err) { $('#restoreBox').hidden = false; const t = $('#restoreTxt'); t.value = txt; t.select(); si('Kopier teksten i feltet manuelt.'); }
   }
   if (e.target.id === 'showRestore') { $('#restoreBox').hidden = false; $('#restoreTxt').value = ''; $('#restoreTxt').focus(); }
   if (e.target.id === 'doRestore') {
@@ -2192,8 +2248,9 @@ sb.addEventListener('click', async e => {
       if (dager) deler.push(flertall(dager, 'dag', 'dager') + (arter ? ` (${flertall(arter, 'ny art', 'nye arter')})` : ''));
       if (telt) deler.push(flertall(telt, 'telling', 'tellinger'));
       if (kjopt) deler.push(flertall(kjopt, 'kjøpt kort', 'kjøpte kort'));
-      toast(deler.length ? `La til ${deler.join(' og ')}.` : 'Ingen nye dager eller tellinger i sikkerhetskopien.');
-    } catch (err) { toast('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
+      const mld = deler.length ? `La til ${deler.join(' og ')}.` : 'Ingen nye dager eller tellinger i sikkerhetskopien.';
+      restoreMld(mld); si(mld);
+    } catch (err) { restoreMld('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
   }
 });
 
@@ -2231,7 +2288,7 @@ function tikk() {
   const ms = Date.now() - a.start, time = ms >= 3600000;
   $('#tTid').textContent = tidTekst(ms);
   tellebar.classList.toggle('time', time);
-  if (time && !timeVarslet) { timeVarslet = true; if (ms < 3600000 + 5000) toast('Én time er gått. Du kan avslutte når du vil.'); }
+  if (time && !timeVarslet) { timeVarslet = true; if (ms < 3600000 + 5000) si('Én time er gått. Du kan avslutte når du vil.'); }
 }
 /* the counter under the deck belongs to the card on top */
 function paintTeller() {
@@ -2264,7 +2321,7 @@ $('#tStart').addEventListener('click', () => {
   timeVarslet = false;
   Tell.start(omrade);
   closeSheets(true);
-  toast('Tellingen er i gang. Bla til arten og trykk +, eller åpne telleliste.');
+  si('Tellingen er i gang. Bla til arten og trykk +, eller åpne telleliste.');
 });
 
 /* the list: every species with its own counter, the commonest garden birds first, ekorn on top */
@@ -2351,28 +2408,26 @@ function avsluttTelling() {
   const for_ = opptjent(), f0 = froFor();
   const id = Tell.avslutt(); if (!id) return;
   const v = Tell.data[id], dag = isoAv(v.start);
+  froFrys();
   const nye = Store.addDayMany(Object.keys(v.arter).filter(k => BY_KEY[k] != null), dag);
   renderSum();
-  toast(`Tellingen er lagret.${nye.length ? ` ${flertall(nye.length, 'art', 'arter')} fikk en observasjonsdag.` : ''}${froTekst(f0)}${nyheter(for_)}`, 'Angre', () => {
-    if (!Tell.data[id]) return;
-    Tell.data[id].slutt = 0; Tell.lagre(id);
-    nye.forEach(k => Store.removeDay(k, dag));
-    if (openSheet === sumSheet) closeSheets();
-  });
+  si(`Tellingen er lagret.${nye.length ? ` ${flertall(nye.length, 'art', 'arter')} fikk en observasjonsdag.` : ''}${froTekst(f0)}${nyheter(for_)}`);
+  froEffekt(null, f0);
 }
 sumSheet.addEventListener('click', async e => {
   const id = e.target.id, v = Tell.data[sumId];
   if (id === 'closeSum' || id === 'sumFortsett') closeSheets();
   else if (id === 'sumAvslutt') avsluttTelling();
-  else if (id === 'sumAvbryt' || id === 'sumSlett') {
-    const tid = sumId, gml = Tell.slett(tid);
-    closeSheets(true);
-    toast(id === 'sumAvbryt' ? 'Tellingen er avbrutt.' : 'Tellingen er slettet.', 'Angre', () => Tell.gjenopprett(tid, gml));
+  else if (id === 'sumAvbryt') { Tell.slett(sumId); closeSheets(true); si('Tellingen er avbrutt.'); }
+  else if (id === 'sumSlett') {
+    const tid = sumId;
+    sporsmal({ tittel: 'Slette tellingen?', tekst: 'Tellingen forsvinner fra lista. Observasjonsdagene den ga, blir liggende.',
+      knapper: [{ tekst: 'Slett tellingen', pri: true, fn: () => { Tell.slett(tid); closeSheets(true); si('Tellingen er slettet.'); } }, { tekst: 'Avbryt' }] });
   }
   else if (id === 'sumKopier' && v) {
     const txt = somTekst(v);
-    if (await kopierTekst(txt)) toast('Tellingen er kopiert. Lim den inn i et notat, eller ha den oppe når du fyller ut skjemaet.');
-    else { $('#sumTekstBoks').hidden = false; const t = $('#sumTekst'); t.value = txt; t.style.minHeight = '220px'; t.focus(); t.select(); toast('Kopier teksten i feltet manuelt.'); }
+    if (await kopierTekst(txt)) { kvittering(e.target, 'Kopiert!'); si('Tellingen er kopiert.'); }
+    else { $('#sumTekstBoks').hidden = false; const t = $('#sumTekst'); t.value = txt; t.style.minHeight = '220px'; t.focus(); t.select(); si('Kopier teksten i feltet manuelt.'); }
   }
   else if (id === 'sumDel' && v) { try { await navigator.share({ title: 'Hagefugltelling', text: somTekst(v) }); } catch (err) {} }
 });
@@ -2396,6 +2451,8 @@ function vis(el) { el.hidden = false; el.classList.remove('on', 'snudd'); void e
 function nesteFest() {
   festPlanlagt = false;
   if (festAapen) return;
+  const vent = froFlyTil - Date.now();
+  if (vent > 0 && festKo.length) { festPlanlagt = true; setTimeout(nesteFest, vent + 120); return; }
   const f = festKo.shift(); if (!f) return;
   festAapen = true; festFokus = document.activeElement; aktivFest = f;
   if (f.type === 'bonus') visBonus(f); else if (f.type === 'laas') visLaas(f); else visNiva(f);
@@ -2446,7 +2503,9 @@ function lukkFest() {
       jump(BY_KEY[f.c.key]);
       setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
     }
+    if (f && f.type === 'laas' && f.frigjort) froVent.push({ c: f.c, belop: f.frigjort, mot: 'fro' });   // the held seeds come home
     if (festKo.length) nesteFest(); else if (festFokus && festFokus.focus && !openSheet) festFokus.focus();
+    froVentKjor(560);
   }, 350);
 }
 [festEl, bfEl, lfEl].forEach(el => {
@@ -2495,6 +2554,7 @@ function lukkDlg(fn) {
   app.inert = dlgInert[0]; if (openSheet) openSheet.inert = !!dlgInert[1];
   setTimeout(() => { dlgEl.hidden = true; }, 200);
   if (fn) fn(); else if (dlgFor && dlgFor.focus) dlgFor.focus();
+  froVentKjor(220);
 }
 dlgEl.addEventListener('click', e => {
   const b = e.target.closest('[data-k]');
@@ -2533,9 +2593,12 @@ function kjopKort(c, etter) {
   froNullstill();
   const r = froRegnskap(), p = PRIS[c.key];
   if (!erLaast(c)) { etter && etter(); return; }
-  if (r.saldo < p) { toast(`Du mangler ${fmtFro(p - Math.max(0, r.saldo))} frø.`); return; }
+  if (r.saldo < p) { si(`Du mangler ${fmtFro(p - Math.max(0, r.saldo))} frø.`); return; }
   const h = r.holdtPer[c.key] || 0;
+  froFrys();
+  froTell(Math.min(froVist == null ? r.saldo : froVist, r.saldo) - p);
   Kjop.kjop(c.key, p);
+  if (!h) froSlipp();
   haptic([15, 50, 15]);
   festKo.push({ type: 'laas', c, pris: p, frigjort: h }); planleggFest();
   if (etter) etter();
@@ -2562,16 +2625,94 @@ function bonusHint() { const nb = nesteBonus(); return nb && nb.mangler > 0 && n
 const butikkSheet = $('#butikkSheet'), butikkListe = $('#butikkListe');
 $('#froIkon').outerHTML = FROIKON;
 let froVist = null, froAnim = 0;
-function paintFro() {
-  const r = froRegnskap(), mal = r.saldo, el = $('#froTall');
-  $('#openFro').setAttribute('aria-label', `Solsikkefrø: ${fmtFro(mal)}. Åpne Frøbutikken`);
-  if (froVist == null || mal <= froVist || matchMedia('(prefers-reduced-motion: reduce)').matches) { cancelAnimationFrame(froAnim); froVist = mal; el.textContent = fmtFro(mal); return; }
-  // counts up to the new balance
-  const fra = froVist, t0 = performance.now(), btn = $('#openFro');
+/* the number counts up to a new value */
+function froTell(mal, ms = 700) {
+  const el = $('#froTall'), fra = froVist == null ? mal : froVist;
   froVist = mal; cancelAnimationFrame(froAnim);
-  btn.classList.remove('pluss'); void btn.offsetWidth; btn.classList.add('pluss');
-  const steg = t => { const k = Math.min(1, (t - t0) / 700); el.textContent = fmtFro(fra + (mal - fra) * (1 - Math.pow(1 - k, 3))); if (k < 1) froAnim = requestAnimationFrame(steg); };
+  if (mal <= fra || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = fmtFro(mal); return; }
+  const t0 = performance.now();
+  const steg = t => { const k = Math.min(1, (t - t0) / ms); el.textContent = fmtFro(Math.round(fra + (mal - fra) * (1 - Math.pow(1 - k, 3)))); if (k < 1) froAnim = requestAnimationFrame(steg); };
   froAnim = requestAnimationFrame(steg);
+}
+function paintFro() {
+  const r = froRegnskap(), mal = r.saldo;
+  $('#openFro').setAttribute('aria-label', `Solsikkefrø: ${fmtFro(mal)}. Åpne Frøbutikken`);
+  if (froHold > 0 || mal === froVist) return;              // seeds on their way: the counter waits for them
+  if (froVist != null && mal > froVist) { const b = $('#openFro'); b.classList.remove('pluss'); void b.offsetWidth; b.classList.add('pluss'); }
+  froTell(mal);
+}
+
+/* ---- seeds fly from the card to the counter ----
+   While seeds are on their way the counter is held; each flight lets go of it when the last seed lands. */
+let froHold = 0, froFlyTil = 0;
+const froVent = [], froAktive = new Set();
+const froFrys = () => { froHold++; };
+function froSlipp() { froHold = Math.max(0, froHold - 1); if (!froHold) paintFro(); }
+const midt = el => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width }; };
+/* where the seeds start: the SETT box on the card on top, or the card itself */
+function froKilde(c) {
+  const el = pool.get(cur);
+  if (el) {
+    const hit = !el.classList.contains('flipped') && c && +el.dataset.i === BY_KEY[c.key] && el.querySelector('.sett-hit');
+    const p = midt(hit || el);
+    if (p.w) return p;
+  }
+  return midt($('#stage'));
+}
+/* after a registration: the seeds it gave fly to the counter, and seeds held on a grey card fly to the card */
+function froEffekt(c, f0) {
+  froNullstill();
+  const na = froRegnskap(), dt = na.tjent - f0.tjent, dh = na.holdt - f0.holdt;
+  if (dh > 0 && c) froVent.push({ c, belop: dh, mot: 'kort' });
+  if (dt > 0) froVent.push({ c, belop: dt, mot: 'fro' }); else froSlipp();
+  froVentKjor(60);
+}
+/* flights wait while a sheet, a question or a celebration covers the screen */
+function froVentKjor(forsink = 0) {
+  if (!froVent.length) return;
+  setTimeout(() => {
+    if (!froVent.length || openSheet || dlgApen || festAapen) return;
+    const rolig = matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden;
+    froVent.splice(0).forEach(v => {
+      const fra = v.fra ? v.fra() : froKilde(v.c);
+      if (v.mot === 'kort') {
+        const kel = pool.get(BY_KEY[v.c.key]), mal = kel && kel.querySelector('.ls-venter:not([hidden])');
+        if (!rolig && mal) froFly(fra, mal, v.belop, null);
+      } else if (rolig) froSlipp();
+      else froFly(fra, $('#openFro'), v.belop, froSlipp);
+    });
+  }, forsink);
+}
+function froFly(fra, tilEl, belop, ferdig) {
+  const lag = $('#froLag'), til = midt(tilEl), n = Math.max(4, Math.min(14, Math.round(Math.log10(Math.max(belop, 1)) * 3)));
+  const tilFro = tilEl.id === 'openFro';
+  let landet = 0;
+  const siste = 720 + (n - 1) * 55 + 120;
+  froFlyTil = Math.max(froFlyTil, Date.now() + siste + 60);
+  for (let k = 0; k < n; k++) {
+    const s = document.createElement('i');
+    s.className = 'flyfro'; s.innerHTML = FROIKON; lag.appendChild(s);
+    const x0 = fra.x + (Math.random() - .5) * 44, y0 = fra.y + (Math.random() - .5) * 26;
+    const dx = til.x - x0, dy = til.y - y0, len = Math.hypot(dx, dy) || 1;
+    const bue = (70 + Math.random() * 90) * (Math.random() < .5 ? -1 : 1);   // a curve to one side
+    const cx = x0 + dx / 2 - dy / len * bue, cy = y0 + dy / 2 + dx / len * bue - 40;
+    const rot = Math.random() * 540 - 270, varighet = 620 + Math.random() * 200;
+    const frames = [];
+    for (let q = 0; q <= 12; q++) {
+      const t = q / 12, u = 1 - t;
+      const x = u * u * x0 + 2 * u * t * cx + t * t * til.x, y = u * u * y0 + 2 * u * t * cy + t * t * til.y;
+      const sk = t < .15 ? .35 + t / .15 * .75 : 1.1 - (t - .15) * .55;
+      frames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(rot * t).toFixed(0)}deg) scale(${sk.toFixed(2)})`, opacity: t > .94 ? 0 : 1, offset: t });
+    }
+    const a = s.animate(frames, { duration: varighet, delay: k * 55, easing: 'cubic-bezier(.45,.05,.6,1)', fill: 'both' });
+    froAktive.add(a);
+    a.onfinish = () => {
+      froAktive.delete(a); s.remove(); landet++;
+      tilEl.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.13)' }, { transform: 'scale(1)' }], { duration: 200, easing: 'ease-out' });
+      if (landet === 1 && tilFro) { haptic(8); froTell((froVist || 0) + belop, Math.max(350, siste - varighet)); }
+      if (landet === n) { if (tilFro) haptic(12); if (ferdig) ferdig(); }
+    };
+  }
 }
 function openButikk() { renderButikk(); showSheet(butikkSheet); butikkSheet.scrollTop = 0; setTimeout(() => $('#closeButikk').focus(), 60); }
 function renderButikk() {
@@ -2599,21 +2740,21 @@ $('#nullstillAlt').addEventListener('click', () => sporsmal({
   tekst: 'Alle observasjoner, tellinger, frø, kjøp og bonuskort slettes, også i den delte lista. Det kan ikke angres.',
   knapper: [{ tekst: 'Nullstill alt', pri: true, fn: () => {
     [Store, Tell, Vist, Kjop].forEach(x => x.replaceAll({}));
-    froVist = null; closeSheets(true); jump(DECK[0], 'instant');
-    toast('Alt er nullstilt.');
+    froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
+    froVent.length = 0; froHold = 0; froFlyTil = 0; froVist = null; paintFro(); closeSheets(true); jump(DECK[0], 'instant');
+    si('Alt er nullstilt.');
   } }, { tekst: 'Avbryt' }],
 }));
 
-/* ---- toast ---- */
-let toastT = 0;
-function toast(msg, action, fn) {
-  const t = $('#toast'), b = $('#toastBtn');
-  $('#toastMsg').textContent = msg;
-  b.hidden = !action; b.textContent = action || '';
-  b.onclick = () => { t.classList.remove('on'); fn && fn(); };
-  t.classList.add('on');
-  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), (action ? 6000 : 3800) + (msg.length > 70 ? 2500 : 0));
+/* a button says «Kopiert!» for a moment instead of a message bubble */
+function kvittering(knapp, tekst) {
+  if (!knapp || knapp.dataset.tekst) return;
+  knapp.dataset.tekst = knapp.textContent; knapp.textContent = tekst;
+  setTimeout(() => { knapp.textContent = knapp.dataset.tekst; delete knapp.dataset.tekst; }, 1600);
 }
+function restoreMld(t) { const m = $('#restoreMld'); if (m) m.textContent = t; }
+/* no message bubbles on screen: what happened is read out to screen readers only */
+function si(msg) { const l = $('#live'); l.textContent = ''; setTimeout(() => { l.textContent = msg; }, 30); }
 
 /* ---- react to data ---- */
 Store.on(() => {

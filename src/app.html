@@ -174,6 +174,25 @@ button{cursor:pointer;touch-action:manipulation}
 .frobtn .froikon{width:18px;height:18px}
 .frobtn.pluss{animation:froplus .6s ease-out}
 @keyframes froplus{30%{background:color-mix(in srgb, var(--gold) 45%, var(--surface));transform:scale(1.08)}}
+/* seeds flying from the card to the counter */
+.frolag{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.flyfro{position:absolute;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;will-change:transform,opacity;filter:drop-shadow(0 0 1.5px rgba(255,255,255,.9)) drop-shadow(0 2px 3px rgba(0,0,0,.3))}
+.flyfro .froikon{width:100%;height:100%;display:block}
+/* the menu at the top right */
+.meny-bak{position:fixed;inset:0;z-index:44}
+.meny{position:fixed;z-index:45;min-width:228px;padding:6px;border-radius:16px;background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  box-shadow:0 18px 40px -12px rgba(var(--shadow),.45),0 2px 6px rgba(var(--shadow),.12);transform-origin:top right;opacity:0;transform:scale(.94) translateY(-6px);
+  transition:opacity .16s, transform .2s cubic-bezier(.2,.8,.2,1)}
+.meny.on{opacity:1;transform:none}
+.meny[hidden],.meny-bak[hidden],.meny button[hidden]{display:none}
+.meny button{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:10px 12px;border:0;border-radius:11px;background:none;color:inherit;font:inherit;font-size:15.5px;font-weight:600;text-align:left}
+.meny button:hover,.meny button:focus-visible{background:var(--surface-2);outline:none}
+.meny .mi{width:24px;height:24px;display:grid;place-items:center;color:var(--muted);flex-shrink:0}
+.meny .mi svg{width:21px;height:21px}
+.meny .mi.q{font-size:19px;font-weight:800;line-height:1}
+.meny .mt{flex:1}
+.meny kbd{font:inherit;font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px}
+@media (hover:none){.meny kbd{display:none}}
 .brand h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:400px){.top{gap:5px}.iconbtn{width:38px;height:38px}.frobtn{height:38px;padding:0 9px 0 7px;gap:4px;font-size:13px}.frobtn .froikon{width:16px;height:16px}.brand h1{font-size:16px}}
 @media (max-width:370px){.iconbtn{width:36px;height:36px}.frobtn{height:36px}.brand h1{font-size:15px}}
@@ -489,8 +508,6 @@ button{cursor:pointer;touch-action:manipulation}
 .stats.on{transform:translateX(0)}
 .s-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .s-head h2{margin:0;font-size:20px;letter-spacing:-.01em}
-.s-head-r{display:flex;align-items:center;gap:6px}
-.iconbtn.sm{width:38px;height:38px}
 .s-sec{margin-top:26px}
 .s-sec h3{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .hero{display:flex;align-items:baseline;gap:10px;margin-top:18px}
@@ -609,7 +626,6 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .tl-hist .ph.tdato{display:grid;place-items:center;background:var(--surface-2);font-size:12px;font-weight:700;line-height:1.1;text-align:center;color:var(--ink)}
 .tl-hist .ph.tdato small{display:block;font-size:10px;font-weight:600;color:var(--muted)}
 
-.iconbtn.qmark{font-size:19px;font-weight:700;line-height:1}
 /* innstillinger: valg av bildesett */
 .valg{display:grid;gap:10px}
 .valg button{display:grid;grid-template-columns:22px 1fr;gap:4px 12px;align-items:start;text-align:left;width:100%;
@@ -646,12 +662,6 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .help-dots button[aria-selected="true"]{background:#fff;transform:scale(1.25)}
 .help-close{border:0;border-radius:999px;padding:9px 18px;font-weight:600;background:rgba(255,255,255,.92);color:#15251e}
 .help ~ .scrim, .scrim.dark{background:rgba(6,14,10,.72)}
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:60;
-  background:var(--ink);color:var(--bg);border-radius:14px;padding:10px 10px 10px 16px;font-size:14px;display:flex;gap:12px;align-items:center;
-  width:max-content;max-width:calc(100% - 32px);transition:opacity .25s, transform .25s}
-.toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
-.toast button{border:0;background:color-mix(in srgb, var(--bg) 18%, transparent);color:inherit;border-radius:9px;padding:7px 11px;font-weight:700}
-.toast button[hidden]{display:none}
 
 @media (prefers-reduced-motion: reduce){
   .float{animation:none}
@@ -673,14 +683,13 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
       <h1>Hagefugler</h1>
       <p id="sub">Kort 001 av 060</p>
     </div>
-    <button class="iconbtn qmark" id="openHelp" aria-label="Om kortene og tegnforklaring" title="Om kortene (?)">?</button>
-    <button class="iconbtn" id="openSearch" aria-label="Søk etter fugl" title="Søk (/)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>
-    </button>
     <button class="frobtn" id="openFro" aria-label="Solsikkefrø" title="Frøbutikken"><span id="froIkon"></span><b id="froTall">0</b></button>
     <button class="iconbtn ring" id="openStats" aria-label="Statistikk" title="Statistikk">
       <svg viewBox="0 0 34 34" aria-hidden="true"><circle class="trk" cx="17" cy="17" r="14"/><circle class="arc" id="ringArc" cx="17" cy="17" r="14" stroke-dasharray="0 88"/></svg>
       <b id="ringNum">0</b>
+    </button>
+    <button class="iconbtn" id="openMeny" aria-label="Meny" title="Meny" aria-haspopup="menu" aria-expanded="false" aria-controls="meny">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg>
     </button>
   </header>
 
@@ -716,6 +725,17 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 
 <div class="scrim" id="scrim"></div>
 
+<!-- the menu at the top right: search, about the cards, settings -->
+<div class="meny-bak" id="menyBak" hidden></div>
+<div class="meny" id="meny" role="menu" aria-label="Meny" hidden>
+  <button role="menuitem" id="openSearch"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg></span><span class="mt">Søk etter fugl</span><kbd aria-hidden="true">/</kbd></button>
+  <button role="menuitem" id="openHelp"><span class="mi q" aria-hidden="true">?</span><span class="mt">Om kortene</span><kbd aria-hidden="true">?</kbd></button>
+  <button role="menuitem" id="openSettings"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span><span class="mt">Innstillinger</span></button>
+</div>
+
+<!-- sunflower seeds flying from a card to the counter -->
+<div class="frolag" id="froLag" aria-hidden="true"></div>
+
 <section class="sheet search" id="searchSheet" role="dialog" aria-modal="true" aria-label="Søk">
   <div class="qrow">
     <div class="qbox">
@@ -736,10 +756,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <section class="sheet stats" id="statsSheet" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
   <div class="s-head">
     <h2 id="statsTitle">Min fugleliste</h2>
-    <span class="s-head-r"><button class="iconbtn sm" id="openSettings" aria-label="Innstillinger" title="Innstillinger" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-    </button>
-    <button class="textbtn" id="closeStats">Lukk</button></span>
+    <button class="textbtn" id="closeStats">Lukk</button>
   </div>
   <div id="statsBody"></div>
 </section>
@@ -852,7 +869,6 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <div class="bf-t2"><span class="bf-stempel">Bonuskort</span><span class="bf-art" id="bfArt"></span><span class="bf-info" id="bfInfo"></span><small>Trykk for å se kortet i kortstokken</small></div>
   </div>
 </div>
-<div class="toast" id="toast" role="status"><span id="toastMsg"></span><button id="toastBtn" hidden>Angre</button></div>
 
 <script type="application/json" id="kortdata">__CARDS_JSON__</script>
 <script>
@@ -975,11 +991,11 @@ function samling({ col, key, norm, toDoc, migrate, hva }) {
           } catch (e) {
             if (e && (e.code === 'invalid_argument' || e.code === 'not_granted' || e.code === 'revoked')) {
               this.readOnly = true; this.mode = 'lokal'; this.emit();
-              toast(`Denne visningen kan ikke lagre i den delte lista. ${hva} ligger bare på denne enheten.`);
+              si(`Denne visningen kan ikke lagre i den delte lista. ${hva} ligger bare på denne enheten.`);
               break;
             }
             if (tries++ < 1) { await new Promise(r => setTimeout(r, 900 + Math.random() * 900)); q.again = true; }
-            else { toast('Fikk ikke lagret akkurat nå. Endringen ligger på denne enheten.'); }
+            else { si('Fikk ikke lagret akkurat nå. Endringen ligger på denne enheten.'); }
           }
           if (!q.again) break;
         }
@@ -1036,7 +1052,7 @@ const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          
    While the app is being tested, old data is not kept. Change TESTMERKE to wipe everything stored on each
    device the next time the app opens (the shared database in Claude is emptied separately when publishing).
    Settings also has a button «Nullstill alt (test)». */
-const TESTMERKE = '2026-09-30-fro1';
+const TESTMERKE = '2026-09-30-meny';
 const DATANOKLER = ['hagefugler-oslo:sett:v1', 'hagefugler:tellinger:v1', 'hagefugler:bonusvist:v1', 'hagefugler:kjop:v1'];
 if (lsGet('hagefugler:testmerke') !== TESTMERKE) {
   DATANOKLER.forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
@@ -1116,10 +1132,11 @@ const PRIS = Object.fromEntries(BIRDS.filter(c => c.nr > FRO.apneFraStart).map(c
 const Kjop = Object.assign(samling({
   col: 'kjop', key: 'hagefugler:kjop:v1', hva: 'Kjøpet',
   norm: raw => Object.fromEntries(Object.keys(raw || {}).filter(k => PRIS[k] != null && raw[k] && Number.isFinite(+raw[k].pris) && ISO.test(raw[k].dato))
-    .map(k => [k, { pris: Math.floor(+raw[k].pris), dato: raw[k].dato, ts: +raw[k].ts || 0 }])),
-  toDoc: (id, v) => ({ pris: v.pris, dato: v.dato, ts: v.ts }),
+    .map(k => [k, { pris: Math.floor(+raw[k].pris), dato: raw[k].dato, ts: +raw[k].ts || 0, ...(raw[k].graaDag ? { graaDag: true } : {}) }])),
+  toDoc: (id, v) => ({ pris: v.pris, dato: v.dato, ts: v.ts, ...(v.graaDag ? { graaDag: true } : {}) }),
 }), {
-  kjop(k, pris) { this.data[k] = { pris, dato: todayISO(), ts: Date.now() }; this.saveLocal(); this.emit(); this.push(k); },
+  // graaDag: the bird was already registered on the day of purchase, while the card was grey
+  kjop(k, pris) { const d = todayISO(); this.data[k] = { pris, dato: d, ts: Date.now(), ...(Store.days(k).includes(d) ? { graaDag: true } : {}) }; this.saveLocal(); this.emit(); this.push(k); },
 });
 Kjop.loadLocal();
 const erLaast = c => PRIS[c.key] != null && !Kjop.data[c.key];
@@ -1135,12 +1152,12 @@ function froRegnskap() {
   CARDS.forEach(c => {
     if (c.bonus && !erApen(c)) return;                     // a hidden bonus card gives nothing until it is found
     const dager = Store.days(c.key); if (!dager.length) return;
-    const s = c.stjerner, kjopbar = PRIS[c.key] != null, kd = Kjop.data[c.key] ? Kjop.data[c.key].dato : null;
+    const s = c.stjerner, kjopbar = PRIS[c.key] != null, kv = Kjop.data[c.key], kd = kv ? kv.dato : null;
     const hendelser = dager.map(d => ['reg', d, FRO.registrering * s]);
     hendelser.push(['forste', dager[0], FRO.forsteGang * s]);
     grenser(c).forEach((g, k) => { if (dager.length >= g) hendelser.push(['niva', dager[g - 1], FRO.niva[k]]); });
     hendelser.forEach(([type, d, v]) => {
-      if (!kjopbar || (kd && d >= kd)) { r[type] += v; return; }   // open that day: full value
+      if (!kjopbar || (kd && (d > kd || (d === kd && !kv.graaDag)))) { r[type] += v; return; }   // open that day: full value
       const halv = Math.floor(v * FRO.laastAndel);                 // grey that day: half, held on the card
       if (kd) r.frigjort += halv; else { r.holdt += halv; r.holdtPer[c.key] = (r.holdtPer[c.key] || 0) + halv; }
     });
@@ -1695,7 +1712,7 @@ const vippValg = () => { const v = lsGet('hagefugler:vipp'); return v ? v === 'p
 async function slaPaVipp(fraBruker) {
   if (!Vipp.stottet) return false;
   if (Vipp.maaSporre) {
-    try { if (await DeviceOrientationEvent.requestPermission() !== 'granted') { if (fraBruker) toast('Appen fikk ikke lov til å bruke bevegelsessensoren. Glinset følger fingeren i stedet.'); return false; } }
+    try { if (await DeviceOrientationEvent.requestPermission() !== 'granted') { if (fraBruker) si('Appen fikk ikke lov til å bruke bevegelsessensoren. Glinset følger fingeren i stedet.'); return false; } }
     catch (e) { return false; }                          // not from a tap: wait for the next one
   }
   startVipp(); return true;
@@ -1720,7 +1737,7 @@ deckEl.addEventListener('click', e => {
 deckEl.addEventListener('change', e => {
   const inp = e.target.closest('input[type="date"]'); if (!inp || !inp.value || !ISO.test(inp.value)) return;
   const c = CARDS[+inp.closest('.card').dataset.i], d = inp.value;
-  if (d > todayISO()) { toast('Datoen kan ikke være fram i tid.'); paintCard(inp.closest('.card')); return; }
+  if (d > todayISO()) { si('Datoen kan ikke være fram i tid.'); paintCard(inp.closest('.card')); return; }
   if (inp.dataset.act === 'addday') { inp.value = ''; leggTilDag(c, d); }
   else flyttForsteDag(c, d);
 });
@@ -1729,7 +1746,7 @@ deckEl.addEventListener('change', e => {
    A second tap on the same day shows the list of days instead of removing anything. */
 function trykkSett(c) {
   const t = todayISO(), dager = Store.days(c.key);
-  if (dager.includes(t)) { visLogg(c); toast(`${c.navn} er allerede registrert i dag.`); return; }
+  if (dager.includes(t)) { visLogg(c); si(`${c.navn} er allerede registrert i dag.`); return; }
   if (erLaast(c)) { advarLaast(c, () => settIDag(c)); return; }
   settIDag(c);
 }
@@ -1738,12 +1755,15 @@ function settIDag(c) {
   if (!dager.length) { registrer(c, t); return; }
   if (dager.includes(t)) return;
   const for_ = opptjent(), f0 = froFor();
+  froFrys();
   Store.addDay(c.key, t);
   haptic(10);
-  toast(`${c.navn}: ${dager.length + 1}. observasjonsdag.${froTekst(f0)}${nyheter(for_)}${bonusHint()}`, 'Angre', () => Store.removeDay(c.key, t));
+  si(`${c.navn}: ${dager.length + 1}. observasjonsdag.${froTekst(f0)}${nyheter(for_)}${bonusHint()}`);
+  froEffekt(c, f0);
 }
 function registrer(c, d) {
   const for_ = opptjent(), f0 = froFor();
+  froFrys();
   Store.put(c.key, [d]);
   haptic(12);
   const n = seenCount();
@@ -1751,21 +1771,24 @@ function registrer(c, d) {
     : n === NB ? `Alle ${NB} fuglene er sett. Hele kortstokken er komplett!`
     : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i norske hager. ${n} av ${NB} sett.`
     : `${c.navn} er sett for første gang. ${n} av ${NB} arter.`;
-  toast(msg + froTekst(f0) + nyheter(for_) + bonusHint(), 'Angre', () => Store.put(c.key, []));
+  si(msg + froTekst(f0) + nyheter(for_) + bonusHint());
+  froEffekt(c, f0);
 }
 function leggTilDag(c, d, sjekket) {
   const gml = Store.days(c.key);
-  if (gml.includes(d)) { toast(`${fmtHand(d)} er allerede registrert for ${c.navn}.`); return; }
+  if (gml.includes(d)) { si(`${fmtHand(d)} er allerede registrert for ${c.navn}.`); return; }
   if (erLaast(c) && !sjekket) { advarLaast(c, () => leggTilDag(c, d, true)); return; }
   if (!gml.length) { registrer(c, d); return; }
   const for_ = opptjent(), f0 = froFor();
+  froFrys();
   Store.addDay(c.key, d);
-  toast(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${froTekst(f0)}${nyheter(for_)}${bonusHint()}`, 'Angre', () => Store.put(c.key, gml));
+  si(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${froTekst(f0)}${nyheter(for_)}${bonusHint()}`);
+  froEffekt(c, f0);
 }
 function slettDag(c, d) {
   const gml = Store.days(c.key);
   Store.removeDay(c.key, d);
-  toast(gml.length === 1 ? `${c.navn} er ikke lenger merket som sett.` : `Slettet ${fmtHand(d)} for ${c.navn}.`, 'Angre', () => Store.put(c.key, gml));
+  si(gml.length === 1 ? `${c.navn} er ikke lenger merket som sett.` : `Slettet ${fmtHand(d)} for ${c.navn}.`);
 }
 /* the date line on the front is the first day: changing it moves that day */
 function flyttForsteDag(c, d) {
@@ -1773,7 +1796,7 @@ function flyttForsteDag(c, d) {
   if (!gml.length) { registrer(c, d); return; }
   if (gml[0] === d) return;
   Store.put(c.key, [...gml.slice(1), d]);
-  toast(`Første gang flyttet fra ${fmtHand(gml[0])} til ${fmtHand(d)}.`, 'Angre', () => Store.put(c.key, gml));
+  si(`Første gang flyttet fra ${fmtHand(gml[0])} til ${fmtHand(d)}.`);
 }
 function visLogg(c) {
   const i = BY_KEY[c.key];
@@ -1859,8 +1882,41 @@ function closeSheets(silent) {
   openSheet.classList.remove('on'); scrim.classList.remove('on', 'dark'); app.inert = false;
   openSheet = null;
   if (!silent && lastFocus && lastFocus.focus) lastFocus.focus();
+  froVentKjor(380);
 }
 scrim.addEventListener('click', () => closeSheets());
+
+/* ---- the menu at the top right: search, about the cards, settings ---- */
+const menyEl = $('#meny'), menyBak = $('#menyBak'), menyBtn = $('#openMeny');
+const menyApen = () => !menyEl.hidden;
+const menyValg = () => [...menyEl.querySelectorAll('[role="menuitem"]')].filter(b => !b.hidden);
+function apneMeny() {
+  const r = menyBtn.getBoundingClientRect();
+  menyEl.style.top = `${Math.round(r.bottom + 8)}px`;
+  menyEl.style.right = `${Math.max(8, Math.round(document.documentElement.clientWidth - r.right))}px`;
+  menyBak.hidden = menyEl.hidden = false; void menyEl.offsetWidth; menyEl.classList.add('on');
+  menyBtn.setAttribute('aria-expanded', 'true');
+  setTimeout(() => { const b = menyValg()[0]; b && b.focus(); }, 30);
+}
+function lukkMeny(fokus) {
+  if (!menyApen()) return;
+  menyEl.classList.remove('on'); menyBak.hidden = menyEl.hidden = true;
+  menyBtn.setAttribute('aria-expanded', 'false');
+  if (fokus) menyBtn.focus();
+}
+menyBtn.addEventListener('click', () => (menyApen() ? lukkMeny(true) : apneMeny()));
+menyBak.addEventListener('click', () => lukkMeny());
+// a choice closes the menu first; the sheet it opens then gives focus back to the menu button
+menyEl.addEventListener('click', e => { if (e.target.closest('[role="menuitem"]')) lukkMeny(true); }, true);
+menyEl.addEventListener('keydown', e => {
+  const v = menyValg(), i = v.indexOf(document.activeElement);
+  if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); lukkMeny(true); }
+  else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); e.stopPropagation(); v[(i + (e.key === 'ArrowDown' ? 1 : -1) + v.length) % v.length].focus(); }
+  else if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); e.stopPropagation(); v[e.key === 'Home' ? 0 : v.length - 1].focus(); }
+  else if (e.key === 'Tab') lukkMeny();
+  else e.stopPropagation();                                 // Enter and Space press the item; no deck shortcuts meanwhile
+});
+addEventListener('resize', () => lukkMeny());
 
 /* ---- search ---- */
 const qEl = $('#q'), resEl = $('#results');
@@ -1965,7 +2021,6 @@ helpSheet.addEventListener('click', e => { if (!e.target.closest('.help-card, .h
 
 /* ---- innstillinger ---- */
 const setSheet = $('#settingsSheet');
-$('#openSettings').hidden = !HAR_FOTO && !Vipp.stottet;
 $('#bildeSek').hidden = !HAR_FOTO;
 $('#vippSek').hidden = !Vipp.stottet;
 // only the bonus cards already found are mentioned
@@ -1979,7 +2034,7 @@ function paintSettings() {
 }
 $('#vippBtn').addEventListener('click', async () => {
   if (Vipp.aktiv) { stoppVipp(); lsSet('hagefugler:vipp', 'av'); }
-  else if (await slaPaVipp(true)) { lsSet('hagefugler:vipp', 'på'); toast('Vipp telefonen for å se glinset på glinskortene.'); }
+  else if (await slaPaVipp(true)) { lsSet('hagefugler:vipp', 'på'); si('Vipp telefonen for å se glinset på glinskortene.'); }
   paintSettings();
 });
 function openSettings() { paintSettings(); showSheet(setSheet); setTimeout(() => (HAR_FOTO ? setSheet.querySelector('[data-bilder][aria-checked="true"]') : $('#vippBtn')).focus(), 60); }
@@ -1989,7 +2044,7 @@ function settBilder(v) {
   settSprites();
   pool.forEach(el => { const c = CARDS[+el.dataset.i], img = el.querySelector('.front img'); img.src = bildeAv(c); img.alt = altTekst(c); paintCard(el); });
   renderHelp(); paintSettings(); setTimeout(warm, 300);
-  toast(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
+  si(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
 }
 $('#openSettings').addEventListener('click', openSettings);
 $('#closeSettings').addEventListener('click', () => closeSheets());
@@ -2124,6 +2179,7 @@ function renderStats() {
         <label for="restoreTxt" style="font-size:13px;color:var(--muted)">Lim inn en sikkerhetskopi. Avkrysningene i den legges til de du har.</label>
         <textarea id="restoreTxt" spellcheck="false"></textarea>
         <div><button class="btn pri" id="doRestore">Legg til avkrysningene</button></div>
+        <p class="cap" id="restoreMld" role="status"></p>
       </div>
     </div>`;
 
@@ -2141,8 +2197,8 @@ sb.addEventListener('click', async e => {
   if (e.target.id === 'goTell') { closeSheets(); return; }
   if (e.target.id === 'copyBackup') {
     const txt = JSON.stringify({ kortstokk: 'hagefugler', versjon: 5, sett: Store.data, tellinger: Tell.data, kjop: Kjop.data });
-    try { await navigator.clipboard.writeText(txt); toast('Sikkerhetskopien er kopiert. Lim den inn i et notat eller en e-post til deg selv.'); }
-    catch (err) { $('#restoreBox').hidden = false; const t = $('#restoreTxt'); t.value = txt; t.select(); toast('Kopier teksten i feltet manuelt.'); }
+    try { await navigator.clipboard.writeText(txt); kvittering(e.target, 'Kopiert!'); si('Sikkerhetskopien er kopiert.'); }
+    catch (err) { $('#restoreBox').hidden = false; const t = $('#restoreTxt'); t.value = txt; t.select(); si('Kopier teksten i feltet manuelt.'); }
   }
   if (e.target.id === 'showRestore') { $('#restoreBox').hidden = false; $('#restoreTxt').value = ''; $('#restoreTxt').focus(); }
   if (e.target.id === 'doRestore') {
@@ -2175,8 +2231,9 @@ sb.addEventListener('click', async e => {
       if (dager) deler.push(flertall(dager, 'dag', 'dager') + (arter ? ` (${flertall(arter, 'ny art', 'nye arter')})` : ''));
       if (telt) deler.push(flertall(telt, 'telling', 'tellinger'));
       if (kjopt) deler.push(flertall(kjopt, 'kjøpt kort', 'kjøpte kort'));
-      toast(deler.length ? `La til ${deler.join(' og ')}.` : 'Ingen nye dager eller tellinger i sikkerhetskopien.');
-    } catch (err) { toast('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
+      const mld = deler.length ? `La til ${deler.join(' og ')}.` : 'Ingen nye dager eller tellinger i sikkerhetskopien.';
+      restoreMld(mld); si(mld);
+    } catch (err) { restoreMld('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
   }
 });
 
@@ -2214,7 +2271,7 @@ function tikk() {
   const ms = Date.now() - a.start, time = ms >= 3600000;
   $('#tTid').textContent = tidTekst(ms);
   tellebar.classList.toggle('time', time);
-  if (time && !timeVarslet) { timeVarslet = true; if (ms < 3600000 + 5000) toast('Én time er gått. Du kan avslutte når du vil.'); }
+  if (time && !timeVarslet) { timeVarslet = true; if (ms < 3600000 + 5000) si('Én time er gått. Du kan avslutte når du vil.'); }
 }
 /* the counter under the deck belongs to the card on top */
 function paintTeller() {
@@ -2247,7 +2304,7 @@ $('#tStart').addEventListener('click', () => {
   timeVarslet = false;
   Tell.start(omrade);
   closeSheets(true);
-  toast('Tellingen er i gang. Bla til arten og trykk +, eller åpne telleliste.');
+  si('Tellingen er i gang. Bla til arten og trykk +, eller åpne telleliste.');
 });
 
 /* the list: every species with its own counter, the commonest garden birds first, ekorn on top */
@@ -2334,28 +2391,26 @@ function avsluttTelling() {
   const for_ = opptjent(), f0 = froFor();
   const id = Tell.avslutt(); if (!id) return;
   const v = Tell.data[id], dag = isoAv(v.start);
+  froFrys();
   const nye = Store.addDayMany(Object.keys(v.arter).filter(k => BY_KEY[k] != null), dag);
   renderSum();
-  toast(`Tellingen er lagret.${nye.length ? ` ${flertall(nye.length, 'art', 'arter')} fikk en observasjonsdag.` : ''}${froTekst(f0)}${nyheter(for_)}`, 'Angre', () => {
-    if (!Tell.data[id]) return;
-    Tell.data[id].slutt = 0; Tell.lagre(id);
-    nye.forEach(k => Store.removeDay(k, dag));
-    if (openSheet === sumSheet) closeSheets();
-  });
+  si(`Tellingen er lagret.${nye.length ? ` ${flertall(nye.length, 'art', 'arter')} fikk en observasjonsdag.` : ''}${froTekst(f0)}${nyheter(for_)}`);
+  froEffekt(null, f0);
 }
 sumSheet.addEventListener('click', async e => {
   const id = e.target.id, v = Tell.data[sumId];
   if (id === 'closeSum' || id === 'sumFortsett') closeSheets();
   else if (id === 'sumAvslutt') avsluttTelling();
-  else if (id === 'sumAvbryt' || id === 'sumSlett') {
-    const tid = sumId, gml = Tell.slett(tid);
-    closeSheets(true);
-    toast(id === 'sumAvbryt' ? 'Tellingen er avbrutt.' : 'Tellingen er slettet.', 'Angre', () => Tell.gjenopprett(tid, gml));
+  else if (id === 'sumAvbryt') { Tell.slett(sumId); closeSheets(true); si('Tellingen er avbrutt.'); }
+  else if (id === 'sumSlett') {
+    const tid = sumId;
+    sporsmal({ tittel: 'Slette tellingen?', tekst: 'Tellingen forsvinner fra lista. Observasjonsdagene den ga, blir liggende.',
+      knapper: [{ tekst: 'Slett tellingen', pri: true, fn: () => { Tell.slett(tid); closeSheets(true); si('Tellingen er slettet.'); } }, { tekst: 'Avbryt' }] });
   }
   else if (id === 'sumKopier' && v) {
     const txt = somTekst(v);
-    if (await kopierTekst(txt)) toast('Tellingen er kopiert. Lim den inn i et notat, eller ha den oppe når du fyller ut skjemaet.');
-    else { $('#sumTekstBoks').hidden = false; const t = $('#sumTekst'); t.value = txt; t.style.minHeight = '220px'; t.focus(); t.select(); toast('Kopier teksten i feltet manuelt.'); }
+    if (await kopierTekst(txt)) { kvittering(e.target, 'Kopiert!'); si('Tellingen er kopiert.'); }
+    else { $('#sumTekstBoks').hidden = false; const t = $('#sumTekst'); t.value = txt; t.style.minHeight = '220px'; t.focus(); t.select(); si('Kopier teksten i feltet manuelt.'); }
   }
   else if (id === 'sumDel' && v) { try { await navigator.share({ title: 'Hagefugltelling', text: somTekst(v) }); } catch (err) {} }
 });
@@ -2379,6 +2434,8 @@ function vis(el) { el.hidden = false; el.classList.remove('on', 'snudd'); void e
 function nesteFest() {
   festPlanlagt = false;
   if (festAapen) return;
+  const vent = froFlyTil - Date.now();
+  if (vent > 0 && festKo.length) { festPlanlagt = true; setTimeout(nesteFest, vent + 120); return; }
   const f = festKo.shift(); if (!f) return;
   festAapen = true; festFokus = document.activeElement; aktivFest = f;
   if (f.type === 'bonus') visBonus(f); else if (f.type === 'laas') visLaas(f); else visNiva(f);
@@ -2429,7 +2486,9 @@ function lukkFest() {
       jump(BY_KEY[f.c.key]);
       setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
     }
+    if (f && f.type === 'laas' && f.frigjort) froVent.push({ c: f.c, belop: f.frigjort, mot: 'fro' });   // the held seeds come home
     if (festKo.length) nesteFest(); else if (festFokus && festFokus.focus && !openSheet) festFokus.focus();
+    froVentKjor(560);
   }, 350);
 }
 [festEl, bfEl, lfEl].forEach(el => {
@@ -2478,6 +2537,7 @@ function lukkDlg(fn) {
   app.inert = dlgInert[0]; if (openSheet) openSheet.inert = !!dlgInert[1];
   setTimeout(() => { dlgEl.hidden = true; }, 200);
   if (fn) fn(); else if (dlgFor && dlgFor.focus) dlgFor.focus();
+  froVentKjor(220);
 }
 dlgEl.addEventListener('click', e => {
   const b = e.target.closest('[data-k]');
@@ -2516,9 +2576,12 @@ function kjopKort(c, etter) {
   froNullstill();
   const r = froRegnskap(), p = PRIS[c.key];
   if (!erLaast(c)) { etter && etter(); return; }
-  if (r.saldo < p) { toast(`Du mangler ${fmtFro(p - Math.max(0, r.saldo))} frø.`); return; }
+  if (r.saldo < p) { si(`Du mangler ${fmtFro(p - Math.max(0, r.saldo))} frø.`); return; }
   const h = r.holdtPer[c.key] || 0;
+  froFrys();
+  froTell(Math.min(froVist == null ? r.saldo : froVist, r.saldo) - p);
   Kjop.kjop(c.key, p);
+  if (!h) froSlipp();
   haptic([15, 50, 15]);
   festKo.push({ type: 'laas', c, pris: p, frigjort: h }); planleggFest();
   if (etter) etter();
@@ -2545,16 +2608,94 @@ function bonusHint() { const nb = nesteBonus(); return nb && nb.mangler > 0 && n
 const butikkSheet = $('#butikkSheet'), butikkListe = $('#butikkListe');
 $('#froIkon').outerHTML = FROIKON;
 let froVist = null, froAnim = 0;
-function paintFro() {
-  const r = froRegnskap(), mal = r.saldo, el = $('#froTall');
-  $('#openFro').setAttribute('aria-label', `Solsikkefrø: ${fmtFro(mal)}. Åpne Frøbutikken`);
-  if (froVist == null || mal <= froVist || matchMedia('(prefers-reduced-motion: reduce)').matches) { cancelAnimationFrame(froAnim); froVist = mal; el.textContent = fmtFro(mal); return; }
-  // counts up to the new balance
-  const fra = froVist, t0 = performance.now(), btn = $('#openFro');
+/* the number counts up to a new value */
+function froTell(mal, ms = 700) {
+  const el = $('#froTall'), fra = froVist == null ? mal : froVist;
   froVist = mal; cancelAnimationFrame(froAnim);
-  btn.classList.remove('pluss'); void btn.offsetWidth; btn.classList.add('pluss');
-  const steg = t => { const k = Math.min(1, (t - t0) / 700); el.textContent = fmtFro(fra + (mal - fra) * (1 - Math.pow(1 - k, 3))); if (k < 1) froAnim = requestAnimationFrame(steg); };
+  if (mal <= fra || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = fmtFro(mal); return; }
+  const t0 = performance.now();
+  const steg = t => { const k = Math.min(1, (t - t0) / ms); el.textContent = fmtFro(Math.round(fra + (mal - fra) * (1 - Math.pow(1 - k, 3)))); if (k < 1) froAnim = requestAnimationFrame(steg); };
   froAnim = requestAnimationFrame(steg);
+}
+function paintFro() {
+  const r = froRegnskap(), mal = r.saldo;
+  $('#openFro').setAttribute('aria-label', `Solsikkefrø: ${fmtFro(mal)}. Åpne Frøbutikken`);
+  if (froHold > 0 || mal === froVist) return;              // seeds on their way: the counter waits for them
+  if (froVist != null && mal > froVist) { const b = $('#openFro'); b.classList.remove('pluss'); void b.offsetWidth; b.classList.add('pluss'); }
+  froTell(mal);
+}
+
+/* ---- seeds fly from the card to the counter ----
+   While seeds are on their way the counter is held; each flight lets go of it when the last seed lands. */
+let froHold = 0, froFlyTil = 0;
+const froVent = [], froAktive = new Set();
+const froFrys = () => { froHold++; };
+function froSlipp() { froHold = Math.max(0, froHold - 1); if (!froHold) paintFro(); }
+const midt = el => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width }; };
+/* where the seeds start: the SETT box on the card on top, or the card itself */
+function froKilde(c) {
+  const el = pool.get(cur);
+  if (el) {
+    const hit = !el.classList.contains('flipped') && c && +el.dataset.i === BY_KEY[c.key] && el.querySelector('.sett-hit');
+    const p = midt(hit || el);
+    if (p.w) return p;
+  }
+  return midt($('#stage'));
+}
+/* after a registration: the seeds it gave fly to the counter, and seeds held on a grey card fly to the card */
+function froEffekt(c, f0) {
+  froNullstill();
+  const na = froRegnskap(), dt = na.tjent - f0.tjent, dh = na.holdt - f0.holdt;
+  if (dh > 0 && c) froVent.push({ c, belop: dh, mot: 'kort' });
+  if (dt > 0) froVent.push({ c, belop: dt, mot: 'fro' }); else froSlipp();
+  froVentKjor(60);
+}
+/* flights wait while a sheet, a question or a celebration covers the screen */
+function froVentKjor(forsink = 0) {
+  if (!froVent.length) return;
+  setTimeout(() => {
+    if (!froVent.length || openSheet || dlgApen || festAapen) return;
+    const rolig = matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden;
+    froVent.splice(0).forEach(v => {
+      const fra = v.fra ? v.fra() : froKilde(v.c);
+      if (v.mot === 'kort') {
+        const kel = pool.get(BY_KEY[v.c.key]), mal = kel && kel.querySelector('.ls-venter:not([hidden])');
+        if (!rolig && mal) froFly(fra, mal, v.belop, null);
+      } else if (rolig) froSlipp();
+      else froFly(fra, $('#openFro'), v.belop, froSlipp);
+    });
+  }, forsink);
+}
+function froFly(fra, tilEl, belop, ferdig) {
+  const lag = $('#froLag'), til = midt(tilEl), n = Math.max(4, Math.min(14, Math.round(Math.log10(Math.max(belop, 1)) * 3)));
+  const tilFro = tilEl.id === 'openFro';
+  let landet = 0;
+  const siste = 720 + (n - 1) * 55 + 120;
+  froFlyTil = Math.max(froFlyTil, Date.now() + siste + 60);
+  for (let k = 0; k < n; k++) {
+    const s = document.createElement('i');
+    s.className = 'flyfro'; s.innerHTML = FROIKON; lag.appendChild(s);
+    const x0 = fra.x + (Math.random() - .5) * 44, y0 = fra.y + (Math.random() - .5) * 26;
+    const dx = til.x - x0, dy = til.y - y0, len = Math.hypot(dx, dy) || 1;
+    const bue = (70 + Math.random() * 90) * (Math.random() < .5 ? -1 : 1);   // a curve to one side
+    const cx = x0 + dx / 2 - dy / len * bue, cy = y0 + dy / 2 + dx / len * bue - 40;
+    const rot = Math.random() * 540 - 270, varighet = 620 + Math.random() * 200;
+    const frames = [];
+    for (let q = 0; q <= 12; q++) {
+      const t = q / 12, u = 1 - t;
+      const x = u * u * x0 + 2 * u * t * cx + t * t * til.x, y = u * u * y0 + 2 * u * t * cy + t * t * til.y;
+      const sk = t < .15 ? .35 + t / .15 * .75 : 1.1 - (t - .15) * .55;
+      frames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(rot * t).toFixed(0)}deg) scale(${sk.toFixed(2)})`, opacity: t > .94 ? 0 : 1, offset: t });
+    }
+    const a = s.animate(frames, { duration: varighet, delay: k * 55, easing: 'cubic-bezier(.45,.05,.6,1)', fill: 'both' });
+    froAktive.add(a);
+    a.onfinish = () => {
+      froAktive.delete(a); s.remove(); landet++;
+      tilEl.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.13)' }, { transform: 'scale(1)' }], { duration: 200, easing: 'ease-out' });
+      if (landet === 1 && tilFro) { haptic(8); froTell((froVist || 0) + belop, Math.max(350, siste - varighet)); }
+      if (landet === n) { if (tilFro) haptic(12); if (ferdig) ferdig(); }
+    };
+  }
 }
 function openButikk() { renderButikk(); showSheet(butikkSheet); butikkSheet.scrollTop = 0; setTimeout(() => $('#closeButikk').focus(), 60); }
 function renderButikk() {
@@ -2582,21 +2723,21 @@ $('#nullstillAlt').addEventListener('click', () => sporsmal({
   tekst: 'Alle observasjoner, tellinger, frø, kjøp og bonuskort slettes, også i den delte lista. Det kan ikke angres.',
   knapper: [{ tekst: 'Nullstill alt', pri: true, fn: () => {
     [Store, Tell, Vist, Kjop].forEach(x => x.replaceAll({}));
-    froVist = null; closeSheets(true); jump(DECK[0], 'instant');
-    toast('Alt er nullstilt.');
+    froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
+    froVent.length = 0; froHold = 0; froFlyTil = 0; froVist = null; paintFro(); closeSheets(true); jump(DECK[0], 'instant');
+    si('Alt er nullstilt.');
   } }, { tekst: 'Avbryt' }],
 }));
 
-/* ---- toast ---- */
-let toastT = 0;
-function toast(msg, action, fn) {
-  const t = $('#toast'), b = $('#toastBtn');
-  $('#toastMsg').textContent = msg;
-  b.hidden = !action; b.textContent = action || '';
-  b.onclick = () => { t.classList.remove('on'); fn && fn(); };
-  t.classList.add('on');
-  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), (action ? 6000 : 3800) + (msg.length > 70 ? 2500 : 0));
+/* a button says «Kopiert!» for a moment instead of a message bubble */
+function kvittering(knapp, tekst) {
+  if (!knapp || knapp.dataset.tekst) return;
+  knapp.dataset.tekst = knapp.textContent; knapp.textContent = tekst;
+  setTimeout(() => { knapp.textContent = knapp.dataset.tekst; delete knapp.dataset.tekst; }, 1600);
 }
+function restoreMld(t) { const m = $('#restoreMld'); if (m) m.textContent = t; }
+/* no message bubbles on screen: what happened is read out to screen readers only */
+function si(msg) { const l = $('#live'); l.textContent = ''; setTimeout(() => { l.textContent = msg; }, 30); }
 
 /* ---- react to data ---- */
 Store.on(() => {
