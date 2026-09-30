@@ -24,7 +24,8 @@ hagefugler/
     ├── cards/                Kortbildene 001–100 med KI-illustrasjoner, bonuskortene b01–b05, forklaringskortene 000a og 000b,
     │                         bildekrediteringen for bonuskortene (b00) og bakside.webp
     ├── cards-foto/           Kortene som har fotografi fra Artsdatabanken, og kortet Bildekreditering (000c)
-    └── sprites/              Små miniatyrer til søk og samlingen (cards/photos og cards-foto/photos-foto)
+    ├── cards-tegneserie/     Kortene som har tegneseriefugl (001–050)
+    └── sprites/              Små miniatyrer til søk og samlingen (cards/photos, cards-foto/photos-foto og cards-tegneserie/photos-tegneserie)
 ```
 
 ## Prøve lokalt
@@ -55,13 +56,15 @@ npx cap add ios && npx cap add android
 npx cap open ios        # eller: npx cap open android
 ```
 
-## Fotografier eller KI-illustrasjoner
+## KI-illustrasjoner, fotografier eller tegneseriefugler
 
-Fuglekort- lager to sett kort til appen: KI-illustrasjonene (`kort/`) og fotografiene fra mappen
-`bilder_artsdatabanken` (`kort_foto/`, med fotokreditering). Importen kopierer bare kortene som faktisk har
-fotografi til `docs/cards-foto/`; de andre er like KI-kortene og gjenbrukes. I `data/cards.json` har disse kortene
-`bildeFoto`, `fotograf` og `lisens`, og `hjelpFoto` er forklaringskortene med Bildekreditering. Begge settene
-lagres på telefonen, så man kan bytte også uten nett. Finnes ikke fotosettet, skjules bildevalget i Innstillinger.
+Fuglekort- lager tre sett kort til appen: KI-illustrasjonene (`kort/`), fotografiene fra mappen
+`bilder_artsdatabanken` (`kort_foto/`, med fotokreditering) og tegneseriefuglene (`kort_tegneserie/`).
+
+- **Fotografier:** Importen kopierer bare kortene som faktisk har fotografi til `docs/cards-foto/`; de andre er like KI-kortene og gjenbrukes. I `data/cards.json` har disse kortene `bildeFoto`, `fotograf` og `lisens`, og `hjelpFoto` er forklaringskortene med Bildekreditering.
+- **Tegneseriefugler:** 50 fuglekort (001–050) har tegneseriebilde. Importen kopierer `tegneserie.kortbilde` til `docs/cards-tegneserie/NNN.webp` (mappen tømmes først), og kortene får `bildeTegneserie` i `cards.json`; `data.tegneserie` er `true` når settet finnes. Miniatyrene `sprites/cards-tegneserie.webp` og `sprites/photos-tegneserie.webp` er KI-miniatyrene med tegneseriekortene byttet inn (`tegneserie.bilde` til søket). Kort uten tegneseriebilde og alle bonuskortene viser KI-kortet. Forklaringskortene er de samme som i KI-valget, uten Bildekreditering, og det står ingen fotograf på kortene.
+- Valget lagres i `hagefugler:bilder` (`ki`, `foto` eller `tegneserie`). En lagret verdi som ikke finnes i dataene, blir `ki`.
+- Alle settene lagres på telefonen (service workeren), så man kan bytte også uten nett. Bildevalget i Innstillinger vises når minst ett av foto- og tegneseriesettet finnes, og hvert valg skjules hvis settet mangler.
 
 ## Hagefugltelling
 
@@ -144,7 +147,7 @@ Vil du ha synkronisering i den frittstående appen, bytter du ut `connectRemote(
 2. Her: `python3 importer_fuglekort.py sti/til/app`
 3. Commit og push. GitHub Pages oppdaterer appen, og telefonene henter de nye kortene selv.
 
-Skriptet kopierer kortene, de to forklaringskortene, baksiden og fotosettet (se under), finner SETT-ruta og datolinja, lager `data/cards.json`, miniatyrene og app-ikonene, og kjører `build.py`. Avkrysningene lagres på artens latinske navn (f.eks. `parus-major`), ikke på kortnummeret, så de følger fuglen når kortene får ny rekkefølge. Avkrysninger fra før dette (lagret på kortnummer) flyttes over automatisk ved hjelp av `data/tidligere_nummer.json`.
+Skriptet kopierer kortene, de to forklaringskortene, baksiden, fotosettet og tegneseriesettet (se over), finner SETT-ruta og datolinja, lager `data/cards.json`, miniatyrene og app-ikonene, og kjører `build.py`. Avkrysningene lagres på artens latinske navn (f.eks. `parus-major`), ikke på kortnummeret, så de følger fuglen når kortene får ny rekkefølge. Avkrysninger fra før dette (lagret på kortnummer) flyttes over automatisk ved hjelp av `data/tidligere_nummer.json`.
 
 Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort. Appen regner ut antall rader selv.
 
@@ -156,5 +159,5 @@ Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort
 - **Trykk på SETT** når du ser fuglen. Første gang kommer haken og datoen på kortet. En senere dag legger et nytt trykk til en ny observasjonsdag, og tallet ved SETT (f.eks. «× 7») viser hvor mange dager du har sett den. Et nytt trykk samme dag viser lista over dagene. Det er ingen meldinger nederst på skjermen og ingen angreknapp; en registrering fjernes ved å slette dagen på baksiden. Det som skjer, leses opp for skjermlesere.
 - **Baksiden** av et kort du har sett, viser alle dagene. Der kan du slette en dag (×) eller legge til en dag du glemte. Datoen på forsiden er første gang; endrer du den, flyttes den dagen.
 - **Menyen** (☰ øverst til høyre) samler **Søk etter fugl**, **Om kortene** (forklaringskortene: Om kortene og Tegnforklaring) og **Innstillinger**. Øverst ellers: frøtallet (åpner Frøbutikken) og ringen (statistikken).
-- **Innstillinger**: Under «Bilder på kortene» velger du **KI-illustrasjoner** (standard, som på de trykte kortene) eller **Fotografier** fra Artsdatabanken og Artsobservasjoner. Arter uten fotografi viser illustrasjonen, og i fotovalget kommer kortet Bildekreditering med under **Om kortene**. Valget huskes på enheten og påvirker ikke avkrysningene.
+- **Innstillinger**: Under «Bilder på kortene» velger du **KI-illustrasjoner** (standard, som på de trykte kortene), **Fotografier** fra Artsdatabanken og Artsobservasjoner eller **Tegneseriefugler** (fuglene tegnet i tegneseriestil, for 50 av 100 fugler). Kort uten bilde i valgt sett viser illustrasjonen, og i fotovalget kommer kortet Bildekreditering med under **Om kortene**. Piltastene går gjennom alle valgene. Valget huskes på enheten og påvirker ikke avkrysningene.
 - Tastatur: ← → blar, mellomrom snur kortet, S registrerer i dag, / åpner søk, ? viser forklaringskortene, Esc stopper blaing og lukker paneler.

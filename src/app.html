@@ -796,6 +796,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <div class="valg" role="radiogroup" aria-labelledby="bildevalgTitle">
       <button role="radio" data-bilder="ki" aria-checked="true"><span class="rd"></span><b>KI-illustrasjoner</b><small>Tegnede fuglebilder laget til kortstokken. Samme bilder som på de trykte kortene.</small></button>
       <button role="radio" data-bilder="foto" aria-checked="false"><span class="rd"></span><b>Fotografier</b><small id="fotoAntall"></small></button>
+      <button role="radio" data-bilder="tegneserie" aria-checked="false"><span class="rd"></span><b>Tegneseriefugler</b><small id="tegneserieAntall"></small></button>
     </div>
     <p class="valg-merk">Valget gjelder bare på denne enheten. Avkrysningene dine påvirkes ikke.</p>
   </div>
@@ -923,13 +924,18 @@ const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
 const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const fmtHand = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}.${m}.${y}`; };
 const fmtLong = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-').map(Number); return `${d}. ${MND[m-1]}. ${y}`; };
-/* Bildesett: KI-illustrasjoner (standard) eller fotografier fra Artsdatabanken der de finnes */
+/* Bildesett: KI-illustrasjoner (standard), fotografier fra Artsdatabanken eller tegneseriefugler, der de finnes.
+   Et kort uten bilde i det valgte settet (og bonuskortene i tegneserievalget) viser KI-kortet. */
 const HAR_FOTO = Array.isArray(DATA.hjelpFoto) && CARDS.some(c => c.bildeFoto);
-let bildevalg = HAR_FOTO && lsGet('hagefugler:bilder') === 'foto' ? 'foto' : 'ki';
+const HAR_TEGNESERIE = !!DATA.tegneserie && CARDS.some(c => c.bildeTegneserie);
+const BILDESETT = { ki: true, foto: HAR_FOTO, tegneserie: HAR_TEGNESERIE };
+const finnesSett = v => BILDESETT[v] === true;            // a stored value the data does not have falls back to 'ki'
+let bildevalg = finnesSett(lsGet('hagefugler:bilder')) ? lsGet('hagefugler:bilder') : 'ki';
 const foto = () => bildevalg === 'foto';
-const bildeAv = c => (foto() && c.bildeFoto) || c.bilde;
+const tegneserie = () => bildevalg === 'tegneserie';
+const bildeAv = c => (tegneserie() && c.bildeTegneserie) || (foto() && c.bildeFoto) || c.bilde;
 function settSprites() {
-  const f = foto() ? '-foto' : '';
+  const f = foto() ? '-foto' : tegneserie() ? '-tegneserie' : '';
   document.documentElement.style.setProperty('--photos', `url("sprites/photos${f}.webp")`);
   document.documentElement.style.setProperty('--cardsprite', `url("sprites/cards${f}.webp")`);
 }
@@ -2050,14 +2056,17 @@ helpSheet.addEventListener('click', e => { if (!e.target.closest('.help-card, .h
 
 /* ---- innstillinger ---- */
 const setSheet = $('#settingsSheet');
-$('#bildeSek').hidden = !HAR_FOTO;
+$('#bildeSek').hidden = !HAR_FOTO && !HAR_TEGNESERIE;
+setSheet.querySelectorAll('[data-bilder]').forEach(b => { b.hidden = !finnesSett(b.dataset.bilder); });
 $('#vippSek').hidden = !Vipp.stottet;
 // only the bonus cards already found are mentioned
 const fotoTekst = () => `Fotografier fra Artsdatabanken og Artsobservasjoner for ${BIRDS.filter(c => c.bildeFoto).length} av ${NB} fugler`
-  + '. De andre viser illustrasjonen. Fotografene står på kortene Bildekreditering under ?.'
+  + '. De andre viser illustrasjonen. Fotografene står på kortene Bildekreditering under Om kortene i menyen.'
   + (BONUS.some(c => erApen(c) && c.bildeFoto) ? ' Bonuskortene du har funnet, har også fotografi.' : '');
+const tegneserieTekst = () => `Fuglene tegnet i tegneseriestil, for ${BIRDS.filter(c => c.bildeTegneserie).length} av ${NB} fugler. De andre viser illustrasjonen.`;
 function paintSettings() {
   $('#fotoAntall').textContent = fotoTekst();
+  $('#tegneserieAntall').textContent = tegneserieTekst();
   setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg));
   $('#vippBtn').setAttribute('aria-checked', Vipp.aktiv ? 'true' : 'false');
 }
@@ -2066,21 +2075,26 @@ $('#vippBtn').addEventListener('click', async () => {
   else if (await slaPaVipp(true)) { lsSet('hagefugler:vipp', 'på'); si('Vipp telefonen for å se glinset på glinskortene.'); }
   paintSettings();
 });
-function openSettings() { paintSettings(); showSheet(setSheet); setTimeout(() => (HAR_FOTO ? setSheet.querySelector('[data-bilder][aria-checked="true"]') : $('#vippBtn')).focus(), 60); }
+function openSettings() { paintSettings(); showSheet(setSheet); setTimeout(() => (HAR_FOTO || HAR_TEGNESERIE ? setSheet.querySelector('[data-bilder][aria-checked="true"]') : $('#vippBtn')).focus(), 60); }
 function settBilder(v) {
-  if (v === bildevalg || !HAR_FOTO) return;
+  if (v === bildevalg || !finnesSett(v)) return;
   bildevalg = v; lsSet('hagefugler:bilder', v);
   settSprites();
   pool.forEach(el => { const c = CARDS[+el.dataset.i], img = el.querySelector('.front img'); img.src = bildeAv(c); img.alt = altTekst(c); paintCard(el); });
   renderHelp(); paintSettings(); setTimeout(warm, 300);
-  si(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
+  si(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : v === 'tegneserie' ? 'Kortene viser nå tegneseriefuglene der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
 }
 $('#openSettings').addEventListener('click', openSettings);
 $('#closeSettings').addEventListener('click', () => closeSheets());
 setSheet.addEventListener('click', e => { const b = e.target.closest('[data-bilder]'); if (b) settBilder(b.dataset.bilder); });
 setSheet.addEventListener('keydown', e => {
   if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) || !e.target.closest('[data-bilder]')) return;
-  e.preventDefault(); settBilder(bildevalg === 'ki' ? 'foto' : 'ki'); setSheet.querySelector('[aria-checked="true"]').focus();
+  e.preventDefault();
+  // the arrow keys go round all the choices that exist
+  const valg = [...setSheet.querySelectorAll('[data-bilder]')].filter(b => !b.hidden).map(b => b.dataset.bilder);
+  const d = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1;
+  settBilder(valg[(valg.indexOf(bildevalg) + d + valg.length) % valg.length]);
+  setSheet.querySelector('[data-bilder][aria-checked="true"]').focus();
 });
 
 /* ---- stats ---- */

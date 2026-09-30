@@ -5,12 +5,13 @@ Bruk:
     python3 importer_fuglekort.py STI/TIL/app
 
 der STI/TIL/app er mappen `ut/app` fra `python bygg.py` i Fuglekort-, eller den utpakkede
-«app»-nedlastingen fra Actions → Bygg fuglekort. Mappen skal ha kort.json, kort/, bilder/ og bakside.webp.
+«app»-nedlastingen fra Actions → Bygg fuglekort. Mappen skal ha kort.json, kort/, bilder/ og bakside.webp
+(og kort_tegneserie/ og bilder_tegneserie/ når Fuglekort- har tegneseriesettet).
 
 Skriptet
   1. kopierer kortbildene (001–NNN), bonuskortene (b01–b05, andre dyr), de to forklaringskortene (000a, 000b)
      og baksiden til docs/cards/, og kortene med fotografi (også bonuskortene og bildekrediteringen deres, b00)
-     til docs/cards-foto/
+     til docs/cards-foto/, og kortene med tegneseriebilde til docs/cards-tegneserie/
   2. finner SETT-ruta og datolinja på kortene, så avkrysningen havner riktig
   3. lager data/cards.json (navn, sjeldenhet og korttekst til søket)
   4. lager miniatyrene i docs/sprites/ og app-ikonene i docs/icons/ (fra baksiden)
@@ -70,16 +71,31 @@ def foto_felt(k, kid=None):
             "fotograf": fs["foto"]["fotograf"], "lisens": fs["foto"]["lisens"]}
 
 
+def tegneserie_felt(k):
+    """Kortbildet i tegneseriestil, for fuglekort som har det (resten viser KI-kortet i det valget)."""
+    return {"bildeTegneserie": f"cards-tegneserie/{k['nr']:03d}.webp"} if k.get("tegneserie") else {}
+
+
+def kvadrat(fil):
+    """Kvadratisk utsnitt fra midten, 128 × 128, til miniatyrene i søket."""
+    foto = Image.open(fil).convert("RGB")
+    s = min(foto.size)
+    foto = foto.crop(((foto.width - s) // 2, (foto.height - s) // 2, (foto.width + s) // 2, (foto.height + s) // 2))
+    return foto.resize((128, 128), Image.LANCZOS)
+
+
 def main(app):
     kilde = json.loads((app / "kort.json").read_text(encoding="utf-8"))
     kort_inn = kilde["kort"]
     bonus = kilde.get("bonus") or {}          # bonuskortene (andre dyr): legges etter fuglekortene i kortstokken
     bonus_inn = bonus.get("kort", [])
-    for mappe in ("cards", "cards-foto"):
+    for mappe in ("cards", "cards-foto", "cards-tegneserie"):
         (DOCS / mappe).mkdir(parents=True, exist_ok=True)
         for f in (DOCS / mappe).glob("*.webp"):
             f.unlink()
     fotosett = kilde.get("fotosett")   # kortene med fotografier (valget «Fotografier» i innstillingene)
+    # tegneseriefuglene (valget «Tegneseriefugler»): bare fuglekort, og bare de som har et tegneseriebilde
+    tegneserie = kilde.get("tegneserie") if any(k.get("tegneserie") for k in kort_inn) else None
 
     # 1. bilder
     for k in kort_inn:
@@ -119,6 +135,12 @@ def main(app):
                 shutil.copy(app / f["kortbilde"], DOCS / "cards-foto" / f"{f['id']}.webp")
                 hjelp_foto.append({"id": f["id"], "navn": f.get("navn") or f.get("tittel"), "bilde": f"cards-foto/{f['id']}.webp"})
 
+    # tegneseriesettet: samme forklaringskort som KI-settet, ingen bildekreditering og ingen bonuskort
+    if tegneserie:
+        for k in kort_inn:
+            if k.get("tegneserie"):
+                shutil.copy(app / k["tegneserie"]["kortbilde"], DOCS / "cards-tegneserie" / f"{k['nr']:03d}.webp")
+
     # 2. SETT-ruta: lik på alle kort, så bruk medianen (tåler et kort med grønt nær ruta)
     funn = [finn_sett(DOCS / "cards" / f"{k['nr']:03d}.webp") for k in kort_inn]
     med = lambda liste, i: statistics.median(x[i] for x in liste)
@@ -136,6 +158,7 @@ def main(app):
         "rodliste": (k.get("rodliste") or {}).get("navn", ""),
         "bilde": f"cards/{k['nr']:03d}.webp", "sett": sett,
         **foto_felt(k),
+        **tegneserie_felt(k),
     } for k in kort_inn]
     # bonuskortene (andre dyr): samme felt, men «lengde» i stedet for vingespenn
     kort += [{
@@ -156,6 +179,8 @@ def main(app):
             "kort": kort}
     if fotosett:
         data["hjelpFoto"] = hjelp_foto
+    if tegneserie:
+        data["tegneserie"] = True
     assert len({k["key"] for k in kort}) == len(kort), "to kort har samme latinske navn"
     tidligere = ROT / "data" / "tidligere_nummer.json"
     if tidligere.exists():   # gamle avkrysninger lagret på kortnummer flyttes over på arten
@@ -170,29 +195,35 @@ def main(app):
     for i, k in enumerate(kort_inn):
         x, y = i % kol, i // kol
         ark_kort.paste(Image.open(app / k["kortbilde"]).convert("RGBA").resize((150, 210), Image.LANCZOS), (x * 150, y * 210))
-        foto = Image.open(app / k["bilde"]).convert("RGB")
-        s = min(foto.size)
-        foto = foto.crop(((foto.width - s) // 2, (foto.height - s) // 2, (foto.width + s) // 2, (foto.height + s) // 2))
-        ark_foto.paste(foto.resize((128, 128), Image.LANCZOS), (x * 128, y * 128))
+        ark_foto.paste(kvadrat(app / k["bilde"]), (x * 128, y * 128))
     (DOCS / "sprites").mkdir(exist_ok=True)
     ark_kort.save(DOCS / "sprites" / "cards.webp", "WEBP", quality=76, method=4)
     ark_foto.save(DOCS / "sprites" / "photos.webp", "WEBP", quality=78, method=4)
-    # miniatyrer for fotosettet (KI-bildet der fotografi mangler)
-    for f in ("cards-foto.webp", "photos-foto.webp"):
-        (DOCS / "sprites" / f).unlink(missing_ok=True)
-    if fotosett:
+
+    def miniatyrsett(navn, bilder):
+        """Miniatyrer for et annet bildesett: KI-miniatyrene, med kortene som har eget bilde byttet ut.
+        bilder(k) gir (kortbilde, bilde) for kort som har det, ellers None."""
+        kort_ark, foto_ark = ark_kort.copy(), ark_foto.copy()
         for i, k in enumerate(kort_inn):
-            fs = k.get("fotosett") or {}
-            if not fs.get("foto"):
+            b = bilder(k)
+            if not b:
                 continue
             x, y = i % kol, i // kol
-            ark_kort.paste(Image.open(app / fs["kortbilde"]).convert("RGBA").resize((150, 210), Image.LANCZOS), (x * 150, y * 210))
-            foto = Image.open(app / fs["bilde"]).convert("RGB")
-            s = min(foto.size)
-            foto = foto.crop(((foto.width - s) // 2, (foto.height - s) // 2, (foto.width + s) // 2, (foto.height + s) // 2))
-            ark_foto.paste(foto.resize((128, 128), Image.LANCZOS), (x * 128, y * 128))
-        ark_kort.save(DOCS / "sprites" / "cards-foto.webp", "WEBP", quality=76, method=4)
-        ark_foto.save(DOCS / "sprites" / "photos-foto.webp", "WEBP", quality=78, method=4)
+            kort_ark.paste(Image.open(app / b[0]).convert("RGBA").resize((150, 210), Image.LANCZOS), (x * 150, y * 210))
+            foto_ark.paste(kvadrat(app / b[1]), (x * 128, y * 128))
+        kort_ark.save(DOCS / "sprites" / f"cards-{navn}.webp", "WEBP", quality=76, method=4)
+        foto_ark.save(DOCS / "sprites" / f"photos-{navn}.webp", "WEBP", quality=78, method=4)
+
+    for f in ("cards-foto.webp", "photos-foto.webp", "cards-tegneserie.webp", "photos-tegneserie.webp"):
+        (DOCS / "sprites" / f).unlink(missing_ok=True)
+    # fotosettet (KI-bildet der fotografi mangler)
+    if fotosett:
+        miniatyrsett("foto", lambda k: (k["fotosett"]["kortbilde"], k["fotosett"]["bilde"])
+                     if (k.get("fotosett") or {}).get("foto") else None)
+    # tegneseriesettet (KI-bildet der tegneseriebilde mangler, og på bonuskortene)
+    if tegneserie:
+        miniatyrsett("tegneserie", lambda k: (k["tegneserie"]["kortbilde"], k["tegneserie"]["bilde"])
+                     if k.get("tegneserie") and not k.get("nr_tekst", "").startswith("b") else None)
     (DOCS / "icons").mkdir(exist_ok=True)
     ikon(bakside, 192).save(DOCS / "icons" / "icon-192.png")
     ikon(bakside, 512).save(DOCS / "icons" / "icon-512.png")
@@ -204,6 +235,9 @@ def main(app):
     if fotosett:
         print(f"Fotosett: {sum(1 for k in kort if k.get('bildeFoto'))} kort med fotografi, "
               f"{len(hjelp_foto)} forklaringskort (resten viser KI-bildet)")
+    if tegneserie:
+        print(f"Tegneseriesett: {sum(1 for k in kort if k.get('bildeTegneserie'))} kort med tegneseriebilde "
+              f"(resten og bonuskortene viser KI-bildet)")
     print(f"SETT-rute {sett['boks']}, datolinje {sett['linje']}")
     subprocess.run([sys.executable, str(ROT / "build.py")], check=True)
 
