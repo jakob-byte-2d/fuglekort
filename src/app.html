@@ -925,7 +925,7 @@ const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${Stri
 const fmtHand = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}.${m}.${y}`; };
 const fmtLong = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-').map(Number); return `${d}. ${MND[m-1]}. ${y}`; };
 /* Bildesett: KI-illustrasjoner (standard), fotografier fra Artsdatabanken eller tegneseriefugler, der de finnes.
-   Et kort uten bilde i det valgte settet (og bonuskortene i tegneserievalget) viser KI-kortet. */
+   Et kort uten bilde i det valgte settet viser KI-kortet. */
 const HAR_FOTO = Array.isArray(DATA.hjelpFoto) && CARDS.some(c => c.bildeFoto);
 const HAR_TEGNESERIE = !!DATA.tegneserie && CARDS.some(c => c.bildeTegneserie);
 const BILDESETT = { ki: true, foto: HAR_FOTO, tegneserie: HAR_TEGNESERIE };
@@ -2063,7 +2063,8 @@ $('#vippSek').hidden = !Vipp.stottet;
 const fotoTekst = () => `Fotografier fra Artsdatabanken og Artsobservasjoner for ${BIRDS.filter(c => c.bildeFoto).length} av ${NB} fugler`
   + '. De andre viser illustrasjonen. Fotografene står på kortene Bildekreditering under Om kortene i menyen.'
   + (BONUS.some(c => erApen(c) && c.bildeFoto) ? ' Bonuskortene du har funnet, har også fotografi.' : '');
-const tegneserieTekst = () => `Fuglene tegnet i tegneseriestil, for ${BIRDS.filter(c => c.bildeTegneserie).length} av ${NB} fugler. De andre viser illustrasjonen.`;
+const tegneserieTekst = () => `Fuglene tegnet i tegneseriestil, for ${BIRDS.filter(c => c.bildeTegneserie).length} av ${NB} fugler. De andre viser illustrasjonen.`
+  + (BONUS.some(c => erApen(c) && c.bildeTegneserie) ? ' Bonuskortene du har funnet, er også tegnet.' : '');
 function paintSettings() {
   $('#fotoAntall').textContent = fotoTekst();
   $('#tegneserieAntall').textContent = tegneserieTekst();

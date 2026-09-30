@@ -3350,7 +3350,8 @@
    },
    "bildeFoto": "cards-foto/b01.webp",
    "fotograf": "Hege Røkenes",
-   "lisens": "CC BY 4.0"
+   "lisens": "CC BY 4.0",
+   "bildeTegneserie": "cards-tegneserie/b01.webp"
   },
   {
    "nr": 2,
@@ -3385,7 +3386,8 @@
    },
    "bildeFoto": "cards-foto/b02.webp",
    "fotograf": "Hildegunn Bjørgan",
-   "lisens": "CC BY 4.0"
+   "lisens": "CC BY 4.0",
+   "bildeTegneserie": "cards-tegneserie/b02.webp"
   },
   {
    "nr": 3,
@@ -3420,7 +3422,8 @@
    },
    "bildeFoto": "cards-foto/b03.webp",
    "fotograf": "Eirik Røtnes",
-   "lisens": "CC BY 4.0"
+   "lisens": "CC BY 4.0",
+   "bildeTegneserie": "cards-tegneserie/b03.webp"
   },
   {
    "nr": 4,
@@ -3455,7 +3458,8 @@
    },
    "bildeFoto": "cards-foto/b04.webp",
    "fotograf": "Ragnar Skrede",
-   "lisens": "CC BY 4.0"
+   "lisens": "CC BY 4.0",
+   "bildeTegneserie": "cards-tegneserie/b04.webp"
   },
   {
    "nr": 5,
@@ -3490,7 +3494,8 @@
    },
    "bildeFoto": "cards-foto/b05.webp",
    "fotograf": "Steinar Stueflotten",
-   "lisens": "CC BY 4.0"
+   "lisens": "CC BY 4.0",
+   "bildeTegneserie": "cards-tegneserie/b05.webp"
   }
  ],
  "hjelpFoto": [
