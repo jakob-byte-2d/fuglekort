@@ -201,6 +201,15 @@ button{cursor:pointer;touch-action:manipulation}
 .frobtn.fylt{animation:frofylt 1s ease-out}
 .frobtn.fram{position:relative;z-index:61;background:var(--surface);box-shadow:0 0 0 2px color-mix(in srgb, var(--gold) 70%, transparent),0 0 26px 6px color-mix(in srgb, var(--gold) 45%, transparent)}
 .frobtn.fram.mottar{background:color-mix(in srgb, var(--gold) 34%, var(--surface))}
+/* "+10 000" just below the counter */
+.froplus{position:fixed;left:0;top:0;z-index:54;pointer-events:none;padding:3px 10px 4px;border-radius:99px;background:var(--gold);color:#1b1402;
+  font-weight:800;font-size:14px;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.01em;
+  box-shadow:0 4px 12px -4px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.35);opacity:0;transform:translateX(-50%);visibility:hidden}
+.froplus.fram{z-index:62}
+.froplus.vis{visibility:visible;animation:froplus-inn .35s cubic-bezier(.2,1.4,.4,1) forwards}
+.froplus.vis.ut{animation:froplus-ut .6s ease-in forwards}
+@keyframes froplus-inn{from{opacity:0;transform:translate(-50%,-6px) scale(.6)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes froplus-ut{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-12px) scale(.9)}}
 .fest.strommer .fest-tekst small,.bfest.strommer .bf-t2 small,.lfest.strommer .lf-tekst small{visibility:hidden}
 .fest.strommer,.bfest.strommer,.lfest.strommer{cursor:default}
 @keyframes frofylt{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--gold) 75%, transparent)}100%{box-shadow:0 0 0 16px color-mix(in srgb, var(--gold) 0%, transparent)}}
@@ -768,6 +777,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <!-- sunflower seeds flying from a card to the counter -->
 <div class="frolag" id="froLag" aria-hidden="true"></div>
 <canvas class="frostrom" id="froStrom" aria-hidden="true"></canvas>
+<span class="froplus" id="froPluss" aria-hidden="true"></span>
 
 <section class="sheet search" id="searchSheet" role="dialog" aria-modal="true" aria-label="Søk">
   <div class="qrow">
@@ -1085,7 +1095,7 @@ const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          
    While the app is being tested, old data is not kept. Change TESTMERKE to wipe everything stored on each
    device the next time the app opens (the shared database in Claude is emptied separately when publishing).
    Settings also has a button «Nullstill alt (test)». */
-const TESTMERKE = '2026-09-30-strom';
+const TESTMERKE = '2026-09-30-pluss';
 const DATANOKLER = ['hagefugler-oslo:sett:v1', 'hagefugler:tellinger:v1', 'hagefugler:bonusvist:v1', 'hagefugler:kjop:v1'];
 if (lsGet('hagefugler:testmerke') !== TESTMERKE) {
   DATANOKLER.forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
@@ -2527,7 +2537,7 @@ function lukkFest() {
   if (belop) {
     f.strommet = true;
     if (f.type !== 'laas') { froFrys(); f.fro = 0; }         // the seeds leave the celebration (an unlock already holds the counter)
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) { froSlipp(); }
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) { froSlipp(); visPluss(belop); ferdigPluss(); }
     else {
       f.strommer = true; el.classList.add('strommer');
       const kort = el.querySelector('.fest-kort, .bf-kort, .lf-kort'), bank = $('#openFro');
@@ -2732,7 +2742,7 @@ function froVentKjor(forsink = 0) {
       if (v.mot === 'kort') {
         const kel = pool.get(BY_KEY[v.c.key]), mal = kel && kel.querySelector('.ls-venter:not([hidden])');
         if (!rolig && mal) froFly(fra, mal, v.belop, null);
-      } else if (rolig) froSlipp();
+      } else if (rolig) { froSlipp(); visPluss(v.belop); ferdigPluss(); }
       else froFly(fra, $('#openFro'), v.belop, froSlipp);
     });
   }, forsink);
@@ -2755,18 +2765,38 @@ function froFly(fra, tilEl, belop, ferdig) {
     for (let q = 0; q <= 12; q++) {
       const t = q / 12, u = 1 - t;
       const x = u * u * x0 + 2 * u * t * cx + t * t * til.x, y = u * u * y0 + 2 * u * t * cy + t * t * til.y;
-      const sk = t < .15 ? .35 + t / .15 * .75 : 1.1 - (t - .15) * .55;
-      frames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(rot * t).toFixed(0)}deg) scale(${sk.toFixed(2)})`, opacity: t > .94 ? 0 : 1, offset: t });
+      const sk = t < .25 ? .6 + t / .25 * .45 : 1.05 - (t - .25) * .5;
+      const op = t < .25 ? t / .25 : t > .94 ? 0 : 1;           // fades in as it leaves the card
+      frames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(rot * t).toFixed(0)}deg) scale(${sk.toFixed(2)})`, opacity: +op.toFixed(2), offset: t });
     }
     const a = s.animate(frames, { duration: varighet, delay: k * 55, easing: 'cubic-bezier(.45,.05,.6,1)', fill: 'both' });
     froAktive.add(a);
     a.onfinish = () => {
       froAktive.delete(a); s.remove(); landet++;
       tilEl.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.13)' }, { transform: 'scale(1)' }], { duration: 200, easing: 'ease-out' });
-      if (landet === 1 && tilFro) { haptic(8); froTell((froVist || 0) + belop, Math.max(350, siste - varighet)); }
-      if (landet === n) { if (tilFro) haptic(12); if (ferdig) ferdig(); }
+      if (landet === 1 && tilFro) { haptic(8); froTell((froVist || 0) + belop, Math.max(350, siste - varighet)); visPluss(belop); }
+      if (landet === n) { if (tilFro) { haptic(12); ferdigPluss(); } if (ferdig) ferdig(); }
     };
   }
+}
+/* ---- "+10 000" just below the counter: what this event gave ----
+   Flights landing at the same time add up; it goes a moment after the last seed has landed. */
+const plussEl = $('#froPluss');
+let plussSum = 0, plussAktive = 0, plussT = 0;
+function visPluss(belop) {
+  const r = $('#openFro').getBoundingClientRect();
+  plussEl.style.left = `${Math.round(r.left + r.width / 2)}px`; plussEl.style.top = `${Math.round(r.bottom + 7)}px`;
+  const synlig = plussEl.classList.contains('vis') && !plussEl.classList.contains('ut');
+  plussSum = (synlig ? plussSum : 0) + belop; plussAktive++;
+  plussEl.textContent = `+${fmtFro(plussSum)}`;
+  plussEl.classList.toggle('fram', $('#openFro').classList.contains('fram'));   // over a celebration only while the counter is
+  clearTimeout(plussT);
+  if (!synlig) { plussEl.classList.remove('vis', 'ut'); void plussEl.offsetWidth; plussEl.classList.add('vis'); }
+}
+function ferdigPluss() {
+  plussAktive = Math.max(0, plussAktive - 1); if (plussAktive) return;
+  clearTimeout(plussT);
+  plussT = setTimeout(() => { plussEl.classList.add('ut'); plussT = setTimeout(() => { plussEl.classList.remove('vis', 'ut'); plussSum = 0; }, 650); }, 1500);
 }
 /* ---- the big stream after a celebration: many seeds pour from the card into the counter ----
    Drawn on one canvas so a hundred seeds stay smooth on a phone. */
@@ -2810,21 +2840,21 @@ function stromSteg(t) {
       if (p < 0) return;
       if (p >= 1) {
         f.landet = true; s.landet++;
-        if (s.landet === 1) { haptic(8); froTell((froVist || 0) + s.belop, stromSpre(s.belop) * 1.1 + 300); }
+        if (s.landet === 1) { haptic(8); froTell((froVist || 0) + s.belop, stromSpre(s.belop) * 1.1 + 300); visPluss(s.belop); }
         if (t - s.bump > 110) { s.bump = t; s.tilEl.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.12)' }, { transform: 'scale(1)' }], { duration: 180, easing: 'ease-out' }); }
         return;
       }
       const e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2, u = 1 - e;   // slow out of the card, fast into the counter
       const x = u * u * f.x0 + 2 * u * e * f.cx + e * e * til.x, y = u * u * f.y0 + 2 * u * e * f.cy + e * e * til.y;
-      const sk = p < .12 ? .3 + p / .12 * .8 : 1.1 - (p - .12) * .5, str = f.str * sk;
-      ctx.globalAlpha = p > .93 ? (1 - p) / .07 : 1;
+      const sk = p < .25 ? .6 + p / .25 * .45 : 1.05 - (p - .25) * .5, str = f.str * sk;
+      ctx.globalAlpha = p < .25 ? p / .25 : p > .93 ? (1 - p) / .07 : 1;   // fades in as it leaves the card
       ctx.save(); ctx.translate(x, y); ctx.rotate(f.rot + f.spin * p);
       if (froSprite) { const h = str * 88 / 64; ctx.drawImage(froSprite, -h / 2, -h / 2, h, h); }
       else if (froBilde.complete) ctx.drawImage(froBilde, -str / 2, -str / 2, str, str);
       ctx.restore();
     });
     if (s.landet === s.fro.length && !s.ferdigKalt) {
-      s.ferdigKalt = true;
+      s.ferdigKalt = true; ferdigPluss();
       s.tilEl.classList.remove('mottar', 'fylt'); void s.tilEl.offsetWidth; s.tilEl.classList.add('fylt');
       haptic([10, 40, 16]);
       if (s.ferdig) s.ferdig();
@@ -2863,6 +2893,7 @@ $('#nullstillAlt').addEventListener('click', () => sporsmal({
     [Store, Tell, Vist, Kjop].forEach(x => x.replaceAll({}));
     froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
     STROM.liste = []; festKo.forEach(f => { f.fro = 0; }); $('#openFro').classList.remove('mottar');
+    clearTimeout(plussT); plussAktive = 0; plussSum = 0; plussEl.classList.remove('vis', 'ut');
     froVent.length = 0; froHold = 0; froFlyTil = 0; froVist = null; paintFro(); closeSheets(true); jump(DECK[0], 'instant');
     si('Alt er nullstilt.');
   } }, { tekst: 'Avbryt' }],
