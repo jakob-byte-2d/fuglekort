@@ -66,6 +66,14 @@ if data.get("hjelpFoto"):
 if data.get("tegneserie"):
     assets += ["sprites/cards-tegneserie.webp", "sprites/photos-tegneserie.webp"]
     assets += [c["bildeTegneserie"] for c in data["kort"] if c.get("bildeTegneserie")]
+# de store fuglebildene til fullskjermvisningen (alle tre bildesettene) lastes ned sammen med appen
+if data.get("storeBilder"):
+    for c in data["kort"]:
+        assets.append(f"pictures/{c['id']}.webp")
+        if c.get("bildeFoto"):
+            assets.append(f"pictures-foto/{c['id']}.webp")
+        if c.get("bildeTegneserie"):
+            assets.append(f"pictures-tegneserie/{c['id']}.webp")
 # The cache name follows the content, so phones fetch new cards automatically after every change
 import hashlib
 h = hashlib.sha1((ROOT / "docs" / "index.html").read_bytes())

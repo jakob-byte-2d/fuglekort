@@ -84,6 +84,10 @@ button{cursor:pointer;touch-action:manipulation}
   stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset .38s cubic-bezier(.5,0,.3,1), opacity 0s linear .38s}
 .seen .tick path{stroke-dashoffset:0;opacity:1;transition:stroke-dashoffset .38s cubic-bezier(.5,0,.3,1), opacity 0s}
 .sett-hit{position:absolute;background:none;border:0;border-radius:2cqw;padding:0}
+/* the picture field: a tap opens it in full screen (found from the tap position, so a swipe can still start there);
+   this button is only for the keyboard */
+.bilde-hit{position:absolute;background:none;border:0;border-radius:2cqw;padding:0;pointer-events:none}
+.card.laast .bilde-hit{display:none}
 .dato{position:absolute;display:block;cursor:pointer}
 .dato input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;margin:0;padding:0;-webkit-appearance:none;appearance:none}
 .hand{position:absolute;bottom:22%;font-family:var(--hand);font-weight:600;font-size:7cqw;line-height:1;color:var(--pen);
@@ -264,6 +268,32 @@ button{cursor:pointer;touch-action:manipulation}
 .fro-kilder li{display:flex;justify-content:space-between;gap:12px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:14.5px}
 .fro-kilder li b{font-variant-numeric:tabular-nums}
 /* question box */
+/* ---------- the picture in full screen ---------- */
+.storbilde{position:fixed;inset:0;z-index:53;display:grid;align-content:center;justify-items:center;gap:16px;padding:24px 16px;
+  background:rgba(6,14,10,0);color:#fff;transition:background .3s;-webkit-tap-highlight-color:transparent}
+.storbilde.on{background:rgba(6,14,10,.93)}
+.storbilde[hidden]{display:none}
+.sb-navn,.sb-valg,.sb-hint{opacity:0;transition:opacity .2s}
+.storbilde.on .sb-navn,.storbilde.on .sb-valg,.storbilde.on .sb-hint{opacity:1;transition:opacity .3s .12s}
+.sb-navn{text-align:center;display:grid;gap:2px}
+.sb-navn b{font-size:22px;letter-spacing:-.01em}
+.sb-navn i{font-size:14px;opacity:.75}
+.sb-bilde{position:relative;width:min(100%, 56vh, 560px);aspect-ratio:1;border:0;padding:0;border-radius:18px;overflow:hidden;background:#1d2a23;
+  box-shadow:0 20px 50px -12px rgba(0,0,0,.7);cursor:zoom-out;will-change:transform}
+.sb-bilde img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .28s}
+.sb-bilde img.klipp{inset:auto;left:-11.13%;top:-55.44%;width:194.29%;height:auto;object-fit:initial}
+.sb-bilde img.ut{opacity:0}
+.sb-kred{position:absolute;left:10px;bottom:10px;max-width:calc(100% - 20px);font-size:12px;line-height:1.3;background:rgba(0,0,0,.58);color:#fff;
+  padding:3px 9px;border-radius:99px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-kred[hidden]{display:none}
+.sb-valg{display:flex;background:rgba(255,255,255,.12);border-radius:99px;padding:4px;gap:4px}
+.sb-valg button{border:0;background:none;color:#fff;font:inherit;font-weight:700;font-size:15px;padding:10px 16px;min-height:44px;border-radius:99px;transition:background .2s,color .2s}
+.sb-valg button[hidden]{display:none}
+.sb-valg button[aria-checked="true"]{background:var(--gold);color:#1b1402}
+.sb-valg button[aria-disabled="true"]{opacity:.35;text-decoration:line-through;cursor:default}
+.sb-valg button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.sb-hint{margin:0;font-size:13px;line-height:1.4;opacity:.75;text-align:center;max-width:320px}
+@media (prefers-reduced-motion: reduce){.storbilde,.sb-navn,.sb-valg,.sb-hint,.sb-bilde img{transition:none}}
 .dlg{position:fixed;inset:0;z-index:58;display:grid;place-items:center;padding:20px;background:rgba(8,16,12,.55);opacity:0;transition:opacity .2s}
 .dlg.on{opacity:1}
 .dlg[hidden]{display:none}
@@ -798,7 +828,8 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
       <button role="radio" data-bilder="foto" aria-checked="false"><span class="rd"></span><b>Fotografier</b><small id="fotoAntall"></small></button>
       <button role="radio" data-bilder="tegneserie" aria-checked="false"><span class="rd"></span><b>Tegneseriefugler</b><small id="tegneserieAntall"></small></button>
     </div>
-    <p class="valg-merk">Valget gjelder bare på denne enheten. Avkrysningene dine påvirkes ikke.</p>
+    <p class="valg-merk">Valget gjelder bare på denne enheten. Avkrysningene dine påvirkes ikke. Trykk på bildet på et kort for å velge bilde bare for det kortet.</p>
+    <p class="valg-merk kortvalg" id="kortvalgInfo" hidden><span id="kortvalgTekst"></span> <button class="textbtn" id="nullstillKortvalg">Bruk valget over på alle</button></p>
   </div>
   <div class="s-sec" id="vippSek" hidden><h3>Glinskort</h3>
     <button class="bryter" id="vippBtn" role="switch" aria-checked="false"><span><b>Glinset følger telefonen</b><small>Lyset på glinskortene flytter seg når du vipper telefonen. Ellers følger det fingeren når du drar i kortet.</small></span><i aria-hidden="true"></i></button>
@@ -868,6 +899,14 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <figure class="fest-kort seen"><img id="festBilde" alt=""><span data-bstripe></span><span id="festMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></figure>
   <div class="fest-tekst"><b id="festNavn"></b><span id="festArt"></span><small>Trykk for å fortsette</small></div>
 </div>
+<div class="storbilde" id="storbilde" role="dialog" aria-modal="true" aria-labelledby="sbNavn" tabindex="-1" hidden>
+  <div class="sb-navn"><b id="sbNavn"></b><i id="sbLatin"></i></div>
+  <button class="sb-bilde" id="sbBilde" aria-label="Tilbake til kortet"><img id="sbImg1" alt=""><img id="sbImg2" class="ut" alt=""><span class="sb-kred" id="sbKred" hidden></span></button>
+  <div class="sb-valg" id="sbValg" role="radiogroup" aria-label="Bilde på dette kortet">
+    <button role="radio" data-sb="ki" aria-checked="false">KI</button><button role="radio" data-sb="foto" aria-checked="false">Foto</button><button role="radio" data-sb="tegneserie" aria-checked="false">Tegneserie</button>
+  </div>
+  <p class="sb-hint" id="sbHint"></p>
+</div>
 <div class="dlg" id="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgTekst" hidden>
   <div class="dlg-kort"><h3 id="dlgT"></h3><p id="dlgTekst"></p><div class="dlg-knapper" id="dlgKnapper"></div></div>
 </div>
@@ -933,7 +972,17 @@ const finnesSett = v => BILDESETT[v] === true;            // a stored value the 
 let bildevalg = finnesSett(lsGet('hagefugler:bilder')) ? lsGet('hagefugler:bilder') : 'ki';
 const foto = () => bildevalg === 'foto';
 const tegneserie = () => bildevalg === 'tegneserie';
-const bildeAv = c => (tegneserie() && c.bildeTegneserie) || (foto() && c.bildeFoto) || c.bilde;
+/* Each card can have its own choice (made on the picture in full screen); it wins over Innstillinger.
+   Stored on this device only, like the choice in Innstillinger. */
+const harSett = (c, v) => v === 'ki' || (v === 'foto' && !!c.bildeFoto) || (v === 'tegneserie' && !!c.bildeTegneserie);
+let KORTVALG = (() => { try { const o = JSON.parse(lsGet('hagefugler:bildekort') || '{}'); return o && typeof o === 'object' && !Array.isArray(o) ? o : {}; } catch (e) { return {}; } })();
+const lagreKortvalg = () => lsSet('hagefugler:bildekort', JSON.stringify(KORTVALG));
+const standardSett = c => (harSett(c, bildevalg) ? bildevalg : 'ki');                  // what Innstillinger gives this card
+const egetValg = c => { const v = KORTVALG[c.key]; return finnesSett(v) && harSett(c, v) ? v : null; };
+const settAv = c => egetValg(c) || standardSett(c);
+const bildeAv = c => { const v = settAv(c); return v === 'tegneserie' ? c.bildeTegneserie : v === 'foto' ? c.bildeFoto : c.bilde; };
+/* the small pictures (search, album) come from the sprite sheet of the card's own choice when it has one */
+const egenSprite = (c, ark) => { const v = settAv(c); return v === standardSett(c) ? '' : `background-image:url('sprites/${ark}${v === 'ki' ? '' : '-' + v}.webp');`; };
 function settSprites() {
   const f = foto() ? '-foto' : tegneserie() ? '-tegneserie' : '';
   document.documentElement.style.setProperty('--photos', `url("sprites/photos${f}.webp")`);
@@ -1342,7 +1391,9 @@ const pool = new Map();
 /* BONUS on its side, from the card font (Barlow Condensed Bold) as a path, so it looks the same everywhere */
 const BONUSSTRIPE = '<span class="bstripe" aria-hidden="true"><svg viewBox="-730 -3040 760 3060"><path transform="rotate(-90)" d="M245 0H56Q51 0 48 -4Q44 -7 44 -12V-688Q44 -693 48 -696Q51 -700 56 -700H223Q323 -700 380 -652Q436 -604 436 -509Q436 -410 368 -365Q364 -362 367 -359Q446 -303 446 -193Q446 -100 390 -50Q334 0 245 0ZM185 -574V-417Q185 -412 190 -412H226Q260 -412 279 -434Q298 -455 298 -494Q298 -535 280 -557Q261 -579 226 -579H190Q185 -579 185 -574ZM305 -214Q305 -258 286 -284Q267 -310 235 -310H190Q185 -310 185 -305V-127Q185 -122 190 -122H234Q267 -122 286 -146Q305 -170 305 -214ZM664 -190V-510Q664 -600 719 -654Q774 -708 866 -708Q958 -708 1014 -654Q1069 -600 1069 -510V-190Q1069 -100 1014 -46Q958 8 866 8Q774 8 719 -46Q664 -100 664 -190ZM928 -184V-516Q928 -548 911 -568Q894 -587 866 -587Q838 -587 822 -568Q805 -548 805 -516V-184Q805 -152 822 -132Q838 -113 866 -113Q894 -113 911 -132Q928 -152 928 -184ZM1605 -700H1721Q1726 -700 1730 -696Q1733 -693 1733 -688V-12Q1733 -7 1730 -4Q1726 0 1721 0H1589Q1579 0 1576 -10L1452 -397Q1451 -400 1448 -400Q1446 -399 1446 -396L1447 -12Q1447 -7 1444 -4Q1440 0 1435 0H1319Q1314 0 1310 -4Q1307 -7 1307 -12V-688Q1307 -693 1310 -696Q1314 -700 1319 -700H1450Q1460 -700 1463 -690L1588 -303Q1589 -300 1592 -300Q1594 -301 1594 -304L1593 -688Q1593 -693 1596 -696Q1600 -700 1605 -700ZM1978 -199V-688Q1978 -693 1982 -696Q1985 -700 1990 -700H2107Q2112 -700 2116 -696Q2119 -693 2119 -688V-185Q2119 -153 2135 -133Q2151 -113 2177 -113Q2203 -113 2218 -133Q2234 -153 2234 -185V-688Q2234 -693 2238 -696Q2241 -700 2246 -700H2363Q2368 -700 2372 -696Q2375 -693 2375 -688V-199Q2375 -105 2320 -48Q2266 8 2177 8Q2087 8 2032 -48Q1978 -105 1978 -199ZM2606 -175V-204Q2606 -209 2610 -212Q2613 -216 2618 -216H2733Q2738 -216 2742 -212Q2745 -209 2745 -204V-182Q2745 -151 2761 -132Q2777 -113 2801 -113Q2825 -113 2841 -131Q2857 -149 2857 -178Q2857 -208 2837 -230Q2817 -251 2759 -293Q2709 -329 2678 -357Q2647 -385 2625 -426Q2603 -467 2603 -521Q2603 -606 2656 -657Q2709 -708 2796 -708Q2884 -708 2938 -655Q2991 -602 2991 -516V-492Q2991 -487 2988 -484Q2984 -480 2979 -480H2864Q2859 -480 2856 -484Q2852 -487 2852 -492V-519Q2852 -550 2836 -568Q2821 -587 2796 -587Q2772 -587 2757 -570Q2742 -552 2742 -521Q2742 -491 2761 -468Q2780 -445 2836 -404Q2898 -358 2930 -330Q2961 -301 2978 -266Q2996 -232 2996 -184Q2996 -96 2942 -44Q2888 8 2800 8Q2742 8 2698 -15Q2654 -38 2630 -80Q2606 -121 2606 -175Z"/></svg></span>';
 document.querySelectorAll('[data-bstripe]').forEach(el => { el.outerHTML = BONUSSTRIPE; });
-const altTekst = c => `${c.bonus ? 'Bonuskort' : `Fuglekort ${c.id}`}: ${c.navn}, ${c.latin}. ${c.status}.${foto() && c.bildeFoto && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
+/* the picture field on the card (share of the card), the same on every card */
+const BILDEFELT = { x: .0573, y: .1695, w: .5147, h: .4362 };
+const altTekst = c => `${c.bonus ? 'Bonuskort' : `Fuglekort ${c.id}`}: ${c.navn}, ${c.latin}. ${c.status}.${settAv(c) === 'foto' && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
 function makeCard(i) {
   const c = CARDS[i];
   const [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje;
@@ -1355,12 +1406,13 @@ function makeCard(i) {
   el.setAttribute('aria-label', `${c.bonus ? 'Bonuskort' : `Kort ${c.id}`}: ${c.navn}`);
   el.innerHTML = `
   <div class="inner">
-    <div class="face front" style="background-position:${spritePos(i)}">
+    <div class="face front" style="background-position:${spritePos(i)};${egenSprite(c, 'cards')}">
       <img src="${esc(bildeAv(c))}" alt="${esc(altTekst(c))}" draggable="false" decoding="async">
       ${c.bonus ? BONUSSTRIPE : ''}
       ${PRIS[c.key] != null ? graaKort(c) : ''}
       <span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span>
       <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
+      <button class="ctl bilde-hit" data-act="bilde" tabindex="0" aria-label="Vis bildet av ${esc(c.navn)} stort" style="left:${P(BILDEFELT.x)};top:${P(BILDEFELT.y)};width:${P(BILDEFELT.w)};height:${P(BILDEFELT.h)}"></button>
       <button class="ctl sett-hit" data-act="toggle" aria-pressed="false" aria-label="Sett ${esc(c.navn)}" style="left:${P(bx - 0.025)};top:${P(by - 0.012)};width:${P(bw + 0.22)};height:${P(bh + 0.024)}"></button>
       <span class="tall" aria-hidden="true"></span>
       <span class="antall" aria-hidden="true" style="left:${P(bx + bw + 0.14)};top:${P(by - 0.006)};height:${P(bh + 0.012)}"></span>
@@ -1438,7 +1490,7 @@ function paintCard(el) {
   if (n > f && f > 0) { tall.classList.remove('pop'); void tall.offsetWidth; tall.classList.add('pop'); }
   paintLogg(el, c, dager);
   const kred = el.querySelector('.kred');
-  if (kred) { kred.textContent = foto() && c.bildeFoto && c.fotograf ? `Foto: ${c.fotograf}${c.lisens ? ` · ${c.lisens}` : ''}` : ''; kred.hidden = !kred.textContent; }
+  if (kred) { kred.textContent = settAv(c) === 'foto' && c.fotograf ? `Foto: ${c.fotograf}${c.lisens ? ` · ${c.lisens}` : ''}` : ''; kred.hidden = !kred.textContent; }
 }
 
 /* the back of the card: every day this bird was seen, newest first */
@@ -1672,7 +1724,9 @@ function endDrag(e, cancelled) {
     if (!cancelled && !d.stopped && d.onCard && quick && !d.ctl) {
       sync();
       const el = pool.get(cur);
-      if (erLaast(CARDS[cur]) && el && !el.classList.contains('flipped')) sporKjop(CARDS[cur]); else flip();
+      if (erLaast(CARDS[cur]) && el && !el.classList.contains('flipped')) sporKjop(CARDS[cur]);
+      else if (el && !el.classList.contains('flipped') && iBildefelt(el, d.x0, d.y0)) apneStorbilde(CARDS[cur]);   // the picture: full screen
+      else flip();
     } else sync();
     return;
   }
@@ -1759,6 +1813,8 @@ if (vippValg()) {
 
 /* controls on the card: the SETT box and date line on the front, the list of days on the back */
 deckEl.addEventListener('click', e => {
+  const bh = e.target.closest('[data-act="bilde"]');         // keyboard: the button over the picture
+  if (bh) { const el = bh.closest('.card'); if (el && el.classList.contains('is-top')) { e.stopPropagation(); apneStorbilde(CARDS[+el.dataset.i]); } return; }
   const b = e.target.closest('[data-act="toggle"], [data-act="delday"]'); if (!b) return;
   const el = b.closest('.card'); if (!el || !el.classList.contains('is-top')) return;
   e.stopPropagation();
@@ -1843,6 +1899,7 @@ function visLogg(c) {
 /* keyboard */
 document.addEventListener('keydown', e => {
   if (dlgApen) { if (e.key === 'Escape') { e.preventDefault(); lukkDlg(); } return; }
+  if (!sbEl.hidden) { storbildeTast(e); return; }
   if (festAapen) { if (e.key === 'Escape') { e.preventDefault(); lukkFest(); } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); festTrykk(); } return; }
   if (e.target.closest('input, textarea')) { if (e.key === 'Escape') closeSheets(); return; }
   if (openSheet) { if (e.key === 'Escape') closeSheets(); return; }
@@ -2069,6 +2126,9 @@ function paintSettings() {
   $('#fotoAntall').textContent = fotoTekst();
   $('#tegneserieAntall').textContent = tegneserieTekst();
   setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg));
+  const egne = CARDS.filter(c => erApen(c) && egetValg(c)).length;
+  $('#kortvalgInfo').hidden = !egne;
+  $('#kortvalgTekst').textContent = egne === 1 ? '1 kort har eget bildevalg.' : `${egne} kort har eget bildevalg.`;
   $('#vippBtn').setAttribute('aria-checked', Vipp.aktiv ? 'true' : 'false');
 }
 $('#vippBtn').addEventListener('click', async () => {
@@ -2081,10 +2141,24 @@ function settBilder(v) {
   if (v === bildevalg || !finnesSett(v)) return;
   bildevalg = v; lsSet('hagefugler:bilder', v);
   settSprites();
-  pool.forEach(el => { const c = CARDS[+el.dataset.i], img = el.querySelector('.front img'); img.src = bildeAv(c); img.alt = altTekst(c); paintCard(el); });
+  pool.forEach(oppdaterBilde);
   renderHelp(); paintSettings(); setTimeout(warm, 300);
   si(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : v === 'tegneserie' ? 'Kortene viser nå tegneseriefuglene der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
 }
+/* the picture on a card in the deck follows its choice */
+function oppdaterBilde(el) {
+  const c = CARDS[+el.dataset.i], img = el.querySelector('.front img'), src = bildeAv(c);
+  if (img.getAttribute('src') !== src) img.src = src;
+  img.alt = altTekst(c);
+  el.querySelector('.front').style.backgroundImage = egenSprite(c, 'cards') ? `url("sprites/cards${settAv(c) === 'ki' ? '' : '-' + settAv(c)}.webp")` : '';
+  paintCard(el);
+}
+$('#nullstillKortvalg').addEventListener('click', () => {
+  KORTVALG = {}; lagreKortvalg();
+  pool.forEach(oppdaterBilde); paintSettings(); setTimeout(warm, 300);
+  si('Alle kortene følger nå valget i Innstillinger.');
+  setSheet.querySelector('[data-bilder][aria-checked="true"]').focus();
+});
 $('#openSettings').addEventListener('click', openSettings);
 $('#closeSettings').addEventListener('click', () => closeSheets());
 setSheet.addEventListener('click', e => { const b = e.target.closest('[data-bilder]'); if (b) settBilder(b.dataset.bilder); });
@@ -2104,11 +2178,11 @@ function openStats() { showSheet($('#statsSheet')); renderStats(); setTimeout(()
 $('#openStats').addEventListener('click', openStats);
 $('#closeStats').addEventListener('click', () => closeSheets());
 /* a small picture of the card, or a grey lock for a card that is not open yet */
-const miniatyr = (c, i, kl = '') => erLaast(c) ? `<span class="ph laastph ${kl}" aria-hidden="true">${LAAS}</span>` : `<span class="ph ${kl}" style="background-position:${spritePos(i)}" aria-hidden="true"></span>`;
+const miniatyr = (c, i, kl = '') => erLaast(c) ? `<span class="ph laastph ${kl}" aria-hidden="true">${LAAS}</span>` : `<span class="ph ${kl}" style="background-position:${spritePos(i)};${egenSprite(c, 'photos')}" aria-hidden="true"></span>`;
 function albumKort(c, i) {
   if (erLaast(c)) return `<button class="alb laast" data-i="${i}" aria-label="Låst kort ${c.id}: ${esc(c.navn)}, ${fmtFro(PRIS[c.key])} frø"><span class="th"></span><span class="nr">${c.nr}</span><span class="lsik">${LAAS}</span></button>`;
   const nv = nivaVis(c);
-  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot">${CHECK}</span></button>`;
+  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)};${egenSprite(c, 'cards')}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot">${CHECK}</span></button>`;
 }
 function renderStats() {
   // fuglelista: bare fuglekortene; bonuskortene (andre dyr) har sin egen del lenger ned
@@ -2588,6 +2662,107 @@ function sjekkBonus() {
 Store.on(sjekkBonus);
 Vist.on(sjekkBonus);
 /* a hint that a bonus is near, without saying what */
+/* ---- the picture in full screen: KI, Foto or Tegneserie for this card ----
+   A tap on the picture field opens it; the choice is kept for this card. A tap on the picture (or outside)
+   goes back to the card. */
+const sbEl = $('#storbilde'), sbBildeEl = $('#sbBilde');
+const SETTNAVN = { ki: 'illustrasjonen', foto: 'fotografiet', tegneserie: 'tegneseriefuglen' };
+let sbKort = null, sbFokus = null, sbLukker = false, sbApnet = 0, sbImgs = [$('#sbImg1'), $('#sbImg2')];
+const feltRect = el => { const r = el.querySelector('.front').getBoundingClientRect();
+  return { x: r.left + r.width * BILDEFELT.x, y: r.top + r.height * BILDEFELT.y, w: r.width * BILDEFELT.w, h: r.height * BILDEFELT.h }; };
+const iBildefelt = (el, x, y) => { const f = feltRect(el); return x >= f.x && x <= f.x + f.w && y >= f.y && y <= f.y + f.h; };
+/* the big square picture of the set, or (older data) the picture field cut from the card itself */
+const storSrc = (c, v) => (DATA.storeBilder ? `${v === 'ki' ? 'pictures' : 'pictures-' + v}/${c.id}.webp` : null);
+function settStorbilde(img, c, v) {
+  const src = storSrc(c, v);
+  img.classList.toggle('klipp', !src);
+  img.src = src || (v === 'tegneserie' ? c.bildeTegneserie : v === 'foto' ? c.bildeFoto : c.bilde);
+  img.onerror = src ? () => { img.onerror = null; img.classList.add('klipp'); img.src = v === 'tegneserie' ? c.bildeTegneserie : v === 'foto' ? c.bildeFoto : c.bilde; } : null;
+}
+function paintStorbilde() {
+  const c = sbKort, v = settAv(c), mangler = [];
+  sbEl.querySelectorAll('[data-sb]').forEach(b => {
+    const s = b.dataset.sb, har = harSett(c, s);
+    b.hidden = !finnesSett(s);
+    b.setAttribute('aria-checked', s === v ? 'true' : 'false');
+    b.setAttribute('aria-disabled', har ? 'false' : 'true');
+    b.tabIndex = s === v ? 0 : -1;
+    if (!b.hidden && !har) mangler.push(s === 'foto' ? 'fotografi' : 'tegneseriefugl');
+  });
+  const kred = $('#sbKred');
+  kred.textContent = v === 'foto' && c.fotograf ? `Foto: ${c.fotograf}${c.lisens ? ` · ${c.lisens}` : ''}` : '';
+  kred.hidden = !kred.textContent;
+  $('#sbHint').textContent = (mangler.length ? `${c.navn} har ikke ${mangler.join(' eller ')} ennå. ` : '') + 'Trykk på bildet for å gå tilbake til kortet.';
+}
+function apneStorbilde(c) {
+  const el = pool.get(BY_KEY[c.key]); if (!el || erLaast(c) || !sbEl.hidden) return;
+  stopRiffle();
+  sbKort = c; sbFokus = document.activeElement;
+  $('#sbNavn').textContent = c.navn; $('#sbLatin').textContent = c.latin;
+  settStorbilde(sbImgs[0], c, settAv(c)); sbImgs[0].classList.remove('ut'); sbImgs[1].classList.add('ut');
+  paintStorbilde();
+  sbEl.hidden = false; app.inert = true; sbApnet = performance.now();
+  // the picture grows out of the card
+  const til = sbBildeEl.getBoundingClientRect(), fra = feltRect(el);
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && til.width) {
+    const dx = fra.x + fra.w / 2 - (til.left + til.width / 2), dy = fra.y + fra.h / 2 - (til.top + til.height / 2);
+    sbBildeEl.animate([{ transform: `translate(${dx}px,${dy}px) scale(${(fra.w / til.width).toFixed(3)})`, borderRadius: '6px' }, { transform: 'none', borderRadius: '18px' }],
+      { duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
+  }
+  void sbEl.offsetWidth; sbEl.classList.add('on');
+  haptic(8);
+  setTimeout(() => { const b = sbEl.querySelector('[data-sb][aria-checked="true"]'); (b || sbBildeEl).focus(); }, 60);
+}
+function lukkStorbilde() {
+  if (sbEl.hidden || sbLukker) return;
+  sbLukker = true;
+  const c = sbKort, el = pool.get(BY_KEY[c.key]);
+  sbEl.classList.remove('on');
+  const fra = sbBildeEl.getBoundingClientRect(), til = el && POS[BY_KEY[c.key]] != null ? feltRect(el) : null;
+  let a = null;
+  if (til && til.w && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const dx = til.x + til.w / 2 - (fra.left + fra.width / 2), dy = til.y + til.h / 2 - (fra.top + fra.height / 2);
+    a = sbBildeEl.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${dx}px,${dy}px) scale(${(til.w / fra.width).toFixed(3)})`, borderRadius: '6px', opacity: .4 }],
+      { duration: 260, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+  }
+  setTimeout(() => {
+    sbEl.hidden = true; if (a) a.cancel();
+    app.inert = !!openSheet; sbLukker = false; sbKort = null;
+    if (sbFokus && sbFokus.focus && document.contains(sbFokus)) sbFokus.focus(); else stage.focus && stage.focus();
+  }, a ? 270 : 120);
+}
+function velgStorbilde(v) {
+  const c = sbKort; if (!c || !finnesSett(v) || !harSett(c, v) || v === settAv(c)) return;
+  KORTVALG[c.key] = v; lagreKortvalg();
+  const el = pool.get(BY_KEY[c.key]); if (el) oppdaterBilde(el);
+  // the new picture fades in over the old one
+  const [na, ny] = sbImgs;
+  settStorbilde(ny, c, v);
+  const vis = () => { ny.classList.remove('ut'); na.classList.add('ut'); };
+  if (ny.decode) ny.decode().then(vis, vis); else vis();
+  sbImgs = [ny, na];
+  paintStorbilde();
+  haptic(6);
+  si(`${c.navn} viser nå ${SETTNAVN[v]}.`);
+  const b = sbEl.querySelector(`[data-sb="${v}"]`); if (b && document.activeElement && document.activeElement.closest('#sbValg')) b.focus();
+}
+sbEl.addEventListener('click', e => {
+  if (performance.now() - sbApnet < 450) return;           // the click that follows the tap that opened it
+  const b = e.target.closest('[data-sb]');
+  if (b) { velgStorbilde(b.dataset.sb); return; }
+  if (e.target.closest('#sbValg')) return;
+  lukkStorbilde();                                          // the picture itself, or anywhere outside the buttons
+});
+function storbildeTast(e) {
+  if (e.key === 'Escape') { e.preventDefault(); lukkStorbilde(); return; }
+  if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key) || !e.target.closest('#sbValg')) return;
+  e.preventDefault();
+  const valg = [...sbEl.querySelectorAll('[data-sb]')].filter(b => !b.hidden && b.getAttribute('aria-disabled') !== 'true').map(b => b.dataset.sb);
+  if (valg.length < 2) return;
+  const d = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
+  velgStorbilde(valg[(valg.indexOf(settAv(sbKort)) + d + valg.length) % valg.length]);
+}
+
 /* ---- a small question box (warning on grey cards, buying) ---- */
 const dlgEl = $('#dlg');
 let dlgApen = false, dlgValg = [], dlgFor = null, dlgInert = null;

@@ -16,7 +16,9 @@ Skriptet
   2. finner SETT-ruta og datolinja på kortene, så avkrysningen havner riktig
   3. lager data/cards.json (navn, sjeldenhet og korttekst til søket)
   4. lager miniatyrene i docs/sprites/ og app-ikonene i docs/icons/ (fra baksiden)
-  5. kjører build.py
+  5. lagrer de store fuglebildene (800 × 800) til fullskjermvisningen i docs/pictures/, docs/pictures-foto/
+     og docs/pictures-tegneserie/
+  6. kjører build.py
 """
 import json, re, shutil, statistics, subprocess, sys
 from pathlib import Path
@@ -86,6 +88,15 @@ def bonus_tegneserie(app, k):
         return app / ts["kortbilde"], app / ts["bilde"]
     kort, bilde = BONUS_TS / "kort" / f"{k['nr_tekst']}.webp", BONUS_TS / "bilder" / f"{k['nr_tekst']}.webp"
     return (kort, bilde) if kort.exists() and bilde.exists() else None
+
+
+def lagre_stort(fil, maal):
+    """Stort, kvadratisk fuglebilde (800 × 800) til fullskjermvisningen, litt hardere komprimert enn kilden."""
+    im = Image.open(fil).convert("RGB")
+    if im.size != (800, 800):
+        s = min(im.size)
+        im = im.crop(((im.width - s) // 2, (im.height - s) // 2, (im.width + s) // 2, (im.height + s) // 2)).resize((800, 800), Image.LANCZOS)
+    im.save(maal, "WEBP", quality=80, method=6)
 
 
 def kvadrat(fil):
@@ -242,6 +253,28 @@ def main(app):
         er_bonus = lambda k: any(k is b for b in bonus_inn)
         miniatyrsett("tegneserie", lambda k: bonus_tegneserie(app, k) if er_bonus(k) else
                      (app / k["tegneserie"]["kortbilde"], app / k["tegneserie"]["bilde"]) if k.get("tegneserie") else None)
+    # 5. store fuglebilder til fullskjermvisningen (trykk på bildet på kortet): ett per kort og bildesett
+    for mappe in ("pictures", "pictures-foto", "pictures-tegneserie"):
+        (DOCS / mappe).mkdir(exist_ok=True)
+        for f in (DOCS / mappe).glob("*.webp"):
+            f.unlink()
+    store = {"pictures": 0, "pictures-foto": 0, "pictures-tegneserie": 0}
+    for k in kort_inn:
+        bonus = any(k is b for b in bonus_inn)
+        kid = k["nr_tekst"] if bonus else f"{k['nr']:03d}"
+        kilder = {"pictures": app / k["bilde"]}
+        if (k.get("fotosett") or {}).get("foto"):
+            kilder["pictures-foto"] = app / k["fotosett"]["bilde"]
+        if tegneserie:
+            b = bonus_tegneserie(app, k) if bonus else ((app / k["tegneserie"]["kortbilde"], app / k["tegneserie"]["bilde"]) if k.get("tegneserie") else None)
+            if b:
+                kilder["pictures-tegneserie"] = b[1]
+        for mappe, fil in kilder.items():
+            lagre_stort(fil, DOCS / mappe / f"{kid}.webp")
+            store[mappe] += 1
+    data["storeBilder"] = True
+    (ROT / "data" / "cards.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+
     (DOCS / "icons").mkdir(exist_ok=True)
     ikon(bakside, 192).save(DOCS / "icons" / "icon-192.png")
     ikon(bakside, 512).save(DOCS / "icons" / "icon-512.png")
@@ -257,6 +290,8 @@ def main(app):
         print(f"Tegneseriesett: {sum(1 for k in kort if k.get('bildeTegneserie') and not k.get('bonus'))} fuglekort og "
               f"{sum(1 for k in kort if k.get('bildeTegneserie') and k.get('bonus'))} bonuskort med tegneseriebilde "
               f"(resten viser KI-bildet)")
+    print(f"Store bilder til fullskjerm: {store['pictures']} KI, {store['pictures-foto']} foto, "
+          f"{store['pictures-tegneserie']} tegneserie")
     print(f"SETT-rute {sett['boks']}, datolinje {sett['linje']}")
     subprocess.run([sys.executable, str(ROT / "build.py")], check=True)
 
