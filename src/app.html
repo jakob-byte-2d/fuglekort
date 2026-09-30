@@ -27,7 +27,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-html{height:100%;box-sizing:border-box}
+html{height:100%;box-sizing:border-box;touch-action:pan-x pan-y}   /* the page itself never zooms */
 body{height:100%;margin:0;overflow:hidden;font-family:var(--font);color:var(--ink);
   background:radial-gradient(ellipse 75% 58% at 50% 46%, var(--bg-hi), var(--bg) 72%) var(--bg);
   -webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
@@ -269,7 +269,7 @@ button{cursor:pointer;touch-action:manipulation}
 .fro-kilder li b{font-variant-numeric:tabular-nums}
 /* question box */
 /* ---------- the picture in full screen ---------- */
-.storbilde{position:fixed;inset:0;z-index:53;display:grid;align-content:center;justify-items:center;gap:16px;padding:24px 16px;
+.storbilde{position:fixed;inset:0;z-index:53;overflow:hidden;display:grid;align-content:center;justify-items:center;gap:16px;padding:24px 16px;
   background:rgba(6,14,10,0);color:#fff;transition:background .3s;-webkit-tap-highlight-color:transparent}
 .storbilde.on{background:rgba(6,14,10,.93)}
 .storbilde[hidden]{display:none}
@@ -278,8 +278,17 @@ button{cursor:pointer;touch-action:manipulation}
 .sb-navn{text-align:center;display:grid;gap:2px}
 .sb-navn b{font-size:22px;letter-spacing:-.01em}
 .sb-navn i{font-size:14px;opacity:.75}
-.sb-bilde{position:relative;width:min(100%, 56vh, 560px);aspect-ratio:1;border:0;padding:0;border-radius:18px;overflow:hidden;background:#1d2a23;
+.sb-spor{position:relative;width:min(100%, 56vh, 560px);aspect-ratio:1;touch-action:none;will-change:transform}
+.sb-bilde{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;border-radius:18px;overflow:hidden;background:#1d2a23;
   box-shadow:0 20px 50px -12px rgba(0,0,0,.7);cursor:zoom-out;will-change:transform}
+/* the birds on either side, for swiping */
+.sb-nabo{position:absolute;top:0;width:100%;height:100%;border-radius:18px;overflow:hidden;background:#1d2a23;opacity:0;transition:opacity .3s;pointer-events:none}
+.storbilde.on .sb-nabo{opacity:.45}
+.sb-nabo[hidden]{display:none}
+.sb-nabo.forrige{right:calc(100% + 20px)}
+.sb-nabo.neste{left:calc(100% + 20px)}
+.sb-nabo img{display:block;width:100%;height:100%;object-fit:cover}
+.sb-nabo img.klipp{position:absolute;left:-11.13%;top:-55.44%;width:194.29%;height:auto;object-fit:initial}
 .sb-bilde img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .28s}
 .sb-bilde img.klipp{inset:auto;left:-11.13%;top:-55.44%;width:194.29%;height:auto;object-fit:initial}
 .sb-bilde img.ut{opacity:0}
@@ -293,7 +302,15 @@ button{cursor:pointer;touch-action:manipulation}
 .sb-valg button[aria-disabled="true"]{opacity:.35;text-decoration:line-through;cursor:default}
 .sb-valg button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .sb-hint{margin:0;font-size:13px;line-height:1.4;opacity:.75;text-align:center;max-width:320px}
-@media (prefers-reduced-motion: reduce){.storbilde,.sb-navn,.sb-valg,.sb-hint,.sb-bilde img{transition:none}}
+@media (prefers-reduced-motion: reduce){.storbilde,.sb-navn,.sb-valg,.sb-hint,.sb-bilde img,.sb-nabo{transition:none}}
+/* peek zoom: a copy of the card or picture grows around the point between two fingers, above everything */
+.kikk{position:fixed;inset:0;z-index:57;pointer-events:none;background:rgba(6,14,10,calc(var(--m, 0) * .6))}
+.kikk.ut{background:rgba(6,14,10,0);transition:background .22s}
+.kikk-boks{position:fixed;will-change:transform}
+.kikk-kopi{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;
+  transform:none!important;opacity:1!important;transition:none!important;animation-play-state:running}
+.help-track{touch-action:none}
+.help-track.drar{scroll-snap-type:none;scroll-behavior:auto}
 .dlg{position:fixed;inset:0;z-index:58;display:grid;place-items:center;padding:20px;background:rgba(8,16,12,.55);opacity:0;transition:opacity .2s}
 .dlg.on{opacity:1}
 .dlg[hidden]{display:none}
@@ -901,7 +918,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 </div>
 <div class="storbilde" id="storbilde" role="dialog" aria-modal="true" aria-labelledby="sbNavn" tabindex="-1" hidden>
   <div class="sb-navn"><b id="sbNavn"></b><i id="sbLatin"></i></div>
-  <button class="sb-bilde" id="sbBilde" aria-label="Tilbake til kortet"><img id="sbImg1" alt=""><img id="sbImg2" class="ut" alt=""><span class="sb-kred" id="sbKred" hidden></span></button>
+  <div class="sb-spor" id="sbSpor">
+    <div class="sb-nabo forrige" aria-hidden="true" hidden><img alt=""></div>
+    <button class="sb-bilde" id="sbBilde" aria-label="Tilbake til kortet"><img id="sbImg1" alt=""><img id="sbImg2" class="ut" alt=""><span class="sb-kred" id="sbKred" hidden></span></button>
+    <div class="sb-nabo neste" aria-hidden="true" hidden><img alt=""></div>
+  </div>
   <div class="sb-valg" id="sbValg" role="radiogroup" aria-label="Bilde på dette kortet">
     <button role="radio" data-sb="ki" aria-checked="false">KI</button><button role="radio" data-sb="foto" aria-checked="false">Foto</button><button role="radio" data-sb="tegneserie" aria-checked="false">Tegneserie</button>
   </div>
@@ -1653,7 +1674,95 @@ function setArmed(a) {
   edgeR.classList.toggle('armed', a === -1);
   if (a) haptic(14);
 }
+/* ---- zoom ----
+   The page itself never zooms. Two fingers on a card or a picture enlarge it around the point between them
+   (peek zoom); it springs back as soon as a finger lets go. A copy is shown above everything, so nothing
+   underneath moves. On a computer, Ctrl + wheel (or pinching on the trackpad) does the same. */
+function kikk(kilde, a, b) {
+  const r = kilde.getBoundingClientRect(); if (!r.width) return null;
+  const lag = document.createElement('div'), boks = document.createElement('div');
+  lag.className = 'kikk'; lag.setAttribute('aria-hidden', 'true'); boks.className = 'kikk-boks';
+  Object.assign(boks.style, { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` });
+  const kopi = kilde.cloneNode(true);
+  kopi.removeAttribute('id'); kopi.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+  kopi.classList.remove('held', 'nybonus', 'glinsny'); kopi.classList.add('kikk-kopi');
+  boks.appendChild(kopi); lag.appendChild(boks); document.body.appendChild(lag);
+  const m0 = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], d0 = Math.max(24, Math.hypot(a[0] - b[0], a[1] - b[1]));
+  boks.style.transformOrigin = `${m0[0] - r.left}px ${m0[1] - r.top}px`;
+  let raf = 0, neste = null, ferdig = false;
+  const vis = (sk, m) => {
+    boks.style.transform = `translate(${(m[0] - m0[0]).toFixed(1)}px,${(m[1] - m0[1]).toFixed(1)}px) scale(${sk.toFixed(3)})`;
+    lag.style.setProperty('--m', Math.min(1, (sk - 1) * 2).toFixed(3));
+  };
+  const tegn = () => { raf = 0; if (neste) vis(...neste); };
+  haptic(6);
+  return {
+    // two fingers: the scale follows the distance between them, the centre follows the point between them
+    flytt(p, q) { neste = [Math.min(4, Math.max(1, Math.hypot(p[0] - q[0], p[1] - q[1]) / d0)), [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2]]; if (!raf) raf = requestAnimationFrame(tegn); },
+    skala(sk, m) { neste = [Math.min(4, Math.max(1, sk)), m]; if (!raf) raf = requestAnimationFrame(tegn); },
+    slipp() {
+      if (ferdig) return; ferdig = true;
+      cancelAnimationFrame(raf);
+      lag.classList.add('ut');
+      const t = boks.style.transform;
+      if (!t || matchMedia('(prefers-reduced-motion: reduce)').matches) { lag.remove(); return; }
+      boks.animate([{ transform: t }, { transform: 'none' }], { duration: 230, easing: 'cubic-bezier(.2,.8,.2,1)' }).onfinish = () => lag.remove();
+      boks.style.transform = 'none';
+    },
+  };
+}
+const toFingre = map => [...map.values()].slice(0, 2);
+// what Ctrl + wheel zooms: the picture in full screen, an explanation card, or the card on top of the deck
+const zoomMal = t => !t || !t.closest ? null : t.closest('#sbSpor') ? sbBildeEl : t.closest('.help-card') || (sbEl.hidden && !openSheet ? t.closest('.card.is-top') : null);
+let hjulKikk = null, hjulS = 1, hjulT = 0;
+document.addEventListener('wheel', e => {
+  if (!e.ctrlKey) return;
+  e.preventDefault();                                       // Ctrl + wheel and trackpad pinching never zoom the page
+  const mal = hjulKikk ? null : zoomMal(e.target);
+  if (!hjulKikk && mal) { hjulS = 1; hjulKikk = kikk(mal, [e.clientX, e.clientY], [e.clientX, e.clientY]); }
+  if (!hjulKikk) return;
+  hjulS = Math.min(4, Math.max(1, hjulS * Math.exp(-e.deltaY / 110)));
+  hjulKikk.skala(hjulS, [e.clientX, e.clientY]);
+  clearTimeout(hjulT); hjulT = setTimeout(() => { if (hjulKikk) hjulKikk.slipp(); hjulKikk = null; }, 420);
+}, { passive: false });
+// iPhone and iPad: pinching the page is stopped here too (Safari does not always respect the viewport)
+document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+let gestKikk = null;
+const berøring = matchMedia('(pointer: coarse)').matches;
+document.addEventListener('gesturestart', e => { e.preventDefault(); if (!berøring) { const mal = zoomMal(e.target); if (mal) gestKikk = kikk(mal, [e.clientX, e.clientY], [e.clientX, e.clientY]); } }, { passive: false });
+document.addEventListener('gesturechange', e => { e.preventDefault(); if (gestKikk) gestKikk.skala(e.scale, [e.clientX, e.clientY]); }, { passive: false });
+document.addEventListener('gestureend', e => { e.preventDefault(); if (gestKikk) gestKikk.slipp(); gestKikk = null; }, { passive: false });
+
+/* two fingers on the card on top of the deck */
+const deckFingre = new Map();
+let deckKikk = null;
+function startDeckKikk() {
+  if (deckKikk || !sbEl.hidden) return;
+  const el = pool.get(cur); if (!el) return;
+  if (drag) { clearTimeout(drag.holdT); drag = null; clearDragUi(); }
+  stopRiffle(); sync({ instant: true });
+  const [a, b] = toFingre(deckFingre);
+  deckKikk = kikk(el, a, b);
+}
 stage.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse') return;
+  deckFingre.set(e.pointerId, [e.clientX, e.clientY]);
+  if (deckFingre.size === 2 && e.target.closest('.card.is-top, .stage')) startDeckKikk();
+});
+stage.addEventListener('pointermove', e => {
+  if (!deckFingre.has(e.pointerId)) return;
+  deckFingre.set(e.pointerId, [e.clientX, e.clientY]);
+  if (deckKikk && deckFingre.size >= 2) { const [a, b] = toFingre(deckFingre); deckKikk.flytt(a, b); }
+});
+const deckSlipp = e => {
+  if (!deckFingre.delete(e.pointerId)) return;
+  if (deckKikk && deckFingre.size < 2) { deckKikk.slipp(); deckKikk = null; }
+};
+stage.addEventListener('pointerup', deckSlipp);
+stage.addEventListener('pointercancel', deckSlipp);
+
+stage.addEventListener('pointerdown', e => {
+  if (deckKikk || deckFingre.size > 1) return;              // a second finger: zoom, not a swipe
   // controls on the card take taps, not drags; the delete buttons in the list of days sit where a swipe
   // often starts, so a drag may begin on them (a tap on them still only deletes)
   if (e.button !== 0 || e.target.closest('.ctl:not(.ldel)')) return;
@@ -2106,6 +2215,47 @@ renderHelp();
 const helpIndex = () => { const w = helpTrack.firstElementChild ? helpTrack.firstElementChild.offsetWidth + 18 : 1; return Math.round(helpTrack.scrollLeft / w); };
 helpTrack.addEventListener('scroll', () => { const k = helpIndex(); helpDots.querySelectorAll('button').forEach((b, j) => b.setAttribute('aria-selected', j === k)); }, { passive: true });
 helpDots.addEventListener('click', e => { const b = e.target.closest('button'); if (b) helpTrack.children[+b.dataset.k].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); });
+/* the explanation cards: one finger swipes between them, two fingers zoom (peek zoom) */
+const hjelpFingre = new Map();
+let hjelpDra = null, hjelpKikk = null;
+function snapHjelp(k) {
+  helpTrack.classList.remove('drar');
+  const kort = helpTrack.children[Math.max(0, Math.min(helpTrack.children.length - 1, k))];
+  if (kort) kort.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+}
+helpTrack.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse') return;                   // the mouse uses the dots and the wheel
+  hjelpFingre.set(e.pointerId, [e.clientX, e.clientY]);
+  try { helpTrack.setPointerCapture(e.pointerId); } catch (err) {}
+  if (hjelpFingre.size === 2) {
+    if (hjelpDra && hjelpDra.moved) snapHjelp(hjelpDra.k0);
+    hjelpDra = null;
+    const [a, b] = toFingre(hjelpFingre), m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    const under = document.elementFromPoint(m[0], m[1]);
+    const kort = (under && under.closest('.help-card')) || helpTrack.children[helpIndex()];
+    if (kort) hjelpKikk = kikk(kort, a, b);
+  } else if (hjelpFingre.size === 1 && !hjelpKikk) hjelpDra = { id: e.pointerId, x0: e.clientX, sl0: helpTrack.scrollLeft, k0: helpIndex(), moved: false };
+});
+helpTrack.addEventListener('pointermove', e => {
+  if (!hjelpFingre.has(e.pointerId)) return;
+  hjelpFingre.set(e.pointerId, [e.clientX, e.clientY]);
+  if (hjelpKikk) { if (hjelpFingre.size >= 2) { const [a, b] = toFingre(hjelpFingre); hjelpKikk.flytt(a, b); } return; }
+  const d = hjelpDra; if (!d || d.id !== e.pointerId) return;
+  const dx = e.clientX - d.x0;
+  if (!d.moved) { if (Math.abs(dx) < 6) return; d.moved = true; helpTrack.classList.add('drar'); }
+  helpTrack.scrollLeft = d.sl0 - dx;
+});
+const hjelpSlipp = e => {
+  if (!hjelpFingre.delete(e.pointerId)) return;
+  if (hjelpKikk) { if (hjelpFingre.size < 2) { hjelpKikk.slipp(); hjelpKikk = null; } return; }
+  const d = hjelpDra; if (!d || d.id !== e.pointerId) return;
+  hjelpDra = null;
+  if (!d.moved) return;
+  const dx = e.clientX - d.x0;
+  snapHjelp(dx < -40 ? d.k0 + 1 : dx > 40 ? d.k0 - 1 : d.k0);
+};
+helpTrack.addEventListener('pointerup', hjelpSlipp);
+helpTrack.addEventListener('pointercancel', hjelpSlipp);
 function openHelp() { showSheet(helpSheet); scrim.classList.add('dark'); helpTrack.scrollLeft = 0; setTimeout(() => $('#closeHelp').focus(), 60); }
 $('#openHelp').addEventListener('click', openHelp);
 $('#closeHelp').addEventListener('click', () => closeSheets());
@@ -2665,7 +2815,7 @@ Vist.on(sjekkBonus);
 /* ---- the picture in full screen: KI, Foto or Tegneserie for this card ----
    A tap on the picture field opens it; the choice is kept for this card. A tap on the picture (or outside)
    goes back to the card. */
-const sbEl = $('#storbilde'), sbBildeEl = $('#sbBilde');
+const sbEl = $('#storbilde'), sbBildeEl = $('#sbBilde'), sporEl = $('#sbSpor');
 const SETTNAVN = { ki: 'illustrasjonen', foto: 'fotografiet', tegneserie: 'tegneseriefuglen' };
 let sbKort = null, sbFokus = null, sbLukker = false, sbApnet = 0, sbImgs = [$('#sbImg1'), $('#sbImg2')];
 const feltRect = el => { const r = el.querySelector('.front').getBoundingClientRect();
@@ -2692,7 +2842,21 @@ function paintStorbilde() {
   const kred = $('#sbKred');
   kred.textContent = v === 'foto' && c.fotograf ? `Foto: ${c.fotograf}${c.lisens ? ` · ${c.lisens}` : ''}` : '';
   kred.hidden = !kred.textContent;
-  $('#sbHint').textContent = (mangler.length ? `${c.navn} har ikke ${mangler.join(' eller ')} ennå. ` : '') + 'Trykk på bildet for å gå tilbake til kortet.';
+  $('#sbHint').textContent = (mangler.length ? `${c.navn} har ikke ${mangler.join(' eller ')} ennå. ` : '') + 'Sveip for å se de andre fuglene. Trykk på bildet for å gå tilbake til kortet.';
+  sbBildeEl.setAttribute('aria-label', `${c.navn}. Tilbake til kortet. Piltastene viser forrige og neste fugl.`);
+}
+/* the next open card in the deck's order (grey cards are skipped), round the deck like the deck itself */
+function naboKort(c, d) {
+  const p0 = POS[BY_KEY[c.key]]; if (p0 == null) return null;
+  for (let k = 1; k < ND; k++) { const n = CARDS[DECK[mod(p0 + d * k)]]; if (n === c) return null; if (!erLaast(n)) return n; }
+  return null;
+}
+function paintNaboer() {
+  [['forrige', -1], ['neste', 1]].forEach(([k, d]) => {
+    const n = sbKort && naboKort(sbKort, d), el = sporEl.querySelector(`.sb-nabo.${k}`);
+    el.hidden = !n;
+    if (n) settStorbilde(el.querySelector('img'), n, settAv(n));
+  });
 }
 function apneStorbilde(c) {
   const el = pool.get(BY_KEY[c.key]); if (!el || erLaast(c) || !sbEl.hidden) return;
@@ -2700,7 +2864,8 @@ function apneStorbilde(c) {
   sbKort = c; sbFokus = document.activeElement;
   $('#sbNavn').textContent = c.navn; $('#sbLatin').textContent = c.latin;
   settStorbilde(sbImgs[0], c, settAv(c)); sbImgs[0].classList.remove('ut'); sbImgs[1].classList.add('ut');
-  paintStorbilde();
+  paintStorbilde(); paintNaboer();
+  sporEl.style.transform = ''; sbDx = 0;
   sbEl.hidden = false; app.inert = true; sbApnet = performance.now();
   // the picture grows out of the card
   const til = sbBildeEl.getBoundingClientRect(), fra = feltRect(el);
@@ -2711,11 +2876,12 @@ function apneStorbilde(c) {
   }
   void sbEl.offsetWidth; sbEl.classList.add('on');
   haptic(8);
-  setTimeout(() => { const b = sbEl.querySelector('[data-sb][aria-checked="true"]'); (b || sbBildeEl).focus(); }, 60);
+  setTimeout(() => sbBildeEl.focus(), 60);
 }
 function lukkStorbilde() {
   if (sbEl.hidden || sbLukker) return;
   sbLukker = true;
+  if (sbKikk) { sbKikk.slipp(); sbKikk = null; } sbFingre.clear(); sbDra = null;
   const c = sbKort, el = pool.get(BY_KEY[c.key]);
   sbEl.classList.remove('on');
   const fra = sbBildeEl.getBoundingClientRect(), til = el && POS[BY_KEY[c.key]] != null ? feltRect(el) : null;
@@ -2746,8 +2912,82 @@ function velgStorbilde(v) {
   si(`${c.navn} viser nå ${SETTNAVN[v]}.`);
   const b = sbEl.querySelector(`[data-sb="${v}"]`); if (b && document.activeElement && document.activeElement.closest('#sbValg')) b.focus();
 }
+/* swiping to the bird before or after; the deck behind follows, so the picture goes back into that card */
+let sbDx = 0, sbDra = null, sbKikk = null, sbBytter = false;
+const sbFingre = new Map();
+const sbBredde = () => sbBildeEl.getBoundingClientRect().width + 20;
+function sprettTilbake() {
+  const fra = sbDx; sbDx = 0; sporEl.style.transform = '';
+  if (fra && !matchMedia('(prefers-reduced-motion: reduce)').matches) sporEl.animate([{ transform: `translateX(${fra}px)` }, { transform: 'none' }], { duration: 200, easing: 'cubic-bezier(.2,.8,.2,1)' });
+}
+function visKort(c) {
+  sbKort = c;
+  $('#sbNavn').textContent = c.navn; $('#sbLatin').textContent = c.latin;
+  settStorbilde(sbImgs[0], c, settAv(c)); sbImgs[0].classList.remove('ut'); sbImgs[1].classList.add('ut');
+  paintStorbilde();
+  if (BY_KEY[c.key] !== cur && POS[BY_KEY[c.key]] != null) jump(BY_KEY[c.key], 'instant');   // the deck follows
+  si(`${c.navn}.`);
+}
+function byttStorbilde(d) {
+  if (sbBytter || sbLukker) return;
+  const n = naboKort(sbKort, d);
+  if (!n) { sprettTilbake(); return; }
+  sbBytter = true;
+  const S = sbBredde(), fra = sbDx, til = -d * S;
+  sbDx = 0;
+  const ferdig = () => {
+    visKort(n);
+    const img = sbImgs[0];
+    const bytt = () => { sporEl.style.transform = ''; paintNaboer(); sbBytter = false; };
+    if (img.decode) img.decode().then(bytt, bytt); else bytt();
+  };
+  sporEl.style.transform = `translateX(${til}px)`;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { ferdig(); return; }
+  sporEl.animate([{ transform: `translateX(${fra}px)` }, { transform: `translateX(${til}px)` }], { duration: 230, easing: 'cubic-bezier(.2,.8,.2,1)' }).onfinish = ferdig;
+  haptic(6);
+}
+sporEl.addEventListener('pointerdown', e => {
+  if (sbLukker || sbBytter || (e.pointerType === 'mouse' && e.button !== 0)) return;
+  sbFingre.set(e.pointerId, [e.clientX, e.clientY]);
+  try { sporEl.setPointerCapture(e.pointerId); } catch (err) {}
+  if (sbFingre.size === 2) {                                // two fingers: peek zoom instead of a swipe
+    if (sbDra && sbDra.moved) sprettTilbake();
+    sbDra = null;
+    const [a, b] = toFingre(sbFingre); sbKikk = kikk(sbBildeEl, a, b);
+  } else if (sbFingre.size === 1 && !sbKikk) {
+    const t = performance.now();
+    sbDra = { id: e.pointerId, x0: e.clientX, y0: e.clientY, t0: t, moved: false, hist: [[e.clientX, t]] };
+  }
+});
+sporEl.addEventListener('pointermove', e => {
+  if (!sbFingre.has(e.pointerId)) return;
+  sbFingre.set(e.pointerId, [e.clientX, e.clientY]);
+  if (sbKikk) { if (sbFingre.size >= 2) { const [a, b] = toFingre(sbFingre); sbKikk.flytt(a, b); } return; }
+  const d = sbDra; if (!d || d.id !== e.pointerId) return;
+  const dx = e.clientX - d.x0, dy = e.clientY - d.y0, t = performance.now();
+  if (!d.moved) { if (Math.hypot(dx, dy) < 8) return; d.moved = true; }
+  d.hist.push([e.clientX, t]); while (d.hist.length > 2 && t - d.hist[0][1] > 100) d.hist.shift();
+  sbDx = naboKort(sbKort, dx < 0 ? 1 : -1) ? dx : dx * 0.3;   // it gives way less when there is no bird that way
+  sporEl.style.transform = `translateX(${sbDx.toFixed(1)}px)`;
+});
+function sbSlipp(e, avbrutt) {
+  if (!sbFingre.delete(e.pointerId)) return;
+  if (sbKikk) { if (sbFingre.size < 2) { sbKikk.slipp(); sbKikk = null; sbDra = null; } return; }
+  const d = sbDra; if (!d || d.id !== e.pointerId) return;
+  sbDra = null;
+  if (!d.moved) {                                           // a tap on the picture: back to the card
+    if (!avbrutt && performance.now() - d.t0 < 450 && performance.now() - sbApnet > 450) lukkStorbilde();
+    return;
+  }
+  const h = d.hist, v = h.length > 1 ? (h[h.length - 1][0] - h[0][0]) / Math.max(8, h[h.length - 1][1] - h[0][1]) : 0;
+  if (!avbrutt && (Math.abs(sbDx) > sbBredde() * 0.22 || (Math.abs(v) > 0.45 && Math.abs(sbDx) > 30))) byttStorbilde(sbDx < 0 ? 1 : -1);
+  else sprettTilbake();
+}
+sporEl.addEventListener('pointerup', e => sbSlipp(e, false));
+sporEl.addEventListener('pointercancel', e => sbSlipp(e, true));
 sbEl.addEventListener('click', e => {
   if (performance.now() - sbApnet < 450) return;           // the click that follows the tap that opened it
+  if (e.target.closest('#sbSpor') && e.detail !== 0) return;   // taps and swipes on the picture are handled above (Enter still closes)
   const b = e.target.closest('[data-sb]');
   if (b) { velgStorbilde(b.dataset.sb); return; }
   if (e.target.closest('#sbValg')) return;
@@ -2755,6 +2995,7 @@ sbEl.addEventListener('click', e => {
 });
 function storbildeTast(e) {
   if (e.key === 'Escape') { e.preventDefault(); lukkStorbilde(); return; }
+  if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !e.target.closest('#sbValg')) { e.preventDefault(); byttStorbilde(e.key === 'ArrowRight' ? 1 : -1); return; }
   if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key) || !e.target.closest('#sbValg')) return;
   e.preventDefault();
   const valg = [...sbEl.querySelectorAll('[data-sb]')].filter(b => !b.hidden && b.getAttribute('aria-disabled') !== 'true').map(b => b.dataset.sb);
