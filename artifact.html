@@ -2842,20 +2842,22 @@ function paintStorbilde() {
   const kred = $('#sbKred');
   kred.textContent = v === 'foto' && c.fotograf ? `Foto: ${c.fotograf}${c.lisens ? ` · ${c.lisens}` : ''}` : '';
   kred.hidden = !kred.textContent;
-  $('#sbHint').textContent = (mangler.length ? `${c.navn} har ikke ${mangler.join(' eller ')} ennå. ` : '') + 'Sveip for å se de andre fuglene. Trykk på bildet for å gå tilbake til kortet.';
-  sbBildeEl.setAttribute('aria-label', `${c.navn}. Tilbake til kortet. Piltastene viser forrige og neste fugl.`);
+  $('#sbHint').textContent = (mangler.length ? `${c.navn} har ikke ${mangler.join(' eller ')} ennå. ` : '') + (naboSett(c, 1) || naboSett(c, -1) ? 'Sveip for å bytte bilde. ' : '') + 'Trykk på bildet for å gå tilbake til kortet.';
+  sbBildeEl.setAttribute('aria-label', `${c.navn}. Tilbake til kortet. Piltastene bytter mellom KI, foto og tegneserie.`);
 }
-/* the next open card in the deck's order (grey cards are skipped), round the deck like the deck itself */
-function naboKort(c, d) {
-  const p0 = POS[BY_KEY[c.key]]; if (p0 == null) return null;
-  for (let k = 1; k < ND; k++) { const n = CARDS[DECK[mod(p0 + d * k)]]; if (n === c) return null; if (!erLaast(n)) return n; }
-  return null;
+/* the picture set before or after this one, in the order of the buttons (KI · Foto · Tegneserie),
+   skipping the ones this bird does not have */
+const SETTREKKE = ['ki', 'foto', 'tegneserie'];
+function naboSett(c, d) {
+  const har = SETTREKKE.filter(v => finnesSett(v) && harSett(c, v));
+  const i = har.indexOf(settAv(c));
+  return i < 0 ? null : har[i + d] || null;
 }
 function paintNaboer() {
   [['forrige', -1], ['neste', 1]].forEach(([k, d]) => {
-    const n = sbKort && naboKort(sbKort, d), el = sporEl.querySelector(`.sb-nabo.${k}`);
-    el.hidden = !n;
-    if (n) settStorbilde(el.querySelector('img'), n, settAv(n));
+    const v = sbKort && naboSett(sbKort, d), el = sporEl.querySelector(`.sb-nabo.${k}`);
+    el.hidden = !v;
+    if (v) settStorbilde(el.querySelector('img'), sbKort, v);
   });
 }
 function apneStorbilde(c) {
@@ -2907,12 +2909,12 @@ function velgStorbilde(v) {
   const vis = () => { ny.classList.remove('ut'); na.classList.add('ut'); };
   if (ny.decode) ny.decode().then(vis, vis); else vis();
   sbImgs = [ny, na];
-  paintStorbilde();
+  paintStorbilde(); paintNaboer();
   haptic(6);
   si(`${c.navn} viser nå ${SETTNAVN[v]}.`);
   const b = sbEl.querySelector(`[data-sb="${v}"]`); if (b && document.activeElement && document.activeElement.closest('#sbValg')) b.focus();
 }
-/* swiping to the bird before or after; the deck behind follows, so the picture goes back into that card */
+/* swiping between the pictures of this bird (KI, Foto, Tegneserie); the choice is kept for the card, like the buttons */
 let sbDx = 0, sbDra = null, sbKikk = null, sbBytter = false;
 const sbFingre = new Map();
 const sbBredde = () => sbBildeEl.getBoundingClientRect().width + 20;
@@ -2920,23 +2922,23 @@ function sprettTilbake() {
   const fra = sbDx; sbDx = 0; sporEl.style.transform = '';
   if (fra && !matchMedia('(prefers-reduced-motion: reduce)').matches) sporEl.animate([{ transform: `translateX(${fra}px)` }, { transform: 'none' }], { duration: 200, easing: 'cubic-bezier(.2,.8,.2,1)' });
 }
-function visKort(c) {
-  sbKort = c;
-  $('#sbNavn').textContent = c.navn; $('#sbLatin').textContent = c.latin;
-  settStorbilde(sbImgs[0], c, settAv(c)); sbImgs[0].classList.remove('ut'); sbImgs[1].classList.add('ut');
+function visSett(v) {
+  const c = sbKort;
+  KORTVALG[c.key] = v; lagreKortvalg();
+  const el = pool.get(BY_KEY[c.key]); if (el) oppdaterBilde(el);
+  settStorbilde(sbImgs[0], c, v); sbImgs[0].classList.remove('ut'); sbImgs[1].classList.add('ut');
   paintStorbilde();
-  if (BY_KEY[c.key] !== cur && POS[BY_KEY[c.key]] != null) jump(BY_KEY[c.key], 'instant');   // the deck follows
-  si(`${c.navn}.`);
+  si(`${c.navn} viser nå ${SETTNAVN[v]}.`);
 }
 function byttStorbilde(d) {
   if (sbBytter || sbLukker) return;
-  const n = naboKort(sbKort, d);
+  const n = naboSett(sbKort, d);
   if (!n) { sprettTilbake(); return; }
   sbBytter = true;
   const S = sbBredde(), fra = sbDx, til = -d * S;
   sbDx = 0;
   const ferdig = () => {
-    visKort(n);
+    visSett(n);
     const img = sbImgs[0];
     const bytt = () => { sporEl.style.transform = ''; paintNaboer(); sbBytter = false; };
     if (img.decode) img.decode().then(bytt, bytt); else bytt();
@@ -2967,7 +2969,7 @@ sporEl.addEventListener('pointermove', e => {
   const dx = e.clientX - d.x0, dy = e.clientY - d.y0, t = performance.now();
   if (!d.moved) { if (Math.hypot(dx, dy) < 8) return; d.moved = true; }
   d.hist.push([e.clientX, t]); while (d.hist.length > 2 && t - d.hist[0][1] > 100) d.hist.shift();
-  sbDx = naboKort(sbKort, dx < 0 ? 1 : -1) ? dx : dx * 0.3;   // it gives way less when there is no bird that way
+  sbDx = naboSett(sbKort, dx < 0 ? 1 : -1) ? dx : dx * 0.3;   // it gives way less when there is no picture that way
   sporEl.style.transform = `translateX(${sbDx.toFixed(1)}px)`;
 });
 function sbSlipp(e, avbrutt) {
