@@ -182,6 +182,10 @@ button{cursor:pointer;touch-action:manipulation}
 .frostrom{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:60}
 .frobtn.mottar{background:color-mix(in srgb, var(--gold) 34%, var(--surface));border-color:color-mix(in srgb, var(--gold) 70%, var(--line))}
 .frobtn.fylt{animation:frofylt 1s ease-out}
+.frobtn.fram{position:relative;z-index:61;background:var(--surface);box-shadow:0 0 0 2px color-mix(in srgb, var(--gold) 70%, transparent),0 0 26px 6px color-mix(in srgb, var(--gold) 45%, transparent)}
+.frobtn.fram.mottar{background:color-mix(in srgb, var(--gold) 34%, var(--surface))}
+.fest.strommer .fest-tekst small,.bfest.strommer .bf-t2 small,.lfest.strommer .lf-tekst small{visibility:hidden}
+.fest.strommer,.bfest.strommer,.lfest.strommer{cursor:default}
 @keyframes frofylt{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--gold) 75%, transparent)}100%{box-shadow:0 0 0 16px color-mix(in srgb, var(--gold) 0%, transparent)}}
 /* the menu at the top right */
 .meny-bak{position:fixed;inset:0;z-index:44}
@@ -1064,7 +1068,7 @@ const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          
    While the app is being tested, old data is not kept. Change TESTMERKE to wipe everything stored on each
    device the next time the app opens (the shared database in Claude is emptied separately when publishing).
    Settings also has a button «Nullstill alt (test)». */
-const TESTMERKE = '2026-09-30-bronse';
+const TESTMERKE = '2026-09-30-strom';
 const DATANOKLER = ['hagefugler-oslo:sett:v1', 'hagefugler:tellinger:v1', 'hagefugler:bonusvist:v1', 'hagefugler:kjop:v1'];
 if (lsGet('hagefugler:testmerke') !== TESTMERKE) {
   DATANOKLER.forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
@@ -2495,25 +2499,40 @@ function snuBonus() {
   $('#live').textContent = `Bonuskort: ${f.c.navn}. ${$('#bfInfo').textContent}`;
 }
 function festTrykk() { const f = aktivFest; if (f && f.type === 'bonus' && !f.snudd) snuBonus(); else lukkFest(); }
+const festElAv = f => (f && f.type === 'bonus' ? bfEl : f && f.type === 'laas' ? lfEl : festEl);
+/* Tapping on: first the seeds stream from the card in the celebration into the counter, then it closes
+   and the card is shown in the deck. */
 function lukkFest() {
   if (!festAapen) return;
-  const f = aktivFest, el = f && f.type === 'bonus' ? bfEl : f && f.type === 'laas' ? lfEl : festEl;
-  el.classList.remove('on');
+  const f = aktivFest, el = festElAv(f);
+  if (f && f.strommer) return;                              // the stream is running: it closes by itself
+  const belop = f && !f.strommet ? (f.type === 'laas' ? f.frigjort : f.fro) || 0 : 0;
+  if (belop) {
+    f.strommet = true;
+    if (f.type !== 'laas') { froFrys(); f.fro = 0; }         // the seeds leave the celebration (an unlock already holds the counter)
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) { froSlipp(); }
+    else {
+      f.strommer = true; el.classList.add('strommer');
+      const kort = el.querySelector('.fest-kort, .bf-kort, .lf-kort'), bank = $('#openFro');
+      bank.classList.add('fram');
+      haptic(10);
+      froStrom(kort.getBoundingClientRect(), bank, belop, () => {
+        froSlipp();
+        setTimeout(() => { bank.classList.remove('fram'); f.strommer = false; lukkFest(); }, 450);
+      });
+      return;
+    }
+  }
+  el.classList.remove('on', 'strommer');
   setTimeout(() => {
     el.hidden = true; el.classList.remove('snudd'); festAapen = false; aktivFest = null;
-    const belop = f ? (f.type === 'laas' ? f.frigjort : f.fro) || 0 : 0;
-    if (belop && f.type !== 'laas') froFrys();              // held until the stream has landed (an unlock already holds it)
     // show the card in the deck: a new bonus card, a card just unlocked, or a card with a new border
     if (f && !openSheet && POS[BY_KEY[f.c.key]] != null) {
       jump(BY_KEY[f.c.key]);
       if (f.type !== 'niva') setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
     }
-    // then the seeds stream from the card into the counter
-    if (belop) {
-      froVent.push({ c: f.c, belop, mot: 'fro', strom: true });
-      froFlyTil = Math.max(froFlyTil, Date.now() + 560 + stromTid(belop) + 150);
-    }
-    if (festKo.length) nesteFest(); else if (festFokus && festFokus.focus && !openSheet) festFokus.focus();
+    // the next celebration waits a moment, so the card can be seen in the deck first
+    if (festKo.length) { festPlanlagt = true; setTimeout(nesteFest, 1400); } else if (festFokus && festFokus.focus && !openSheet) festFokus.focus();
     froVentKjor(560);
   }, 350);
 }
@@ -2697,7 +2716,6 @@ function froVentKjor(forsink = 0) {
         const kel = pool.get(BY_KEY[v.c.key]), mal = kel && kel.querySelector('.ls-venter:not([hidden])');
         if (!rolig && mal) froFly(fra, mal, v.belop, null);
       } else if (rolig) froSlipp();
-      else if (v.strom) froStrom(froKildeFlate(v.c), $('#openFro'), v.belop, froSlipp);
       else froFly(fra, $('#openFro'), v.belop, froSlipp);
     });
   }, forsink);
@@ -2738,15 +2756,17 @@ function froFly(fra, tilEl, belop, ferdig) {
 const stromAntall = b => Math.max(30, Math.min(120, Math.round(18 * Math.log2(b / 500 + 1))));
 const stromSpre = b => 900 + stromAntall(b) * 14;          // how long seeds keep leaving the card
 const stromTid = b => stromSpre(b) + 1000;                  // until the last one has landed
-function froKildeFlate(c) {
-  const el = (c && pool.get(BY_KEY[c.key])) || pool.get(cur);
-  const r = el ? el.getBoundingClientRect() : null;
-  return r && r.width ? r : $('#stage').getBoundingClientRect();
+let froBilde = null, froSprite = null;
+/* one seed with a light halo, drawn once, so the seeds show up on the dark celebration too */
+function lagSprite() {
+  const c = document.createElement('canvas'); c.width = c.height = 88;
+  const x = c.getContext('2d'); x.shadowColor = 'rgba(255,238,196,.95)'; x.shadowBlur = 9;
+  x.drawImage(froBilde, 12, 12, 64, 64); x.shadowBlur = 0; x.drawImage(froBilde, 12, 12, 64, 64);
+  froSprite = c;
 }
-let froBilde = null;
 const STROM = { liste: [], raf: 0 };
 function froStrom(fra, tilEl, belop, ferdig) {
-  if (!froBilde) { froBilde = new Image(); froBilde.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(FROIKON.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" ')); }
+  if (!froBilde) { froBilde = new Image(); froBilde.onload = lagSprite; froBilde.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(FROIKON.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" ')); }
   const n = stromAntall(belop), spre = stromSpre(belop), t0 = performance.now();
   froFlyTil = Math.max(froFlyTil, Date.now() + stromTid(belop) + 60);
   const fro = Array.from({ length: n }, (_, k) => {
@@ -2782,7 +2802,8 @@ function stromSteg(t) {
       const sk = p < .12 ? .3 + p / .12 * .8 : 1.1 - (p - .12) * .5, str = f.str * sk;
       ctx.globalAlpha = p > .93 ? (1 - p) / .07 : 1;
       ctx.save(); ctx.translate(x, y); ctx.rotate(f.rot + f.spin * p);
-      if (froBilde.complete) ctx.drawImage(froBilde, -str / 2, -str / 2, str, str);
+      if (froSprite) { const h = str * 88 / 64; ctx.drawImage(froSprite, -h / 2, -h / 2, h, h); }
+      else if (froBilde.complete) ctx.drawImage(froBilde, -str / 2, -str / 2, str, str);
       ctx.restore();
     });
     if (s.landet === s.fro.length && !s.ferdigKalt) {
