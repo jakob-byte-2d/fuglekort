@@ -91,6 +91,23 @@ feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`, `id` som
 - Bonuskortene får observasjonsdager og glinskant som fuglene, men teller ikke med i fuglelista: ringen, «av 100 fugler sett», poengene, sjeldenhetsstolpene og merkene gjelder bare fuglene.
 - De har KI-illustrasjoner og fotografier som fuglene: KI-kortene i `docs/cards/`, kortene med fotografi i `docs/cards-foto/` (med `bildeFoto`, `fotograf` og `lisens` i `cards.json`). Med fotografier står fotografen og lisensen også nederst på baksiden av kortet.
 
+## Solsikkefrø
+
+Man tjener solsikkefrø og bruker dem til å låse opp kort. Alle tallene står samlet i `FRO` øverst i frødelen av `src/app.html`.
+
+- **Åpne kort:** 001–025 er åpne fra start. 026–100 er grå kort: på sin plass i kortstokken, men bare navnet, stjernene, prisen og en lås vises. Bildet og teksten er skjult, også i samlingen, søket (grå kort finnes bare på navn), «Sist sett» og tellelista.
+- **Tjene frø:** registrering (én observasjonsdag) 100 × stjerner, første gang man ser en art 1 000 × stjerner, sølv-/gull-/holokant 2 000 / 5 000 / 15 000, bonuskort 10 000, og merkene: 10 arter 2 500, 25 arter 5 000, 50 arter 15 000, hele kortstokken 50 000, sju på rad 5 000, 30 dager 7 500, fire årstider 10 000, Tellekorps 7 500, Flokk 7 500. Meldingen nederst viser f.eks. «+300 frø», og frøtallet øverst teller opp.
+- **Grå kort:** Man kan registrere en fugl med grått kort, men får en advarsel hver gang og bare halvparten av frøene (registrering, første gang og nivåer). De frøene er låst til kortet («1 100 frø venter på kortet») og frigjøres når kortet låses opp. Registreringer på grå kort teller fullt mot bonuskort og merker. Glinskant vises først når kortet er åpnet.
+- **Priser:** `pris = 3 000 × 1,035^(kortnr − 26) × stjernefaktor` (★★ 1,35 · ★★★ 1,8 · ★★★★ 2,4 · ★★★★★ 3,2), i hele frø uten avrunding (desimalene kuttes). Alle prisene er forskjellige og stiger bakover i kortstokken (appen sjekker det ved oppstart). Fra 026 Svartmeis 4 050 til 100 Lappugle 122 421, rundt 3 millioner til sammen.
+- **Kjøpe:** Trykk på et grått kort («Lås opp Nøtteskrike for 7 359 frø?»), eller åpne Frøbutikken fra frøtallet øverst. Opplåsingen har sin egen hendelse: fargene fyller kortet nedenfra og frø drysser; den står til man trykker.
+- **Statistikk:** delen «Solsikkefrø» viser saldo, tjent i alt, brukt, frø som venter på grå kort, åpne kort og hva frøene kom fra. Merkene viser hvor mange frø de gir. Innstillinger (tannhjulet) ligger nå øverst i statistikken, for å gi plass til frøtallet.
+- **Lagring:** Saldoen regnes ut hver gang: tjent (fra observasjonene, nivåene, merkene og bonuskortene) minus brukt. Bare kjøpene lagres, i samlingen `kjop` (`kjop/garrulus-glandarius = { pris, dato, ts }`); i Claude deles de, på telefonen ligger de i `localStorage` (`hagefugler:kjop:v1`), og de er med i sikkerhetskopien. Frø fra dager før kjøpsdatoen gir halv verdi; dager fra og med kjøpsdatoen full verdi. Angrer man en registrering, går saldoen ned av seg selv; kjøpte kort beholdes også om saldoen havner under null.
+- **Tempo:** En simulering med fem registreringer om dagen gir omtrent 38 åpne kort etter en uke, 46 etter en måned, 56 etter tre måneder, 65 etter et halvt år og 78 etter ett år.
+
+## Testmodus
+
+Mens appen testes, tas ikke gamle data vare på. `TESTMERKE` i `src/app.html`: når det endres, sletter appen observasjoner, tellinger, bonusvist og kjøp på hver enhet neste gang den åpnes. Den delte databasen i Claude tømmes når en ny versjon publiseres. Under Innstillinger finnes også «Nullstill alt (test)», som tømmer alt, også den delte lista.
+
 ## Glinskort og merker
 
 Kanten på et kort blir sølv, gull eller holo når du har sett fuglen mange dager. Jo sjeldnere fugl, jo færre dager trengs:
