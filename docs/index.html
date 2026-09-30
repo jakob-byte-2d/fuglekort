@@ -166,6 +166,7 @@ button{cursor:pointer;touch-action:manipulation}
 .mkant::before{content:"";position:absolute;inset:3.75cqw;border-radius:1.4cqw;box-shadow:0 0 0 .3cqw rgba(0,0,0,.15)}
 [data-niva="1"] .mk-metall{background:linear-gradient(135deg,#7f878d 0%,#eef1f3 16%,#a7afb5 30%,#fbfcfd 46%,#949ca2 60%,#e3e7ea 78%,#7a8288 100%)}
 [data-niva="2"] .mk-metall{background:linear-gradient(135deg,#7d4f06 0%,#f7d97d 16%,#b67f1a 30%,#fff3c2 46%,#a36c0e 60%,#f2cb58 78%,#6f4605 100%)}
+[data-niva="b"] .mk-metall{background:linear-gradient(135deg,#5a2d0f 0%,#e2a36e 16%,#9a5829 30%,#f8d0a8 46%,#87491f 60%,#d99459 78%,#4d260b 100%)}
 [data-niva="3"] .mk-metall{background:linear-gradient(115deg,#ff7b7b,#ffd76b,#8dff8a,#72e5ff,#8b87ff,#ff86d8,#ff7b7b,#ffd76b,#8dff8a,#72e5ff);
   background-size:300% 300%;background-position:var(--mx) var(--my)}
 [data-niva="3"] .mk-metall::after{content:"";position:absolute;inset:0;border-radius:inherit;
@@ -195,6 +196,10 @@ button{cursor:pointer;touch-action:manipulation}
 .frolag{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
 .flyfro{position:absolute;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;will-change:transform,opacity;filter:drop-shadow(0 0 1.5px rgba(255,255,255,.9)) drop-shadow(0 2px 3px rgba(0,0,0,.3))}
 .flyfro .froikon{width:100%;height:100%;display:block}
+.frostrom{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:60}
+.frobtn.mottar{background:color-mix(in srgb, var(--gold) 34%, var(--surface));border-color:color-mix(in srgb, var(--gold) 70%, var(--line))}
+.frobtn.fylt{animation:frofylt 1s ease-out}
+@keyframes frofylt{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--gold) 75%, transparent)}100%{box-shadow:0 0 0 16px color-mix(in srgb, var(--gold) 0%, transparent)}}
 /* the menu at the top right */
 .meny-bak{position:fixed;inset:0;z-index:44}
 .meny{position:fixed;z-index:45;min-width:228px;padding:6px;border-radius:16px;background:var(--surface);color:var(--ink);border:1px solid var(--line);
@@ -306,9 +311,12 @@ button{cursor:pointer;touch-action:manipulation}
 .lf-tekst small{font-size:13px;opacity:.8;margin-top:4px}
 
 /* ---------- bonuskort ---------- */
-.bonusmerke{position:absolute;right:3.2%;bottom:1.1%;height:4.5%;min-width:19%;padding:0 3cqw;display:grid;place-items:center;border-radius:99px;
-  background:linear-gradient(135deg,#a9461a,#ec8f32 55%,#c25d1d);color:#fff8ec;font-weight:800;font-size:3.5cqw;letter-spacing:.16em;text-transform:uppercase;
-  box-shadow:0 .6cqw 1.8cqw rgba(60,25,5,.4), inset 0 0 0 .3cqw rgba(255,255,255,.35);transform:rotate(-3deg);pointer-events:none;line-height:1}
+/* bonus cards: the strip left of the name turns bronze with BONUS on its side (drawn over the card picture) */
+.bstripe{position:absolute;left:4.93%;top:3.81%;width:6%;height:11.85%;border-radius:1.9cqw 0 0 1.9cqw;pointer-events:none;display:grid;place-items:center;
+  background:linear-gradient(90deg,#7b4119,#c07c45 35%,#e0a672 50%,#a9642f 70%,#6f3a15)}
+.bstripe svg{width:58%;height:auto;fill:#fff6ea;filter:drop-shadow(0 0 .35cqw rgba(60,25,5,.6))}
+.fest-kort:not(.bonus) .bstripe{display:none}
+.bfest.snudd .bf-for .mkant{animation:drift 3.2s ease-in-out .4s infinite alternate}
 .kred{position:absolute;left:8%;right:8%;bottom:1.4%;margin:0;padding:.8cqw 2.4cqw;border-radius:99px;background:rgba(253,252,243,.9);color:#3b4a42;
   font-size:2.9cqw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 .kred[hidden]{display:none}
@@ -605,6 +613,9 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .alb.g1::before,.alb.g2::before{content:"";position:absolute;inset:-3px;border-radius:7px;background:linear-gradient(135deg,#7f878d,#eef1f3 30%,#a7afb5 50%,#fbfcfd 70%,#7a8288)}
 .alb.g2::before{background:linear-gradient(135deg,#7d4f06,#f7d97d 30%,#b67f1a 50%,#fff3c2 70%,#6f4605)}
 .alb.g3::before{content:"";position:absolute;inset:-3px;border-radius:7px;background:linear-gradient(135deg,#ff8a8a,#ffe066,#8dff85,#7ee8ff,#9b8cff,#ff8ad8)}
+.alb.gb::before{content:"";position:absolute;inset:-3px;border-radius:7px;padding:3px;background:linear-gradient(135deg,#5a2d0f,#e2a36e 30%,#9a5829 50%,#f8d0a8 70%,#4d260b);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.alb.bn .th::after{content:"";position:absolute;left:4.93%;top:3.81%;width:6%;height:11.85%;border-radius:1px 0 0 1px;background:linear-gradient(90deg,#8a4d22,#e0a672 50%,#8a4d22)}
 
 .restore textarea{width:100%;min-height:90px;border-radius:10px;border:1px solid var(--line);background:var(--bg-hi);padding:10px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
 /* counting sheets: start, list of species, summary */
@@ -752,6 +763,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 
 <!-- sunflower seeds flying from a card to the counter -->
 <div class="frolag" id="froLag" aria-hidden="true"></div>
+<canvas class="frostrom" id="froStrom" aria-hidden="true"></canvas>
 
 <section class="sheet search" id="searchSheet" role="dialog" aria-modal="true" aria-label="Søk">
   <div class="qrow">
@@ -855,7 +867,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 
 <div class="fest" id="fest" role="dialog" aria-modal="true" aria-labelledby="festNavn" hidden>
   <div class="fest-straaler"></div>
-  <figure class="fest-kort seen"><img id="festBilde" alt=""><span id="festMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></figure>
+  <figure class="fest-kort seen"><img id="festBilde" alt=""><span data-bstripe></span><span id="festMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></figure>
   <div class="fest-tekst"><b id="festNavn"></b><span id="festArt"></span><small>Trykk for å fortsette</small></div>
 </div>
 <div class="dlg" id="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgTekst" hidden>
@@ -878,7 +890,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <div class="bf-kort">
     <div class="bf-inner">
       <div class="bf-side bf-bak"><img src="cards/bakside.webp" alt=""><b class="bf-q" aria-hidden="true">?</b></div>
-      <div class="bf-side bf-for seen"><img id="bfBilde" alt=""><span id="bfMerker"></span><span class="bonusmerke" aria-hidden="true">Bonus</span></div>
+      <div class="bf-side bf-for seen" id="bfFor" data-niva="b"><img id="bfBilde" alt=""><span data-bstripe></span><span id="bfMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></div>
     </div>
   </div>
   <div class="bf-tekst">
@@ -1069,7 +1081,7 @@ const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          
    While the app is being tested, old data is not kept. Change TESTMERKE to wipe everything stored on each
    device the next time the app opens (the shared database in Claude is emptied separately when publishing).
    Settings also has a button «Nullstill alt (test)». */
-const TESTMERKE = '2026-09-30-meny';
+const TESTMERKE = '2026-09-30-bronse';
 const DATANOKLER = ['hagefugler-oslo:sett:v1', 'hagefugler:tellinger:v1', 'hagefugler:bonusvist:v1', 'hagefugler:kjop:v1'];
 if (lsGet('hagefugler:testmerke') !== TESTMERKE) {
   DATANOKLER.forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
@@ -1196,7 +1208,7 @@ function froTekst(for_) {
   if (dh > 0) ut.push(`${fmtFro(dh)} frø låst til ${Object.keys(na.holdtPer).filter(k => na.holdtPer[k] !== for_.holdtPer[k]).length > 1 ? 'kortene' : 'kortet'}`);
   return ut.length ? ` ${ut.join(', ')}.` : '';
 }
-const froFor = () => { froNullstill(); return froRegnskap(); };
+const froFor = () => { froNullstill(); return Object.assign({}, froRegnskap(), { parkert: froParkert() }); };
 
 /* ================= Hagefugltelling =================
    A count keeps its start and end time, the area, and the highest number of each species seen at the
@@ -1324,6 +1336,9 @@ const hashBonus = /^#(b\d{2})$/i.exec(location.hash || '');
 if (hashBonus) { const i = CARDS.findIndex(c => c.id === hashBonus[1].toLowerCase()); if (i >= 0 && erApen(CARDS[i])) cur = i; }
 const pool = new Map();
 
+/* BONUS on its side, from the card font (Barlow Condensed Bold) as a path, so it looks the same everywhere */
+const BONUSSTRIPE = '<span class="bstripe" aria-hidden="true"><svg viewBox="-730 -3040 760 3060"><path transform="rotate(-90)" d="M245 0H56Q51 0 48 -4Q44 -7 44 -12V-688Q44 -693 48 -696Q51 -700 56 -700H223Q323 -700 380 -652Q436 -604 436 -509Q436 -410 368 -365Q364 -362 367 -359Q446 -303 446 -193Q446 -100 390 -50Q334 0 245 0ZM185 -574V-417Q185 -412 190 -412H226Q260 -412 279 -434Q298 -455 298 -494Q298 -535 280 -557Q261 -579 226 -579H190Q185 -579 185 -574ZM305 -214Q305 -258 286 -284Q267 -310 235 -310H190Q185 -310 185 -305V-127Q185 -122 190 -122H234Q267 -122 286 -146Q305 -170 305 -214ZM664 -190V-510Q664 -600 719 -654Q774 -708 866 -708Q958 -708 1014 -654Q1069 -600 1069 -510V-190Q1069 -100 1014 -46Q958 8 866 8Q774 8 719 -46Q664 -100 664 -190ZM928 -184V-516Q928 -548 911 -568Q894 -587 866 -587Q838 -587 822 -568Q805 -548 805 -516V-184Q805 -152 822 -132Q838 -113 866 -113Q894 -113 911 -132Q928 -152 928 -184ZM1605 -700H1721Q1726 -700 1730 -696Q1733 -693 1733 -688V-12Q1733 -7 1730 -4Q1726 0 1721 0H1589Q1579 0 1576 -10L1452 -397Q1451 -400 1448 -400Q1446 -399 1446 -396L1447 -12Q1447 -7 1444 -4Q1440 0 1435 0H1319Q1314 0 1310 -4Q1307 -7 1307 -12V-688Q1307 -693 1310 -696Q1314 -700 1319 -700H1450Q1460 -700 1463 -690L1588 -303Q1589 -300 1592 -300Q1594 -301 1594 -304L1593 -688Q1593 -693 1596 -696Q1600 -700 1605 -700ZM1978 -199V-688Q1978 -693 1982 -696Q1985 -700 1990 -700H2107Q2112 -700 2116 -696Q2119 -693 2119 -688V-185Q2119 -153 2135 -133Q2151 -113 2177 -113Q2203 -113 2218 -133Q2234 -153 2234 -185V-688Q2234 -693 2238 -696Q2241 -700 2246 -700H2363Q2368 -700 2372 -696Q2375 -693 2375 -688V-199Q2375 -105 2320 -48Q2266 8 2177 8Q2087 8 2032 -48Q1978 -105 1978 -199ZM2606 -175V-204Q2606 -209 2610 -212Q2613 -216 2618 -216H2733Q2738 -216 2742 -212Q2745 -209 2745 -204V-182Q2745 -151 2761 -132Q2777 -113 2801 -113Q2825 -113 2841 -131Q2857 -149 2857 -178Q2857 -208 2837 -230Q2817 -251 2759 -293Q2709 -329 2678 -357Q2647 -385 2625 -426Q2603 -467 2603 -521Q2603 -606 2656 -657Q2709 -708 2796 -708Q2884 -708 2938 -655Q2991 -602 2991 -516V-492Q2991 -487 2988 -484Q2984 -480 2979 -480H2864Q2859 -480 2856 -484Q2852 -487 2852 -492V-519Q2852 -550 2836 -568Q2821 -587 2796 -587Q2772 -587 2757 -570Q2742 -552 2742 -521Q2742 -491 2761 -468Q2780 -445 2836 -404Q2898 -358 2930 -330Q2961 -301 2978 -266Q2996 -232 2996 -184Q2996 -96 2942 -44Q2888 8 2800 8Q2742 8 2698 -15Q2654 -38 2630 -80Q2606 -121 2606 -175Z"/></svg></span>';
+document.querySelectorAll('[data-bstripe]').forEach(el => { el.outerHTML = BONUSSTRIPE; });
 const altTekst = c => `${c.bonus ? 'Bonuskort' : `Fuglekort ${c.id}`}: ${c.navn}, ${c.latin}. ${c.status}.${foto() && c.bildeFoto && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
 function makeCard(i) {
   const c = CARDS[i];
@@ -1339,9 +1354,9 @@ function makeCard(i) {
   <div class="inner">
     <div class="face front" style="background-position:${spritePos(i)}">
       <img src="${esc(bildeAv(c))}" alt="${esc(altTekst(c))}" draggable="false" decoding="async">
+      ${c.bonus ? BONUSSTRIPE : ''}
       ${PRIS[c.key] != null ? graaKort(c) : ''}
       <span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span>
-      ${c.bonus ? '<span class="bonusmerke" aria-hidden="true">Bonus</span>' : ''}
       <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
       <button class="ctl sett-hit" data-act="toggle" aria-pressed="false" aria-label="Sett ${esc(c.navn)}" style="left:${P(bx - 0.025)};top:${P(by - 0.012)};width:${P(bw + 0.22)};height:${P(bh + 0.024)}"></button>
       <span class="tall" aria-hidden="true"></span>
@@ -1412,7 +1427,7 @@ function paintCard(el) {
   }
   // glinskort level; a flash when it goes up while the card is on screen
   const niva = nivaVis(c);
-  if (niva) el.dataset.niva = niva; else delete el.dataset.niva;
+  if (niva) el.dataset.niva = niva; else if (c.bonus) el.dataset.niva = 'b'; else delete el.dataset.niva;
   if (el._niva != null && niva > el._niva) { el.classList.remove('glinsny'); void el.offsetWidth; el.classList.add('glinsny'); clearTimeout(el._glT); el._glT = setTimeout(() => el.classList.remove('glinsny'), 1400); }
   el._niva = niva;
   const tall = el.querySelector('.tall'), n = Tell.antall(c.key), f = +tall.dataset.n || 0;
@@ -2081,7 +2096,7 @@ const miniatyr = (c, i, kl = '') => erLaast(c) ? `<span class="ph laastph ${kl}"
 function albumKort(c, i) {
   if (erLaast(c)) return `<button class="alb laast" data-i="${i}" aria-label="Låst kort ${c.id}: ${esc(c.navn)}, ${fmtFro(PRIS[c.key])} frø"><span class="th"></span><span class="nr">${c.nr}</span><span class="lsik">${LAAS}</span></button>`;
   const nv = nivaVis(c);
-  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot">${CHECK}</span></button>`;
+  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot">${CHECK}</span></button>`;
 }
 function renderStats() {
   // fuglelista: bare fuglekortene; bonuskortene (andre dyr) har sin egen del lenger ned
@@ -2437,8 +2452,11 @@ $('#tSlutt').addEventListener('click', () => openSum(Tell.aktivId()));
 const festEl = $('#fest'), bfEl = $('#bfest'), lfEl = $('#lfest'), festKo = [];
 let festAapen = false, festPlanlagt = false, festFokus = null, aktivFest = null;
 const planleggFest = () => { if (!festAapen && !festPlanlagt) { festPlanlagt = true; setTimeout(nesteFest, 250); } };
-function feir(c, niva) { festKo.push({ type: 'niva', c, niva }); planleggFest(); }
-function feirBonus(c) { festKo.push({ type: 'bonus', c }); planleggFest(); }
+// ny: set off by a registration now in progress (the counter is held); froEffekt settles its seeds
+function feir(c, niva) { festKo.push({ type: 'niva', c, niva, fro: FRO.niva[niva - 1] || 0, ny: froHold > 0 }); planleggFest(); }
+function feirBonus(c) { festKo.push({ type: 'bonus', c, fro: FRO.bonuskort, ny: froHold > 0 }); planleggFest(); }
+/* seeds that wait for a celebration: the counter does not show them until they have streamed in */
+const froParkert = () => festKo.reduce((a, f) => a + (f.fro || 0), 0) + (aktivFest && aktivFest.fro ? aktivFest.fro : 0);
 /* the pen marks as on the card itself: tick, "× N" and the date of the first sighting */
 function pennMerker(c) {
   const s = Store.get(c.key), n = Store.days(c.key).length; if (!s) return '';
@@ -2460,6 +2478,7 @@ function nesteFest() {
 function visNiva(f) {
   festEl.dataset.niva = f.niva;
   festEl.querySelector('.fest-kort').dataset.niva = f.niva;
+  festEl.querySelector('.fest-kort').classList.toggle('bonus', !!f.c.bonus);
   $('#festBilde').src = bildeAv(f.c);
   $('#festMerker').innerHTML = pennMerker(f.c);
   $('#festNavn').textContent = stor(kantNavn(f.niva)) + '!';
@@ -2473,6 +2492,7 @@ function visBonus(f) {
   const c = f.c;
   f.snudd = false;
   $('#bfBilde').src = bildeAv(c);
+  $('#bfFor').dataset.niva = nivaVis(c) || 'b';
   $('#bfMerker').innerHTML = pennMerker(c);
   $('#bfArt').textContent = c.navn;
   $('#bfInfo').textContent = `Stokket inn blant kortene med ${c.stjerner} ${c.stjerner === 1 ? 'stjerne' : 'stjerner'}.`;
@@ -2498,12 +2518,18 @@ function lukkFest() {
   el.classList.remove('on');
   setTimeout(() => {
     el.hidden = true; el.classList.remove('snudd'); festAapen = false; aktivFest = null;
-    // a new bonus card or a card just unlocked: show it in the deck
-    if (f && (f.type === 'bonus' || f.type === 'laas') && !openSheet && POS[BY_KEY[f.c.key]] != null) {
+    const belop = f ? (f.type === 'laas' ? f.frigjort : f.fro) || 0 : 0;
+    if (belop && f.type !== 'laas') froFrys();              // held until the stream has landed (an unlock already holds it)
+    // show the card in the deck: a new bonus card, a card just unlocked, or a card with a new border
+    if (f && !openSheet && POS[BY_KEY[f.c.key]] != null) {
       jump(BY_KEY[f.c.key]);
-      setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
+      if (f.type !== 'niva') setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
     }
-    if (f && f.type === 'laas' && f.frigjort) froVent.push({ c: f.c, belop: f.frigjort, mot: 'fro' });   // the held seeds come home
+    // then the seeds stream from the card into the counter
+    if (belop) {
+      froVent.push({ c: f.c, belop, mot: 'fro', strom: true });
+      froFlyTil = Math.max(froFlyTil, Date.now() + 560 + stromTid(belop) + 150);
+    }
     if (festKo.length) nesteFest(); else if (festFokus && festFokus.focus && !openSheet) festFokus.focus();
     froVentKjor(560);
   }, 350);
@@ -2635,7 +2661,7 @@ function froTell(mal, ms = 700) {
   froAnim = requestAnimationFrame(steg);
 }
 function paintFro() {
-  const r = froRegnskap(), mal = r.saldo;
+  const r = froRegnskap(), mal = r.saldo - froParkert();
   $('#openFro').setAttribute('aria-label', `Solsikkefrø: ${fmtFro(mal)}. Åpne Frøbutikken`);
   if (froHold > 0 || mal === froVist) return;              // seeds on their way: the counter waits for them
   if (froVist != null && mal > froVist) { const b = $('#openFro'); b.classList.remove('pluss'); void b.offsetWidth; b.classList.add('pluss'); }
@@ -2662,7 +2688,16 @@ function froKilde(c) {
 /* after a registration: the seeds it gave fly to the counter, and seeds held on a grey card fly to the card */
 function froEffekt(c, f0) {
   froNullstill();
-  const na = froRegnskap(), dt = na.tjent - f0.tjent, dh = na.holdt - f0.holdt;
+  const na = froRegnskap(), dh = na.holdt - f0.holdt;
+  // the celebrations this action set off keep their own seeds (never more than the action gave)
+  let niva = Math.max(0, na.niva - f0.niva), bonus = Math.max(0, na.bonus - f0.bonus);
+  festKo.forEach(f => {
+    if (!f.ny) return;
+    f.ny = false;
+    if (f.type === 'niva') { f.fro = Math.min(f.fro, niva); niva -= f.fro; }
+    else if (f.type === 'bonus') { f.fro = Math.min(f.fro, bonus); bonus -= f.fro; }
+  });
+  const dt = na.tjent - f0.tjent - (froParkert() - f0.parkert);
   if (dh > 0 && c) froVent.push({ c, belop: dh, mot: 'kort' });
   if (dt > 0) froVent.push({ c, belop: dt, mot: 'fro' }); else froSlipp();
   froVentKjor(60);
@@ -2679,6 +2714,7 @@ function froVentKjor(forsink = 0) {
         const kel = pool.get(BY_KEY[v.c.key]), mal = kel && kel.querySelector('.ls-venter:not([hidden])');
         if (!rolig && mal) froFly(fra, mal, v.belop, null);
       } else if (rolig) froSlipp();
+      else if (v.strom) froStrom(froKildeFlate(v.c), $('#openFro'), v.belop, froSlipp);
       else froFly(fra, $('#openFro'), v.belop, froSlipp);
     });
   }, forsink);
@@ -2714,6 +2750,70 @@ function froFly(fra, tilEl, belop, ferdig) {
     };
   }
 }
+/* ---- the big stream after a celebration: many seeds pour from the card into the counter ----
+   Drawn on one canvas so a hundred seeds stay smooth on a phone. */
+const stromAntall = b => Math.max(30, Math.min(120, Math.round(18 * Math.log2(b / 500 + 1))));
+const stromSpre = b => 900 + stromAntall(b) * 14;          // how long seeds keep leaving the card
+const stromTid = b => stromSpre(b) + 1000;                  // until the last one has landed
+function froKildeFlate(c) {
+  const el = (c && pool.get(BY_KEY[c.key])) || pool.get(cur);
+  const r = el ? el.getBoundingClientRect() : null;
+  return r && r.width ? r : $('#stage').getBoundingClientRect();
+}
+let froBilde = null;
+const STROM = { liste: [], raf: 0 };
+function froStrom(fra, tilEl, belop, ferdig) {
+  if (!froBilde) { froBilde = new Image(); froBilde.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(FROIKON.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" ')); }
+  const n = stromAntall(belop), spre = stromSpre(belop), t0 = performance.now();
+  froFlyTil = Math.max(froFlyTil, Date.now() + stromTid(belop) + 60);
+  const fro = Array.from({ length: n }, (_, k) => {
+    const x0 = fra.left + fra.width * (.15 + Math.random() * .7), y0 = fra.top + fra.height * (.12 + Math.random() * .76);
+    const v = Math.random() * Math.PI * 2, r = 50 + Math.random() * 120;
+    return { x0, y0, cx: x0 + Math.cos(v) * r, cy: y0 + Math.sin(v) * r * .7 - 70 - Math.random() * 60,
+      start: (k / n) * spre * (.85 + Math.random() * .3), varighet: 720 + Math.random() * 260,
+      rot: Math.random() * 6.3, spin: (Math.random() - .5) * 12, str: 20 + Math.random() * 10, landet: false };
+  });
+  STROM.liste.push({ fro, t0, tilEl, belop, ferdig, landet: 0, bump: 0 });
+  tilEl.classList.add('mottar');
+  if (!STROM.raf) STROM.raf = requestAnimationFrame(stromSteg);
+}
+function stromSteg(t) {
+  const cv = $('#froStrom'), dpr = Math.min(2, devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+  STROM.liste.forEach(s => {
+    const til = midt(s.tilEl);
+    s.fro.forEach(f => {
+      if (f.landet) return;
+      const p = (t - s.t0 - f.start) / f.varighet;
+      if (p < 0) return;
+      if (p >= 1) {
+        f.landet = true; s.landet++;
+        if (s.landet === 1) { haptic(8); froTell((froVist || 0) + s.belop, stromSpre(s.belop) * 1.1 + 300); }
+        if (t - s.bump > 110) { s.bump = t; s.tilEl.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.12)' }, { transform: 'scale(1)' }], { duration: 180, easing: 'ease-out' }); }
+        return;
+      }
+      const e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2, u = 1 - e;   // slow out of the card, fast into the counter
+      const x = u * u * f.x0 + 2 * u * e * f.cx + e * e * til.x, y = u * u * f.y0 + 2 * u * e * f.cy + e * e * til.y;
+      const sk = p < .12 ? .3 + p / .12 * .8 : 1.1 - (p - .12) * .5, str = f.str * sk;
+      ctx.globalAlpha = p > .93 ? (1 - p) / .07 : 1;
+      ctx.save(); ctx.translate(x, y); ctx.rotate(f.rot + f.spin * p);
+      if (froBilde.complete) ctx.drawImage(froBilde, -str / 2, -str / 2, str, str);
+      ctx.restore();
+    });
+    if (s.landet === s.fro.length && !s.ferdigKalt) {
+      s.ferdigKalt = true;
+      s.tilEl.classList.remove('mottar', 'fylt'); void s.tilEl.offsetWidth; s.tilEl.classList.add('fylt');
+      haptic([10, 40, 16]);
+      if (s.ferdig) s.ferdig();
+    }
+  });
+  ctx.globalAlpha = 1;
+  STROM.liste = STROM.liste.filter(s => !s.ferdigKalt);
+  if (STROM.liste.length) STROM.raf = requestAnimationFrame(stromSteg);
+  else { STROM.raf = 0; ctx.clearRect(0, 0, W, H); }
+}
 function openButikk() { renderButikk(); showSheet(butikkSheet); butikkSheet.scrollTop = 0; setTimeout(() => $('#closeButikk').focus(), 60); }
 function renderButikk() {
   const r = froRegnskap();
@@ -2741,6 +2841,7 @@ $('#nullstillAlt').addEventListener('click', () => sporsmal({
   knapper: [{ tekst: 'Nullstill alt', pri: true, fn: () => {
     [Store, Tell, Vist, Kjop].forEach(x => x.replaceAll({}));
     froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
+    STROM.liste = []; festKo.forEach(f => { f.fro = 0; }); $('#openFro').classList.remove('mottar');
     froVent.length = 0; froHold = 0; froFlyTil = 0; froVist = null; paintFro(); closeSheets(true); jump(DECK[0], 'instant');
     si('Alt er nullstilt.');
   } }, { tekst: 'Avbryt' }],
