@@ -6,7 +6,7 @@ Kortene lages i repoet **Fuglekort-** (med bindestrek, kortfabrikken). Dette rep
 
 Appen ligger på **https://jakob-byte-2d.github.io/fuglekort/** når GitHub Pages er slått på (se under).
 
-Appen het tidligere **Hagefugler** og lå på jakob-byte-2d.github.io/hagefugler/ (før det hagefugler-oslo/). Den gamle adressen virker ikke lenger. Avkrysningene, tellingene og kjøpene ligger på samme nettsted (jakob-byte-2d.github.io), så de følger med til den nye adressen i samme nettleser. Lagringsnøklene heter fortsatt `hagefugler…` av den grunn, og sikkerhetskopien har fortsatt `kortstokk: "hagefugler"`, så gamle kopier kan gjenopprettes. En hjemskjerm-app på iPhone har sitt eget lager: åpne den gamle appen (den virker fra hurtiglageret), velg *Kopier sikkerhetskopi* i innstillingene, legg den nye adressen på hjemskjermen og velg *Gjenopprett* der.
+Appen het tidligere **Hagefugler** og lå på jakob-byte-2d.github.io/hagefugler/ (før det hagefugler-oslo/). Den gamle adressen virker ikke lenger. Avkrysningene, tellingene og kjøpene ligger på samme nettsted (jakob-byte-2d.github.io), så de følger med til den nye adressen i samme nettleser. Lagringsnøklene heter fortsatt `hagefugler…` av den grunn, og sikkerhetskopien har fortsatt `kortstokk: "hagefugler"`, så gamle kopier kan gjenopprettes. En hjemskjerm-app på iPhone har sitt eget lager: åpne den gamle appen (den virker fra hurtiglageret), trykk på statistikk-ringen øverst og velg *Kopier sikkerhetskopi* under *Lagring*, legg den nye adressen på hjemskjermen og velg *Gjenopprett* samme sted der.
 
 ## Innhold
 
