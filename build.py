@@ -55,7 +55,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
 (ROOT / "docs" / "index.html").write_text(head + body + tail, encoding="utf-8")
 
 # Service worker precache list follows the card data, so new cards are cached automatically
-assets = ["./", "index.html", "manifest.webmanifest", "sprites/photos.webp", "sprites/cards.webp",
+assets = ["./", "index.html", "manifest.webmanifest", "sprites/photos.webp", "sprites/cards.webp", "sprites/titler.webp",
           "icons/icon-192.png", "icons/icon-512.png", "icons/icon-512-maskable.png", "icons/apple-touch-icon.png"]
 assets += [data.get("bakside", "cards/bakside.webp")] + [h["bilde"] for h in data.get("hjelp", [])] + [c["bilde"] for c in data["kort"]]
 # alle bildesettene lagres på telefonen, så man kan bytte i innstillingene også uten nett
