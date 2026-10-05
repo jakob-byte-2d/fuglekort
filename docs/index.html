@@ -277,6 +277,13 @@ button{cursor:pointer;touch-action:manipulation}
 .fro-saldo b{font-size:40px;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
 .fro-saldo span{font-size:14px;color:var(--muted)}
 .butikk{list-style:none;margin:10px -8px 0;padding:0}
+/* the newest purchase can be undone for 2 minutes */
+.angre{display:flex;align-items:center;gap:12px;margin:14px 0 4px;padding:10px 10px 10px 14px;border-radius:14px;background:var(--warn-bg);color:var(--warn-ink)}
+.angre[hidden]{display:none}
+.angre .ang-t{flex:1;min-width:0;display:grid;gap:2px}
+.angre b{font-size:14.5px;color:var(--ink)}
+.angre small{font-size:12.5px;font-variant-numeric:tabular-nums}
+.angre .btn{flex-shrink:0}
 .butikk li{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:14px}
 .butikk li:hover{background:var(--surface-2)}
 .bk-go{flex:1;min-width:0;display:flex;align-items:center;gap:12px;border:0;background:none;padding:0;text-align:left}
@@ -671,6 +678,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .grenser td:first-child{text-align:left}
 .grenser .stars{font-size:11px;color:var(--gold)}
 .merker{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px}
+/* the day badges: smaller, five in a row; only the next one shows seeds and how far there is left */
+.merker.dagmerker{grid-template-columns:repeat(5,1fr);gap:12px 6px}
+.dagmerker .merke .med{width:44px;height:44px;font-size:15px;margin-bottom:2px}
+.dagmerker .merke b{font-size:11.5px;font-weight:600}
+.dagmerker .merke.neste{grid-column:span 2}
 .merke{display:grid;justify-items:center;text-align:center;gap:3px;align-content:start}
 .merke .med{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:17px;letter-spacing:-.02em;margin-bottom:4px;
   color:var(--muted);background:var(--surface-2);border:2px dashed var(--line)}
@@ -893,6 +905,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <button class="textbtn" id="closeButikk">Lukk</button>
   </div>
   <div class="fro-saldo" id="butikkSaldo"></div>
+  <div class="angre" id="butikkAngre" hidden></div>
   <p class="cap">Lås opp et kort for å se bildet og teksten. Før du kjøper, ser du bare navnet.</p>
   <ul class="butikk" id="butikkListe"></ul>
 </section>
@@ -1237,17 +1250,21 @@ const Vist = Object.assign(samling({
 Vist.loadLocal();
 
 /* ================= Solsikkefrø =================
-   Seeds are earned by registering birds, first sightings, new border levels, bonus cards and badges, and spent
+   Seeds are earned by registering birds (most of it: every day counts), first sightings, new border levels,
+   bonus cards and badges, and spent
    on unlocking cards. Cards 001–025 are open from the start; the rest are grey until bought. All the numbers
    are here. The balance is worked out from the data every time (earned − spent); only purchases are stored. */
 const FRO = {
   apneFraStart: 25,                          // cards 001–025 are open
   pris: { start: 3000, vekst: 1.035, fraKort: 26, stjerne: { 1: 1, 2: 1.35, 3: 1.8, 4: 2.4, 5: 3.2 } },
-  registrering: 100,                         // × stars, per observation day
-  forsteGang: 1000,                          // × stars, the first time a species is seen
+  registrering: 200,                         // × stars, per observation day of the bird
+  forsteGang: 400,                           // × stars, the first time a species is seen
+  daglig: 300,                               // once for each day with at least one bird registered
   niva: [2000, 5000, 15000],                 // sølv-, gull-, holokant
   bonuskort: 10000,
-  merker: { a10: 2500, a25: 5000, a50: 15000, aalle: 50000, rekke: 5000, d30: 7500, arstider: 10000, tellekorps: 7500, flokk: 7500 },
+  merker: { a10: 2500, a25: 5000, a50: 15000, aalle: 50000, rekke: 5000, arstider: 10000, tellekorps: 7500, flokk: 7500 },
+  dagMerke: 2500,                            // each «N dager» badge: one for every 5 observation days
+  angreTid: 120000,                          // the newest purchase can be undone for 2 minutes
   laastAndel: 0.5,                           // a grey card gives half, held on the card until it is opened
 };
 /* the price of a card: the formula straight out in whole seeds (decimals cut off, no rounding to round numbers) */
@@ -1265,6 +1282,13 @@ const Kjop = Object.assign(samling({
 }), {
   // graaDag: the bird was already registered on the day of purchase, while the card was grey
   kjop(k, pris) { const d = todayISO(); this.data[k] = { pris, dato: d, ts: Date.now(), ...(Store.days(k).includes(d) ? { graaDag: true } : {}) }; this.saveLocal(); this.emit(); this.push(k); },
+  angre(k) { if (!this.data[k]) return; delete this.data[k]; this.saveLocal(); this.emit(); this.push(k); },
+  /* the newest purchase, while it can still be undone (FRO.angreTid after it was made); only that one */
+  angrebar() {
+    const [k, v] = Object.entries(this.data).sort((a, b) => b[1].ts - a[1].ts)[0] || [];
+    const igjen = k ? FRO.angreTid - (Date.now() - v.ts) : 0;
+    return k && igjen > 0 && igjen <= FRO.angreTid ? { k, v, igjen } : null;
+  },
 });
 Kjop.loadLocal();
 const erLaast = c => PRIS[c.key] != null && !Kjop.data[c.key];
@@ -1276,7 +1300,7 @@ let froCache = null;
 const froNullstill = () => { froCache = null; };
 function froRegnskap() {
   if (froCache) return froCache;
-  const r = { reg: 0, forste: 0, niva: 0, bonus: 0, merker: 0, frigjort: 0, holdt: 0, holdtPer: {}, brukt: 0 };
+  const r = { reg: 0, forste: 0, dag: 0, niva: 0, bonus: 0, merker: 0, frigjort: 0, holdt: 0, holdtPer: {}, brukt: 0 };
   CARDS.forEach(c => {
     if (c.bonus && !erApen(c)) return;                     // a hidden bonus card gives nothing until it is found
     const dager = Store.days(c.key); if (!dager.length) return;
@@ -1292,9 +1316,10 @@ function froRegnskap() {
   });
   r.bonus = APNE.size * FRO.bonuskort;
   const t = nokkeltall();
-  MERKER.forEach(m => { if (m.v(t) >= m.mal) r.merker += FRO.merker[m.id] || 0; });
+  r.dag = t.obsDager * FRO.daglig;                                  // every day with a bird, grey cards too
+  merkerListe(t).forEach(m => { if (m.v(t) >= m.mal) r.merker += merkeFro(m); });
   r.brukt = Object.values(Kjop.data).reduce((a, v) => a + v.pris, 0);
-  r.tjent = r.reg + r.forste + r.niva + r.bonus + r.merker + r.frigjort;
+  r.tjent = r.reg + r.forste + r.dag + r.niva + r.bonus + r.merker + r.frigjort;
   r.saldo = r.tjent - r.brukt;
   return (froCache = r);
 }
@@ -1394,20 +1419,25 @@ const MERKER = [
   { id: 'a50', navn: '50 arter', tekst: 'Sett 50 ulike arter', mal: 50, v: t => t.arter, ikon: '50' },
   { id: 'aalle', navn: 'Hele kortstokken', tekst: `Sett alle ${NB} fuglene`, mal: NB, v: t => t.arter, ikon: String(NB) },
   { id: 'rekke', navn: 'Sju på rad', tekst: 'Observasjoner sju dager på rad', mal: 7, v: t => t.rekke, ikon: MIKON.rekke },
-  { id: 'd30', navn: '30 dager', tekst: '30 observasjonsdager', mal: 30, v: t => t.obsDager, ikon: '30' },
   { id: 'arstider', navn: 'Fire årstider', tekst: 'Observasjoner vår, sommer, høst og vinter', mal: 4, v: t => t.arstider, ikon: MIKON.arstider },
   { id: 'tellekorps', navn: 'Tellekorps', tekst: 'En hagefugltelling på minst én time', mal: 1, v: t => t.langeTellinger, ikon: MIKON.telling },
   { id: 'flokk', navn: 'Flokk', tekst: 'Minst 20 av én art i en telling', mal: 20, v: t => t.flokk, ikon: MIKON.flokk },
 ];
+/* a badge for every 5 observation days (5, 10, 15 …), with no end: the ones reached and the next one */
+const DAGSTEG = 5;
+const dagMerke = n => ({ id: 'd' + n, dag: true, navn: `${n} dager`, tekst: `${n} observasjonsdager`, mal: n, v: t => t.obsDager, ikon: String(n) });
+const dagMerker = t => Array.from({ length: Math.floor(t.obsDager / DAGSTEG) + 1 }, (_, k) => dagMerke((k + 1) * DAGSTEG));
+const merkerListe = t => [...MERKER, ...dagMerker(t)];
+const merkeFro = m => (m.dag ? FRO.dagMerke : FRO.merker[m.id] || 0);
 function opptjent() {
   const t = nokkeltall();
-  return { niva: Object.fromEntries(CARDS.map(c => [c.key, nivaVis(c)])), merker: new Set(MERKER.filter(m => m.v(t) >= m.mal).map(m => m.id)) };
+  return { niva: Object.fromEntries(CARDS.map(c => [c.key, nivaVis(c)])), merker: new Set(merkerListe(t).filter(m => m.v(t) >= m.mal).map(m => m.id)) };
 }
 /* what was reached since `for` (taken just before a change), as text for the message at the bottom */
 function nyheter(for_) {
   const na = opptjent(), ut = [];
   CARDS.forEach(c => { const n = na.niva[c.key]; if (erApen(c) && n > for_.niva[c.key]) { ut.push(`${c.navn} fikk ${kantNavn(n)}!`); feir(c, n); } });
-  MERKER.forEach(m => { if (na.merker.has(m.id) && !for_.merker.has(m.id)) ut.push(`Nytt merke: ${m.navn}!`); });
+  merkerListe(nokkeltall()).forEach(m => { if (na.merker.has(m.id) && !for_.merker.has(m.id)) ut.push(`Nytt merke: ${m.navn}!`); });
   return ut.length ? ' ' + ut.join(' ') : '';
 }
 
@@ -2356,6 +2386,13 @@ function albumKort(c, i) {
   const nv = nivaVis(c), nd = Store.days(c.key).length, iDag = nd && Store.days(c.key).includes(todayISO());
   return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}</span></button>`;
 }
+function merkeHtml(m, nt) {
+  const v = m.v(nt), ok = v >= m.mal;
+  const fro = `<small class="mfro">${FROIKON} ${fmtFro(merkeFro(m))}</small>`;
+  const igjen = `<i class="mbar" role="img" aria-label="${Math.min(v, m.mal)} av ${m.mal}"><i style="width:${(Math.min(v, m.mal) / m.mal * 100).toFixed(1)}%"></i></i><small class="mv">${Math.min(v, m.mal)} av ${m.mal}</small>`;
+  if (m.dag) return `<div class="merke ${ok ? 'ok' : 'neste'}" title="${esc(m.tekst)}"><span class="med">${m.ikon}</span><b>${esc(m.navn)}</b>${ok ? '' : fro + igjen}</div>`;
+  return `<div class="merke ${ok ? 'ok' : ''}" title="${esc(m.tekst)}"><span class="med ${m.ikon.startsWith('<') ? 'ik' : ''}">${m.ikon}</span><b>${esc(m.navn)}</b><small>${ok ? 'Oppnådd' : esc(m.tekst)}</small>${fro}${ok ? '' : igjen}</div>`;
+}
 function renderStats() {
   // fuglelista: bare fuglekortene; bonuskortene (andre dyr) har sin egen del lenger ned
   const alleIds = Object.keys(Store.data).filter(erApenK);
@@ -2377,7 +2414,7 @@ function renderStats() {
     .sort((a, b) => (b.d > a.d ? 1 : b.d < a.d ? -1 : b.ts - a.ts)).slice(0, 6);
   const cardOf = key => BY_KEY[key];
   const aktivT = Tell.aktiv(), ferdigeT = Tell.ferdige();
-  const nt = nokkeltall(), merkerOk = MERKER.filter(m => m.v(nt) >= m.mal).length;
+  const nt = nokkeltall(), dagM = dagMerker(nt), merkerOk = merkerListe(nt).filter(m => m.v(nt) >= m.mal).length;
   const perNiva = [0, 0, 0, 0]; CARDS.filter(c => erApen(c) && !erLaast(c)).forEach(c => perNiva[nivaAv(c)]++);
   const naermest = CARDS.map((c, i) => ({ c, i, n: erApen(c) && !erLaast(c) && Store.has(c.key) && nesteNiva(c) })).filter(x => x.n).sort((a, b) => a.n.mangler - b.n.mangler || b.c.stjerner - a.c.stjerner).slice(0, 3);
   const obsDager = new Set(ids.flatMap(id => Store.data[id].dager)).size;
@@ -2404,7 +2441,7 @@ function renderStats() {
         <div class="kpi"><b>${antallApne()} <small style="font-size:14px;color:var(--muted)">/ ${NB}</small></b><span>Åpne fuglekort</span></div>
       </div>
       <ul class="fro-kilder">
-        ${[['Registreringer', fr.reg], ['Første gang du så en art', fr.forste], ['Glinskant', fr.niva], ['Bonuskort', fr.bonus], ['Merker', fr.merker], ['Frigjort fra låste kort', fr.frigjort]]
+        ${[['Registreringer', fr.reg], ['Dager med fugler', fr.dag], ['Første gang du så en art', fr.forste], ['Glinskant', fr.niva], ['Bonuskort', fr.bonus], ['Merker', fr.merker], ['Frigjort fra låste kort', fr.frigjort]]
           .map(([t, v]) => `<li><span>${t}</span><b>${fmtFro(v)}</b></li>`).join('')}
       </ul>
       <div class="row"><button class="btn pri" id="openButikk">Åpne Frøbutikken</button></div>
@@ -2429,8 +2466,10 @@ function renderStats() {
       </details>
     </div>
 
-    <div class="s-sec"><h3>Merker <span class="h3n">${merkerOk} av ${MERKER.length}</span></h3>
-      <div class="merker">${MERKER.map(m => { const v = m.v(nt), ok = v >= m.mal; return `<div class="merke ${ok ? 'ok' : ''}" title="${esc(m.tekst)}"><span class="med ${m.ikon.startsWith('<') ? 'ik' : ''}">${m.ikon}</span><b>${esc(m.navn)}</b><small>${ok ? 'Oppnådd' : esc(m.tekst)}</small><small class="mfro">${FROIKON} ${fmtFro(FRO.merker[m.id] || 0)}</small>${ok ? '' : `<i class="mbar" role="img" aria-label="${Math.min(v, m.mal)} av ${m.mal}"><i style="width:${(Math.min(v, m.mal) / m.mal * 100).toFixed(1)}%"></i></i><small class="mv">${Math.min(v, m.mal)} av ${m.mal}</small>`}</div>`; }).join('')}</div>
+    <div class="s-sec"><h3>Merker <span class="h3n">${merkerOk} oppnådd</span></h3>
+      <div class="merker">${MERKER.map(m => merkeHtml(m, nt)).join('')}</div>
+      <p class="cap" style="margin:22px 0 10px">Observasjonsdager: et merke for hver 5. dag, ${fmtFro(FRO.dagMerke)} frø hver.</p>
+      <div class="merker dagmerker">${dagM.map(m => merkeHtml(m, nt)).join('')}</div>
     </div>
 
     <div class="s-sec"><h3>Hagefugltelling</h3>
@@ -3303,9 +3342,47 @@ function stromSteg(t) {
   else { STROM.raf = 0; ctx.clearRect(0, 0, W, H); }
 }
 function openButikk() { renderButikk(); showSheet(butikkSheet); butikkSheet.scrollTop = 0; setTimeout(() => $('#closeButikk').focus(), 60); }
+const mmss = ms => { const s = Math.ceil(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+let angreUr = null;
+function paintAngre() {
+  const box = $('#butikkAngre'), a = Kjop.angrebar();
+  clearInterval(angreUr); angreUr = null;
+  box.hidden = !a;
+  if (!a) { box.innerHTML = ''; return; }
+  const c = CARDS[BY_KEY[a.k]];
+  box.innerHTML = `<span class="ang-t"><b>Siste kjøp: ${esc(c.navn)}</b><small>${fmtFro(a.v.pris)} frø · kan angres i <span class="ang-tid">${mmss(a.igjen)}</span></small></span>
+    <button class="btn" data-angre="${a.k}" aria-label="Angre kjøpet av ${esc(c.navn)}">Angre</button>`;
+  angreUr = setInterval(() => {
+    const n = Kjop.angrebar();
+    if (!n || n.k !== a.k || openSheet !== butikkSheet) { paintAngre(); return; }
+    box.querySelector('.ang-tid').textContent = mmss(n.igjen);
+  }, 1000);
+}
+/* what undoing the purchase gives back: the price, minus the seeds that go back to waiting on the grey card */
+function angreVerdi(k) {
+  froNullstill(); const for_ = froRegnskap(), v = Kjop.data[k];
+  delete Kjop.data[k]; froNullstill(); const etter = froRegnskap();
+  Kjop.data[k] = v; froNullstill();
+  return { tilbake: etter.saldo - for_.saldo, venter: etter.holdtPer[k] || 0 };
+}
+function angreKjop(k) {
+  const a = Kjop.angrebar(); if (!a || a.k !== k) { paintAngre(); si('Kjøpet kan ikke angres lenger.'); return; }
+  const c = CARDS[BY_KEY[k]];
+  Kjop.angre(k);
+  haptic(10);
+  si(`Kjøpet er angret. ${c.navn} er grått igjen.`);
+}
+butikkSheet.addEventListener('click', e => {
+  const b = e.target.closest('[data-angre]'); if (!b) return;
+  const k = b.dataset.angre, c = CARDS[BY_KEY[k]], { tilbake, venter } = angreVerdi(k);
+  sporsmal({ tittel: `Angre kjøpet av ${c.navn}?`,
+    tekst: `Kortet blir grått igjen, og du får ${fmtFro(tilbake)} frø tilbake.${venter ? ` ${fmtFro(venter)} frø venter på kortet igjen til du låser det opp.` : ''}`,
+    knapper: [{ tekst: 'Angre kjøpet', pri: true, fn: () => angreKjop(k) }, { tekst: 'Behold kortet' }] });
+});
 function renderButikk() {
   const r = froRegnskap();
   $('#butikkSaldo').innerHTML = `${FROIKON}<b>${fmtFro(r.saldo)}</b><span>frø å bruke</span>`;
+  paintAngre();
   const laaste = BIRDS.filter(erLaast).sort((a, b) => PRIS[a.key] - PRIS[b.key]);
   butikkListe.innerHTML = laaste.length ? laaste.map(c => {
     const i = BY_KEY[c.key], p = PRIS[c.key], h = r.holdtPer[c.key] || 0, nok = r.saldo >= p;
