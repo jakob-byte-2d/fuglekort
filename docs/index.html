@@ -3518,6 +3518,42 @@ function restoreMld(t) { const m = $('#restoreMld'); if (m) m.textContent = t; }
 /* no message bubbles on screen: what happened is read out to screen readers only */
 function si(msg) { const l = $('#live'); l.textContent = ''; setTimeout(() => { l.textContent = msg; }, 30); }
 
+/* ---- the back button (Android, and the back gesture): it closes what is open instead of leaving the app ----
+   While something lies over the deck (a picture in full screen, a sheet, the menu, a question, a celebration),
+   there is one extra entry in the history. Back takes it away and closes the top layer, the same as Esc; if
+   more is still open, a new entry is added. Closing with a button or a tap removes the entry again. */
+const antallLag = () => (dlgApen ? 1 : 0) + (sbEl.hidden ? 0 : 1) + (festAapen ? 1 : 0) + (menyApen() ? 1 : 0) + (openSheet ? 1 : 0);
+function lukkOverste() {
+  if (dlgApen) { lukkDlg(); return; }
+  if (!sbEl.hidden) { lukkStorbilde(); return; }
+  if (festAapen) { lukkFest(); return; }
+  if (menyApen()) { lukkMeny(true); return; }
+  if (openSheet) closeSheets();
+}
+let tilbakeVakt = false, tilbakeEgen = false, tilbakeT = null, synkT = null;
+function synkTilbake() {
+  if (tilbakeEgen) return;                                   // wait until our own step back has landed
+  const n = antallLag();
+  try {
+    if (n && !tilbakeVakt) { history.pushState({ fuglekort: 'lag' }, ''); tilbakeVakt = true; }
+    else if (!n && tilbakeVakt) {
+      tilbakeVakt = false; tilbakeEgen = true; history.back();
+      tilbakeT = setTimeout(() => { tilbakeEgen = false; synkTilbake(); }, 800);   // in case no popstate comes
+    }
+  } catch (e) { tilbakeEgen = false; }
+}
+const planleggSynk = () => { if (!synkT) synkT = setTimeout(() => { synkT = null; synkTilbake(); }, 40); };
+addEventListener('popstate', () => {
+  if (tilbakeEgen) { tilbakeEgen = false; clearTimeout(tilbakeT); planleggSynk(); return; }
+  if (!tilbakeVakt) return;                                  // not ours (nothing was open)
+  tilbakeVakt = false;
+  lukkOverste();
+  setTimeout(synkTilbake, 450);                             // still open (e.g. seeds streaming): one more entry
+});
+const lagObs = new MutationObserver(planleggSynk);
+document.querySelectorAll('section.sheet, section.help, #storbilde, #dlg, #fest, #bfest, #lfest, #meny')
+  .forEach(el => lagObs.observe(el, { attributes: true, attributeFilter: ['hidden', 'class'] }));
+
 /* ---- react to data ---- */
 let dagNa = todayISO();
 function sjekkNyDag() {
