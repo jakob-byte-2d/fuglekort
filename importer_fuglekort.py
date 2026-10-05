@@ -16,7 +16,7 @@ Skriptet
   2. finner SETT-ruta og datolinja på kortene, så avkrysningen havner riktig
   3. lager data/cards.json (navn, sjeldenhet og korttekst til søket)
   4. lager miniatyrene i docs/sprites/ og app-ikonene i docs/icons/ (fra baksiden)
-  5. lagrer de store fuglebildene (800 × 800) til fullskjermvisningen i docs/pictures/, docs/pictures-foto/
+  5. lagrer de store, stående fuglebildene (675 × 800) til fullskjermvisningen i docs/pictures/, docs/pictures-foto/
      og docs/pictures-tegneserie/
   6. kjører build.py
 """
@@ -85,7 +85,7 @@ def tegneserie_felt(k):
 
 
 def bonus_tegneserie(app, k):
-    """(kortbilde, kvadratisk bilde) for et bonuskort i tegneseriestil: fra kort.json hvis Fuglekort-builder har det,
+    """(kortbilde, stort bilde) for et bonuskort i tegneseriestil: fra kort.json hvis Fuglekort-builder har det,
     ellers fra kilder/bonus_tegneserie/. None når det mangler (appen viser da KI-kortet)."""
     ts = k.get("tegneserie")
     if ts:
@@ -95,16 +95,17 @@ def bonus_tegneserie(app, k):
 
 
 def lagre_stort(fil, maal):
-    """Stort, kvadratisk fuglebilde (800 × 800) til fullskjermvisningen, litt hardere komprimert enn kilden."""
+    """Stort fuglebilde til fullskjermvisningen, i samme stående format som bildet på kortet (Fuglekort-builder
+    lager det 800 px høyt). Formatet beholdes; større bilder skaleres ned til 800 px høyde. Litt hardere
+    komprimert enn kilden."""
     im = Image.open(fil).convert("RGB")
-    if im.size != (800, 800):
-        s = min(im.size)
-        im = im.crop(((im.width - s) // 2, (im.height - s) // 2, (im.width + s) // 2, (im.height + s) // 2)).resize((800, 800), Image.LANCZOS)
+    if im.height > 800:
+        im = im.resize((round(im.width * 800 / im.height), 800), Image.LANCZOS)
     im.save(maal, "WEBP", quality=80, method=6)
 
 
 def kvadrat(fil):
-    """Kvadratisk utsnitt fra midten, 128 × 128, til miniatyrene i søket."""
+    """Kvadratisk utsnitt fra midten av det stående fuglebildet, 128 × 128, til miniatyrene i søket og lista."""
     foto = Image.open(fil).convert("RGB")
     s = min(foto.size)
     foto = foto.crop(((foto.width - s) // 2, (foto.height - s) // 2, (foto.width + s) // 2, (foto.height + s) // 2))

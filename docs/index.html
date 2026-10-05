@@ -297,25 +297,27 @@ button{cursor:pointer;touch-action:manipulation}
   background:rgba(6,14,10,0);color:#fff;transition:background .3s;-webkit-tap-highlight-color:transparent}
 .storbilde.on{background:rgba(6,14,10,.93)}
 .storbilde[hidden]{display:none}
-.sb-navn,.sb-valg,.sb-hint{opacity:0;transition:opacity .2s}
-.storbilde.on .sb-navn,.storbilde.on .sb-valg,.storbilde.on .sb-hint{opacity:1;transition:opacity .3s .12s}
+.sb-navn,.sb-valg,.sb-hint,.sb-innst{opacity:0;transition:opacity .2s}
+.storbilde.on .sb-navn,.storbilde.on .sb-valg,.storbilde.on .sb-hint,.storbilde.on .sb-innst{opacity:1;transition:opacity .3s .12s}
 .sb-navn{text-align:center;display:grid;gap:2px}
 .sb-navn b{font-size:22px;letter-spacing:-.01em}
 .sb-navn i{font-size:14px;opacity:.75}
-.sb-spor{position:relative;width:min(100%, 56vh, 560px);aspect-ratio:1;touch-action:none;will-change:transform}
+/* standing, like the picture on the card (Fuglekort-builder makes the big pictures 675 × 800); as tall as the screen allows */
+.sb-spor{position:relative;width:max(160px, min(100%, calc((100vh - 300px) * .84375), 480px));width:max(160px, min(100%, calc((100dvh - 300px) * .84375), 480px));
+  aspect-ratio:675/800;touch-action:none;will-change:transform}
 .sb-bilde{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;border-radius:18px;overflow:hidden;background:#1d2a23;
   box-shadow:0 20px 50px -12px rgba(0,0,0,.7);cursor:zoom-out;will-change:transform}
-/* the birds on either side, for swiping */
-.sb-nabo{position:absolute;top:0;width:100%;height:100%;border-radius:18px;overflow:hidden;background:#1d2a23;opacity:0;transition:opacity .3s;pointer-events:none}
-.storbilde.on .sb-nabo{opacity:.45}
+/* the other pictures of the bird on either side: they slide in at full strength when you swipe, nothing fades */
+.sb-nabo{position:absolute;top:0;width:100%;height:100%;border-radius:18px;overflow:hidden;background:#1d2a23;pointer-events:none}
+.storbilde:not(.on) .sb-nabo{visibility:hidden}
 .sb-nabo[hidden]{display:none}
 .sb-nabo.forrige{right:calc(100% + 20px)}
 .sb-nabo.neste{left:calc(100% + 20px)}
 .sb-nabo img{display:block;width:100%;height:100%;object-fit:cover}
-.sb-nabo img.klipp{position:absolute;left:-11.13%;top:-55.44%;width:194.29%;height:auto;object-fit:initial}
-.sb-bilde img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .28s}
-.sb-bilde img.klipp{inset:auto;left:-11.13%;top:-55.44%;width:194.29%;height:auto;object-fit:initial}
-.sb-bilde img.ut{opacity:0}
+/* older data without the big pictures: the picture field cut out of the card (BILDEFELT) */
+.sb-nabo img.klipp{position:absolute;left:-11.13%;top:-38.86%;width:194.29%;height:auto;object-fit:initial}
+.sb-bilde img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sb-bilde img.klipp{inset:auto;left:-11.13%;top:-38.86%;width:194.29%;height:auto;object-fit:initial}
 .sb-kred{position:absolute;left:10px;bottom:10px;max-width:calc(100% - 20px);font-size:12px;line-height:1.3;background:rgba(0,0,0,.58);color:#fff;
   padding:3px 9px;border-radius:99px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sb-kred[hidden]{display:none}
@@ -326,7 +328,10 @@ button{cursor:pointer;touch-action:manipulation}
 .sb-valg button[aria-disabled="true"]{opacity:.35;text-decoration:line-through;cursor:default}
 .sb-valg button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .sb-hint{margin:0;font-size:13px;line-height:1.4;opacity:.75;text-align:center;max-width:320px}
-@media (prefers-reduced-motion: reduce){.storbilde,.sb-navn,.sb-valg,.sb-hint,.sb-bilde img,.sb-nabo{transition:none}}
+.sb-innst{margin:-8px 0 0;font-size:13px;line-height:1.4;text-align:center;max-width:340px;color:rgba(255,255,255,.85)}
+.sb-lenke{border:0;background:none;color:var(--gold);font:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:10px 4px;cursor:pointer}
+.sb-lenke:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion: reduce){.storbilde,.sb-navn,.sb-valg,.sb-hint,.sb-innst{transition:none}}
 /* peek zoom: a copy of the card or picture grows around the point between two fingers, above everything */
 .kikk{position:fixed;inset:0;z-index:57;pointer-events:none;background:rgba(6,14,10,calc(var(--m, 0) * .6))}
 .kikk.ut{background:rgba(6,14,10,0);transition:background .22s}
@@ -871,8 +876,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
       <button role="radio" data-bilder="foto" aria-checked="false"><span class="rd"></span><b>Fotografier</b><small id="fotoAntall"></small></button>
       <button role="radio" data-bilder="tegneserie" aria-checked="false"><span class="rd"></span><b>Tegneseriefugler</b><small id="tegneserieAntall"></small></button>
     </div>
-    <p class="valg-merk">Valget gjelder bare på denne enheten. Avkrysningene dine påvirkes ikke. Trykk på bildet på et kort for å velge bilde bare for det kortet.</p>
-    <p class="valg-merk kortvalg" id="kortvalgInfo" hidden><span id="kortvalgTekst"></span> <button class="textbtn" id="nullstillKortvalg">Bruk valget over på alle</button></p>
+    <p class="valg-merk">Valget gjelder alle kortene på denne enheten. Avkrysningene dine påvirkes ikke. Trykk på bildet på et kort for å se det stort og bla mellom bildetypene.</p>
   </div>
   <div class="s-sec" id="vippSek" hidden><h3>Glinskort</h3>
     <button class="bryter" id="vippBtn" role="switch" aria-checked="false"><span><b>Glinset følger telefonen</b><small>Lyset på glinskortene flytter seg når du vipper telefonen. Ellers følger det fingeren når du drar i kortet.</small></span><i aria-hidden="true"></i></button>
@@ -946,13 +950,14 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <div class="sb-navn"><b id="sbNavn"></b><i id="sbLatin"></i></div>
   <div class="sb-spor" id="sbSpor">
     <div class="sb-nabo forrige" aria-hidden="true" hidden><img alt=""></div>
-    <button class="sb-bilde" id="sbBilde" aria-label="Tilbake til kortet"><img id="sbImg1" alt=""><img id="sbImg2" class="ut" alt=""><span class="sb-kred" id="sbKred" hidden></span></button>
+    <button class="sb-bilde" id="sbBilde" aria-label="Tilbake til kortet"><img id="sbImg" alt=""><span class="sb-kred" id="sbKred" hidden></span></button>
     <div class="sb-nabo neste" aria-hidden="true" hidden><img alt=""></div>
   </div>
-  <div class="sb-valg" id="sbValg" role="radiogroup" aria-label="Bilde på dette kortet">
+  <div class="sb-valg" id="sbValg" role="radiogroup" aria-label="Vis bildet">
     <button role="radio" data-sb="ki" aria-checked="false">KI</button><button role="radio" data-sb="foto" aria-checked="false">Foto</button><button role="radio" data-sb="tegneserie" aria-checked="false">Tegneserie</button>
   </div>
   <p class="sb-hint" id="sbHint"></p>
+  <p class="sb-innst"><span id="sbInnstTekst"></span> <button class="sb-lenke" id="sbTilInnst">Endre i Innstillinger</button></p>
 </div>
 <div class="dlg" id="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgTekst" hidden>
   <div class="dlg-kort"><h3 id="dlgT"></h3><p id="dlgTekst"></p><div class="dlg-knapper" id="dlgKnapper"></div></div>
@@ -1019,17 +1024,12 @@ const finnesSett = v => BILDESETT[v] === true;            // a stored value the 
 let bildevalg = finnesSett(lsGet('hagefugler:bilder')) ? lsGet('hagefugler:bilder') : 'ki';
 const foto = () => bildevalg === 'foto';
 const tegneserie = () => bildevalg === 'tegneserie';
-/* Each card can have its own choice (made on the picture in full screen); it wins over Innstillinger.
-   Stored on this device only, like the choice in Innstillinger. */
+/* The choice in Innstillinger is the only one; it applies to every card. In full screen you can look at the
+   other pictures of a bird, but that does not change the card. (Earlier versions kept a choice per card.) */
 const harSett = (c, v) => v === 'ki' || (v === 'foto' && !!c.bildeFoto) || (v === 'tegneserie' && !!c.bildeTegneserie);
-let KORTVALG = (() => { try { const o = JSON.parse(lsGet('hagefugler:bildekort') || '{}'); return o && typeof o === 'object' && !Array.isArray(o) ? o : {}; } catch (e) { return {}; } })();
-const lagreKortvalg = () => lsSet('hagefugler:bildekort', JSON.stringify(KORTVALG));
-const standardSett = c => (harSett(c, bildevalg) ? bildevalg : 'ki');                  // what Innstillinger gives this card
-const egetValg = c => { const v = KORTVALG[c.key]; return finnesSett(v) && harSett(c, v) ? v : null; };
-const settAv = c => egetValg(c) || standardSett(c);
+try { localStorage.removeItem('hagefugler:bildekort'); } catch (e) {}
+const settAv = c => (harSett(c, bildevalg) ? bildevalg : 'ki');
 const bildeAv = c => { const v = settAv(c); return v === 'tegneserie' ? c.bildeTegneserie : v === 'foto' ? c.bildeFoto : c.bilde; };
-/* the small pictures (search, album) come from the sprite sheet of the card's own choice when it has one */
-const egenSprite = (c, ark) => { const v = settAv(c); return v === standardSett(c) ? '' : `background-image:url('sprites/${ark}${v === 'ki' ? '' : '-' + v}.webp');`; };
 function settSprites() {
   const f = foto() ? '-foto' : tegneserie() ? '-tegneserie' : '';
   document.documentElement.style.setProperty('--photos', `url("sprites/photos${f}.webp")`);
@@ -1453,7 +1453,7 @@ function makeCard(i) {
   el.setAttribute('aria-label', `${c.bonus ? 'Bonuskort' : `Kort ${c.id}`}: ${c.navn}`);
   el.innerHTML = `
   <div class="inner">
-    <div class="face front" style="background-position:${spritePos(i)};${egenSprite(c, 'cards')}">
+    <div class="face front" style="background-position:${spritePos(i)}">
       <img src="${esc(bildeAv(c))}" alt="${esc(altTekst(c))}" draggable="false" decoding="async">
       ${c.bonus ? BONUSSTRIPE : ''}
       ${PRIS[c.key] != null ? graaKort(c) : ''}
@@ -2308,9 +2308,6 @@ function paintSettings() {
   $('#fotoAntall').textContent = fotoTekst();
   $('#tegneserieAntall').textContent = tegneserieTekst();
   setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg));
-  const egne = CARDS.filter(c => erApen(c) && egetValg(c)).length;
-  $('#kortvalgInfo').hidden = !egne;
-  $('#kortvalgTekst').textContent = egne === 1 ? '1 kort har eget bildevalg.' : `${egne} kort har eget bildevalg.`;
   $('#vippBtn').setAttribute('aria-checked', Vipp.aktiv ? 'true' : 'false');
 }
 $('#vippBtn').addEventListener('click', async () => {
@@ -2332,15 +2329,8 @@ function oppdaterBilde(el) {
   const c = CARDS[+el.dataset.i], img = el.querySelector('.front img'), src = bildeAv(c);
   if (img.getAttribute('src') !== src) img.src = src;
   img.alt = altTekst(c);
-  el.querySelector('.front').style.backgroundImage = egenSprite(c, 'cards') ? `url("sprites/cards${settAv(c) === 'ki' ? '' : '-' + settAv(c)}.webp")` : '';
   paintCard(el);
 }
-$('#nullstillKortvalg').addEventListener('click', () => {
-  KORTVALG = {}; lagreKortvalg();
-  pool.forEach(oppdaterBilde); paintSettings(); setTimeout(warm, 300);
-  si('Alle kortene følger nå valget i Innstillinger.');
-  setSheet.querySelector('[data-bilder][aria-checked="true"]').focus();
-});
 $('#openSettings').addEventListener('click', openSettings);
 $('#closeSettings').addEventListener('click', () => closeSheets());
 setSheet.addEventListener('click', e => { const b = e.target.closest('[data-bilder]'); if (b) settBilder(b.dataset.bilder); });
@@ -2360,11 +2350,11 @@ function openStats() { showSheet($('#statsSheet')); renderStats(); setTimeout(()
 $('#openStats').addEventListener('click', openStats);
 $('#closeStats').addEventListener('click', () => closeSheets());
 /* a small picture of the card, or a grey lock for a card that is not open yet */
-const miniatyr = (c, i, kl = '') => erLaast(c) ? `<span class="ph laastph ${kl}" aria-hidden="true">${LAAS}</span>` : `<span class="ph ${kl}" style="background-position:${spritePos(i)};${egenSprite(c, 'photos')}" aria-hidden="true"></span>`;
+const miniatyr = (c, i, kl = '') => erLaast(c) ? `<span class="ph laastph ${kl}" aria-hidden="true">${LAAS}</span>` : `<span class="ph ${kl}" style="background-position:${spritePos(i)}" aria-hidden="true"></span>`;
 function albumKort(c, i) {
   if (erLaast(c)) return `<button class="alb laast" data-i="${i}" aria-label="Låst kort ${c.id}: ${esc(c.navn)}, ${fmtFro(PRIS[c.key])} frø"><span class="th"></span><span class="nr">${c.nr}</span><span class="lsik">${LAAS}</span></button>`;
   const nv = nivaVis(c), nd = Store.days(c.key).length, iDag = nd && Store.days(c.key).includes(todayISO());
-  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)};${egenSprite(c, 'cards')}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}</span></button>`;
+  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}</span></button>`;
 }
 function renderStats() {
   // fuglelista: bare fuglekortene; bonuskortene (andre dyr) har sin egen del lenger ned
@@ -2849,11 +2839,14 @@ Vist.on(sjekkBonus);
    goes back to the card. */
 const sbEl = $('#storbilde'), sbBildeEl = $('#sbBilde'), sporEl = $('#sbSpor');
 const SETTNAVN = { ki: 'illustrasjonen', foto: 'fotografiet', tegneserie: 'tegneseriefuglen' };
-let sbKort = null, sbFokus = null, sbLukker = false, sbApnet = 0, sbImgs = [$('#sbImg1'), $('#sbImg2')];
+const SETTFLERTALL = { ki: 'KI-illustrasjoner', foto: 'fotografier', tegneserie: 'tegneseriefugler' };
+/* sbVis: the picture shown in full screen. Only looking: the card keeps the picture chosen in Innstillinger. */
+let sbKort = null, sbVis = 'ki', sbFokus = null, sbLukker = false, sbApnet = 0;
+const sbImg = $('#sbImg');
 const feltRect = el => { const r = el.querySelector('.front').getBoundingClientRect();
   return { x: r.left + r.width * BILDEFELT.x, y: r.top + r.height * BILDEFELT.y, w: r.width * BILDEFELT.w, h: r.height * BILDEFELT.h }; };
 const iBildefelt = (el, x, y) => { const f = feltRect(el); return x >= f.x && x <= f.x + f.w && y >= f.y && y <= f.y + f.h; };
-/* the big square picture of the set, or (older data) the picture field cut from the card itself */
+/* the big standing picture of the set, or (older data) the picture field cut from the card itself */
 const storSrc = (c, v) => (DATA.storeBilder ? `${v === 'ki' ? 'pictures' : 'pictures-' + v}/${c.id}.webp` : null);
 function settStorbilde(img, c, v) {
   const src = storSrc(c, v);
@@ -2862,7 +2855,7 @@ function settStorbilde(img, c, v) {
   img.onerror = src ? () => { img.onerror = null; img.classList.add('klipp'); img.src = v === 'tegneserie' ? c.bildeTegneserie : v === 'foto' ? c.bildeFoto : c.bilde; } : null;
 }
 function paintStorbilde() {
-  const c = sbKort, v = settAv(c), mangler = [];
+  const c = sbKort, v = sbVis, mangler = [];
   sbEl.querySelectorAll('[data-sb]').forEach(b => {
     const s = b.dataset.sb, har = harSett(c, s);
     b.hidden = !finnesSett(s);
@@ -2874,15 +2867,16 @@ function paintStorbilde() {
   const kred = $('#sbKred');
   kred.textContent = v === 'foto' && c.fotograf ? `Foto: ${c.fotograf}${c.lisens ? ` · ${c.lisens}` : ''}` : '';
   kred.hidden = !kred.textContent;
-  $('#sbHint').textContent = (mangler.length ? `${c.navn} har ikke ${mangler.join(' eller ')} ennå. ` : '') + (naboSett(c, 1) || naboSett(c, -1) ? 'Sveip for å bytte bilde. ' : '') + 'Trykk på bildet for å gå tilbake til kortet.';
-  sbBildeEl.setAttribute('aria-label', `${c.navn}. Tilbake til kortet. Piltastene bytter mellom KI, foto og tegneserie.`);
+  $('#sbHint').textContent = (mangler.length ? `${c.navn} har ikke ${mangler.join(' eller ')} ennå. ` : '') + (naboSett(c, 1) || naboSett(c, -1) ? 'Sveip for å se de andre bildene. ' : '') + 'Trykk på bildet for å gå tilbake til kortet.';
+  $('#sbInnstTekst').textContent = `Kortene viser ${SETTFLERTALL[bildevalg]}${bildevalg === 'ki' ? '' : ' der de finnes'}.`;
+  sbBildeEl.setAttribute('aria-label', `${c.navn}, ${SETTNAVN[v]}. Tilbake til kortet. Piltastene viser de andre bildene.`);
 }
-/* the picture set before or after this one, in the order of the buttons (KI · Foto · Tegneserie),
+/* the picture set before or after the one shown, in the order of the buttons (KI · Foto · Tegneserie),
    skipping the ones this bird does not have */
 const SETTREKKE = ['ki', 'foto', 'tegneserie'];
 function naboSett(c, d) {
   const har = SETTREKKE.filter(v => finnesSett(v) && harSett(c, v));
-  const i = har.indexOf(settAv(c));
+  const i = har.indexOf(sbVis);
   return i < 0 ? null : har[i + d] || null;
 }
 function paintNaboer() {
@@ -2897,7 +2891,7 @@ function apneStorbilde(c) {
   stopRiffle();
   sbKort = c; sbFokus = document.activeElement;
   $('#sbNavn').textContent = c.navn; $('#sbLatin').textContent = c.latin;
-  settStorbilde(sbImgs[0], c, settAv(c)); sbImgs[0].classList.remove('ut'); sbImgs[1].classList.add('ut');
+  sbVis = settAv(c); settStorbilde(sbImg, c, sbVis);
   paintStorbilde(); paintNaboer();
   sporEl.style.transform = ''; sbDx = 0;
   sbEl.hidden = false; app.inert = true; sbApnet = performance.now();
@@ -2931,22 +2925,14 @@ function lukkStorbilde() {
     if (sbFokus && sbFokus.focus && document.contains(sbFokus)) sbFokus.focus(); else stage.focus && stage.focus();
   }, a ? 270 : 120);
 }
+/* a button: slide to that picture (the way it lies in the row of buttons) */
 function velgStorbilde(v) {
-  const c = sbKort; if (!c || !finnesSett(v) || !harSett(c, v) || v === settAv(c)) return;
-  KORTVALG[c.key] = v; lagreKortvalg();
-  const el = pool.get(BY_KEY[c.key]); if (el) oppdaterBilde(el);
-  // the new picture fades in over the old one
-  const [na, ny] = sbImgs;
-  settStorbilde(ny, c, v);
-  const vis = () => { ny.classList.remove('ut'); na.classList.add('ut'); };
-  if (ny.decode) ny.decode().then(vis, vis); else vis();
-  sbImgs = [ny, na];
-  paintStorbilde(); paintNaboer();
-  haptic(6);
-  si(`${c.navn} viser nå ${SETTNAVN[v]}.`);
+  const c = sbKort; if (!c || !finnesSett(v) || !harSett(c, v) || v === sbVis) return;
+  glid(v, SETTREKKE.indexOf(v) > SETTREKKE.indexOf(sbVis) ? 1 : -1);
   const b = sbEl.querySelector(`[data-sb="${v}"]`); if (b && document.activeElement && document.activeElement.closest('#sbValg')) b.focus();
 }
-/* swiping between the pictures of this bird (KI, Foto, Tegneserie); the choice is kept for the card, like the buttons */
+/* swiping between the pictures of this bird (KI, Foto, Tegneserie): the pictures lie side by side and slide,
+   like a row of photos; the one coming in is at full strength the whole way, and nothing fades */
 let sbDx = 0, sbDra = null, sbKikk = null, sbBytter = false;
 const sbFingre = new Map();
 const sbBredde = () => sbBildeEl.getBoundingClientRect().width + 20;
@@ -2954,32 +2940,34 @@ function sprettTilbake() {
   const fra = sbDx; sbDx = 0; sporEl.style.transform = '';
   if (fra && !matchMedia('(prefers-reduced-motion: reduce)').matches) sporEl.animate([{ transform: `translateX(${fra}px)` }, { transform: 'none' }], { duration: 200, easing: 'cubic-bezier(.2,.8,.2,1)' });
 }
-function visSett(v) {
-  const c = sbKort;
-  KORTVALG[c.key] = v; lagreKortvalg();
-  const el = pool.get(BY_KEY[c.key]); if (el) oppdaterBilde(el);
-  settStorbilde(sbImgs[0], c, v); sbImgs[0].classList.remove('ut'); sbImgs[1].classList.add('ut');
-  paintStorbilde();
-  si(`${c.navn} viser nå ${SETTNAVN[v]}.`);
+function glid(v, d) {
+  if (sbBytter || sbLukker) return;
+  sbBytter = true;
+  const c = sbKort, S = sbBredde(), fra = sbDx, til = -d * S;
+  sbDx = 0;
+  // the picture that comes in lies next to this one (a button may skip one: put that picture there)
+  const nabo = sporEl.querySelector(`.sb-nabo.${d > 0 ? 'neste' : 'forrige'}`);
+  if (naboSett(c, d) !== v) { nabo.hidden = false; settStorbilde(nabo.querySelector('img'), c, v); }
+  const ferdig = () => {
+    sbVis = v;
+    settStorbilde(sbImg, c, v);
+    const bytt = () => { sporEl.style.transform = ''; paintNaboer(); paintStorbilde(); sbBytter = false; };
+    if (sbImg.decode) sbImg.decode().then(bytt, bytt); else bytt();      // the same picture: no blink when the row moves back
+    si(`Viser ${SETTNAVN[v]}.`);
+  };
+  sporEl.style.transform = `translateX(${til}px)`;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { ferdig(); return; }
+  sporEl.animate([{ transform: `translateX(${fra}px)` }, { transform: `translateX(${til}px)` }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' }).onfinish = ferdig;
+  haptic(6);
 }
 function byttStorbilde(d) {
   if (sbBytter || sbLukker) return;
   const n = naboSett(sbKort, d);
   if (!n) { sprettTilbake(); return; }
-  sbBytter = true;
-  const S = sbBredde(), fra = sbDx, til = -d * S;
-  sbDx = 0;
-  const ferdig = () => {
-    visSett(n);
-    const img = sbImgs[0];
-    const bytt = () => { sporEl.style.transform = ''; paintNaboer(); sbBytter = false; };
-    if (img.decode) img.decode().then(bytt, bytt); else bytt();
-  };
-  sporEl.style.transform = `translateX(${til}px)`;
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { ferdig(); return; }
-  sporEl.animate([{ transform: `translateX(${fra}px)` }, { transform: `translateX(${til}px)` }], { duration: 230, easing: 'cubic-bezier(.2,.8,.2,1)' }).onfinish = ferdig;
-  haptic(6);
+  glid(n, d);
 }
+/* to Innstillinger, where the pictures on the cards are chosen */
+function tilInnstillinger() { lukkStorbilde(); setTimeout(openSettings, 300); }
 sporEl.addEventListener('pointerdown', e => {
   if (sbLukker || sbBytter || (e.pointerType === 'mouse' && e.button !== 0)) return;
   sbFingre.set(e.pointerId, [e.clientX, e.clientY]);
@@ -3025,6 +3013,7 @@ sbEl.addEventListener('click', e => {
   const b = e.target.closest('[data-sb]');
   if (b) { velgStorbilde(b.dataset.sb); return; }
   if (e.target.closest('#sbValg')) return;
+  if (e.target.closest('#sbTilInnst')) { tilInnstillinger(); return; }
   lukkStorbilde();                                          // the picture itself, or anywhere outside the buttons
 });
 function storbildeTast(e) {
@@ -3035,7 +3024,7 @@ function storbildeTast(e) {
   const valg = [...sbEl.querySelectorAll('[data-sb]')].filter(b => !b.hidden && b.getAttribute('aria-disabled') !== 'true').map(b => b.dataset.sb);
   if (valg.length < 2) return;
   const d = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
-  velgStorbilde(valg[(valg.indexOf(settAv(sbKort)) + d + valg.length) % valg.length]);
+  velgStorbilde(valg[(valg.indexOf(sbVis) + d + valg.length) % valg.length]);
 }
 
 /* ---- a small question box (warning on grey cards, buying) ---- */

@@ -8,7 +8,7 @@ Bruk:
 Fuglekort-builder endres ikke. Skriptet bygger i en midlertidig kopi der tegneseriebildene i kilder/bonus_tegneserie/
 (b01_ekorn.jpg … b05_rodrev.jpg, stående 533 × 631 som bildefeltet på kortet) står i stedet for KI-bildene
 til bonuskortene, og kjører «bygg.py --bonus bare». Kortene havner i kilder/bonus_tegneserie/kort/ og de
-kvadratiske bildene (til miniatyrene i søket) i kilder/bonus_tegneserie/bilder/. Teksten på kortene kommer fra
+stående bildene (fullskjerm og miniatyrer) i kilder/bonus_tegneserie/bilder/. Teksten på kortene kommer fra
 regnearket i Fuglekort-builder, så kjør skriptet på nytt hvis bonuskortene endres der.
 """
 import shutil, subprocess, sys, tempfile
