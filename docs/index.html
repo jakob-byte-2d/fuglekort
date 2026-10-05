@@ -696,6 +696,48 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .grenser th,.grenser td{padding:7px 4px;text-align:center;border-bottom:1px solid var(--line)}
 .grenser td:first-child{text-align:left}
 .grenser .stars{font-size:11px;color:var(--gold)}
+/* ---------- when the birds are seen: the calendar of months, the birds that usually come now, one species ---------- */
+.kal-valg{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.kal-valg .chip{padding:5px 11px;font-size:13px}
+.kal-valg .sep{flex-basis:100%;height:0}
+.kal{display:grid;grid-template-columns:minmax(0,1fr) repeat(12,minmax(0,19px));gap:2px;align-items:center}
+.kal .kh{font-size:10.5px;font-weight:700;color:var(--muted);text-align:center;padding-bottom:3px}
+.kal .kh.na{color:var(--spruce-ink)}
+.kal .kn{border:0;background:none;padding:3px 6px 3px 0;text-align:left;font:inherit;font-size:12.5px;font-weight:600;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;border-radius:6px;text-decoration:underline dotted color-mix(in srgb, var(--muted) 60%, transparent);text-underline-offset:3px}
+.kal .kc{height:19px;border-radius:4px;background:var(--surface-2);border:0;padding:0;cursor:pointer}
+.kc.l1{background:color-mix(in srgb, var(--gold) 28%, var(--surface-2))}
+.kc.l2{background:color-mix(in srgb, var(--gold) 52%, var(--surface-2))}
+.kc.l3{background:color-mix(in srgb, var(--gold) 78%, var(--surface-2))}
+.kc.l4{background:var(--gold-ink)}
+.kal .kc.fram{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.kal .kc.na{box-shadow:0 0 0 1.5px var(--spruce-ink)}
+.kal .kc.valgt{outline:2px solid var(--ink);outline-offset:1px}
+.kal .kskille{grid-column:1/-1;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 0 2px}
+.kal-tip{min-height:20px;margin:10px 0 0;font-size:13.5px;color:var(--ink)}
+.kal-skala{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted);margin-top:6px}
+.kal-skala i{width:14px;height:14px;border-radius:3px;display:inline-block}
+.naa{display:flex;flex-wrap:wrap;gap:8px}
+.naa button{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg-hi);border-radius:99px;padding:4px 12px 4px 4px;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink)}
+.naa .ph{width:30px;height:30px;border-radius:50%}
+.art-tilbake{margin:12px 0 0 -6px}
+.art-hode{display:flex;align-items:center;gap:14px;margin-top:8px}
+.art-hode .ph{width:64px;height:64px;border-radius:16px;flex-shrink:0}
+.art-hode h3{margin:0;font-size:22px;letter-spacing:-.01em}
+.art-hode i{color:var(--muted);font-size:14px}
+.art-rytme{display:inline-block;margin:14px 0 0;padding:6px 12px;border-radius:99px;background:color-mix(in srgb, var(--gold) 22%, var(--surface));font-weight:700;font-size:14px;color:var(--gold-ink)}
+.art-mnd{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;align-items:end;height:150px;margin-top:6px}
+.art-mnd > div{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:3px;min-width:0}
+.art-mnd b{font-size:11px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.art-mnd i{display:block;width:100%;border-radius:5px 5px 2px 2px;background:var(--gold);min-height:3px}
+.art-mnd i.tom{background:var(--surface-2)}
+.art-mnd .na i{box-shadow:0 0 0 2px var(--spruce-ink)}
+.art-ml{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;font-size:11px;font-weight:700;color:var(--muted);text-align:center;margin-top:4px}
+.art-ml .na{color:var(--spruce-ink)}
+.kpi.dato b{font-size:20px;line-height:1.2}
+.art-aar{list-style:none;margin:8px 0 0;padding:0;border-top:1px solid var(--line)}
+.art-aar li{display:flex;justify-content:space-between;padding:8px 2px;border-bottom:1px solid var(--line);font-size:14.5px}
+.art-aar b{font-variant-numeric:tabular-nums}
 .merker{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px}
 /* the day badges: smaller, five in a row; only the next one shows seeds and how far there is left */
 .merker.dagmerker{grid-template-columns:repeat(5,1fr);gap:12px 6px}
@@ -1621,6 +1663,112 @@ function paintCard(el) {
 }
 
 /* the back of the card: every day this bird was seen, newest first */
+/* ================= Når fuglene er sett =================
+   Worked out from the days stored for each species (dates only, no time of day): a calendar of the months,
+   the birds that usually turn up around this date, and a view of one species. Shown in Statistikk only. */
+const MND_KORT = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+const MND_LANG = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
+const aarAv = d => +d.slice(0, 4), mndAv = d => +d.slice(5, 7) - 1;
+const dagNr = d => { const [y, m, n] = d.split('-').map(Number); return Math.round((Date.UTC(y, m - 1, n) - Date.UTC(y, 0, 1)) / 864e5); };
+const perMnd = (dager, aar) => { const n = Array(12).fill(0); dager.forEach(d => { if (aar == null || aarAv(d) === aar) n[mndAv(d)]++; }); return n; };
+const mndSpenn = (a, b) => (a === b ? MND_LANG[a] : `${MND_LANG[a]}–${MND_LANG[b]}`);
+const erHelaar = dager => perMnd(dager).filter(Boolean).length >= 9;
+/* what the months (all years) make the bird in your garden: all year, summer or winter visitor, on passage, or its best months */
+function aarsrytme(dager) {
+  const n = perMnd(dager), mnd = n.map((v, i) => (v ? i : -1)).filter(i => i >= 0);
+  if (dager.length < 4 || mnd.length < 2) return null;
+  if (mnd.length >= 9) return 'Helårsfugl i hagen din';
+  if (mnd.every(m => m >= 3 && m <= 8)) return `Sommergjest: ${mndSpenn(Math.min(...mnd), Math.max(...mnd))}`;
+  const vint = m => (m - 9 + 12) % 12;                       // October first
+  if (mnd.every(m => vint(m) <= 5)) { const s = [...mnd].sort((a, b) => vint(a) - vint(b)); return `Vintergjest: ${mndSpenn(s[0], s[s.length - 1])}`; }
+  const vaar = mnd.some(m => m >= 2 && m <= 4), host = mnd.some(m => m >= 7 && m <= 9);
+  if (vaar && host && !mnd.some(m => m === 5 || m === 6 || m === 11 || m === 0)) return 'På trekk vår og høst';
+  const topp = n.indexOf(Math.max(...n)), nabo = [topp - 1, topp + 1].filter(m => m >= 0 && m < 12 && n[m] >= n[topp] * 0.6).sort((a, b) => n[b] - n[a])[0];
+  return `Vanligst i ${nabo == null ? MND_LANG[topp] : mndSpenn(Math.min(topp, nabo), Math.max(topp, nabo))}`;
+}
+/* the choices for the calendar (this year or all years, order), kept on this device */
+let kalVis = (() => { try { return JSON.parse(lsGet('fuglekort:kalender')) || {}; } catch (e) { return {}; } })();
+kalVis = { aar: kalVis.aar === 'alle' ? 'alle' : 'iaar', sort: kalVis.sort === 'tid' ? 'tid' : 'nr' };
+const kalAar = () => (kalVis.aar === 'iaar' ? new Date().getFullYear() : null);
+const nivaKal = v => (v >= 8 ? 4 : v >= 4 ? 3 : v >= 2 ? 2 : v ? 1 : 0);
+const kalValg = (k, v, t) => `<button class="chip" data-kalvalg="${k}:${v}" aria-pressed="${kalVis[k] === v}">${t}</button>`;
+/* the calendar: one row per species seen (birds, then the other animals), one column per month */
+function kalenderHtml() {
+  const naaM = new Date().getMonth(), aar = kalAar();
+  const rader = CARDS.map((c, i) => ({ c, i, d: Store.days(c.key).filter(d => aar == null || aarAv(d) === aar) }))
+    .filter(r => r.d.length && erApen(r.c))
+    .map(r => ({ ...r, n: perMnd(r.d), forste: Math.min(...r.d.map(dagNr)) }));
+  const sorter = (a, b) => (kalVis.sort === 'tid' ? a.forste - b.forste || a.c.nr - b.c.nr : a.c.nr - b.c.nr);
+  const fugler = rader.filter(r => !r.c.bonus).sort(sorter), dyr = rader.filter(r => r.c.bonus).sort(sorter);
+  const rad = r => `<button class="kn" data-art="${r.c.key}" aria-label="${esc(r.c.navn)}: ${r.n.map((v, m) => v ? `${MND_LANG[m]} ${v} ${v === 1 ? 'dag' : 'dager'}` : '').filter(Boolean).join(', ')}. Åpne arten.">${esc(r.c.navn)}</button>`
+    + r.n.map((v, m) => `<span class="kc l${nivaKal(v)} ${aar && m > naaM ? 'fram' : ''} ${m === naaM ? 'na' : ''}" data-kal="${r.i}:${m}" aria-hidden="true"></span>`).join('');
+  return `<div class="s-sec"><h3>Når fuglene er sett</h3>
+    <div class="kal-valg" role="group" aria-label="Vis">${kalValg('aar', 'iaar', `I år (${new Date().getFullYear()})`)}${kalValg('aar', 'alle', 'Alle år')}<span class="sep"></span>${kalValg('sort', 'nr', 'Etter kortnummer')}${kalValg('sort', 'tid', 'Etter når på året')}</div>
+    ${rader.length ? `<div class="kal">
+      <span></span>${MND_KORT.map((m, k) => `<span class="kh ${k === naaM ? 'na' : ''}" aria-hidden="true">${m}</span>`).join('')}
+      ${fugler.map(rad).join('')}
+      ${dyr.length ? `<span class="kskille">Andre dyr</span>${dyr.map(rad).join('')}` : ''}
+    </div>
+    <p class="kal-tip" id="kalTip">Trykk på en rute for antall dager, eller på navnet for mer om arten.</p>
+    <div class="kal-skala" aria-hidden="true">Færre <i class="kc l1"></i><i class="kc l2"></i><i class="kc l3"></i><i class="kc l4"></i> flere dager i måneden</div>`
+    : `<p class="cap">Ingen observasjoner${aar ? ' i år' : ''} ennå.</p>`}
+  </div>`;
+}
+/* birds seen around this date in earlier years (two weeks either way) that have not been seen in the last two
+   weeks; birds that are here all year are left out. The first year, before there is an earlier year, the
+   birds seen the last 14 days. */
+function naaHtml() {
+  const t = todayISO(), iAar = aarAv(t), dn = dagNr(t);
+  const naer = d => { const x = Math.abs(dagNr(d) - dn); return Math.min(x, 365 - x) <= 14; };
+  const alle = CARDS.map((c, i) => ({ c, i, d: Store.days(c.key) })).filter(r => r.d.length && erApen(r.c));
+  const chips = l => `<div class="naa">${l.map(r => `<button data-i="${r.i}">${miniatyr(r.c, r.i)}${esc(r.c.navn)}</button>`).join('')}</div>`;
+  if (alle.some(r => r.d.some(d => aarAv(d) < iAar))) {
+    const pleier = alle.filter(r => !erHelaar(r.d) && r.d.some(d => aarAv(d) < iAar && naer(d)) && !r.d.some(d => aarAv(d) === iAar && dagNr(d) >= dn - 14));
+    if (!pleier.length) return '';
+    return `<div class="s-sec"><h3>Pleier å dukke opp nå</h3>
+      <p class="cap" style="margin:0 0 10px">Sett rundt denne tiden tidligere år, men ikke de siste to ukene.</p>${chips(pleier)}</div>`;
+  }
+  const nylig = alle.filter(r => r.d.some(d => aarAv(d) === iAar && dagNr(d) >= dn - 14));
+  return nylig.length ? `<div class="s-sec"><h3>Sett de siste 14 dagene</h3>${chips(nylig)}</div>` : '';
+}
+/* one species: its months (this year or all years), what that makes it, first and last day, days per year */
+let artVis = null, artRull = 0;
+function artHtml(key) {
+  const i = BY_KEY[key], c = CARDS[i], alle = Store.days(key), aar = kalAar(), d = alle.filter(x => aar == null || aarAv(x) === aar);
+  const n = perMnd(alle, aar), maks = Math.max(1, ...n), naaM = new Date().getMonth(), r = aarsrytme(alle);
+  const perAar = [...new Set(alle.map(aarAv))].sort((a, b) => b - a).map(y => [y, alle.filter(x => aarAv(x) === y).length]);
+  const topp = n.indexOf(Math.max(...n));
+  return `<button class="textbtn art-tilbake" data-artlukk>‹ Tilbake til statistikken</button>
+    <div class="art-hode">${miniatyr(c, i)}<div><h3 id="artNavn" tabindex="-1">${esc(c.navn)}</h3><i>${esc(c.latin || '')}</i></div></div>
+    ${r ? `<p class="art-rytme">${r}</p>` : '<p class="cap" style="margin-top:14px">For lite data til å si når den er her ennå.</p>'}
+    <div class="s-sec" style="margin-top:18px">
+      <div class="kal-valg" role="group" aria-label="Vis">${kalValg('aar', 'iaar', `I år (${new Date().getFullYear()})`)}${kalValg('aar', 'alle', 'Alle år')}</div>
+      <div class="art-mnd" role="img" aria-label="${n.map((v, m) => v ? `${MND_LANG[m]} ${v}` : '').filter(Boolean).join(', ') || 'Ikke sett'}">
+        ${n.map((v, m) => `<div class="${m === naaM ? 'na' : ''}">${v ? `<b>${v}</b>` : ''}<i class="${v ? '' : 'tom'}" style="height:${v ? Math.max(4, Math.round(v / maks * 100)) : 2}%"></i></div>`).join('')}
+      </div>
+      <div class="art-ml" aria-hidden="true">${MND_KORT.map((m, k) => `<span class="${k === naaM ? 'na' : ''}">${m}</span>`).join('')}</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>${d.length}</b><span>${d.length === 1 ? 'Observasjonsdag' : 'Observasjonsdager'}${aar ? ' i år' : ''}</span></div>
+      <div class="kpi"><b>${d.length ? MND_LANG[topp][0].toUpperCase() + MND_LANG[topp].slice(1) : '–'}</b><span>Flest dager${aar ? ' i år' : ''}</span></div>
+      <div class="kpi dato"><b>${d.length ? fmtLong(d[0]) : '–'}</b><span>Først sett${aar ? ' i år' : ''}</span></div>
+      <div class="kpi dato"><b>${d.length ? fmtLong(d[d.length - 1]) : '–'}</b><span>Sist sett</span></div>
+    </div>
+    ${perAar.length > 1 ? `<div class="s-sec"><h3>Dager per år</h3><ul class="art-aar">${perAar.map(([y, v]) => `<li><span>${y}</span><b>${flertall(v, 'dag', 'dager')}</b></li>`).join('')}</ul></div>` : ''}
+    <div class="row" style="margin-top:20px"><button class="btn" data-i="${i}">Gå til kortet</button></div>`;
+}
+function apneArt(key) {
+  if (BY_KEY[key] == null) return;
+  artRull = $('#statsSheet').scrollTop; artVis = key;
+  renderStats(); $('#statsSheet').scrollTop = 0;
+  setTimeout(() => { const h = $('#artNavn'); h && h.focus({ preventScroll: true }); }, 30);
+}
+function lukkArt() {
+  if (!artVis) return;
+  const key = artVis; artVis = null;
+  renderStats(); $('#statsSheet').scrollTop = artRull;
+  const b = sb.querySelector(`[data-art="${key}"]`); if (b) b.focus({ preventScroll: true });
+}
 function paintLogg(el, c, dager) {
   const box = el.querySelector('.logg'), t = todayISO();
   const sig = dager.join(',') + '|' + t + '|' + erLaast(c);
@@ -2117,7 +2265,7 @@ document.addEventListener('keydown', e => {
   if (!sbEl.hidden) { storbildeTast(e); return; }
   if (festAapen) { if (e.key === 'Escape') { e.preventDefault(); lukkFest(); } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); festTrykk(); } return; }
   if (e.target.closest('input, textarea')) { if (e.key === 'Escape') closeSheets(); return; }
-  if (openSheet) { if (e.key === 'Escape') closeSheets(); return; }
+  if (openSheet) { if (e.key === 'Escape') { if (artVis && openSheet.id === 'statsSheet') lukkArt(); else closeSheets(); } return; }
   if (e.key === 'ArrowRight') { e.preventDefault(); stopRiffle(); go(1); }
   else if (e.key === 'ArrowLeft') { e.preventDefault(); stopRiffle(); go(-1); }
   else if (e.key === 'Escape') { stopRiffle(); }
@@ -2433,8 +2581,8 @@ function paintFaner() {
 }
 function velgFane(f, fokus) {
   if (!FANER.includes(f)) return;
-  const ny = f !== statsFane;
-  statsFane = f; lsSet('fuglekort:fane', f);
+  const ny = f !== statsFane || artVis;
+  statsFane = f; lsSet('fuglekort:fane', f); artVis = null;
   renderStats();
   if (ny) $('#statsSheet').scrollTop = 0;
   const b = fanerEl.querySelector(`[data-fane="${f}"]`);
@@ -2448,7 +2596,7 @@ fanerEl.addEventListener('keydown', e => {
     : e.key === 'Home' ? FANER[0] : e.key === 'End' ? FANER[FANER.length - 1] : null;
   if (ny) { e.preventDefault(); velgFane(ny, true); }
 });
-function openStats(fane) { if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; setTimeout(() => $('#closeStats').focus(), 60); }
+function openStats(fane) { artVis = null; if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; setTimeout(() => $('#closeStats').focus(), 60); }
 $('#openStats').addEventListener('click', () => openStats());
 $('#closeStats').addEventListener('click', () => closeSheets());
 /* a small picture of the card, or a grey lock for a card that is not open yet */
@@ -2558,6 +2706,9 @@ function renderStats() {
       <div class="kpi"><b>${inYear}</b><span>${inYear === 1 ? 'Ny art' : 'Nye arter'} de siste 12 månedene</span></div>
     </div>
 
+    ${naaHtml()}
+    ${kalenderHtml()}
+
     <div class="s-sec"><h3>Etter sjeldenhet</h3><div class="rar">
       ${byRar.map(x => `<div class="rrow">${stars(x.r)}<div class="lab"><span>${RAR[x.r]}</span><div class="bar"><i style="width:${(x.seen / x.tot * 100).toFixed(1)}%"></i></div></div><span class="num">${x.seen}/${x.tot}</span></div>`).join('')}
     </div></div>
@@ -2597,7 +2748,7 @@ function renderStats() {
     </div>`
   };
   paintFaner();
-  sb.innerHTML = FANER_HTML[statsFane]();
+  sb.innerHTML = statsFane === 'statistikk' && artVis ? artHtml(artVis) : FANER_HTML[statsFane]();
 
   const tip = $('#mtip'), mEl = $('#months');
   if (!mEl) return;
@@ -2612,6 +2763,18 @@ sb.addEventListener('change', e => {
 });
 sb.addEventListener('keydown', e => { if (e.target.id === 'profilNavn' && e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
 sb.addEventListener('click', async e => {
+  const kv = e.target.closest('[data-kalvalg]');
+  if (kv) { const [k, v] = kv.dataset.kalvalg.split(':'); kalVis[k] = v; lsSet('fuglekort:kalender', JSON.stringify(kalVis)); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
+  const kc = e.target.closest('[data-kal]');
+  if (kc) {
+    const [i, m] = kc.dataset.kal.split(':').map(Number), c = CARDS[i], aar = kalAar(), v = perMnd(Store.days(c.key), aar)[m];
+    sb.querySelectorAll('.kc.valgt').forEach(x => x.classList.remove('valgt')); kc.classList.add('valgt');
+    $('#kalTip').innerHTML = `<b>${esc(c.navn)}</b> · ${MND_LANG[m]}${aar ? ` ${aar}` : ', alle år'}: ${v ? `${v} ${v === 1 ? 'dag' : 'dager'}` : 'ikke sett'}`;
+    return;
+  }
+  const an = e.target.closest('[data-art]');
+  if (an) { apneArt(an.dataset.art); return; }
+  if (e.target.closest('[data-artlukk]')) { lukkArt(); return; }
   const tl = e.target.closest('[data-tid]');
   if (tl) { openSum(tl.dataset.tid); return; }
   const j = e.target.closest('[data-i]');
@@ -3528,6 +3691,7 @@ function lukkOverste() {
   if (!sbEl.hidden) { lukkStorbilde(); return; }
   if (festAapen) { lukkFest(); return; }
   if (menyApen()) { lukkMeny(true); return; }
+  if (openSheet && openSheet.id === 'statsSheet' && artVis) { lukkArt(); return; }
   if (openSheet) closeSheets();
 }
 let tilbakeVakt = false, tilbakeEgen = false, tilbakeT = null, synkT = null;
