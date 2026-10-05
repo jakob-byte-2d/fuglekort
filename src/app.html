@@ -1,4 +1,4 @@
-<title>Hagefugler</title>
+<title>Fuglekort</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Familjen+Grotesk:wght@400;500;600;700&display=swap">
@@ -751,7 +751,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <div class="app" id="app">
   <header class="top">
     <div class="brand">
-      <h1>Hagefugler</h1>
+      <h1>Fuglekort</h1>
       <p id="sub">Kort 001 av 060</p>
     </div>
     <button class="frobtn" id="openFro" aria-label="Solsikkefrø" title="Frøbutikken"><span id="froIkon"></span><b id="froTall">0</b></button>
@@ -1229,7 +1229,7 @@ const prisAv = c => Math.floor(FRO.pris.start * Math.pow(FRO.pris.vekst, c.nr - 
 const PRIS = Object.fromEntries(BIRDS.filter(c => c.nr > FRO.apneFraStart).map(c => [c.key, prisAv(c)]));
 (() => {                                     // every price different, rising through the deck
   const p = BIRDS.filter(c => PRIS[c.key] != null).sort((a, b) => a.nr - b.nr).map(c => PRIS[c.key]);
-  if (p.some((v, k) => k && v <= p[k - 1])) console.warn('Hagefugler: prisene stiger ikke for hvert kort', p);
+  if (p.some((v, k) => k && v <= p[k - 1])) console.warn('Fuglekort: prisene stiger ikke for hvert kort', p);
 })();
 const Kjop = Object.assign(samling({
   col: 'kjop', key: 'hagefugler:kjop:v1', hva: 'Kjøpet',

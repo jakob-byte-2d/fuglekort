@@ -1,6 +1,6 @@
 {
-  "name": "Hagefugler",
-  "short_name": "Hagefugler",
+  "name": "Fuglekort",
+  "short_name": "Fuglekort",
   "description": "100 fuglekort fra Oslo som en kortstokk. Bla, søk og kryss av fuglene du har sett.",
   "lang": "nb",
   "start_url": "./",

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bygger Hagefugler fra src/app.html + data/cards.json.
+"""Bygger Fuglekort fra src/app.html + data/cards.json.
 
 Lager to utgaver av samme side:
   docs/index.html     – frittstående app (PWA): full HTML med manifest og offline-støtte
@@ -22,7 +22,7 @@ fragment = src.replace("__CARDS_JSON__", payload)
 
 # 2) Standalone app: full document, title moved into <head>, manifest + service worker
 title_m = re.search(r"<title>.*?</title>\s*", fragment, re.S)
-title = title_m.group(0).strip() if title_m else "<title>Hagefugler</title>"
+title = title_m.group(0).strip() if title_m else "<title>Fuglekort</title>"
 body = fragment.replace(title_m.group(0), "", 1) if title_m else fragment
 head = f"""<!doctype html>
 <html lang="nb">
@@ -34,7 +34,7 @@ head = f"""<!doctype html>
 <meta name="theme-color" content="#0f4a36">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Hagefugler">
+<meta name="apple-mobile-web-app-title" content="Fuglekort">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
@@ -82,7 +82,7 @@ for f in assets:
     if fp.is_file():
         h.update(fp.read_bytes())
 sw = (ROOT / "src" / "sw.template.js").read_text(encoding="utf-8").replace("__ASSETS__", json.dumps(assets, indent=2))
-sw = re.sub(r"const CACHE = '[^']*';", f"const CACHE = 'hagefugler-oslo-{h.hexdigest()[:10]}';", sw)
+sw = re.sub(r"const CACHE = '[^']*';", f"const CACHE = 'fuglekort-{h.hexdigest()[:10]}';", sw)
 (ROOT / "docs" / "sw.js").write_text(sw, encoding="utf-8")
 
 print(f"Bygget {len(data['kort'])} kort → docs/index.html og artifact.html")

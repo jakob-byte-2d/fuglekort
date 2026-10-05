@@ -206,7 +206,7 @@ def main(app):
     } for k in bonus_inn]
     hjelp += hjelp_bonus
     hjelp_foto += hjelp_bonus + hjelp_bonus_foto
-    data = {"tittel": "Hagefugler", "antall": len(kort_inn), "bonus": len(bonus_inn), "bakside": "cards/bakside.webp", "hjelp": hjelp,
+    data = {"tittel": "Fuglekort", "antall": len(kort_inn), "bonus": len(bonus_inn), "bakside": "cards/bakside.webp", "hjelp": hjelp,
             "sjeldenhet": {"1": "Vanlig", "2": "Regelmessig", "3": "Uvanlig", "4": "Sjelden", "5": "Svært sjelden"},
             "kort": kort}
     if fotosett:

@@ -1,15 +1,17 @@
-# Hagefugler
+# Fuglekort
 
 Kortstokk med 100 fuglekort med hagefugler i Norge. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen, samle glinskort og merker og se statistikk. Menyen øverst til høyre har søk, forklaringskortene og innstillingene.
 
-Kortene lages i repoet **Fuglekort-** (Fuglekort-fabrikken). Dette repoet er appen som viser dem.
+Kortene lages i repoet **Fuglekort-** (med bindestrek, kortfabrikken). Dette repoet, **fuglekort**, er appen som viser dem.
 
-Appen ligger på **https://jakob-byte-2d.github.io/hagefugler/** når GitHub Pages er slått på (se under).
+Appen ligger på **https://jakob-byte-2d.github.io/fuglekort/** når GitHub Pages er slått på (se under).
+
+Appen het tidligere **Hagefugler** og lå på jakob-byte-2d.github.io/hagefugler/ (før det hagefugler-oslo/). Den gamle adressen virker ikke lenger. Avkrysningene, tellingene og kjøpene ligger på samme nettsted (jakob-byte-2d.github.io), så de følger med til den nye adressen i samme nettleser. Lagringsnøklene heter fortsatt `hagefugler…` av den grunn, og sikkerhetskopien har fortsatt `kortstokk: "hagefugler"`, så gamle kopier kan gjenopprettes. En hjemskjerm-app på iPhone har sitt eget lager: åpne den gamle appen (den virker fra hurtiglageret), velg *Kopier sikkerhetskopi* i innstillingene, legg den nye adressen på hjemskjermen og velg *Gjenopprett* der.
 
 ## Innhold
 
 ```
-hagefugler/
+fuglekort/
 ├── data/cards.json          Navn, sjeldenhet og teksten fra kortene (til søket) + posisjonen til SETT-ruta og datolinja
 ├── src/app.html             Selve appen (HTML, CSS og JavaScript i én fil)
 ├── src/sw.template.js       Mal for offline-støtte (service worker)
@@ -52,7 +54,7 @@ Da starter den i fullskjerm med eget ikon, og kortene virker uten nett. Etter en
 ```
 npm init -y
 npm i @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android
-npx cap init "Hagefugler" no.hagefugler.app --web-dir docs
+npx cap init "Fuglekort" no.fuglekort.app --web-dir docs
 npx cap add ios && npx cap add android
 npx cap open ios        # eller: npx cap open android
 ```
