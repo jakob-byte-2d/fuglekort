@@ -56,8 +56,12 @@ def ikon(bakside, storrelse, maskable=False):
     im = Image.open(bakside).convert("RGBA")
     bak = Image.new("RGBA", im.size, im.getpixel((W // 2, 8))[:3] + (255,))
     bak.alpha_composite(im)
-    side = H - 335                      # under ordet «Hagefugler», ned til bunnen
-    kvadrat = bak.crop((18, 335, 18 + side, 335 + side)).convert("RGB")
+    # under ordet øverst («Fuglekort», tidligere «Hagefugler»), ned til bunnen: finn nederste mørke rad i ordet
+    mork = (np.asarray(bak.convert("RGB")).astype(int).sum(2) < 250).any(1)
+    topp = max(y for y in range(200, 430) if mork[y]) + 9
+    side = H - topp
+    x0 = (W - side) // 2
+    kvadrat = bak.crop((x0, topp, x0 + side, topp + side)).convert("RGB")
     if maskable:
         flate = Image.new("RGB", (side, side), im.getpixel((W // 2, 8))[:3])
         liten = kvadrat.resize((int(side * 0.8), int(side * 0.8)), Image.LANCZOS)
