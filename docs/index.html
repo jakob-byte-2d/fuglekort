@@ -65,12 +65,16 @@ button{cursor:pointer;touch-action:manipulation}
 .iconbtn:hover{background:var(--surface-2)}
 .iconbtn:active{transform:scale(.94)}
 .iconbtn svg{width:20px;height:20px}
-.ring{position:relative}
-.ring svg{width:34px;height:34px;transform:rotate(-90deg)}
-.ring circle{fill:none;stroke-width:3}
+/* the ring top right: the icon of your title, and the way to the next title around it */
+.ring{position:relative;border-color:transparent}
+.ring svg,.ring .ti{position:absolute;left:50%;top:50%}
+.ring svg{width:42px;height:42px;margin:-21px 0 0 -21px;transform:rotate(-90deg)}
+.ring .ti{width:31px;height:31px;margin:-15.5px 0 0 -15.5px;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
+.ring .ti.pop{animation:ringpop .7s cubic-bezier(.3,1.7,.5,1)}
+@keyframes ringpop{0%{transform:scale(.4)}100%{transform:scale(1)}}
+.ring circle{fill:none;stroke-width:3.2}
 .ring .trk{stroke:var(--track)}
 .ring .arc{stroke:var(--gold);stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.2,.8,.2,1)}
-.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
 
 /* ---------- deck ---------- */
 .stage{position:relative;min-height:0;container-type:size;display:grid;place-items:center;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -867,7 +871,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 @media (prefers-reduced-motion: reduce){
   .float{animation:none}
   .card,.card .inner,.sheet,.scrim,.tick path,.hand{transition-duration:.01s!important}
-  .antall.pop,.card.idag .idag-merke.ny{animation:none}
+  .antall.pop,.card.idag .idag-merke.ny,.ring .ti.pop{animation:none}
   .fest.on .fest-straaler,.fest.on .fest-kort,.fest.on .fest-tekst,.fest.on .fest-kort .mkant,.fest.on .fest-kort .mk-blits{animation:none;opacity:1;transform:none}
   .bfest.on .bf-kort,.bfest .bf-inner,.bfest .bf-bak,.bfest .bf-q,.bfest .bf-lys,.bfest.snudd .bf-stempel{animation:none!important;transform:none;opacity:1}
   .bfest.snudd .bf-inner{transform:rotateY(180deg)}
@@ -885,9 +889,9 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
       <p id="sub">Kort 001 av 060</p>
     </div>
     <button class="frobtn" id="openFro" aria-label="Solsikkefrø" title="Frøbutikken"><span id="froIkon"></span><b id="froTall">0</b></button>
-    <button class="iconbtn ring" id="openStats" aria-label="Statistikk" title="Statistikk">
-      <svg viewBox="0 0 34 34" aria-hidden="true"><circle class="trk" cx="17" cy="17" r="14"/><circle class="arc" id="ringArc" cx="17" cy="17" r="14" stroke-dasharray="0 88"/></svg>
-      <b id="ringNum">0</b>
+    <button class="iconbtn ring" id="openStats" aria-label="Min fugleliste" title="Min fugleliste">
+      <svg viewBox="0 0 42 42" aria-hidden="true"><circle class="trk" cx="21" cy="21" r="19"/><circle class="arc" id="ringArc" cx="21" cy="21" r="19" stroke-dasharray="0 120"/></svg>
+      <span class="ti" id="ringIkon" aria-hidden="true"></span>
     </button>
     <button class="iconbtn" id="openMeny" aria-label="Meny" title="Meny" aria-haspopup="menu" aria-expanded="false" aria-controls="meny">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg>
@@ -2359,11 +2363,15 @@ function paintChrome() {
   const c = CARDS[cur];
   const n = seenCount();
   $('#sub').textContent = c.bonus ? `Bonuskort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
-  $('#ringNum').textContent = n;
   paintFro();
-  const C = 2 * Math.PI * 14;
-  $('#ringArc').setAttribute('stroke-dasharray', `${(n / NB * C).toFixed(2)} ${C.toFixed(2)}`);
-  $('#openStats').setAttribute('aria-label', `Statistikk: ${n} av ${NB} fugler sett`);
+  // the title: its icon in the ring, and how far it is to the next title around it
+  const C = 2 * Math.PI * 19, fT = froTotalt(), tk = tittelAv(fT), tt = TITLER[tk], tn = TITLER[tk + 1];
+  const andel = tn ? Math.max(0, Math.min(1, (fT - tt.fra) / (tn.fra - tt.fra))) : 1;
+  $('#ringIkon').setAttribute('style', tittelPos(tk));
+  $('#ringArc').setAttribute('stroke-dasharray', `${(andel * C).toFixed(2)} ${C.toFixed(2)}`);
+  $('#ringArc').style.opacity = andel > 0 ? 1 : 0;           // no dot when the way has just started
+  $('#openStats').setAttribute('aria-label', `Min fugleliste. ${tt.navn}${tn ? `, ${Math.round(andel * 100)} prosent av veien til ${tn.navn}` : ', den høyeste tittelen'}`);
+  $('#openStats').title = tt.navn;
   ticks.forEach((t, p) => { const i = DECK[p]; t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
   paintTeller();
   scrub.setAttribute('aria-valuenow', POS[cur] + 1);
@@ -2649,7 +2657,7 @@ fanerEl.addEventListener('keydown', e => {
   if (ny) { e.preventDefault(); velgFane(ny, true); }
 });
 function openStats(fane) { artVis = null; if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; setTimeout(() => $('#closeStats').focus(), 60); }
-$('#openStats').addEventListener('click', () => openStats());
+$('#openStats').addEventListener('click', () => openStats('profil'));
 $('#closeStats').addEventListener('click', () => closeSheets());
 /* a small picture of the card, or a grey lock for a card that is not open yet */
 const miniatyr = (c, i, kl = '') => erLaast(c) ? `<span class="ph laastph ${kl}" aria-hidden="true">${LAAS}</span>` : `<span class="ph ${kl}" style="background-position:${spritePos(i)}" aria-hidden="true"></span>`;
@@ -3168,6 +3176,7 @@ function lukkFest() {
       jump(BY_KEY[f.c.key]);
       if (f.type !== 'niva') setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
     }
+    if (f && f.type === 'tittel') { const ri = $('#ringIkon'); ri.classList.remove('pop'); void ri.offsetWidth; ri.classList.add('pop'); }
     // the next celebration waits a moment, so the card can be seen in the deck first
     if (festKo.length) { festPlanlagt = true; setTimeout(nesteFest, 1400); } else if (festFokus && festFokus.focus && !openSheet) festFokus.focus();
     froVentKjor(560);
