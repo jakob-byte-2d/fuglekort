@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Henter inn kortene fra Fuglekort-fabrikken (repoet Fuglekort-).
+"""Henter inn kortene fra kortfabrikken (repoet Fuglekort-builder).
 
 Bruk:
     python3 importer_fuglekort.py STI/TIL/app
 
-der STI/TIL/app er mappen `ut/app` fra `python bygg.py` i Fuglekort-, eller den utpakkede
+der STI/TIL/app er mappen `ut/app` fra `python bygg.py` i Fuglekort-builder, eller den utpakkede
 «app»-nedlastingen fra Actions → Bygg fuglekort. Mappen skal ha kort.json, kort/, bilder/ og bakside.webp
-(og kort_tegneserie/ og bilder_tegneserie/ når Fuglekort- har tegneseriesettet).
+(og kort_tegneserie/ og bilder_tegneserie/ når Fuglekort-builder har tegneseriesettet).
 
 Skriptet
   1. kopierer kortbildene (001–NNN), bonuskortene (b01–b05, andre dyr), de to forklaringskortene (000a, 000b)
@@ -85,7 +85,7 @@ def tegneserie_felt(k):
 
 
 def bonus_tegneserie(app, k):
-    """(kortbilde, kvadratisk bilde) for et bonuskort i tegneseriestil: fra kort.json hvis Fuglekort- har det,
+    """(kortbilde, kvadratisk bilde) for et bonuskort i tegneseriestil: fra kort.json hvis Fuglekort-builder har det,
     ellers fra kilder/bonus_tegneserie/. None når det mangler (appen viser da KI-kortet)."""
     ts = k.get("tegneserie")
     if ts:

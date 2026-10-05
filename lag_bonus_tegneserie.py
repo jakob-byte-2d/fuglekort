@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Lager bonuskortene i tegneseriestil (valget «Tegneseriefugler» i appen) med kortmalen i Fuglekort-.
+"""Lager bonuskortene i tegneseriestil (valget «Tegneseriefugler» i appen) med kortmalen i Fuglekort-builder.
 
 Bruk:
-    python3 lag_bonus_tegneserie.py STI/TIL/Fuglekort-
+    python3 lag_bonus_tegneserie.py STI/TIL/Fuglekort-builder
     python3 importer_fuglekort.py STI/TIL/app        (tar dem med inn i appen)
 
-Fuglekort- endres ikke. Skriptet bygger i en midlertidig kopi der tegneseriebildene i kilder/bonus_tegneserie/
+Fuglekort-builder endres ikke. Skriptet bygger i en midlertidig kopi der tegneseriebildene i kilder/bonus_tegneserie/
 (b01_ekorn.jpg … b05_rodrev.jpg, stående 533 × 631 som bildefeltet på kortet) står i stedet for KI-bildene
 til bonuskortene, og kjører «bygg.py --bonus bare». Kortene havner i kilder/bonus_tegneserie/kort/ og de
 kvadratiske bildene (til miniatyrene i søket) i kilder/bonus_tegneserie/bilder/. Teksten på kortene kommer fra
-regnearket i Fuglekort-, så kjør skriptet på nytt hvis bonuskortene endres der.
+regnearket i Fuglekort-builder, så kjør skriptet på nytt hvis bonuskortene endres der.
 """
 import shutil, subprocess, sys, tempfile
 from pathlib import Path
@@ -28,7 +28,7 @@ def main(fuglekort):
         for b in bilder:
             maal = kopi / "bilder" / b.name
             if not maal.exists():
-                sys.exit(f"Fuglekort- har ikke {b.name} i bilder/ (KI-bildet til bonuskortet med samme navn).")
+                sys.exit(f"Fuglekort-builder har ikke {b.name} i bilder/ (KI-bildet til bonuskortet med samme navn).")
             shutil.copy(b, maal)
         subprocess.run([sys.executable, "bygg.py", "--bonus", "bare", "--uten-pdf"], cwd=kopi, check=True)
         app = kopi / "ut" / "app" / "bonus"

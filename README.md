@@ -2,7 +2,7 @@
 
 Kortstokk med 100 fuglekort med hagefugler i Norge. Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen, samle glinskort og merker og se statistikk. Menyen øverst til høyre har søk, forklaringskortene og innstillingene.
 
-Kortene lages i repoet **Fuglekort-** (med bindestrek, kortfabrikken). Dette repoet, **fuglekort**, er appen som viser dem.
+Kortene lages i repoet **Fuglekort-builder** (kortfabrikken, tidligere Fuglekort-builder). Dette repoet, **fuglekort**, er appen som viser dem.
 
 Appen ligger på **https://jakob-byte-2d.github.io/fuglekort/** når GitHub Pages er slått på (se under).
 
@@ -16,7 +16,7 @@ fuglekort/
 ├── src/app.html             Selve appen (HTML, CSS og JavaScript i én fil)
 ├── src/sw.template.js       Mal for offline-støtte (service worker)
 ├── build.py                 Bygger docs/index.html og artifact.html fra src + data
-├── importer_fuglekort.py    Henter kort, forklaringskort og bakside fra Fuglekort-
+├── importer_fuglekort.py    Henter kort, forklaringskort og bakside fra Fuglekort-builder
 ├── artifact.html            Versjonen som ligger publisert hos Claude
 └── docs/                    Ferdig app – det er denne mappen GitHub Pages viser
     ├── index.html
@@ -61,7 +61,7 @@ npx cap open ios        # eller: npx cap open android
 
 ## KI-illustrasjoner, fotografier eller tegneseriefugler
 
-Fuglekort- lager tre sett kort til appen: KI-illustrasjonene (`kort/`), fotografiene fra «Fotomappe (app)»
+Fuglekort-builder lager tre sett kort til appen: KI-illustrasjonene (`kort/`), fotografiene fra «Fotomappe (app)»
 (nå `bilder_foto_ny`; `kort_foto/`, med fotokreditering) og tegneseriefuglene (`kort_tegneserie/`). Alle 100
 fuglekortene finnes i alle tre valgene: kort uten fotografi eller tegneseriefugl viser KI-kortet. Kortnummeret
 nederst på kortene er bare «001» (ikke «001/100»); appen leser ikke nummeret fra bildet eller fra `kortnr`.
@@ -69,9 +69,9 @@ nederst på kortene er bare «001» (ikke «001/100»); appen leser ikke nummere
 - **Fotografier:** Importen kopierer bare kortene som faktisk har fotografi til `docs/cards-foto/`; de andre er like KI-kortene og gjenbrukes. I `data/cards.json` har disse kortene `bildeFoto`, `fotograf` og `lisens`, og `hjelpFoto` er forklaringskortene med Bildekreditering.
 - **Fotografier:** 63 fuglekort (001–062 og 073) og alle fem bonuskortene har fotografi.
 - **Tegneseriefugler:** 60 fuglekort (001–060) har tegneseriebilde. Importen kopierer `tegneserie.kortbilde` til `docs/cards-tegneserie/NNN.webp` (mappen tømmes først), og kortene får `bildeTegneserie` i `cards.json`; `data.tegneserie` er `true` når settet finnes. Miniatyrene `sprites/cards-tegneserie.webp` og `sprites/photos-tegneserie.webp` er KI-miniatyrene med tegneseriekortene byttet inn (`tegneserie.bilde` til søket). Kort uten tegneseriebilde viser KI-kortet. Forklaringskortene er de samme som i KI-valget, uten Bildekreditering, og det står ingen fotograf på kortene.
-- **Bonuskortene i tegneseriestil** (b01 ekorn … b05 rødrev) lages her, ikke i Fuglekort-: tegneseriebildene ligger i `kilder/bonus_tegneserie/` (b01_ekorn.jpg …, stående 533 × 631 som bildefeltet på kortet). `python3 lag_bonus_tegneserie.py sti/til/Fuglekort-` bygger kortene med kortmalen og teksten fra Fuglekort- i en midlertidig kopi (Fuglekort- endres ikke) og legger dem i `kilder/bonus_tegneserie/kort/` og de kvadratiske bildene i `kilder/bonus_tegneserie/bilder/`. Importen tar dem med i `docs/cards-tegneserie/`, gir bonuskortene `bildeTegneserie` og bytter dem inn i tegneserieminiatyrene. Får Fuglekort- egne bonuskort i tegneseriestil i `kort.json`, brukes de i stedet. Kjør skriptet på nytt hvis teksten på bonuskortene endres i Fuglekort-.
+- **Bonuskortene i tegneseriestil** (b01 ekorn … b05 rødrev) lages her, ikke i Fuglekort-builder: tegneseriebildene ligger i `kilder/bonus_tegneserie/` (b01_ekorn.jpg …, stående 533 × 631 som bildefeltet på kortet). `python3 lag_bonus_tegneserie.py sti/til/Fuglekort-builder` bygger kortene med kortmalen og teksten fra Fuglekort-builder i en midlertidig kopi (Fuglekort-builder endres ikke) og legger dem i `kilder/bonus_tegneserie/kort/` og de kvadratiske bildene i `kilder/bonus_tegneserie/bilder/`. Importen tar dem med i `docs/cards-tegneserie/`, gir bonuskortene `bildeTegneserie` og bytter dem inn i tegneserieminiatyrene. Får Fuglekort-builder egne bonuskort i tegneseriestil i `kort.json`, brukes de i stedet. Kjør skriptet på nytt hvis teksten på bonuskortene endres i Fuglekort-builder.
 - **Eget bilde per kort:** Trykk på bildefeltet på forsiden av et kort (den gule rammen), så kommer bildet opp i fullskjerm med knappene **KI · Foto · Tegneserie**. Valget gjelder bare det kortet og overstyrer valget i Innstillinger; kortet i kortstokken, feiringene og miniatyrene i søk og samling følger det. Mangler fuglen et bilde i et sett, er knappen grå, og det står hva som mangler. Med Foto står fotografen nederst i bildet. Sveip til sidene for å bytte mellom KI, foto og tegneserie for fuglen (i samme rekkefølge som knappene; sett fuglen mangler hoppes over, og piltastene gjør det samme). Valget huskes for kortet, som med knappene. Trykk på bildet (eller utenfor, eller Esc) for å gå tilbake til kortet. Trykk ellers på kortet snur det som før, og et sveip kan starte på bildet. Grå kort åpner fortsatt spørsmålet om opplåsing. Valgene lagres på enheten i `hagefugler:bildekort` (`{ "parus-major": "foto" }`). Innstillinger viser hvor mange kort som har eget valg, med knappen «Bruk valget over på alle».
-- **Store bilder:** Fullskjermvisningen bruker de kvadratiske fuglebildene (800 × 800) som Fuglekort- lager til appen (`bilder/`, `bilder_foto/`, `bilder_tegneserie/` og bonuskortenes), lagret på nytt som WebP (kvalitet 80) i `docs/pictures/`, `docs/pictures-foto/` og `docs/pictures-tegneserie/`, ett per kort og sett (til sammen rundt 15 MB). `data.storeBilder` er `true` når de finnes. De lastes ned sammen med appen, så de virker uten nett. Uten dem viser fullskjermen bildefeltet klippet fra kortbildet.
+- **Store bilder:** Fullskjermvisningen bruker de kvadratiske fuglebildene (800 × 800) som Fuglekort-builder lager til appen (`bilder/`, `bilder_foto/`, `bilder_tegneserie/` og bonuskortenes), lagret på nytt som WebP (kvalitet 80) i `docs/pictures/`, `docs/pictures-foto/` og `docs/pictures-tegneserie/`, ett per kort og sett (til sammen rundt 15 MB). `data.storeBilder` er `true` når de finnes. De lastes ned sammen med appen, så de virker uten nett. Uten dem viser fullskjermen bildefeltet klippet fra kortbildet.
 - Valget lagres i `hagefugler:bilder` (`ki`, `foto` eller `tegneserie`). En lagret verdi som ikke finnes i dataene, blir `ki`.
 - Alle settene lagres på telefonen (service workeren), så man kan bytte også uten nett. Bildevalget i Innstillinger vises når minst ett av foto- og tegneseriesettet finnes, og hvert valg skjules hvis settet mangler.
 
@@ -88,7 +88,7 @@ Under statistikken (ringen øverst til høyre) finnes **Start telling**. Skriv g
 ## Bonuskort (andre dyr)
 
 Fem bonuskort med de vanligste ville pattedyrene i hager: b01 ekorn, b02 rådyr, b03 hare, b04 elg og b05 rødrev
-(rangert etter Hagefugltellingen 2024–2026). De lages i Fuglekort- (arket Bonuskort) og kommer med i importen fra
+(rangert etter Hagefugltellingen 2024–2026). De lages i Fuglekort-builder (arket Bonuskort) og kommer med i importen fra
 feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`, `id` som `b01` og `lengde` i stedet for `vingespenn`.
 
 **De er en belønning og en overraskelse.** Et bonuskort finnes ikke i appen før det er fortjent:
@@ -98,7 +98,7 @@ feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`, `id` som
 - Hint uten å si hva: statistikken har delen «Bonus» med et kort med spørsmålstegn og hvor mange registreringer som mangler, og skjermleseren sier «To registreringer til en bonus!» og «Én registrering til en bonus!».
 - **Når et bonuskort er fortjent**, faller et kort med baksiden opp inn på skjermen og vugger, med et lysende spørsmålstegn. Trykk, så snur det seg: blader virvler ut, et stempel sier BONUSKORT, og det står hvilke kort det er stokket inn blant. Trykk igjen, så viser kortstokken hvor det havnet, og kortet lyser opp. Ingenting skjer av seg selv; hvert steg venter på et trykk. Avsløringen vises én gang (i Claude lagres det i samlingen `bonusvist`); bonuskort fortjent før denne versjonen avsløres første gang appen åpnes.
 - Kortet stokkes inn blant fuglekortene med like mange stjerner, et sted mellom to av dem. Plassen er fast (regnes ut fra artsnavnet), så den er lik hver gang og på alle enheter. Ekorn (★★) havner blant kortene 018–032, rådyr (★★★) blant 033–048, og hare, elg og rødrev (★★★★) blant 049–068.
-- Bonuskortene har **bronsekant** fra de er fortjent, og fargestripa til venstre for navnet er bronse med **BONUS** på høykant. Appen tegner stripa oppå kortbildet (fra skrifta på kortene, Barlow Condensed Bold, som en SVG-bane), så kortbildene fra Fuglekort- er uendret. Sølv, gull og holo erstatter bronsekanten når bonuskortet når de nivåene. Overskriften viser «Bonuskort» uten nummer, og samlingen viser bonuskortene med bronsekant og «Bonus» på dem som ikke er sett.
+- Bonuskortene har **bronsekant** fra de er fortjent, og fargestripa til venstre for navnet er bronse med **BONUS** på høykant. Appen tegner stripa oppå kortbildet (fra skrifta på kortene, Barlow Condensed Bold, som en SVG-bane), så kortbildene fra Fuglekort-builder er uendret. Sølv, gull og holo erstatter bronsekanten når bonuskortet når de nivåene. Overskriften viser «Bonuskort» uten nummer, og samlingen viser bonuskortene med bronsekant og «Bonus» på dem som ikke er sett.
 - Sletter du dager så du kommer under grensen, forsvinner kortet igjen, og det avsløres på nytt når det er fortjent.
 - Bonuskortene får observasjonsdager og glinskant som fuglene, men teller ikke med i fuglelista: ringen, «av 100 fugler sett», poengene, sjeldenhetsstolpene og merkene gjelder bare fuglene.
 - De har KI-illustrasjoner og fotografier som fuglene: KI-kortene i `docs/cards/`, kortene med fotografi i `docs/cards-foto/` (med `bildeFoto`, `fotograf` og `lisens` i `cards.json`). Med fotografier står fotografen og lisensen også nederst på baksiden av kortet.
@@ -150,9 +150,9 @@ All lagring går gjennom objektet `Store` øverst i skriptet i `src/app.html`:
 
 Vil du ha synkronisering i den frittstående appen, bytter du ut `connectRemote()` og `push()` i `Store` med kall mot din egen backend, for eksempel Firebase eller Supabase. Resten av appen trenger ingen endringer.
 
-## Hente nye kort fra Fuglekort-
+## Hente nye kort fra Fuglekort-builder
 
-1. I **Fuglekort-**: endre regnearket, bildene eller baksiden og push. GitHub bygger kortene. Last ned «app» under *Actions → Bygg fuglekort → Artifacts* og pakk den ut. (Eller kjør `python bygg.py --uten-pdf` der, så ligger den i `ut/app`.)
+1. I **Fuglekort-builder**: endre regnearket, bildene eller baksiden og push. GitHub bygger kortene. Last ned «app» under *Actions → Bygg fuglekort → Artifacts* og pakk den ut. (Eller kjør `python bygg.py --uten-pdf` der, så ligger den i `ut/app`.)
 2. Her: `python3 importer_fuglekort.py sti/til/app`
 3. Commit og push. GitHub Pages oppdaterer appen, og telefonene henter de nye kortene selv.
 
