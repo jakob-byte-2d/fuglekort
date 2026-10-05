@@ -595,6 +595,25 @@ button{cursor:pointer;touch-action:manipulation}
   padding:calc(env(safe-area-inset-top,0px) + 14px) 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
 .stats.on{transform:translateX(0)}
 .s-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+/* Min fugleliste: the title and the tabs stay at the top while the tab scrolls */
+.s-topp{position:sticky;top:0;z-index:3;background:var(--surface);margin:calc(-1 * (env(safe-area-inset-top,0px) + 14px)) -20px 0;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 20px 0;box-shadow:0 1px 0 var(--line)}
+.faner{display:flex;gap:2px;margin:8px -8px 0;overflow-x:auto;scrollbar-width:none}
+.faner::-webkit-scrollbar{display:none}
+.faner button{flex:1 0 auto;border:0;background:none;color:var(--muted);font:inherit;font-size:14px;font-weight:600;padding:10px 6px 11px;
+  border-bottom:3px solid transparent;white-space:nowrap;min-height:44px}
+.faner button[aria-selected="true"]{color:var(--spruce-ink);border-bottom-color:var(--gold)}
+@media (max-width:370px){.faner button{font-size:13.5px;padding-inline:4px}}
+.faner button:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-2px;border-radius:8px}
+#statsBody:focus{outline:none}
+/* the profile at the top of Profil: today one person per device, ready for more */
+.profil{display:flex;align-items:center;gap:14px;margin-top:18px}
+.profil .avatar{width:52px;height:52px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:var(--spruce);color:var(--on-spruce);font-size:22px;font-weight:700}
+.profil .p-t{min-width:0;flex:1;display:grid;gap:2px}
+.profil input{width:100%;min-width:0;border:0;border-bottom:1px dashed var(--line);background:none;color:var(--ink);font:inherit;font-size:19px;font-weight:700;padding:4px 0}
+.profil input::placeholder{color:var(--muted);font-weight:500}
+.profil input:focus{outline:none;border-bottom-color:var(--spruce-ink)}
+.profil small{font-size:13px;color:var(--muted)}
 .s-head h2{margin:0;font-size:20px;letter-spacing:-.01em}
 .s-sec{margin-top:26px}
 .s-sec h3{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -853,11 +872,20 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 </section>
 
 <section class="sheet stats" id="statsSheet" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
-  <div class="s-head">
-    <h2 id="statsTitle">Min fugleliste</h2>
-    <button class="textbtn" id="closeStats">Lukk</button>
+  <div class="s-topp">
+    <div class="s-head">
+      <h2 id="statsTitle">Min fugleliste</h2>
+      <button class="textbtn" id="closeStats">Lukk</button>
+    </div>
+    <div class="faner" id="faner" role="tablist" aria-labelledby="statsTitle">
+      <button role="tab" id="fane-profil" data-fane="profil" aria-controls="statsBody">Profil</button>
+      <button role="tab" id="fane-statistikk" data-fane="statistikk" aria-controls="statsBody">Statistikk</button>
+      <button role="tab" id="fane-telling" data-fane="telling" aria-controls="statsBody">Telling</button>
+      <button role="tab" id="fane-kort" data-fane="kort" aria-controls="statsBody">Kort</button>
+      <button role="tab" id="fane-merker" data-fane="merker" aria-controls="statsBody">Merker</button>
+    </div>
   </div>
-  <div id="statsBody"></div>
+  <div id="statsBody" role="tabpanel" tabindex="-1"></div>
 </section>
 
 <section class="sheet stats" id="settingsSheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
@@ -1003,6 +1031,8 @@ const mod = n => ((n % ND) + ND) % ND;
 const pad3 = n => String(n).padStart(3, '0');
 const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.85 6 6.55.78-4.84 4.5 1.3 6.5L12 17.2l-5.86 3.18 1.3-6.5L2.6 9.38l6.55-.78z"/></svg>';
 const stars = n => `<span class="stars" aria-label="${n} av 5 stjerner">${STAR.repeat(n)}</span>`;
+/* a small bird (Lucide «bird», ISC licence) for the profile without a name */
+const FUGLEIKON = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></svg>';
 const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
 const PEN = '<path pathLength="1" d="M18 58 C 24 64, 31 73, 37 86 C 49 60, 65 33, 94 7"/>';
 const MND = ['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
@@ -1062,7 +1092,21 @@ const hentDb = () => dbP || (dbP = (async () => {
   if (!c || typeof c.use !== 'function') return null;
   try { return await c.use('db'); } catch (e) { return null; }
 })());
+/* ================= Brukere =================
+   Today there is one person per device, «meg». What belongs to a person (sightings, counts, bonus cards shown,
+   purchases, name) is stored under keys from brukerNokkel/brukerSamling, so that more people can be added later
+   without moving anyone's data: the first user keeps the keys and collections the app has always used. */
+const BRUKERE_KEY = 'fuglekort:brukere', AKTIV_BRUKER_KEY = 'fuglekort:bruker';
+const BRUKERE = (() => {
+  try { const a = JSON.parse(lsGet(BRUKERE_KEY) || 'null'); if (Array.isArray(a) && a.length && a.every(b => b && typeof b.id === 'string')) return a; } catch (e) {}
+  return [{ id: 'meg', navn: '' }];
+})();
+let BRUKER = BRUKERE.find(b => b.id === lsGet(AKTIV_BRUKER_KEY)) || BRUKERE[0];
+const brukerNokkel = (k, b = BRUKER) => (b.id === 'meg' ? k : `${k}@${b.id}`);          // localStorage
+const brukerSamling = (col, b = BRUKER) => (b.id === 'meg' ? col : `${col}_${b.id}`);    // the shared database in Claude
+const lagreBrukere = () => { lsSet(BRUKERE_KEY, JSON.stringify(BRUKERE)); lsSet(AKTIV_BRUKER_KEY, BRUKER.id); };
 function samling({ col, key, norm, toDoc, migrate, hva }) {
+  col = brukerSamling(col); key = brukerNokkel(key);
   return {
     KEY: key, data: {}, mode: 'lokal', readOnly: false, db: null, subs: new Set(), queue: {},
     loadLocal() {
@@ -1179,7 +1223,7 @@ const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          
 const TESTMERKE = '2026-09-30-pluss';
 const DATANOKLER = ['hagefugler-oslo:sett:v1', 'hagefugler:tellinger:v1', 'hagefugler:bonusvist:v1', 'hagefugler:kjop:v1'];
 if (lsGet('hagefugler:testmerke') !== TESTMERKE) {
-  DATANOKLER.forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
+  BRUKERE.forEach(b => DATANOKLER.forEach(k => { try { localStorage.removeItem(brukerNokkel(k, b)); } catch (e) {} }));
   lsSet('hagefugler:testmerke', TESTMERKE);
 }
 Store.loadLocal();
@@ -2359,8 +2403,36 @@ setSheet.addEventListener('keydown', e => {
 
 /* ---- stats ---- */
 const sb = $('#statsBody');
-function openStats() { showSheet($('#statsSheet')); renderStats(); setTimeout(() => $('#closeStats').focus(), 60); }
-$('#openStats').addEventListener('click', openStats);
+/* the tabs of Min fugleliste; the last one used is opened again (on this device) */
+const FANER = ['profil', 'statistikk', 'telling', 'kort', 'merker'];
+let statsFane = FANER.includes(lsGet('fuglekort:fane')) ? lsGet('fuglekort:fane') : 'profil';
+const fanerEl = $('#faner');
+function paintFaner() {
+  fanerEl.querySelectorAll('[data-fane]').forEach(b => {
+    const pa = b.dataset.fane === statsFane;
+    b.setAttribute('aria-selected', pa ? 'true' : 'false'); b.tabIndex = pa ? 0 : -1;
+  });
+  sb.setAttribute('aria-labelledby', 'fane-' + statsFane);
+}
+function velgFane(f, fokus) {
+  if (!FANER.includes(f)) return;
+  const ny = f !== statsFane;
+  statsFane = f; lsSet('fuglekort:fane', f);
+  renderStats();
+  if (ny) $('#statsSheet').scrollTop = 0;
+  const b = fanerEl.querySelector(`[data-fane="${f}"]`);
+  b.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  if (fokus) b.focus();
+}
+fanerEl.addEventListener('click', e => { const b = e.target.closest('[data-fane]'); if (b) velgFane(b.dataset.fane); });
+fanerEl.addEventListener('keydown', e => {
+  const i = FANER.indexOf(statsFane);
+  const ny = e.key === 'ArrowRight' ? FANER[(i + 1) % FANER.length] : e.key === 'ArrowLeft' ? FANER[(i - 1 + FANER.length) % FANER.length]
+    : e.key === 'Home' ? FANER[0] : e.key === 'End' ? FANER[FANER.length - 1] : null;
+  if (ny) { e.preventDefault(); velgFane(ny, true); }
+});
+function openStats(fane) { if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; setTimeout(() => $('#closeStats').focus(), 60); }
+$('#openStats').addEventListener('click', () => openStats());
 $('#closeStats').addEventListener('click', () => closeSheets());
 /* a small picture of the card, or a grey lock for a card that is not open yet */
 const miniatyr = (c, i, kl = '') => erLaast(c) ? `<span class="ph laastph ${kl}" aria-hidden="true">${LAAS}</span>` : `<span class="ph ${kl}" style="background-position:${spritePos(i)}" aria-hidden="true"></span>`;
@@ -2404,15 +2476,19 @@ function renderStats() {
   const regs = ids.reduce((a, id) => a + Store.data[id].dager.length, 0);
   const most = ids.map(id => ({ c: CARDS[BY_KEY[id]], ant: Store.data[id].dager.length })).sort((a, b) => b.ant - a.ant || a.c.nr - b.c.nr)[0];
   const fr = froRegnskap();
+  const navn = (BRUKER.navn || '').trim();
+  const profilHode = `<div class="profil"><span class="avatar" aria-hidden="true">${navn ? esc(navn[0].toUpperCase()) : FUGLEIKON}</span>
+    <span class="p-t"><input id="profilNavn" value="${esc(navn)}" placeholder="Skriv navnet ditt" maxlength="40" autocomplete="nickname" aria-label="Navnet ditt">
+    <small>${flertall(n, 'fugl', 'fugler')} sett · ${flertall(obsDager, 'observasjonsdag', 'observasjonsdager')}</small></span></div>`;
 
-  sb.innerHTML = `
+  const FANER_HTML = {
+    profil: () => `
+    ${profilHode}
     <div class="hero"><span class="big">${n}</span><span class="of">av ${NB} fugler sett</span></div>
     <div class="bar" role="img" aria-label="${Math.round(n / NB * 100)} prosent av fuglekortene"><i style="width:${(n / NB * 100).toFixed(1)}%"></i></div>
     <div class="kpis">
       <div class="kpi"><b>${pts} <small style="font-size:14px;color:var(--muted)">/ ${ptsMax}</small></b><span>Poeng. Hvert kort gir like mange poeng som det har stjerner.</span></div>
-      <div class="kpi"><b>${rarest ? esc(rarest.navn) : '–'}</b><span>${rarest ? `Sjeldneste funn, kort ${rarest.id}` : 'Sjeldneste funn vises her'}</span></div>
-      <div class="kpi"><b>${obsDager}</b><span>${obsDager === 1 ? 'Observasjonsdag' : 'Observasjonsdager'}, med ${regs} ${regs === 1 ? 'registrering' : 'registreringer'} i alt</span></div>
-      <div class="kpi"><b>${most && most.ant > 1 ? esc(most.c.navn) : '–'}</b><span>${most && most.ant > 1 ? `Sett flest dager, ${most.ant} i alt` : 'Fuglen du har sett flest dager, vises her'}</span></div>
+      <div class="kpi"><b>${merkerOk}</b><span>${merkerOk === 1 ? 'Merke' : 'Merker'} oppnådd</span></div>
     </div>
 
     <div class="s-sec"><h3>Solsikkefrø</h3>
@@ -2430,15 +2506,6 @@ function renderStats() {
       <div class="row"><button class="btn pri" id="openButikk">Åpne Frøbutikken</button></div>
     </div>
 
-    ${NBON ? `<div class="s-sec"><h3>Bonus${APNE.size ? `kort <span class="h3n">${APNE.size} funnet</span>` : ''}</h3>
-      ${APNE.size ? `<div class="album">${BONUS_REKKE.filter(erApen).map(c => albumKort(c, BY_KEY[c.key])).join('')}</div>` : ''}
-      ${nb ? `<div class="teaser"><span class="tz-kort" aria-hidden="true"><img src="${esc(DATA.bakside || 'cards/bakside.webp')}" alt=""><b>?</b></span>
-        <span class="tz-t"><b>${APNE.size ? 'Enda en bonus venter' : 'Det venter en bonus'}</b>
-        <small>${nb.mangler === 1 ? 'Én registrering igjen' : `${nb.mangler} registreringer igjen`}. Hver gang du registrerer en fugl, kommer du nærmere.</small>
-        <i class="mbar" role="img" aria-label="${Math.max(0, nb.r - nb.fra)} av ${nb.grense - nb.fra}"><i style="width:${(Math.max(0, Math.min(1, (nb.r - nb.fra) / (nb.grense - nb.fra))) * 100).toFixed(1)}%"></i></i></span></div>` : ''}
-      ${APNE.size ? `<p class="cap">Bonuskortene er stokket inn blant kortene med like mange stjerner. De får glinskant som fuglene, men teller ikke med i fuglelista, poengene eller merkene.</p>` : ''}
-    </div>` : ''}
-
     <div class="s-sec"><h3>Glinskort</h3>
       <div class="nivaer">${[1, 2, 3].map(k => `<div class="nv n${k}"><b>${perNiva[k]}</b><span>${NIVA[k]}</span></div>`).join('')}</div>
       ${naermest.length ? `<p class="cap" style="margin:14px 0 6px">Nærmest neste nivå</p><ul class="recent">${naermest.map(x => `<li><button data-i="${x.i}"><span class="ph" style="background-position:${spritePos(x.i)}" aria-hidden="true"></span><span><b style="font-weight:600">${esc(x.c.navn)}</b><br><span style="font-size:12.5px;color:var(--muted)">${dagerTekst(Store.days(x.c.key).length)}</span></span><span class="nx">${x.n.mangler} ${x.n.mangler === 1 ? 'dag' : 'dager'} til <em class="nchip n${x.n.niva}">${NIVA[x.n.niva]}</em></span></button></li>`).join('')}</ul>` : ''}
@@ -2449,16 +2516,29 @@ function renderStats() {
       </details>
     </div>
 
-    <div class="s-sec"><h3>Merker <span class="h3n">${merkerOk} oppnådd</span></h3>
-      <div class="merker">${MERKER.map(m => merkeHtml(m, nt)).join('')}</div>
-      <p class="cap" style="margin:22px 0 10px">Observasjonsdager: et merke for hver 5. dag, ${fmtFro(FRO.dagMerke)} frø hver.</p>
-      <div class="merker dagmerker">${dagM.map(m => merkeHtml(m, nt)).join('')}</div>
-    </div>
+    ${NBON && nb ? `<div class="s-sec"><h3>Bonus</h3>
+      <div class="teaser"><span class="tz-kort" aria-hidden="true"><img src="${esc(DATA.bakside || 'cards/bakside.webp')}" alt=""><b>?</b></span>
+        <span class="tz-t"><b>${APNE.size ? 'Enda en bonus venter' : 'Det venter en bonus'}</b>
+        <small>${nb.mangler === 1 ? 'Én registrering igjen' : `${nb.mangler} registreringer igjen`}. Hver gang du registrerer en fugl, kommer du nærmere.</small>
+        <i class="mbar" role="img" aria-label="${Math.max(0, nb.r - nb.fra)} av ${nb.grense - nb.fra}"><i style="width:${(Math.max(0, Math.min(1, (nb.r - nb.fra) / (nb.grense - nb.fra))) * 100).toFixed(1)}%"></i></i></span></div>
+    </div>` : ''}
 
-    <div class="s-sec"><h3>Hagefugltelling</h3>
-      <p class="cap" style="margin:0 0 12px">Tell det høyeste antallet av hver art du ser samtidig, og send tallene til Hagefugltellingen på Fuglevennen.no.</p>
-      <button class="btn pri" id="${aktivT ? 'goTell' : 'openStart'}">${aktivT ? 'Tilbake til tellingen' : 'Start telling'}</button>
-      ${ferdigeT.length ? `<ul class="recent tl-hist">${ferdigeT.map(id => { const v = Tell.data[id], x = sumAv(v), d = new Date(v.start); return `<li><button data-tid="${id}"><span class="ph tdato" aria-hidden="true"><span>${d.getDate()}.<small>${MND[d.getMonth()]}</small></span></span><span><b style="font-weight:600">${esc(stor(datoLang(v.start)))}</b><br><span style="font-size:12.5px;color:var(--muted)">${flertall(x.arter, 'art', 'arter')} · ${flertall(x.ind, 'individ', 'individer')} · ${varighet(v.slutt - v.start)}${v.omrade ? ` · ${esc(v.omrade)}` : ''}</span></span><span></span></button></li>`; }).join('')}</ul>` : ''}
+    <div class="s-sec"><h3>Lagring</h3>
+      <p class="store ${Store.mode === 'delt' ? 'sky' : ''}"><i></i>${Store.mode === 'delt' ? 'Avkrysningene og tellingene lagres sammen med kortstokken og følger deg på alle enheter.' : 'Avkrysningene og tellingene lagres på denne enheten.'}</p>
+      <div class="row"><button class="btn" id="copyBackup">Kopier sikkerhetskopi</button><button class="btn" id="showRestore">Gjenopprett</button></div>
+      <div class="restore" id="restoreBox" hidden>
+        <label for="restoreTxt" style="font-size:13px;color:var(--muted)">Lim inn en sikkerhetskopi. Avkrysningene i den legges til de du har.</label>
+        <textarea id="restoreTxt" spellcheck="false"></textarea>
+        <div><button class="btn pri" id="doRestore">Legg til avkrysningene</button></div>
+        <p class="cap" id="restoreMld" role="status"></p>
+      </div>
+    </div>`,
+    statistikk: () => `
+    <div class="kpis" style="margin-top:20px">
+      <div class="kpi"><b>${rarest ? esc(rarest.navn) : '–'}</b><span>${rarest ? `Sjeldneste funn, kort ${rarest.id}` : 'Sjeldneste funn vises her'}</span></div>
+      <div class="kpi"><b>${most && most.ant > 1 ? esc(most.c.navn) : '–'}</b><span>${most && most.ant > 1 ? `Sett flest dager, ${most.ant} i alt` : 'Fuglen du har sett flest dager, vises her'}</span></div>
+      <div class="kpi"><b>${obsDager}</b><span>${obsDager === 1 ? 'Observasjonsdag' : 'Observasjonsdager'}, med ${regs} ${regs === 1 ? 'registrering' : 'registreringer'} i alt</span></div>
+      <div class="kpi"><b>${inYear}</b><span>${inYear === 1 ? 'Ny art' : 'Nye arter'} de siste 12 månedene</span></div>
     </div>
 
     <div class="s-sec"><h3>Etter sjeldenhet</h3><div class="rar">
@@ -2476,29 +2556,44 @@ function renderStats() {
 
     ${recent.length ? `<div class="s-sec"><h3>Sist sett</h3><ul class="recent">
       ${recent.map(r => { const i = cardOf(r.id), c = CARDS[i]; return `<li><button data-i="${i}">${miniatyr(c, i)}<span><b style="font-weight:600">${esc(c.navn)}</b><br><span style="font-size:12.5px;color:var(--muted)">${esc(RAR[c.stjerner])} · ${dagerTekst(r.ant)}</span></span>${r.d === todayISO() ? '<span class="d idag">I dag</span>' : `<span class="d">${fmtHand(r.d)}</span>`}</button></li>`; }).join('')}
-    </ul></div>` : ''}
-
+    </ul></div>` : ''}`,
+    telling: () => `
+    <div class="s-sec"><h3>Hagefugltelling</h3>
+      <p class="cap" style="margin:0 0 12px">Tell det høyeste antallet av hver art du ser samtidig, og send tallene til Hagefugltellingen på Fuglevennen.no.</p>
+      <button class="btn pri" id="${aktivT ? 'goTell' : 'openStart'}">${aktivT ? 'Tilbake til tellingen' : 'Start telling'}</button>
+      ${ferdigeT.length ? `<ul class="recent tl-hist">${ferdigeT.map(id => { const v = Tell.data[id], x = sumAv(v), d = new Date(v.start); return `<li><button data-tid="${id}"><span class="ph tdato" aria-hidden="true"><span>${d.getDate()}.<small>${MND[d.getMonth()]}</small></span></span><span><b style="font-weight:600">${esc(stor(datoLang(v.start)))}</b><br><span style="font-size:12.5px;color:var(--muted)">${flertall(x.arter, 'art', 'arter')} · ${flertall(x.ind, 'individ', 'individer')} · ${varighet(v.slutt - v.start)}${v.omrade ? ` · ${esc(v.omrade)}` : ''}</span></span><span></span></button></li>`; }).join('')}</ul>` : ''}
+    </div>`,
+    kort: () => `
     <div class="s-sec"><h3>Samlingen</h3><div class="album">
       ${CARDS.map((c, i) => c.bonus ? '' : albumKort(c, i)).join('')}
     </div></div>
 
-
-
-    <div class="s-sec"><h3>Lagring</h3>
-      <p class="store ${Store.mode === 'delt' ? 'sky' : ''}"><i></i>${Store.mode === 'delt' ? 'Avkrysningene og tellingene lagres sammen med kortstokken og følger deg på alle enheter.' : 'Avkrysningene og tellingene lagres på denne enheten.'}</p>
-      <div class="row"><button class="btn" id="copyBackup">Kopier sikkerhetskopi</button><button class="btn" id="showRestore">Gjenopprett</button></div>
-      <div class="restore" id="restoreBox" hidden>
-        <label for="restoreTxt" style="font-size:13px;color:var(--muted)">Lim inn en sikkerhetskopi. Avkrysningene i den legges til de du har.</label>
-        <textarea id="restoreTxt" spellcheck="false"></textarea>
-        <div><button class="btn pri" id="doRestore">Legg til avkrysningene</button></div>
-        <p class="cap" id="restoreMld" role="status"></p>
-      </div>
-    </div>`;
+    ${NBON && APNE.size ? `<div class="s-sec"><h3>Bonuskort <span class="h3n">${APNE.size} funnet</span></h3>
+      <div class="album">${BONUS_REKKE.filter(erApen).map(c => albumKort(c, BY_KEY[c.key])).join('')}</div>
+      <p class="cap">Bonuskortene er stokket inn blant kortene med like mange stjerner. De får glinskant som fuglene, men teller ikke med i fuglelista, poengene eller merkene.</p>
+    </div>` : ''}`,
+    merker: () => `
+    <div class="s-sec"><h3>Merker <span class="h3n">${merkerOk} oppnådd</span></h3>
+      <div class="merker">${MERKER.map(m => merkeHtml(m, nt)).join('')}</div>
+      <p class="cap" style="margin:22px 0 10px">Observasjonsdager: et merke for hver 5. dag, ${fmtFro(FRO.dagMerke)} frø hver.</p>
+      <div class="merker dagmerker">${dagM.map(m => merkeHtml(m, nt)).join('')}</div>
+    </div>`
+  };
+  paintFaner();
+  sb.innerHTML = FANER_HTML[statsFane]();
 
   const tip = $('#mtip'), mEl = $('#months');
+  if (!mEl) return;
   const showTip = b => { const x = months[+b.dataset.k]; tip.textContent = `${MND[x.m - 1]}. ${x.y}: ${x.n} ${x.n === 1 ? 'art' : 'arter'}`; const r = b.getBoundingClientRect(), pr = mEl.getBoundingClientRect(); tip.style.left = (r.left - pr.left + r.width / 2) + 'px'; tip.style.top = Math.max(0, r.bottom - pr.top - (b.querySelector('i').offsetHeight) - 6) + 'px'; tip.classList.add('on'); };
   mEl.querySelectorAll('.mcol').forEach(b => { b.addEventListener('pointerenter', () => showTip(b)); b.addEventListener('focus', () => showTip(b)); b.addEventListener('click', () => showTip(b)); b.addEventListener('pointerleave', () => tip.classList.remove('on')); b.addEventListener('blur', () => tip.classList.remove('on')); });
 }
+sb.addEventListener('change', e => {
+  if (e.target.id !== 'profilNavn') return;
+  BRUKER.navn = e.target.value.trim().slice(0, 40); lagreBrukere();
+  const a = sb.querySelector('.profil .avatar'); if (a) a.innerHTML = BRUKER.navn ? esc(BRUKER.navn[0].toUpperCase()) : FUGLEIKON;
+  si(BRUKER.navn ? `Navnet er lagret: ${BRUKER.navn}.` : 'Navnet er fjernet.');
+});
+sb.addEventListener('keydown', e => { if (e.target.id === 'profilNavn' && e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
 sb.addEventListener('click', async e => {
   const tl = e.target.closest('[data-tid]');
   if (tl) { openSum(tl.dataset.tid); return; }
