@@ -212,7 +212,7 @@
    "fakta": "Hannen viser seg fram i en langsom, flagrende sangflukt.",
    "vingespenn": "25–28 cm",
    "vekt": "24–34 g",
-   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia og Nord-Afrika",
+   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Europa ellers, Tyrkia og Nord-Afrika; innført på New Zealand, i Sørøst-Australia, Uruguay og Argentina",
    "rodliste": "Sårbar",
    "bilde": "cards/006.webp",
    "sett": {
@@ -247,7 +247,7 @@
    "fakta": "Sangen ender gjerne med en tydelig, energisk sluttrille.",
    "vingespenn": "24–28 cm",
    "vekt": "18–29 g",
-   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Tyskland, Polen, Baltikum, Frankrike, Spania, Italia, Tyrkia, Kaukasus og deler av Sentral-Asia",
+   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Europa ellers, Tyrkia, Kaukasus og deler av Sentral-Asia; innført på New Zealand",
    "rodliste": "Livskraftig",
    "bilde": "cards/007.webp",
    "sett": {
@@ -456,7 +456,7 @@
    "mat": "Frø, knopper, bær; insekter til ungene.",
    "fakta": "Den myke plystrelyden høres ofte før fuglen sees.",
    "vingespenn": "22–26 cm",
-   "vekt": "21–27 g",
+   "vekt": "25–38 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Tyskland, Polen, Baltikum, Russland, Kasakhstan, Mongolia, Kina og Japan",
    "rodliste": "Livskraftig",
    "bilde": "cards/013.webp",
@@ -772,7 +772,7 @@
    "fakta": "Bruker en fast stein som ambolt for å knuse sneglehus.",
    "vingespenn": "33–36 cm",
    "vekt": "64–90 g",
-   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Sentral-/Øst-Europa og Vest-Russland; vinterstid bl.a. Frankrike, Iberia, Italia, Nord-Afrika og Tyrkia",
+   "utbredelse": "Norge, Sverige, Danmark, Finland, Storbritannia, Europa ellers og Vest-Russland; vinterstid Sør-/Vest-Europa, Nord-Afrika og Tyrkia; innført på New Zealand og ved Melbourne",
    "rodliste": "Livskraftig",
    "bilde": "cards/022.webp",
    "sett": {
@@ -947,7 +947,7 @@
    "fakta": "Det spisse nebbet er som en pinsett for frø i frøstander.",
    "vingespenn": "21–26 cm",
    "vekt": "14–19 g",
-   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Tyskland, Polen, Frankrike, Spania, Italia, Balkan, Tyrkia, Nord-Afrika og deler av Sentral-Asia",
+   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia, Nord-Afrika og deler av Sentral-Asia; innført på New Zealand, i Sørøst-Australia, Uruguay og Argentina",
    "rodliste": "Livskraftig",
    "bilde": "cards/027.webp",
    "sett": {
@@ -1157,7 +1157,7 @@
    "fakta": "Beveger seg musaktig på bakken under busker og fuglebrett.",
    "vingespenn": "19–21 cm",
    "vekt": "19–24 g",
-   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia og Kaukasus; vinterstid Sør-Europa, Nord-Afrika og Midtøsten",
+   "utbredelse": "Norge, Sverige, Finland, Danmark, Storbritannia, Europa ellers, Tyrkia og Kaukasus; vinterstid Sør-Europa, Nord-Afrika og Midtøsten; innført på New Zealand",
    "rodliste": "Livskraftig",
    "bilde": "cards/033.webp",
    "sett": {
@@ -1399,7 +1399,7 @@
    "kjennetegn": "Lys sandbrun due med smal svart halvring i nakken.",
    "nar": "Hele året.",
    "mat": "Frø og korn, gjerne under fuglebrettet.",
-   "fakta": "Kom fra Balkan; hekket første gang i Norge i Oslo i 1952.",
+   "fakta": "Kom fra Balkan; hekket første gang i Norge i Oslo og Moss i 1952.",
    "vingespenn": "47–55 cm",
    "vekt": "150–220 g",
    "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Europa ellers, Tyrkia, Midtøsten, India og Kina; innført i USA og Karibia",
@@ -1682,7 +1682,7 @@
    "fakta": "Leter etter maur på bakken med svært lang, klebrig tunge.",
    "vingespenn": "40–42 cm",
    "vekt": "180–250 g",
-   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Frankrike, Spania, Tyskland, Polen, Italia, Balkan og deler av Vest-Asia",
+   "utbredelse": "Norge, Sverige, Danmark, Storbritannia, Frankrike, Tyskland, Polen, Italia, Balkan og deler av Vest-Asia; på Den iberiske halvøy lever ibergrønnspett",
    "rodliste": "Livskraftig",
    "bilde": "cards/048.webp",
    "sett": {
@@ -1714,7 +1714,7 @@
    "kjennetegn": "Mørk, sigdformet fugl med lange smale vinger, kort stjert.",
    "nar": "Mai–august.",
    "mat": "Flygende insekter og edderkopper.",
-   "fakta": "Lever nesten hele livet i lufta og kan sove mens den flyr.",
+   "fakta": "Kan holde seg i lufta i opptil ti måneder uten å lande.",
    "vingespenn": "42–48 cm",
    "vekt": "31–56 g",
    "utbredelse": "Norge, Sverige, Finland, Danmark og resten av Europa; Nord-Afrika, Russland, Sentral-Asia, Mongolia og Nord-Kina; vinterstid Sentral-, Øst- og Sør-Afrika",
@@ -2251,7 +2251,11 @@
      0.9152,
      0.392
     ]
-   }
+   },
+   "bildeFoto": "cards-foto/064.webp",
+   "fotograf": "Pål A. Olsvik",
+   "lisens": "CC BY 4.0",
+   "bildeTegneserie": "cards-tegneserie/064.webp"
   },
   {
    "nr": 65,
