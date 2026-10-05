@@ -80,6 +80,13 @@ button{cursor:pointer;touch-action:manipulation}
 
 /* pen marks on the printed SETT field */
 .tick{position:absolute;overflow:visible;pointer-events:none}
+/* a bird registered today: a green label in the corner of the picture */
+.idag-merke{position:absolute;z-index:3;display:none;align-items:center;gap:.3em;padding:.42em .8em .42em .6em;border-radius:99px;pointer-events:none;
+  background:#1f8a4c;color:#fff;font-family:var(--font);font-weight:800;font-size:3.5cqw;line-height:1;letter-spacing:.01em;white-space:nowrap;
+  box-shadow:0 .5cqw 1.6cqw rgba(0,0,0,.28),0 0 0 .45cqw rgba(255,255,255,.9)}
+.idag-merke svg{width:1.05em;height:1.05em}
+.card.idag .idag-merke{display:flex}
+.card.idag .idag-merke.ny{animation:pop .55s cubic-bezier(.3,1.7,.5,1)}
 .tick path{fill:none;stroke:var(--pen);stroke-width:8.5;stroke-linecap:round;stroke-linejoin:round;
   stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset .38s cubic-bezier(.5,0,.3,1), opacity 0s linear .38s}
 .seen .tick path{stroke-dashoffset:0;opacity:1;transition:stroke-dashoffset .38s cubic-bezier(.5,0,.3,1), opacity 0s}
@@ -567,8 +574,9 @@ button{cursor:pointer;touch-action:manipulation}
 .res mark{background:color-mix(in srgb, var(--gold) 38%, transparent);color:inherit;border-radius:3px;padding:0 1px}
 .res .r{display:grid;justify-items:end;gap:4px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 .res .stars{font-size:11px;color:var(--gold)}
-.okdot{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#1b1402}
-.okdot svg{width:12px;height:12px}
+.okdot{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:var(--gold);color:#1b1402;
+  font-size:11.5px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.okdot.idag{background:var(--ok);color:#fff}
 .empty{padding:28px 8px;text-align:center;color:var(--muted);font-size:14px}
 
 .stats{top:0;right:0;bottom:0;width:min(440px,100%);transform:translateX(105%);overflow-y:auto;overscroll-behavior:contain;
@@ -608,15 +616,16 @@ button{cursor:pointer;touch-action:manipulation}
 .recent button:hover{background:var(--surface-2)}
 .recent .ph{width:40px;height:40px;border-radius:10px}
 .recent .d{font-family:var(--hand);font-size:20px;color:var(--spruce-ink);font-weight:600;white-space:nowrap}
+.recent .d.idag{color:var(--ok)}
 .album{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
 .alb{position:relative;border:0;padding:0;background:none;aspect-ratio:150/210;border-radius:5px}
 .alb .th{position:absolute;inset:0;border-radius:5px;background-image:var(--cardsprite);background-size:1000% calc(var(--rows, 10) * 100%);filter:grayscale(1);opacity:.35;transition:filter .3s, opacity .3s}
 .alb.s .th{filter:none;opacity:1;box-shadow:0 3px 8px -3px rgba(var(--shadow),.5)}
 .alb .nr{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .alb.s .nr{display:none}
-.alb .okdot{position:absolute;right:-4px;top:-4px;width:17px;height:17px;display:none}
+.alb .okdot{position:absolute;right:-5px;top:-5px;min-width:19px;height:19px;padding:0 4px;border-radius:10px;font-size:10.5px;display:none;box-shadow:0 0 0 2px var(--surface)}
 .alb.s .okdot{display:grid}
-.alb .okdot svg{width:10px;height:10px}
+.alb.idag .okdot{background:var(--ok);color:#fff}
 .store{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center}
 .store i{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0}
 .store.sky i{background:#3aa66f}
@@ -737,7 +746,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 @media (prefers-reduced-motion: reduce){
   .float{animation:none}
   .card,.card .inner,.sheet,.scrim,.tick path,.hand{transition-duration:.01s!important}
-  .antall.pop{animation:none}
+  .antall.pop,.card.idag .idag-merke.ny{animation:none}
   .fest.on .fest-straaler,.fest.on .fest-kort,.fest.on .fest-tekst,.fest.on .fest-kort .mkant,.fest.on .fest-kort .mk-blits{animation:none;opacity:1;transform:none}
   .bfest.on .bf-kort,.bfest .bf-inner,.bfest .bf-bak,.bfest .bf-q,.bfest .bf-lys,.bfest.snudd .bf-stempel{animation:none!important;transform:none;opacity:1}
   .bfest.snudd .bf-inner{transform:rotateY(180deg)}
@@ -1435,6 +1444,7 @@ function makeCard(i) {
       <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
       <button class="ctl bilde-hit" data-act="bilde" tabindex="0" aria-label="Vis bildet av ${esc(c.navn)} stort" style="left:${P(BILDEFELT.x)};top:${P(BILDEFELT.y)};width:${P(BILDEFELT.w)};height:${P(BILDEFELT.h)}"></button>
       <button class="ctl sett-hit" data-act="toggle" aria-pressed="false" aria-label="Sett ${esc(c.navn)}" style="left:${P(bx - 0.025)};top:${P(by - 0.012)};width:${P(bw + 0.22)};height:${P(bh + 0.024)}"></button>
+      <span class="idag-merke" aria-hidden="true" style="left:${P(BILDEFELT.x + 0.022)};top:${P(BILDEFELT.y + BILDEFELT.h - 0.058)}">${CHECK}Sett i dag</span>
       <span class="tall" aria-hidden="true"></span>
       <span class="antall" aria-hidden="true" style="left:${P(bx + bw + 0.14)};top:${P(by - 0.006)};height:${P(bh + 0.012)}"></span>
       <label class="ctl dato" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}">
@@ -1471,6 +1481,7 @@ function graaKort(c) {
 const UKEDAG = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];
 const ukedag = iso => { const [y, m, d] = iso.split('-').map(Number); return UKEDAG[new Date(y, m - 1, d).getDay()]; };
 const dagerTekst = n => `${n} observasjonsdag${n === 1 ? '' : 'er'}`;
+const antDager = n => n > 99 ? '99+' : String(n);
 const XMARK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
 
 function paintCard(el) {
@@ -1478,6 +1489,10 @@ function paintCard(el) {
   const s = Store.get(c.key);
   const dager = s ? s.dager : [], t = todayISO();
   el.classList.toggle('seen', !!s);
+  const iDag = dager.includes(t), varIdag = el.classList.contains('idag');
+  el.classList.toggle('idag', iDag);
+  if (iDag && !varIdag && el.dataset.malt) { const m = el.querySelector('.idag-merke'); m.classList.remove('ny'); void m.offsetWidth; m.classList.add('ny'); }
+  el.dataset.malt = '1';
   const b = el.querySelector('[data-act="toggle"]');
   b.setAttribute('aria-pressed', s ? 'true' : 'false');
   b.setAttribute('aria-label', !s ? `Merk ${c.navn} som sett i dag`
@@ -2191,7 +2206,7 @@ function renderSearch() {
       <span class="t"><span class="n">${terms.length ? hl(c.navn, IDX[i].navn, terms) : esc(c.navn)}</span>
         <span class="l">${laast ? `Låst kort · ${fmtFro(PRIS[c.key])} frø` : terms.length ? hl(c.latin, IDX[i].latin, terms) : esc(c.latin)}</span>
         ${hit ? `<span class="sn"><em>${label}:</em> ${snippet(c[hit], IDX[i][hit], terms)}</span>` : ''}</span>
-      <span class="r">${s ? `<span class="okdot" title="Sett første gang ${fmtLong(s.date)}, ${dagerTekst(s.dager.length)}">${CHECK}</span>` : `<span>${c.bonus ? 'Bonus' : c.id}</span>`}${stars(c.stjerner)}</span>
+      <span class="r">${s ? `<span class="okdot ${s.dager.includes(todayISO()) ? 'idag' : ''}" title="Sett første gang ${fmtLong(s.date)}, ${dagerTekst(s.dager.length)}${s.dager.includes(todayISO()) ? ', også i dag' : ''}">${antDager(s.dager.length)}</span>` : `<span>${c.bonus ? 'Bonus' : c.id}</span>`}${stars(c.stjerner)}</span>
     </button></li>`;
   }).join('');
 }
@@ -2331,8 +2346,8 @@ $('#closeStats').addEventListener('click', () => closeSheets());
 const miniatyr = (c, i, kl = '') => erLaast(c) ? `<span class="ph laastph ${kl}" aria-hidden="true">${LAAS}</span>` : `<span class="ph ${kl}" style="background-position:${spritePos(i)};${egenSprite(c, 'photos')}" aria-hidden="true"></span>`;
 function albumKort(c, i) {
   if (erLaast(c)) return `<button class="alb laast" data-i="${i}" aria-label="Låst kort ${c.id}: ${esc(c.navn)}, ${fmtFro(PRIS[c.key])} frø"><span class="th"></span><span class="nr">${c.nr}</span><span class="lsik">${LAAS}</span></button>`;
-  const nv = nivaVis(c);
-  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${Store.has(c.key) ? ', sett' : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)};${egenSprite(c, 'cards')}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot">${CHECK}</span></button>`;
+  const nv = nivaVis(c), nd = Store.days(c.key).length, iDag = nd && Store.days(c.key).includes(todayISO());
+  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)};${egenSprite(c, 'cards')}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}</span></button>`;
 }
 function renderStats() {
   // fuglelista: bare fuglekortene; bonuskortene (andre dyr) har sin egen del lenger ned
@@ -2342,7 +2357,7 @@ function renderStats() {
   const byRar = [1, 2, 3, 4, 5].map(r => ({ r, tot: BIRDS.filter(c => c.stjerner === r).length, seen: BIRDS.filter(c => c.stjerner === r && Store.has(c.key)).length }));
   const ptsMax = BIRDS.reduce((a, c) => a + c.stjerner, 0);
   const pts = BIRDS.reduce((a, c) => a + (Store.has(c.key) ? c.stjerner : 0), 0);
-  const rarest = BIRDS.filter(c => Store.has(c.key)).sort((a, b) => b.stjerner - a.stjerner || a.nr - b.nr)[0];
+  const rarest = BIRDS.filter(c => Store.has(c.key)).sort((a, b) => b.nr - a.nr)[0];
   const nb = nesteBonus();
   // last 12 months
   const now = new Date(); const months = [];
@@ -2368,7 +2383,7 @@ function renderStats() {
     <div class="bar" role="img" aria-label="${Math.round(n / NB * 100)} prosent av fuglekortene"><i style="width:${(n / NB * 100).toFixed(1)}%"></i></div>
     <div class="kpis">
       <div class="kpi"><b>${pts} <small style="font-size:14px;color:var(--muted)">/ ${ptsMax}</small></b><span>Poeng. Hvert kort gir like mange poeng som det har stjerner.</span></div>
-      <div class="kpi"><b>${rarest ? esc(rarest.navn) : '–'}</b><span>${rarest ? `Sjeldneste funn, ${rarest.stjerner} ${rarest.stjerner === 1 ? 'stjerne' : 'stjerner'}` : 'Sjeldneste funn vises her'}</span></div>
+      <div class="kpi"><b>${rarest ? esc(rarest.navn) : '–'}</b><span>${rarest ? `Sjeldneste funn, kort ${rarest.id}` : 'Sjeldneste funn vises her'}</span></div>
       <div class="kpi"><b>${obsDager}</b><span>${obsDager === 1 ? 'Observasjonsdag' : 'Observasjonsdager'}, med ${regs} ${regs === 1 ? 'registrering' : 'registreringer'} i alt</span></div>
       <div class="kpi"><b>${most && most.ant > 1 ? esc(most.c.navn) : '–'}</b><span>${most && most.ant > 1 ? `Sett flest dager, ${most.ant} i alt` : 'Fuglen du har sett flest dager, vises her'}</span></div>
     </div>
@@ -2431,7 +2446,7 @@ function renderStats() {
     </div>
 
     ${recent.length ? `<div class="s-sec"><h3>Sist sett</h3><ul class="recent">
-      ${recent.map(r => { const i = cardOf(r.id), c = CARDS[i]; return `<li><button data-i="${i}">${miniatyr(c, i)}<span><b style="font-weight:600">${esc(c.navn)}</b><br><span style="font-size:12.5px;color:var(--muted)">${esc(RAR[c.stjerner])} · ${dagerTekst(r.ant)}</span></span><span class="d">${fmtHand(r.d)}</span></button></li>`; }).join('')}
+      ${recent.map(r => { const i = cardOf(r.id), c = CARDS[i]; return `<li><button data-i="${i}">${miniatyr(c, i)}<span><b style="font-weight:600">${esc(c.navn)}</b><br><span style="font-size:12.5px;color:var(--muted)">${esc(RAR[c.stjerner])} · ${dagerTekst(r.ant)}</span></span>${r.d === todayISO() ? '<span class="d idag">I dag</span>' : `<span class="d">${fmtHand(r.d)}</span>`}</button></li>`; }).join('')}
     </ul></div>` : ''}
 
     <div class="s-sec"><h3>Samlingen</h3><div class="album">
@@ -3326,6 +3341,16 @@ function restoreMld(t) { const m = $('#restoreMld'); if (m) m.textContent = t; }
 function si(msg) { const l = $('#live'); l.textContent = ''; setTimeout(() => { l.textContent = msg; }, 30); }
 
 /* ---- react to data ---- */
+let dagNa = todayISO();
+function sjekkNyDag() {
+  if (todayISO() === dagNa) return;
+  dagNa = todayISO();
+  pool.forEach(paintCard);
+  if (openSheet && openSheet.id === 'statsSheet') renderStats();
+  if (openSheet && openSheet.id === 'searchSheet') renderSearch();
+}
+setInterval(sjekkNyDag, 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) sjekkNyDag(); });
 Store.on(() => {
   pool.forEach(paintCard);
   paintChrome();
