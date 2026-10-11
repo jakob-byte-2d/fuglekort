@@ -12,6 +12,10 @@ import json, re, pathlib
 ROOT = pathlib.Path(__file__).parent
 src = (ROOT / "src" / "app.html").read_text(encoding="utf-8")
 data = json.loads((ROOT / "data" / "cards.json").read_text(encoding="utf-8"))
+# baksider to buy in Frøbutikken (see README): kept apart from cards.json, which importer_fuglekort.py writes anew
+bak = ROOT / "data" / "baksider.json"
+if bak.is_file():
+    data["baksider"] = json.loads(bak.read_text(encoding="utf-8"))
 
 # Inline the card data (</ is escaped so the JSON can never close the <script> tag)
 payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
@@ -58,6 +62,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
 assets = ["./", "index.html", "manifest.webmanifest", "sprites/photos.webp", "sprites/cards.webp", "sprites/titler.webp",
           "icons/icon-192.png", "icons/icon-512.png", "icons/icon-512-maskable.png", "icons/apple-touch-icon.png"]
 assets += [data.get("bakside", "cards/bakside.webp")] + [h["bilde"] for h in data.get("hjelp", [])] + [c["bilde"] for c in data["kort"]]
+assets += [b["bilde"] for b in data.get("baksider", []) if b.get("bilde") and b["bilde"] not in assets]
 # alle bildesettene lagres på telefonen, så man kan bytte i innstillingene også uten nett
 if data.get("hjelpFoto"):
     assets += ["sprites/cards-foto.webp", "sprites/photos-foto.webp"]

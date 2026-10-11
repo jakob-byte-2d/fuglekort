@@ -235,6 +235,46 @@ button{cursor:pointer;touch-action:manipulation}
 .fro-kilder{list-style:none;margin:14px 0 0;padding:0;border-top:1px solid var(--line)}
 .fro-kilder li{display:flex;justify-content:space-between;gap:12px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:14.5px}
 .fro-kilder li b{font-variant-numeric:tabular-nums}
+/* ---------- Frøbutikken ---------- */
+.butikk{list-style:none;margin:0 -8px;padding:0}
+.butikk li{display:flex;align-items:center;gap:12px;padding:7px 8px;border-radius:14px}
+.butikk li.empty{display:block}
+.bk-t{flex:1;min-width:0;display:grid;gap:1px}
+.bk-t b{font-weight:600;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-t small{font-size:12.5px;color:var(--muted)}
+.bk-kort{position:relative;width:34px;aspect-ratio:750/1050;border-radius:4px;overflow:hidden;flex-shrink:0;box-shadow:0 3px 8px -3px rgba(var(--shadow),.5)}
+.bk-kort img{display:block;width:100%;height:100%}
+.bk-kort b{position:absolute;inset:0;display:grid;place-items:center;color:#ffe3a3;font-size:17px;font-weight:800;text-shadow:0 0 8px rgba(255,190,80,.9);background:rgba(10,20,14,.38)}
+.bk-kort.kjopt b{color:#fff;background:rgba(31,111,74,.6);text-shadow:none}
+.bk-kort.kjopt b svg{width:60%;height:auto}
+.bk-kjop{display:flex;align-items:center;gap:5px;white-space:nowrap;font-variant-numeric:tabular-nums;flex-shrink:0}
+.bk-kjop .froikon{width:15px;height:15px}
+.bk-kjop[disabled]{opacity:.55;cursor:default}
+.bk-go{flex:1;min-width:0;display:flex;align-items:center;gap:12px;border:0;background:none;padding:0;text-align:left;color:inherit}
+.bk-go .ph{width:40px;height:40px;border-radius:10px;flex-shrink:0}
+/* a multiplier: a round sticker, gold; ×10 in all colours */
+.xdisk{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-weight:800;font-size:15px;letter-spacing:-.02em;color:#4a2a00;
+  background:radial-gradient(circle at 35% 30%,#fff6d0,#f4c24c 52%,#c4860f);box-shadow:inset 0 0 0 2px rgba(255,250,235,.8),0 3px 8px -3px rgba(var(--shadow),.6)}
+.xdisk.x10,.xmerke.x10{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5);background:conic-gradient(from 20deg,#ff8a8a,#ffd24d,#7fe07a,#6fd8f0,#9b8cff,#ff8ad8,#ff8a8a)}
+.xpaa{display:flex;flex-wrap:wrap;gap:6px}
+.xchip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface-2);border-radius:99px;padding:3px 11px 3px 3px;font-size:13px;font-weight:600;color:inherit}
+.xchip .xdisk{width:24px;height:24px;font-size:10px;box-shadow:inset 0 0 0 1.5px rgba(255,250,235,.8)}
+.velg-h{margin:8px 0 0;font-size:17px}
+.velg-sok{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:15px;background:var(--surface);color:var(--ink);margin-bottom:8px}
+/* the newest purchase can be undone for 2 minutes */
+.angre{display:flex;align-items:center;gap:12px;margin:14px 0 4px;padding:10px 10px 10px 14px;border-radius:14px;background:var(--warn-bg);color:var(--warn-ink)}
+.angre[hidden]{display:none}
+.angre .ang-t{flex:1;min-width:0;display:grid;gap:2px}
+.angre b{font-size:14.5px;color:var(--ink)}
+.angre small{font-size:12.5px;font-variant-numeric:tabular-nums}
+.angre .btn{flex-shrink:0}
+/* the multiplier on the front of a card, stuck on the corner of the picture */
+.xmerke{position:absolute;z-index:3;display:none;place-items:center;width:15cqw;height:15cqw;margin:-7.5cqw 0 0 -7.5cqw;border-radius:50%;pointer-events:none;
+  font-weight:800;font-size:6cqw;letter-spacing:-.03em;line-height:1;color:#4a2a00;transform:rotate(-12deg);
+  background:radial-gradient(circle at 35% 30%,#fff6d0,#f4c24c 52%,#c4860f);box-shadow:0 0 0 .7cqw #fffaf0,0 1.2cqw 2.6cqw rgba(40,25,0,.45)}
+.card.xm .xmerke{display:grid}
+.xmerke.ny{animation:xpaa .75s cubic-bezier(.3,1.6,.5,1)}
+@keyframes xpaa{0%{transform:scale(2.8) rotate(-50deg);opacity:0}55%{opacity:1}100%{transform:rotate(-12deg)}}
 /* question box */
 /* ---------- the picture in full screen ---------- */
 .storbilde{position:fixed;inset:0;z-index:53;overflow:hidden;display:grid;align-content:center;justify-items:center;gap:16px;padding:24px 16px;
@@ -297,26 +337,13 @@ button{cursor:pointer;touch-action:manipulation}
 .dlg-knapper .btn{padding:12px 14px;font-size:15px;border-radius:12px}
 .dlg-knapper .btn[disabled]{opacity:.55;cursor:default}
 
-/* ---------- bonuskort ---------- */
-/* bonus cards: the strip left of the name turns bronze with BONUS on its side (drawn over the card picture) */
-.bstripe{position:absolute;left:4.93%;top:3.81%;width:6%;height:11.85%;border-radius:1.9cqw 0 0 1.9cqw;pointer-events:none;display:grid;place-items:center;
-  background:linear-gradient(90deg,#7b4119,#c07c45 35%,#e0a672 50%,#a9642f 70%,#6f3a15)}
-.bstripe svg{width:58%;height:auto;fill:#fff6ea;filter:drop-shadow(0 0 .35cqw rgba(60,25,5,.6))}
-.fest-kort:not(.bonus) .bstripe{display:none}
+/* ---------- dyrekort ---------- */
 .bfest.snudd .bf-for .mkant{animation:drift 3.2s ease-in-out .4s infinite alternate}
 .kred{position:absolute;left:8%;right:8%;bottom:1.4%;margin:0;padding:.8cqw 2.4cqw;border-radius:99px;background:rgba(253,252,243,.9);color:#3b4a42;
   font-size:2.9cqw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 .kred[hidden]{display:none}
 .card.nybonus .face.front{animation:nybonus 1.8s ease-out}
 @keyframes nybonus{0%{box-shadow:0 0 0 0 rgba(236,143,50,.9),0 0 0 0 rgba(236,143,50,.5)}40%{box-shadow:0 0 0 2.5cqw rgba(236,143,50,.35),0 0 12cqw 4cqw rgba(236,143,50,.45)}100%{box-shadow:0 0 0 0 rgba(236,143,50,0),0 0 0 0 rgba(236,143,50,0)}}
-.teaser{display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:center;margin-top:12px;padding:12px;border-radius:14px;border:1px dashed var(--line)}
-.tz-kort{position:relative;width:56px;aspect-ratio:750/1050;border-radius:6px;overflow:hidden;box-shadow:0 4px 10px -4px rgba(var(--shadow),.5)}
-.tz-kort img{display:block;width:100%;height:100%;filter:brightness(.55) saturate(.8)}
-.tz-kort b{position:absolute;inset:0;display:grid;place-items:center;color:#ffe3a3;font-size:28px;font-weight:800;text-shadow:0 0 12px rgba(255,190,80,.9)}
-.tz-t{display:grid;gap:4px}
-.tz-t b{font-size:15px}
-.tz-t small{font-size:12.5px;line-height:1.35;color:var(--muted)}
-.tz-t .mbar{width:100%;margin-top:4px}
 
 /* ---------- the reveal when a bonus card is earned ----------
    Unlike the border celebration: a card falls in face down and rocks, a question mark glows on its back;
@@ -789,7 +816,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
       <h1>Fuglekort</h1>
       <p id="sub">Kort 001 av 060</p>
     </div>
-    <button class="frobtn" id="openFro" aria-label="Solsikkefrø" title="Solsikkefrø"><span id="froIkon"></span><b id="froTall">0</b></button>
+    <button class="frobtn" id="openFro" aria-label="Solsikkefrø. Åpne Frøbutikken" title="Frøbutikken"><span id="froIkon"></span><b id="froTall">0</b></button>
     <button class="iconbtn ring" id="openStats" aria-label="Min fugleliste" title="Min fugleliste">
       <svg viewBox="0 0 42 42" aria-hidden="true"><circle class="trk" cx="21" cy="21" r="19"/><circle class="arc" id="ringArc" cx="21" cy="21" r="19" stroke-dasharray="0 120"/></svg>
       <span class="ti" id="ringIkon" aria-hidden="true"></span>
@@ -896,8 +923,16 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   </div>
   <div class="s-sec"><h3>Test</h3>
     <button class="btn" id="nullstillAlt">Nullstill alt (test)</button>
-    <p class="valg-merk">Sletter observasjoner, tellinger, frø og bonuskort, også i den delte lista. Valgene her beholdes.</p>
+    <p class="valg-merk">Sletter observasjoner, tellinger, frø, kjøp og dyrekort, også i den delte lista. Valgene her beholdes.</p>
   </div>
+</section>
+
+<section class="sheet stats" id="butikkSheet" role="dialog" aria-modal="true" aria-labelledby="butikkTitle">
+  <div class="s-head">
+    <h2 id="butikkTitle">Frøbutikken</h2>
+    <button class="textbtn" id="closeButikk">Lukk</button>
+  </div>
+  <div id="butikkBody"></div>
 </section>
 
 <section class="sheet stats" id="startSheet" role="dialog" aria-modal="true" aria-labelledby="startTitle">
@@ -946,7 +981,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 
 <div class="fest" id="fest" role="dialog" aria-modal="true" aria-labelledby="festNavn" hidden>
   <div class="fest-straaler"></div>
-  <figure class="fest-kort seen"><img id="festBilde" alt=""><span data-bstripe></span><span id="festMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></figure>
+  <figure class="fest-kort seen"><img id="festBilde" alt=""><span id="festMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></figure>
   <figure class="fest-ikon" aria-hidden="true"><span class="ti" id="festIkon"></span></figure>
   <div class="fest-tekst"><b id="festNavn"></b><span id="festArt"></span><small>Trykk for å fortsette</small></div>
 </div>
@@ -972,13 +1007,13 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <div class="bf-ring" aria-hidden="true"></div>
   <div class="bf-kort">
     <div class="bf-inner">
-      <div class="bf-side bf-bak"><img src="cards/bakside.webp" alt=""><b class="bf-q" aria-hidden="true">?</b></div>
-      <div class="bf-side bf-for seen" id="bfFor" data-niva="b"><img id="bfBilde" alt=""><span data-bstripe></span><span id="bfMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></div>
+      <div class="bf-side bf-bak"><img id="bfBak" src="cards/bakside.webp" alt=""><b class="bf-q" aria-hidden="true">?</b></div>
+      <div class="bf-side bf-for seen" id="bfFor" data-niva="b"><img id="bfBilde" alt=""><span id="bfMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></div>
     </div>
   </div>
   <div class="bf-tekst">
-    <div class="bf-t1"><b id="bfTittel">Du har fått en bonus!</b><small>Trykk for å snu kortet</small></div>
-    <div class="bf-t2"><span class="bf-stempel">Bonuskort</span><span class="bf-art" id="bfArt"></span><span class="bf-info" id="bfInfo"></span><small>Trykk for å se kortet i kortstokken</small></div>
+    <div class="bf-t1"><b id="bfTittel">Nytt dyrekort!</b><small>Trykk for å snu kortet</small></div>
+    <div class="bf-t2"><span class="bf-stempel">Dyrekort</span><span class="bf-art" id="bfArt"></span><span class="bf-info" id="bfInfo"></span><small>Trykk for å se kortet i kortstokken</small></div>
   </div>
 </div>
 
@@ -1033,7 +1068,7 @@ settSprites();
 const ROWS = Math.ceil(N / 10);
 document.documentElement.style.setProperty('--rows', ROWS);
 const spritePos = i => `${(i % 10) / 9 * 100}% ${ROWS > 1 ? Math.floor(i / 10) / (ROWS - 1) * 100 : 0}%`;
-const BACK = `<img src="${esc(DATA.bakside || 'cards/bakside.webp')}" alt="" draggable="false" decoding="async" loading="lazy">`;
+const BACK = () => `<img src="${esc(baksideBilde())}" alt="" draggable="false" decoding="async" loading="lazy">`;
 
 /* ================= Storage =================
    One small adapter so the same page runs as a Claude artifact (shared db)
@@ -1196,30 +1231,68 @@ if (lsGet('hagefugler:testmerke') !== TESTMERKE) {
 }
 Store.loadLocal();
 
-/* ================= Bonuskort som belønning =================
-   The other animals are a surprise: none of them shows anywhere until it is earned. A bonus card comes at
-   5, 10, 20, 40 and 60 registrations of birds (BONUS_GRENSER), in the order b01, b02 … It is then shuffled in among
-   the bird cards with the same number of stars, at a place that is the same every time and on every device. */
-const BONUS_GRENSER = [5, 10, 20, 40, 60];               // registrations needed for bonus card 1, 2, 3 …
-const bonusGrense = k => k < BONUS_GRENSER.length ? BONUS_GRENSER[k] : BONUS_GRENSER[BONUS_GRENSER.length - 1] + 20 * (k - BONUS_GRENSER.length + 1);
-const BONUS_REKKE = BONUS.slice().sort((a, b) => (a.id < b.id ? -1 : 1));
-const registreringer = () => Object.keys(Store.data).filter(erFugl).reduce((a, k) => a + Store.data[k].dager.length, 0);
-const apneBonus = () => { const r = registreringer(); return new Set(BONUS_REKKE.filter((c, k) => r >= bonusGrense(k)).map(c => c.key)); };
-let APNE = apneBonus();
+/* ================= Frøbutikken: prisene og det som er kjøpt =================
+   Everything bought is kept in the collection `kjop` (shared in Claude, in localStorage on the phone, and in the backup):
+     dyr-<art>      a dyrekort                      { pris, dato, ts }
+     x-<art>        a multiplier stuck on a card     { pris, dato, ts, faktor }   one per card, never moved
+     bakside-<id>   a card back                      { pris, dato, ts }
+   The price is kept with the purchase, so changing a price later does not change what was paid. */
+// the other animals (b01 …) are bought; the cheapest first. A new animal from Fuglekort-builder gets the next price.
+const DYRPRIS = { b01: 6500, b02: 8000, b03: 12000, b05: 16000, b04: 20000 };
+const dyrPris = c => DYRPRIS[c.id] != null ? DYRPRIS[c.id] : 20000 + 5000 * (1 + BONUS.filter(b => DYRPRIS[b.id] == null && b.id < c.id).length);
+const DYR = BONUS.slice().sort((a, b) => dyrPris(a) - dyrPris(b) || (a.id < b.id ? -1 : 1));
+// multipliers: exponentially dearer (×3 for each step)
+const MULT = [{ f: 2, pris: 4000 }, { f: 3, pris: 12000 }, { f: 4, pris: 36000 }, { f: 5, pris: 108000 }, { f: 10, pris: 324000 }];
+const MULTNAVN = { 2: 'Dobbelt frø', 3: 'Tre ganger frø', 4: 'Fire ganger frø', 5: 'Fem ganger frø', 10: 'Ti ganger frø' };
+/* card backs: the deck's own back is free. More can be added in data/baksider.json (see README); the shelf in the
+   shop shows up when there is more than one. */
+const BAKSIDER = [{ id: 'standard', navn: 'Standard', bilde: DATA.bakside || 'cards/bakside.webp', pris: 0 },
+  ...(Array.isArray(DATA.baksider) ? DATA.baksider : []).filter(b => b && /^[a-z0-9-]+$/.test(b.id) && b.id !== 'standard' && b.bilde && Number.isFinite(+b.pris))];
+const KJOPID = /^(dyr|x|bakside)-([a-z0-9-]+)$/;
+function kjopGyldig(id, v) {
+  const m = KJOPID.exec(id);
+  if (!m || !v || !Number.isFinite(+v.pris) || +v.pris < 0 || !ISO.test(v.dato)) return false;
+  if (m[1] === 'dyr') return BY_KEY[m[2]] != null && CARDS[BY_KEY[m[2]]].bonus;
+  if (m[1] === 'x') return BY_KEY[m[2]] != null && MULT.some(x => x.f === +v.faktor);
+  return true;                                             // a back that is not in this version is kept, just not shown
+}
+const Kjop = Object.assign(samling({
+  col: 'kjop', key: 'hagefugler:kjop:v1', hva: 'Kjøpet',
+  // purchases from the grey cards of earlier versions (one per bird) are left out
+  norm: raw => Object.fromEntries(Object.keys(raw || {}).filter(k => kjopGyldig(k, raw[k]))
+    .map(k => [k, { pris: Math.floor(+raw[k].pris), dato: raw[k].dato, ts: +raw[k].ts || 0, ...(k.startsWith('x-') ? { faktor: +raw[k].faktor } : {}) }])),
+  toDoc: (id, v) => ({ pris: v.pris, dato: v.dato, ts: v.ts, ...(v.faktor ? { faktor: v.faktor } : {}) }),
+}), {
+  kjop(id, v) { this.data[id] = { ...v, ts: Date.now() }; this.saveLocal(); this.emit(); this.push(id); },
+  angre(id) { if (!this.data[id]) return; delete this.data[id]; this.saveLocal(); this.emit(); this.push(id); },
+  /* the newest purchase, while it can still be undone (FRO.angreTid after it was made); only that one */
+  angrebar() {
+    const [k, v] = Object.entries(this.data).sort((a, b) => b[1].ts - a[1].ts)[0] || [];
+    const igjen = k ? FRO.angreTid - (Date.now() - v.ts) : 0;
+    return k && igjen > 0 && igjen <= FRO.angreTid ? { k, v, igjen } : null;
+  },
+});
+Kjop.loadLocal();
+const multAv = key => Kjop.data['x-' + key] || null;
+const harBakside = id => id === 'standard' || !!Kjop.data['bakside-' + id];
+const BAKSIDE_KEY = () => brukerNokkel('fuglekort:bakside');
+const baksideValgt = () => { const v = lsGet(BAKSIDE_KEY()); return v && BAKSIDER.some(b => b.id === v) && harBakside(v) ? v : 'standard'; };
+const baksideBilde = () => (BAKSIDER.find(b => b.id === baksideValgt()) || BAKSIDER[0]).bilde;
+
+/* ================= Dyrekort =================
+   The other animals are bought in Frøbutikken; before that, none of them shows anywhere in the deck. A bought card
+   is shuffled in among the bird cards with the same number of stars, at a place that is the same every time and on
+   every device. */
+const apneDyr = () => new Set(DYR.filter(c => Kjop.data['dyr-' + c.key]).map(c => c.key));
+let APNE = apneDyr();
 const erApen = c => !c.bonus || APNE.has(c.key);
 const erApenK = k => BY_KEY[k] != null && erApen(CARDS[BY_KEY[k]]);
-const bonusSeen = () => BONUS.filter(c => erApen(c) && Store.has(c.key)).length;
-function nesteBonus() {
-  if (APNE.size >= NBON) return null;
-  const r = registreringer(), grense = bonusGrense(APNE.size);
-  return { mangler: grense - r, grense, fra: APNE.size ? bonusGrense(APNE.size - 1) : 0, r };
-}
 const hashTall = s => { let h = 5381; for (const ch of s) h = (h * 33 + ch.charCodeAt(0)) >>> 0; return h; };
 function byggStokk() {
   const foran = new Map(), etter = new Map();
   const legg = (m, i, j) => { if (!m.has(i)) m.set(i, []); m.get(i).push(j); };
   const fugler = CARDS.map((c, i) => i).filter(i => !CARDS[i].bonus);
-  BONUS_REKKE.filter(c => APNE.has(c.key)).forEach(c => {
+  DYR.filter(c => APNE.has(c.key)).forEach(c => {
     const j = BY_KEY[c.key];
     const blokk = fugler.filter(i => CARDS[i].stjerner === c.stjerner);
     if (!blokk.length) { legg(etter, fugler[fugler.length - 1], j); return; }
@@ -1232,9 +1305,9 @@ function byggStokk() {
   POS = Object.fromEntries(DECK.map((i, p) => [i, p])); ND = DECK.length;
 }
 byggStokk();
-/* bonus cards whose reveal has been shown; shared like the sightings, so each one is revealed once */
+/* dyrekort whose reveal has been shown; shared like the sightings, so each one is revealed once */
 const Vist = Object.assign(samling({
-  col: 'bonusvist', key: 'hagefugler:bonusvist:v1', hva: 'Bonuskortet',
+  col: 'bonusvist', key: 'hagefugler:bonusvist:v1', hva: 'Dyrekortet',
   norm: raw => Object.fromEntries(Object.keys(raw || {}).filter(k => BY_KEY[k] != null && CARDS[BY_KEY[k]].bonus).map(k => [k, { ts: +((raw[k] || {}).ts) || 1 }])),
   toDoc: (id, v) => ({ ts: v.ts }),
 }), {
@@ -1245,44 +1318,47 @@ const Vist = Object.assign(samling({
 Vist.loadLocal();
 
 /* ================= Solsikkefrø =================
-   Seeds are points: earned by registering birds (most of it: every day counts), first sightings, new border
-   levels, bonus cards and badges. They are never spent; all the seeds earned make the titles (Egg … Fuglekonge).
-   All the cards are open from the start, so the deck works as a field guide. All the numbers are here, and the
-   total is worked out from the data every time; nothing about seeds is stored. */
+   Seeds are earned by registering birds (most of it: every day counts), first sightings, new border levels and
+   badges, and more with a multiplier on the card. All the seeds earned make the titles (Egg … Fuglekonge); what is
+   spent in Frøbutikken comes off the balance only, never off the titles. All the bird cards are open from the start,
+   so the deck works as a field guide. All the numbers are here, and the totals are worked out from the data every
+   time; only the purchases are stored. */
 const FRO = {
   registrering: 200,                         // × stars, per observation day of the bird
   forsteGang: 400,                           // × stars, the first time a species is seen
   daglig: 300,                               // once for each day with at least one bird registered
   niva: [2000, 5000, 15000],                 // sølv-, gull-, holokant
-  bonuskort: 10000,
   merker: { a10: 2500, a25: 5000, a50: 15000, aalle: 50000, rekke: 5000, arstider: 10000, tellekorps: 7500, flokk: 7500 },
   dagMerke: 2500,                            // each «N dager» badge: one for every 5 observation days
+  angreTid: 120000,                          // the newest purchase can be undone for 2 minutes
 };
 const fmtFro = n => { try { return Math.round(n).toLocaleString('nb-NO'); } catch (e) { return String(Math.round(n)); } };
 const FROIKON = '<svg class="froikon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.3c3.7 3 5.8 7.2 5.8 11.4 0 4.3-2.6 8-5.8 8s-5.8-3.7-5.8-8C6.2 9.5 8.3 5.3 12 2.3z" fill="#3a3027"/><path d="M12 4.6v15.8M9.4 7.8c-.9 3.1-.8 7.6.5 11.1M14.6 7.8c.9 3.1.8 7.6-.5 11.1" stroke="#efe6d2" stroke-width="1.15" fill="none" stroke-linecap="round"/></svg>';
-/* all the seeds earned, worked out from the sightings, border levels, badges and bonus cards */
+/* all the seeds earned, worked out from the sightings, border levels, badges and multipliers; and what is left */
 let froCache = null;
 const froNullstill = () => { froCache = null; };
 function froRegnskap() {
   if (froCache) return froCache;
-  const r = { reg: 0, forste: 0, dag: 0, niva: 0, bonus: 0, merker: 0 };
+  const r = { reg: 0, forste: 0, dag: 0, niva: 0, merker: 0, mult: 0 };
   CARDS.forEach(c => {
-    if (c.bonus && !erApen(c)) return;                     // a hidden bonus card gives nothing until it is found
+    if (c.bonus && !erApen(c)) return;                     // a dyrekort not bought gives nothing
     const dager = Store.days(c.key); if (!dager.length) return;
-    const s = c.stjerner;
+    const s = c.stjerner, x = multAv(c.key);
     r.reg += dager.length * FRO.registrering * s;
     r.forste += FRO.forsteGang * s;
+    // a multiplier counts from the day it was stuck on: the days from then, and the first sighting if it came after
+    if (x) r.mult += (x.faktor - 1) * (dager.filter(d => d >= x.dato).length * FRO.registrering * s + (dager[0] >= x.dato ? FRO.forsteGang * s : 0));
     grenser(c).forEach((g, k) => { if (dager.length >= g) r.niva += FRO.niva[k]; });
   });
-  r.bonus = APNE.size * FRO.bonuskort;
   const t = nokkeltall();
   r.dag = t.obsDager * FRO.daglig;                                  // every day with a bird
   merkerListe(t).forEach(m => { if (m.v(t) >= m.mal) r.merker += merkeFro(m); });
-  r.tjent = r.reg + r.forste + r.dag + r.niva + r.bonus + r.merker;
-  r.saldo = r.tjent;                                                // nothing is spent: the seeds are points
+  r.tjent = r.reg + r.forste + r.dag + r.niva + r.merker + r.mult;
+  r.brukt = Object.values(Kjop.data).reduce((a, v) => a + v.pris, 0);
+  r.saldo = r.tjent - r.brukt;                                      // what can be spent; the titles go by r.tjent
   return (froCache = r);
 }
-[Store, Vist].forEach(x => x.on(froNullstill));   // first in line, before anything reads the account (Tell: below)
+[Store, Vist, Kjop].forEach(x => x.on(froNullstill));   // first in line, before anything reads the account (Tell: below)
 /* "+300 frø" for the message at the bottom: what an action changed */
 function froTekst(for_) {
   froNullstill();
@@ -1422,12 +1498,9 @@ const hashBonus = /^#(b\d{2})$/i.exec(location.hash || '');
 if (hashBonus) { const i = CARDS.findIndex(c => c.id === hashBonus[1].toLowerCase()); if (i >= 0 && erApen(CARDS[i])) cur = i; }
 const pool = new Map();
 
-/* BONUS on its side, from the card font (Barlow Condensed Bold) as a path, so it looks the same everywhere */
-const BONUSSTRIPE = '<span class="bstripe" aria-hidden="true"><svg viewBox="-730 -3040 760 3060"><path transform="rotate(-90)" d="M245 0H56Q51 0 48 -4Q44 -7 44 -12V-688Q44 -693 48 -696Q51 -700 56 -700H223Q323 -700 380 -652Q436 -604 436 -509Q436 -410 368 -365Q364 -362 367 -359Q446 -303 446 -193Q446 -100 390 -50Q334 0 245 0ZM185 -574V-417Q185 -412 190 -412H226Q260 -412 279 -434Q298 -455 298 -494Q298 -535 280 -557Q261 -579 226 -579H190Q185 -579 185 -574ZM305 -214Q305 -258 286 -284Q267 -310 235 -310H190Q185 -310 185 -305V-127Q185 -122 190 -122H234Q267 -122 286 -146Q305 -170 305 -214ZM664 -190V-510Q664 -600 719 -654Q774 -708 866 -708Q958 -708 1014 -654Q1069 -600 1069 -510V-190Q1069 -100 1014 -46Q958 8 866 8Q774 8 719 -46Q664 -100 664 -190ZM928 -184V-516Q928 -548 911 -568Q894 -587 866 -587Q838 -587 822 -568Q805 -548 805 -516V-184Q805 -152 822 -132Q838 -113 866 -113Q894 -113 911 -132Q928 -152 928 -184ZM1605 -700H1721Q1726 -700 1730 -696Q1733 -693 1733 -688V-12Q1733 -7 1730 -4Q1726 0 1721 0H1589Q1579 0 1576 -10L1452 -397Q1451 -400 1448 -400Q1446 -399 1446 -396L1447 -12Q1447 -7 1444 -4Q1440 0 1435 0H1319Q1314 0 1310 -4Q1307 -7 1307 -12V-688Q1307 -693 1310 -696Q1314 -700 1319 -700H1450Q1460 -700 1463 -690L1588 -303Q1589 -300 1592 -300Q1594 -301 1594 -304L1593 -688Q1593 -693 1596 -696Q1600 -700 1605 -700ZM1978 -199V-688Q1978 -693 1982 -696Q1985 -700 1990 -700H2107Q2112 -700 2116 -696Q2119 -693 2119 -688V-185Q2119 -153 2135 -133Q2151 -113 2177 -113Q2203 -113 2218 -133Q2234 -153 2234 -185V-688Q2234 -693 2238 -696Q2241 -700 2246 -700H2363Q2368 -700 2372 -696Q2375 -693 2375 -688V-199Q2375 -105 2320 -48Q2266 8 2177 8Q2087 8 2032 -48Q1978 -105 1978 -199ZM2606 -175V-204Q2606 -209 2610 -212Q2613 -216 2618 -216H2733Q2738 -216 2742 -212Q2745 -209 2745 -204V-182Q2745 -151 2761 -132Q2777 -113 2801 -113Q2825 -113 2841 -131Q2857 -149 2857 -178Q2857 -208 2837 -230Q2817 -251 2759 -293Q2709 -329 2678 -357Q2647 -385 2625 -426Q2603 -467 2603 -521Q2603 -606 2656 -657Q2709 -708 2796 -708Q2884 -708 2938 -655Q2991 -602 2991 -516V-492Q2991 -487 2988 -484Q2984 -480 2979 -480H2864Q2859 -480 2856 -484Q2852 -487 2852 -492V-519Q2852 -550 2836 -568Q2821 -587 2796 -587Q2772 -587 2757 -570Q2742 -552 2742 -521Q2742 -491 2761 -468Q2780 -445 2836 -404Q2898 -358 2930 -330Q2961 -301 2978 -266Q2996 -232 2996 -184Q2996 -96 2942 -44Q2888 8 2800 8Q2742 8 2698 -15Q2654 -38 2630 -80Q2606 -121 2606 -175Z"/></svg></span>';
-document.querySelectorAll('[data-bstripe]').forEach(el => { el.outerHTML = BONUSSTRIPE; });
 /* the picture field on the card (share of the card), the same on every card */
 const BILDEFELT = { x: .0573, y: .1695, w: .5147, h: .4362 };
-const altTekst = c => `${c.bonus ? 'Bonuskort' : `Fuglekort ${c.id}`}: ${c.navn}, ${c.latin}. ${c.status}.${settAv(c) === 'foto' && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
+const altTekst = c => `${c.bonus ? 'Dyrekort' : `Fuglekort ${c.id}`}: ${c.navn}, ${c.latin}. ${c.status}.${settAv(c) === 'foto' && c.fotograf ? ` Foto: ${c.fotograf}.` : ''}`;
 function makeCard(i) {
   const c = CARDS[i];
   const [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje;
@@ -1437,12 +1510,12 @@ function makeCard(i) {
   el.className = 'card';
   el.dataset.i = i;
   el.setAttribute('role', 'group');
-  el.setAttribute('aria-label', `${c.bonus ? 'Bonuskort' : `Kort ${c.id}`}: ${c.navn}`);
+  el.setAttribute('aria-label', `${c.bonus ? 'Dyrekort' : `Kort ${c.id}`}: ${c.navn}`);
   el.innerHTML = `
   <div class="inner">
     <div class="face front" style="background-position:${spritePos(i)}">
       <img src="${esc(bildeAv(c))}" alt="${esc(altTekst(c))}" draggable="false" decoding="async">
-      ${c.bonus ? BONUSSTRIPE : ''}
+      <span class="xmerke" aria-hidden="true" style="left:${P(BILDEFELT.x + BILDEFELT.w - 0.082)};top:${P(BILDEFELT.y + 0.056)}"></span>
       <span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span>
       <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
       <button class="ctl bilde-hit" data-act="bilde" tabindex="0" aria-label="Vis bildet av ${esc(c.navn)} stort" style="left:${P(BILDEFELT.x)};top:${P(BILDEFELT.y)};width:${P(BILDEFELT.w)};height:${P(BILDEFELT.h)}"></button>
@@ -1455,7 +1528,7 @@ function makeCard(i) {
         <input type="date" data-act="date" aria-label="Første gang du så ${esc(c.navn)}">
       </label>
     </div>
-    <div class="face back">${BACK}<div class="logg" hidden></div>${c.bonus ? '<p class="kred"></p>' : ''}</div>
+    <div class="face back">${BACK()}<div class="logg" hidden></div>${c.bonus ? '<p class="kred"></p>' : ''}</div>
   </div>`;
   el.querySelector('.back').inert = true;
   paintCard(el);
@@ -1500,6 +1573,13 @@ function paintCard(el) {
   tall.dataset.n = n; tall.textContent = n || ''; tall.classList.toggle('on', n > 0);
   if (n > f && f > 0) { tall.classList.remove('pop'); void tall.offsetWidth; tall.classList.add('pop'); }
   paintLogg(el, c, dager);
+  // the multiplier: only on the front; it is stamped on when it is new
+  const xf = (multAv(c.key) || {}).faktor || 0, xm = el.querySelector('.xmerke');
+  el.classList.toggle('xm', !!xf);
+  if (xf) { xm.className = `xmerke x${xf}`; xm.textContent = `×${xf}`; }
+  if (el._x != null && xf > el._x) { xm.classList.remove('ny'); void xm.offsetWidth; xm.classList.add('ny'); }
+  el._x = xf;
+  el.setAttribute('aria-label', `${c.bonus ? 'Dyrekort' : `Kort ${c.id}`}: ${c.navn}${xf ? `, merket ×${xf}` : ''}`);
   const kred = el.querySelector('.kred');
   if (kred) { kred.textContent = settAv(c) === 'foto' && c.fotograf ? `Foto: ${c.fotograf}${c.lisens ? ` · ${c.lisens}` : ''}` : ''; kred.hidden = !kred.textContent; }
 }
@@ -1509,10 +1589,10 @@ function paintCard(el) {
    A title for how far you have come, from all the seeds earned. Nothing is stored for it except which title
    has been celebrated on this device. */
 const TITLER = [
-  { navn: 'Egg', fra: 0 }, { navn: 'Nyklekket', fra: 1800 }, { navn: 'Dununge', fra: 20000 }, { navn: 'Reirunge', fra: 40000 },
-  { navn: 'Flygeferdig', fra: 65000 }, { navn: 'Hagegjest', fra: 90000 }, { navn: 'Fuglevenn', fra: 120000 },
-  { navn: 'Kikkertbærer', fra: 200000 }, { navn: 'Fuglekikker', fra: 350000 }, { navn: 'Artsjeger', fra: 550000 },
-  { navn: 'Ornitolog', fra: 850000 }, { navn: 'Mesterornitolog', fra: 1300000 }, { navn: 'Fuglekonge', fra: 2000000 },
+  { navn: 'Egg', fra: 0 }, { navn: 'Nyklekket', fra: 1800 }, { navn: 'Dununge', fra: 7500 }, { navn: 'Reirunge', fra: 15000 },
+  { navn: 'Flygeferdig', fra: 30000 }, { navn: 'Hagegjest', fra: 45000 }, { navn: 'Fuglevenn', fra: 70000 },
+  { navn: 'Kikkertbærer', fra: 150000 }, { navn: 'Fuglekikker', fra: 300000 }, { navn: 'Artsjeger', fra: 500000 },
+  { navn: 'Ornitolog', fra: 800000 }, { navn: 'Mesterornitolog', fra: 1250000 }, { navn: 'Fuglekonge', fra: 1950000 },
 ];
 const froTotalt = () => froRegnskap().tjent;
 const tittelAv = f => TITLER.reduce((k, t, i) => (f >= t.fra ? i : k), 0);
@@ -1739,7 +1819,7 @@ function flip() {
   setFlipped(el, !el.classList.contains('flipped'));
   nudgeHint();
 }
-function announce() { const c = CARDS[cur]; $('#live').textContent = `${c.bonus ? 'Bonuskort' : `Kort ${c.nr} av ${NB}`}: ${c.navn}${Store.has(c.key) ? ', sett' : ''}`; }
+function announce() { const c = CARDS[cur]; $('#live').textContent = `${c.bonus ? 'Dyrekort' : `Kort ${c.nr} av ${NB}`}: ${c.navn}${Store.has(c.key) ? ', sett' : ''}`; }
 const haptic = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
 
 /* ---- momentum: a fast swipe riffles through many cards, slowing down; a tap stops it ---- */
@@ -2078,7 +2158,7 @@ function settIDag(c) {
   froFrys();
   Store.addDay(c.key, t);
   haptic(10);
-  si(`${c.navn}: ${dager.length + 1}. observasjonsdag.${froTekst(f0)}${nyheter(for_)}${bonusHint()}`);
+  si(`${c.navn}: ${dager.length + 1}. observasjonsdag.${froTekst(f0)}${nyheter(for_)}`);
   froEffekt(c, f0);
 }
 function registrer(c, d) {
@@ -2087,11 +2167,11 @@ function registrer(c, d) {
   Store.put(c.key, [d]);
   haptic(12);
   const n = seenCount();
-  const msg = c.bonus ? `${c.navn}! Bonuskortet er sett for første gang.`
+  const msg = c.bonus ? `${c.navn}! Dyrekortet er sett for første gang.`
     : n === NB ? `Alle ${NB} fuglene er sett. Hele kortstokken er komplett!`
     : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i norske hager. ${n} av ${NB} sett.`
     : `${c.navn} er sett for første gang. ${n} av ${NB} arter.`;
-  si(msg + froTekst(f0) + nyheter(for_) + bonusHint());
+  si(msg + froTekst(f0) + nyheter(for_));
   froEffekt(c, f0);
 }
 function leggTilDag(c, d) {
@@ -2101,7 +2181,7 @@ function leggTilDag(c, d) {
   const for_ = opptjent(), f0 = froFor();
   froFrys();
   Store.addDay(c.key, d);
-  si(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${froTekst(f0)}${nyheter(for_)}${bonusHint()}`);
+  si(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${froTekst(f0)}${nyheter(for_)}`);
   froEffekt(c, f0);
 }
 function slettDag(c, d) {
@@ -2171,7 +2251,7 @@ scrub.addEventListener('keydown', e => {
 function paintChrome() {
   const c = CARDS[cur];
   const n = seenCount();
-  $('#sub').textContent = c.bonus ? `Bonuskort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
+  $('#sub').textContent = c.bonus ? `Dyrekort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
   paintFro();
   // the title: its icon in the ring, and how far it is to the next title around it
   const C = 2 * Math.PI * 19, fT = froTotalt(), tk = tittelAv(fT), tt = TITLER[tk], tn = TITLER[tk + 1];
@@ -2184,7 +2264,7 @@ function paintChrome() {
   ticks.forEach((t, p) => { const i = DECK[p]; t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
   paintTeller();
   scrub.setAttribute('aria-valuenow', POS[cur] + 1);
-  scrub.setAttribute('aria-valuetext', `${c.bonus ? 'Bonuskort' : `Kort ${c.nr}`}: ${c.navn}`);
+  scrub.setAttribute('aria-valuetext', `${c.bonus ? 'Dyrekort' : `Kort ${c.nr}`}: ${c.navn}`);
 }
 
 let hintCount = lsGet('hagefugler-oslo:hint') === 'ok' ? 99 : 0;
@@ -2329,7 +2409,7 @@ resEl.addEventListener('click', e => {
 const helpSheet = $('#helpSheet'), helpTrack = $('#helpTrack'), helpDots = $('#helpDots');
 const hjelpListe = () => ((foto() && DATA.hjelpFoto) || DATA.hjelp || []).filter(h => !/^b/.test(h.id) || APNE.size >= NBON);
 function renderHelp() {
-  const HJELP = hjelpListe();
+  const HJELP = hjelpListe().map(h => ({ ...h, navn: h.navn.replace(/bonuskort/i, 'dyrekort') }));   // the name read out; the picture is from Fuglekort-builder
   $('#openHelp').hidden = !HJELP.length;
   helpTrack.innerHTML = HJELP.map(h => `<figure class="help-card"><img src="${esc(h.bilde)}" alt="${esc(h.navn)}" loading="lazy" decoding="async"></figure>`).join('');
   helpDots.innerHTML = HJELP.map((h, k) => `<button role="tab" aria-selected="${k === 0}" aria-label="${esc(h.navn)}" data-k="${k}"></button>`).join('');
@@ -2389,12 +2469,12 @@ const setSheet = $('#settingsSheet');
 $('#bildeSek').hidden = !HAR_FOTO && !HAR_TEGNESERIE;
 setSheet.querySelectorAll('[data-bilder]').forEach(b => { b.hidden = !finnesSett(b.dataset.bilder); });
 $('#vippSek').hidden = !Vipp.stottet;
-// only the bonus cards already found are mentioned
+// only the dyrekort already bought are mentioned
 const fotoTekst = () => `Fotografier fra Artsdatabanken og Artsobservasjoner for ${BIRDS.filter(c => c.bildeFoto).length} av ${NB} fugler`
   + '. De andre viser illustrasjonen. Fotografene står på kortene Bildekreditering under Om kortene i menyen.'
-  + (BONUS.some(c => erApen(c) && c.bildeFoto) ? ' Bonuskortene du har funnet, har også fotografi.' : '');
+  + (BONUS.some(c => erApen(c) && c.bildeFoto) ? ' Dyrekortene du har kjøpt, har også fotografi.' : '');
 const tegneserieTekst = () => `Fuglene tegnet i tegneseriestil, for ${BIRDS.filter(c => c.bildeTegneserie).length} av ${NB} fugler. De andre viser illustrasjonen.`
-  + (BONUS.some(c => erApen(c) && c.bildeTegneserie) ? ' Bonuskortene du har funnet, er også tegnet.' : '');
+  + (BONUS.some(c => erApen(c) && c.bildeTegneserie) ? ' Dyrekortene du har kjøpt, er også tegnet.' : '');
 function paintSettings() {
   $('#fotoAntall').textContent = fotoTekst();
   $('#tegneserieAntall').textContent = tegneserieTekst();
@@ -2467,13 +2547,12 @@ fanerEl.addEventListener('keydown', e => {
 });
 function openStats(fane) { artVis = null; if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; setTimeout(() => $('#closeStats').focus(), 60); }
 $('#openStats').addEventListener('click', () => openStats('profil'));
-$('#openFro').addEventListener('click', () => openStats('profil'));   // the seed counter: how the seeds were earned
 $('#closeStats').addEventListener('click', () => closeSheets());
 /* a small picture of the card */
 const miniatyr = (c, i, kl = '') => `<span class="ph ${kl}" style="background-position:${spritePos(i)}" aria-hidden="true"></span>`;
 function albumKort(c, i) {
   const nv = nivaAv(c), nd = Store.days(c.key).length, iDag = nd && Store.days(c.key).includes(todayISO());
-  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Bonuskort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Bonus' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}</span></button>`;
+  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Dyrekort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Dyr' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}</span></button>`;
 }
 function merkeHtml(m, nt) {
   const v = m.v(nt), ok = v >= m.mal;
@@ -2483,13 +2562,12 @@ function merkeHtml(m, nt) {
   return `<div class="merke ${ok ? 'ok' : ''}" title="${esc(m.tekst)}"><span class="med ${m.ikon.startsWith('<') ? 'ik' : ''}">${m.ikon}</span><b>${esc(m.navn)}</b><small>${ok ? 'Oppnådd' : esc(m.tekst)}</small>${fro}${ok ? '' : igjen}</div>`;
 }
 function renderStats() {
-  // fuglelista: bare fuglekortene; bonuskortene (andre dyr) har sin egen del lenger ned
+  // fuglelista: bare fuglekortene; dyrekortene har sin egen del i fanen Kort
   const alleIds = Object.keys(Store.data).filter(erApenK);
   const ids = alleIds.filter(erFugl);
   const n = ids.length;
   const byRar = [1, 2, 3, 4, 5].map(r => ({ r, tot: BIRDS.filter(c => c.stjerner === r).length, seen: BIRDS.filter(c => c.stjerner === r && Store.has(c.key)).length }));
   const rarest = BIRDS.filter(c => Store.has(c.key)).sort((a, b) => b.nr - a.nr)[0];
-  const nb = nesteBonus();
   // last 12 months
   const now = new Date(); const months = [];
   for (let k = 11; k >= 0; k--) { const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push({ y: d.getFullYear(), m: d.getMonth() + 1, n: 0 }); }
@@ -2533,9 +2611,15 @@ function renderStats() {
 
     <div class="s-sec"><h3>Solsikkefrø</h3>
       <div class="fro-saldo">${FROIKON}<b>${fmtFro(fr.tjent)}</b><span>frø samlet</span></div>
-      <p class="cap" style="margin:8px 0 0">Frøene er poeng. De samles og gir titlene, fra Egg til Fuglekonge.</p>
+      <p class="cap" style="margin:8px 0 0">Alle frøene du har samlet, gir titlene, fra Egg til Fuglekonge. Det du bruker i Frøbutikken, trekkes bare fra det du har å bruke, aldri fra titlene.</p>
+      <div class="kpis">
+        <div class="kpi"><b>${fmtFro(fr.saldo)}</b><span>Å bruke</span></div>
+        <div class="kpi"><b>${fmtFro(fr.brukt)}</b><span>Brukt i Frøbutikken</span></div>
+      </div>
+      <div class="row"><button class="btn pri" data-butikk>Åpne Frøbutikken</button></div>
       <ul class="fro-kilder">
-        ${[['Registreringer', fr.reg], ['Dager med fugler', fr.dag], ['Første gang du så en art', fr.forste], ['Glinskant', fr.niva], ['Bonuskort', fr.bonus], ['Merker', fr.merker]]
+        ${[['Registreringer', fr.reg], ['Dager med fugler', fr.dag], ['Første gang du så en art', fr.forste], ['Glinskant', fr.niva], ['Merker', fr.merker],
+          ...(fr.mult || Object.keys(Kjop.data).some(k => k.startsWith('x-')) ? [['Multiplikatorer', fr.mult]] : [])]
           .map(([t, v]) => `<li><span>${t}</span><b>${fmtFro(v)}</b></li>`).join('')}
       </ul>
     </div>
@@ -2549,13 +2633,6 @@ function renderStats() {
         <tbody>${[1, 2, 3, 4, 5].map(r => `<tr><td>${stars(r)}</td>${r === 5 ? '<td colspan="3">Holo med én gang</td>' : GRENSER[r].map(x => `<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table>
       </details>
     </div>
-
-    ${NBON && nb ? `<div class="s-sec"><h3>Bonus</h3>
-      <div class="teaser"><span class="tz-kort" aria-hidden="true"><img src="${esc(DATA.bakside || 'cards/bakside.webp')}" alt=""><b>?</b></span>
-        <span class="tz-t"><b>${APNE.size ? 'Enda en bonus venter' : 'Det venter en bonus'}</b>
-        <small>${nb.mangler === 1 ? 'Én registrering igjen' : `${nb.mangler} registreringer igjen`}. Hver gang du registrerer en fugl, kommer du nærmere.</small>
-        <i class="mbar" role="img" aria-label="${Math.max(0, nb.r - nb.fra)} av ${nb.grense - nb.fra}"><i style="width:${(Math.max(0, Math.min(1, (nb.r - nb.fra) / (nb.grense - nb.fra))) * 100).toFixed(1)}%"></i></i></span></div>
-    </div>` : ''}
 
     <div class="s-sec"><h3>Lagring</h3>
       <p class="store ${Store.mode === 'delt' ? 'sky' : ''}"><i></i>${Store.mode === 'delt' ? 'Avkrysningene og tellingene lagres sammen med kortstokken og følger deg på alle enheter.' : 'Avkrysningene og tellingene lagres på denne enheten.'}</p>
@@ -2605,9 +2682,10 @@ function renderStats() {
       ${CARDS.map((c, i) => c.bonus ? '' : albumKort(c, i)).join('')}
     </div></div>
 
-    ${NBON && APNE.size ? `<div class="s-sec"><h3>Bonuskort <span class="h3n">${APNE.size} funnet</span></h3>
-      <div class="album">${BONUS_REKKE.filter(erApen).map(c => albumKort(c, BY_KEY[c.key])).join('')}</div>
-      <p class="cap">Bonuskortene er stokket inn blant kortene med like mange stjerner. De får glinskant som fuglene, men teller ikke med i fuglelista eller merkene.</p>
+    ${NBON ? `<div class="s-sec"><h3>Dyrekort <span class="h3n">${APNE.size} av ${NBON}</span></h3>
+      ${APNE.size ? `<div class="album">${DYR.filter(erApen).map(c => albumKort(c, BY_KEY[c.key])).join('')}</div>` : ''}
+      <p class="cap">${APNE.size ? 'Dyrekortene er stokket inn blant kortene med like mange stjerner. De får glinskant som fuglene, men teller ikke med i fuglelista eller merkene.' : 'Andre dyr enn fugler kjøper du for solsikkefrø i Frøbutikken. De stokkes inn i kortstokken.'}</p>
+      ${APNE.size < NBON ? '<div class="row"><button class="btn" data-butikk>Til Frøbutikken</button></div>' : ''}
     </div>` : ''}`,
     merker: () => `
     <div class="s-sec"><h3>Merker <span class="h3n">${merkerOk} oppnådd</span></h3>
@@ -2631,6 +2709,7 @@ sb.addEventListener('change', e => {
 });
 sb.addEventListener('keydown', e => { if (e.target.id === 'profilNavn' && e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
 sb.addEventListener('click', async e => {
+  if (e.target.closest('[data-butikk]')) { openButikk(); return; }
   const kv = e.target.closest('[data-kalvalg]');
   if (kv) { const [k, v] = kv.dataset.kalvalg.split(':'); kalVis[k] = v; lsSet('fuglekort:kalender', JSON.stringify(kalVis)); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
   const kc = e.target.closest('[data-kal]');
@@ -2651,7 +2730,7 @@ sb.addEventListener('click', async e => {
   if (e.target.id === 'openStart') { openStart(); return; }
   if (e.target.id === 'goTell') { closeSheets(); return; }
   if (e.target.id === 'copyBackup') {
-    const txt = JSON.stringify({ kortstokk: 'hagefugler', versjon: 6, sett: Store.data, tellinger: Tell.data });
+    const txt = JSON.stringify({ kortstokk: 'hagefugler', versjon: 7, sett: Store.data, tellinger: Tell.data, kjop: Kjop.data });
     try { await navigator.clipboard.writeText(txt); kvittering(e.target, 'Kopiert!'); si('Sikkerhetskopien er kopiert.'); }
     catch (err) { $('#restoreBox').hidden = false; const t = $('#restoreTxt'); t.value = txt; t.select(); si('Kopier teksten i feltet manuelt.'); }
   }
@@ -2677,10 +2756,16 @@ sb.addEventListener('click', async e => {
       let telt = 0;
       Object.keys(tsrc).forEach(id => { if (tsrc[id].slutt && !tm[id]) { tm[id] = tsrc[id]; telt++; } });
       if (telt) Tell.replaceAll(tm);
+      // purchases that are not here yet (a multiplier on a card that already has one stays as it is)
+      const ksrc = obj.kjop && typeof obj.kjop === 'object' ? obj.kjop : {}, km = { ...Kjop.data };
+      let kjopt = 0;
+      Object.keys(ksrc).forEach(k => { if (!km[k] && kjopGyldig(k, ksrc[k])) { km[k] = { pris: Math.floor(+ksrc[k].pris), dato: ksrc[k].dato, ts: +ksrc[k].ts || 1, ...(k.startsWith('x-') ? { faktor: +ksrc[k].faktor } : {}) }; kjopt++; } });
+      if (kjopt) Kjop.replaceAll(km);
       const deler = [];
       if (dager) deler.push(flertall(dager, 'dag', 'dager') + (arter ? ` (${flertall(arter, 'ny art', 'nye arter')})` : ''));
       if (telt) deler.push(flertall(telt, 'telling', 'tellinger'));
-      const mld = deler.length ? `La til ${deler.join(' og ')}.` : 'Ingen nye dager eller tellinger i sikkerhetskopien.';
+      if (kjopt) deler.push(flertall(kjopt, 'kjøp', 'kjøp'));
+      const mld = deler.length ? `La til ${deler.join(' og ')}.` : 'Ingen nye dager, tellinger eller kjøp i sikkerhetskopien.';
       restoreMld(mld); si(mld);
     } catch (err) { restoreMld('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
   }
@@ -2770,7 +2855,7 @@ function renderListe() {
   if (!rader.length) { tlisteEl.innerHTML = `<li class="empty">Ingen art passer til «${esc(lq.value)}».</li>`; return; }
   tlisteEl.innerHTML = rader.map(r => {
     const n = Tell.antall(r.key), fugl = r.i != null;
-    const inn = `${fugl ? miniatyr(CARDS[r.i], r.i) : `<span class="ph ekorn" aria-hidden="true">${EKORN_SVG}</span>`}<span><b>${esc(r.navn)}</b><small>${fugl ? `${CARDS[r.i].bonus ? 'Bonuskort · ' : ''}${esc(RAR[CARDS[r.i].stjerner])}` : 'Med i skjemaet'}</small></span>`;
+    const inn = `${fugl ? miniatyr(CARDS[r.i], r.i) : `<span class="ph ekorn" aria-hidden="true">${EKORN_SVG}</span>`}<span><b>${esc(r.navn)}</b><small>${fugl ? `${CARDS[r.i].bonus ? 'Dyrekort · ' : ''}${esc(RAR[CARDS[r.i].stjerner])}` : 'Med i skjemaet'}</small></span>`;
     return `<li class="${n ? 'har' : ''}" data-k="${r.key}">
       ${fugl ? `<button class="tl-go" data-go="${r.i}" aria-label="Vis kortet for ${esc(r.navn)}">${inn}</button>` : `<div class="tl-go">${inn}</div>`}
       <div class="step sm"><button class="st-btn" data-d="-1" aria-label="En færre ${esc(r.navn)}">−</button><input type="number" inputmode="numeric" min="0" max="9999" enterkeyhint="done" value="${n}" aria-label="Flest samtidig av ${esc(r.navn)}"><button class="st-btn plus" data-d="1" aria-label="En til ${esc(r.navn)}">+</button></div>
@@ -2864,13 +2949,13 @@ sumSheet.addEventListener('click', async e => {
 });
 $('#tSlutt').addEventListener('click', () => openSum(Tell.aktivId()));
 
-/* ---- celebrations: one at a time, in order (new border, new bonus card); they stay until tapped ---- */
+/* ---- celebrations: one at a time, in order (new border, new dyrekort, new title); they stay until tapped ---- */
 const festEl = $('#fest'), bfEl = $('#bfest'), festKo = [];
 let festAapen = false, festPlanlagt = false, festFokus = null, aktivFest = null;
 const planleggFest = () => { if (!festAapen && !festPlanlagt) { festPlanlagt = true; setTimeout(nesteFest, 250); } };
 // ny: set off by a registration now in progress (the counter is held); froEffekt settles its seeds
 function feir(c, niva) { festKo.push({ type: 'niva', c, niva, fro: FRO.niva[niva - 1] || 0, ny: froHold > 0 }); planleggFest(); }
-function feirBonus(c) { festKo.push({ type: 'bonus', c, fro: FRO.bonuskort, ny: froHold > 0 }); planleggFest(); }
+function feirBonus(c) { festKo.push({ type: 'bonus', c, fro: 0 }); planleggFest(); }   // a bought card gives no seeds
 /* seeds that wait for a celebration: the counter does not show them until they have streamed in */
 const froParkert = () => festKo.reduce((a, f) => a + (f.fro || 0), 0) + (aktivFest && aktivFest.fro ? aktivFest.fro : 0);
 /* the pen marks as on the card itself: tick, "× N" and the date of the first sighting */
@@ -2905,7 +2990,6 @@ function visNiva(f) {
   festEl.dataset.type = 'niva';
   festEl.dataset.niva = f.niva;
   festEl.querySelector('.fest-kort').dataset.niva = f.niva;
-  festEl.querySelector('.fest-kort').classList.toggle('bonus', !!f.c.bonus);
   $('#festBilde').src = bildeAv(f.c);
   $('#festMerker').innerHTML = pennMerker(f.c);
   $('#festNavn').textContent = stor(kantNavn(f.niva)) + '!';
@@ -2919,6 +3003,7 @@ function visBonus(f) {
   const c = f.c;
   f.snudd = false;
   $('#bfBilde').src = bildeAv(c);
+  $('#bfBak').src = baksideBilde();
   $('#bfFor').dataset.niva = nivaAv(c) || 'b';
   $('#bfMerker').innerHTML = pennMerker(c);
   $('#bfArt').textContent = c.navn;
@@ -2929,14 +3014,14 @@ function visBonus(f) {
   }).join('');
   vis(bfEl);
   haptic([12, 60, 12]);
-  $('#live').textContent = 'Du har fått en bonus! Trykk for å snu kortet.';
+  $('#live').textContent = 'Nytt dyrekort! Trykk for å snu kortet.';
 }
 function snuBonus() {
   const f = aktivFest; if (!f || f.type !== 'bonus' || f.snudd) return;
   f.snudd = true;
   bfEl.classList.add('snudd');
   haptic([30, 40, 30, 40, 90]);
-  $('#live').textContent = `Bonuskort: ${f.c.navn}. ${$('#bfInfo').textContent}`;
+  $('#live').textContent = `Dyrekort: ${f.c.navn}. ${$('#bfInfo').textContent}`;
 }
 function festTrykk() { const f = aktivFest; if (f && f.type === 'bonus' && !f.snudd) snuBonus(); else lukkFest(); }
 const festElAv = f => (f && f.type === 'bonus' ? bfEl : festEl);
@@ -2966,7 +3051,7 @@ function lukkFest() {
   el.classList.remove('on', 'strommer');
   setTimeout(() => {
     el.hidden = true; el.classList.remove('snudd'); festAapen = false; aktivFest = null;
-    // show the card in the deck: a new bonus card or a card with a new border
+    // show the card in the deck: a new dyrekort or a card with a new border
     if (f && f.c && !openSheet && POS[BY_KEY[f.c.key]] != null) {
       jump(BY_KEY[f.c.key]);
       if (f.type !== 'niva') setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
@@ -2986,24 +3071,23 @@ function lukkFest() {
   });
 });
 
-/* ---- bonus cards: join the deck when earned, and are revealed once ---- */
-const bonusKlar = () => !window.claude || (Store.mode === 'delt' && Vist.mode === 'delt');   // in Claude: wait for the shared lists
+/* ---- dyrekort: join the deck when bought, and are revealed once (also when bought on another device) ---- */
+const bonusKlar = () => !window.claude || (Kjop.mode === 'delt' && Vist.mode === 'delt');   // in Claude: wait for the shared lists
 function sjekkBonus() {
-  const na = apneBonus();
+  const na = apneDyr();
   if (na.size !== APNE.size || [...na].some(k => !APNE.has(k))) {
     APNE = na; froNullstill(); byggStokk(); byggScrub();
-    if (POS[cur] == null) cur = DECK[0];                  // the card left the deck (a registration was undone)
+    if (POS[cur] == null) cur = DECK[0];                  // the card left the deck (the purchase was undone)
     sync({ instant: true }); renderHelp();
     if (openSheet && openSheet.id === 'statsSheet') renderStats();
     if (openSheet === listeSheet) renderListe();
   }
   if (!bonusKlar()) return;
-  Object.keys(Vist.data).forEach(k => { if (!APNE.has(k)) Vist.glem(k); });   // revealed again if earned again
-  BONUS_REKKE.forEach(c => { if (APNE.has(c.key) && !Vist.har(c.key)) { Vist.merk(c.key); feirBonus(c); } });
+  Object.keys(Vist.data).forEach(k => { if (!APNE.has(k)) Vist.glem(k); });   // revealed again if bought again
+  DYR.forEach(c => { if (APNE.has(c.key) && !Vist.har(c.key)) { Vist.merk(c.key); feirBonus(c); } });
 }
-Store.on(sjekkBonus);
+Kjop.on(sjekkBonus);
 Vist.on(sjekkBonus);
-/* a hint that a bonus is near, without saying what */
 /* ---- the picture in full screen: KI, Foto or Tegneserie for this card ----
    A tap on the picture field opens it; the choice is kept for this card. A tap on the picture (or outside)
    goes back to the card. */
@@ -3224,8 +3308,6 @@ dlgEl.addEventListener('click', e => {
   if (!e.target.closest('.dlg-kort')) lukkDlg();
 });
 
-function bonusHint() { const nb = nesteBonus(); return nb && nb.mangler > 0 && nb.mangler <= 2 ? (nb.mangler === 1 ? ' Én registrering til en bonus!' : ' To registreringer til en bonus!') : ''; }
-
 /* ---- the seed counter at the top ---- */
 $('#froIkon').outerHTML = FROIKON;
 let froVist = null, froAnim = 0;
@@ -3240,11 +3322,182 @@ function froTell(mal, ms = 700) {
 }
 function paintFro() {
   const r = froRegnskap(), mal = r.saldo - froParkert();
-  $('#openFro').setAttribute('aria-label', `Solsikkefrø: ${fmtFro(mal)} samlet. Åpne Profil`);
+  $('#openFro').setAttribute('aria-label', `Solsikkefrø: ${fmtFro(mal)} å bruke. Åpne Frøbutikken`);
   if (froHold > 0 || mal === froVist) return;              // seeds on their way: the counter waits for them
   if (froVist != null && mal > froVist) { const b = $('#openFro'); b.classList.remove('pluss'); void b.offsetWidth; b.classList.add('pluss'); }
   froTell(mal);
 }
+
+/* ---- Frøbutikken: dyrekort and multipliers (and card backs, when there are more than the standard one) ---- */
+const butikkSheet = $('#butikkSheet'), butikkBody = $('#butikkBody');
+let butikkVelg = null;                                     // a multiplier waiting for its card: { f }
+function openButikk() { butikkVelg = null; showSheet(butikkSheet); renderButikk(); butikkSheet.scrollTop = 0; setTimeout(() => $('#closeButikk').focus(), 60); }
+$('#openFro').addEventListener('click', openButikk);
+$('#closeButikk').addEventListener('click', () => closeSheets());
+const mmss = ms => { const t = Math.ceil(ms / 1000); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };
+const nesteDag = iso => { const [y, m, d] = iso.split('-').map(Number), t = new Date(y, m - 1, d + 1); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`; };
+function kjopNavn(id) {
+  const m = KJOPID.exec(id) || [], v = Kjop.data[id];
+  if (m[1] === 'dyr') return CARDS[BY_KEY[m[2]]].navn;
+  if (m[1] === 'x') return `×${v ? v.faktor : ''} på ${CARDS[BY_KEY[m[2]]].navn}`;
+  const b = BAKSIDER.find(x => x.id === m[2]); return `Baksiden ${b ? b.navn : m[2]}`;
+}
+let angreUr = null;
+function paintAngre() {
+  const box = $('#butikkAngre');
+  clearInterval(angreUr); angreUr = null;
+  if (!box || openSheet !== butikkSheet) return;
+  const a = Kjop.angrebar();
+  box.hidden = !a;
+  if (!a) { box.innerHTML = ''; return; }
+  box.innerHTML = `<span class="ang-t"><b>Siste kjøp: ${esc(kjopNavn(a.k))}</b><small>${fmtFro(a.v.pris)} frø · kan angres i <span class="ang-tid">${mmss(a.igjen)}</span></small></span>
+    <button class="btn" data-angre="${a.k}" aria-label="Angre kjøpet: ${esc(kjopNavn(a.k))}">Angre</button>`;
+  angreUr = setInterval(() => {
+    const n = Kjop.angrebar();
+    if (!n || n.k !== a.k || openSheet !== butikkSheet || !box.isConnected) { paintAngre(); return; }
+    box.querySelector('.ang-tid').textContent = mmss(n.igjen);
+  }, 1000);
+}
+function renderButikk() {
+  if (butikkVelg) { renderVelg(); return; }
+  const r = froRegnskap();
+  const knapp = (attr, pris, hva) => {
+    const nok = r.saldo >= pris;
+    return `<button class="btn ${nok ? 'pri' : ''} bk-kjop" ${attr} ${nok ? '' : 'disabled'} aria-label="${esc(hva)} for ${fmtFro(pris)} frø${nok ? '' : `. Du mangler ${fmtFro(pris - Math.max(0, r.saldo))}`}">${FROIKON}${fmtFro(pris)}</button>`;
+  };
+  const merket = Object.keys(Kjop.data).filter(k => k.startsWith('x-')).map(k => ({ i: BY_KEY[k.slice(2)], f: Kjop.data[k].faktor }))
+    .sort((a, b) => b.f - a.f || (POS[a.i] ?? 999) - (POS[b.i] ?? 999));
+  butikkBody.innerHTML = `
+    <div class="fro-saldo">${FROIKON}<b>${fmtFro(r.saldo)}</b><span>frø å bruke</span></div>
+    <p class="cap" style="margin:6px 0 0">Titlene regnes av alle frøene du har samlet (${fmtFro(r.tjent)}), så du mister ingen tittel på å handle.</p>
+    <div class="angre" id="butikkAngre" hidden></div>
+    ${NBON ? `<div class="s-sec"><h3>Dyrekort</h3>
+      <ul class="butikk">${DYR.map(c => {
+        const k = !!Kjop.data['dyr-' + c.key];
+        return `<li><span class="bk-kort ${k ? 'kjopt' : ''}" aria-hidden="true"><img src="${esc(baksideBilde())}" alt=""><b>${k ? CHECK : '?'}</b></span>
+          <span class="bk-t"><b>${esc(c.navn)}</b>${k ? '<small>Kjøpt</small>' : ''}</span>
+          ${k ? `<button class="btn" data-go="${BY_KEY[c.key]}" aria-label="Vis ${esc(c.navn)} i kortstokken">Vis</button>` : knapp(`data-dyr="${c.key}"`, dyrPris(c), `Kjøp ${c.navn}`)}</li>`;
+      }).join('')}</ul>
+      <p class="cap">Et dyrekort stokkes inn i kortstokken når du kjøper det.</p>
+    </div>` : ''}
+    <div class="s-sec"><h3>Multiplikatorer</h3>
+      <p class="cap" style="margin:0 0 8px">Sett et merke på et kort. Hver gang du registrerer fuglen etter det, får du så mange ganger frøene for registreringen, og for første gang du ser den. Merket sitter for alltid og kan ikke flyttes.</p>
+      <ul class="butikk">${MULT.map(x => `<li><span class="xdisk x${x.f}" aria-hidden="true">×${x.f}</span>
+        <span class="bk-t"><b>${MULTNAVN[x.f]}</b><small>×${x.f} på ett kort</small></span>${knapp(`data-mult="${x.f}"`, x.pris, `Velg et kort som skal få ×${x.f}`)}</li>`).join('')}</ul>
+      ${merket.length ? `<p class="cap" style="margin:12px 0 8px">På kortene dine</p>
+      <div class="xpaa">${merket.map(x => `<button class="xchip" data-go="${x.i}" aria-label="${esc(CARDS[x.i].navn)}, ×${x.f}. Vis kortet"><span class="xdisk x${x.f}" aria-hidden="true">×${x.f}</span>${esc(CARDS[x.i].navn)}</button>`).join('')}</div>` : ''}
+    </div>
+    ${BAKSIDER.length > 1 ? `<div class="s-sec"><h3>Baksider</h3>
+      <ul class="butikk">${BAKSIDER.map(b => {
+        const har = harBakside(b.id), bruk = baksideValgt() === b.id;
+        return `<li><span class="bk-kort" aria-hidden="true"><img src="${esc(b.bilde)}" alt=""></span>
+          <span class="bk-t"><b>${esc(b.navn)}</b>${bruk ? '<small>I bruk</small>' : har && b.id !== 'standard' ? '<small>Kjøpt</small>' : ''}</span>
+          ${bruk ? '' : har ? `<button class="btn" data-bruk="${b.id}">Bruk</button>` : knapp(`data-bakside="${b.id}"`, +b.pris, `Kjøp baksiden ${b.navn}`)}</li>`;
+      }).join('')}</ul>
+      <p class="cap">Baksiden vises når du snur et kort.</p>
+    </div>` : ''}`;
+  paintAngre();
+}
+/* placing a multiplier: choose the card (every card in the deck without a multiplier) */
+function renderVelg() {
+  const x = MULT.find(m => m.f === butikkVelg.f);
+  butikkBody.innerHTML = `
+    <button class="textbtn" data-tilbake style="padding-left:0">‹ Tilbake til butikken</button>
+    <h3 class="velg-h">Hvilket kort skal få ×${x.f}?</h3>
+    <p class="cap" style="margin:4px 0 12px">${fmtFro(x.pris)} frø. Merket sitter for alltid og kan ikke flyttes. Kort som alt har et merke, er ikke med.</p>
+    <input class="velg-sok" id="velgSok" type="search" placeholder="Søk etter navn eller nummer" autocomplete="off" aria-label="Søk etter kortet">
+    <ul class="butikk" id="velgListe"></ul>`;
+  paintVelg();
+}
+function paintVelg() {
+  const liste = $('#velgListe'); if (!liste) return;
+  const q = ($('#velgSok').value || '').trim().toLowerCase();
+  const kort = DECK.map(i => CARDS[i]).filter(c => !multAv(c.key))
+    .filter(c => !q || c.navn.toLowerCase().includes(q) || c.latin.toLowerCase().includes(q) || (!c.bonus && (c.id.includes(q) || String(c.nr) === q)));
+  liste.innerHTML = kort.length ? kort.map(c => {
+    const i = BY_KEY[c.key], n = Store.days(c.key).length;
+    return `<li><button class="bk-go" data-velg="${c.key}">${miniatyr(c, i)}<span class="bk-t"><b>${esc(c.navn)}</b><small>${c.bonus ? 'Dyrekort' : `Kort ${c.id}`} · ${esc(RAR[c.stjerner])}${n ? ` · ${dagerTekst(n)}` : ''}</small></span></button></li>`;
+  }).join('') : '<li class="empty">Ingen kort passer.</li>';
+}
+function manglerFro(pris) { const r = froRegnskap(); if (r.saldo >= pris) return false; si(`Du mangler ${fmtFro(pris - Math.max(0, r.saldo))} frø.`); return true; }
+function kjopDyr(key) {
+  const c = CARDS[BY_KEY[key]], p = dyrPris(c), id = 'dyr-' + key;
+  if (Kjop.data[id] || manglerFro(p)) return;
+  sporsmal({
+    tittel: `Kjøpe ${c.navn}?`,
+    tekst: `Det koster <b>${fmtFro(p)} frø</b>, og du har ${fmtFro(froRegnskap().saldo)}. Kortet stokkes inn i kortstokken.`,
+    knapper: [{ tekst: `Kjøp for ${fmtFro(p)} frø`, pri: true, fn: () => {
+      froNullstill(); if (Kjop.data[id] || manglerFro(p)) return;
+      closeSheets(true);
+      Kjop.kjop(id, { pris: p, dato: todayISO() });        // the reveal follows (sjekkBonus)
+      haptic([15, 50, 15]);
+    } }, { tekst: 'Avbryt' }],
+  });
+}
+function kjopMult(f, key) {
+  const x = MULT.find(m => m.f === f), c = CARDS[BY_KEY[key]], id = 'x-' + key;
+  if (!x || !c || multAv(key) || manglerFro(x.pris)) return;
+  // registered already today: the multiplier counts from tomorrow, so it cannot be put on after the fact
+  const idag = todayISO(), alt = Store.days(key).includes(idag), fra = alt ? nesteDag(idag) : idag;
+  const hva = c.navn.toLowerCase();
+  sporsmal({
+    tittel: `Sette ×${f} på ${c.navn}?`,
+    tekst: `Det koster <b>${fmtFro(x.pris)} frø</b>. Fra og med ${alt ? 'i morgen' : 'i dag'} gir hver registrering av ${esc(hva)} ${f} ganger så mange frø${alt ? ' (den er alt registrert i dag)' : ''}. Merket sitter for alltid og kan ikke flyttes.`,
+    knapper: [{ tekst: `Sett på ×${f} for ${fmtFro(x.pris)} frø`, pri: true, fn: () => {
+      froNullstill(); if (multAv(key) || manglerFro(x.pris)) return;
+      butikkVelg = null; closeSheets(true);
+      if (POS[BY_KEY[key]] != null) jump(BY_KEY[key]);
+      setTimeout(() => {                                    // stamped on once the card is in view
+        Kjop.kjop(id, { pris: x.pris, dato: fra, faktor: f });
+        haptic([15, 50, 15]); si(`×${f} er satt på ${c.navn}.`);
+      }, 380);
+    } }, { tekst: 'Avbryt' }],
+  });
+}
+function kjopBakside(bid) {
+  const b = BAKSIDER.find(x => x.id === bid), id = 'bakside-' + bid;
+  if (!b || harBakside(bid) || manglerFro(+b.pris)) return;
+  sporsmal({
+    tittel: `Kjøpe baksiden ${b.navn}?`,
+    tekst: `Det koster <b>${fmtFro(+b.pris)} frø</b>. Den brukes på alle kortene med en gang, og du kan bytte tilbake når du vil.`,
+    knapper: [{ tekst: `Kjøp for ${fmtFro(+b.pris)} frø`, pri: true, fn: () => {
+      froNullstill(); if (harBakside(bid) || manglerFro(+b.pris)) return;
+      lsSet(BAKSIDE_KEY(), bid);
+      Kjop.kjop(id, { pris: +b.pris, dato: todayISO() });
+      haptic([15, 50, 15]); si(`Baksiden ${b.navn} er i bruk.`);
+    } }, { tekst: 'Avbryt' }],
+  });
+}
+function malBaksider() {
+  const src = baksideBilde();
+  document.querySelectorAll('.card .back > img').forEach(img => { if (img.getAttribute('src') !== src) img.src = src; });
+}
+function angreKjop(k) {
+  const a = Kjop.angrebar(); if (!a || a.k !== k) { paintAngre(); si('Kjøpet kan ikke angres lenger.'); return; }
+  const navn = kjopNavn(k);
+  Kjop.angre(k);
+  haptic(10);
+  si(`Kjøpet er angret: ${navn}.`);
+}
+butikkSheet.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || !butikkSheet.contains(b)) return;
+  const d = b.dataset;
+  if (d.angre) {
+    const k = d.angre, v = Kjop.data[k], m = KJOPID.exec(k); if (!v || !m) return;
+    sporsmal({ tittel: 'Angre kjøpet?',
+      tekst: `${esc(kjopNavn(k))}: du får ${fmtFro(v.pris)} frø tilbake.${m[1] === 'dyr' ? ' Kortet tas ut av kortstokken igjen.' : m[1] === 'x' ? ' Merket tas av kortet.' : ''}`,
+      knapper: [{ tekst: 'Angre kjøpet', pri: true, fn: () => angreKjop(k) }, { tekst: 'Behold' }] });
+    return;
+  }
+  if (d.go != null) { closeSheets(true); jump(+d.go); return; }
+  if (d.dyr) { kjopDyr(d.dyr); return; }
+  if (d.mult) { butikkVelg = { f: +d.mult }; renderButikk(); butikkSheet.scrollTop = 0; return; }
+  if (b.hasAttribute('data-tilbake')) { butikkVelg = null; renderButikk(); butikkSheet.scrollTop = 0; return; }
+  if (d.velg && butikkVelg) { kjopMult(butikkVelg.f, d.velg); return; }
+  if (d.bakside) { kjopBakside(d.bakside); return; }
+  if (d.bruk && harBakside(d.bruk)) { lsSet(BAKSIDE_KEY(), d.bruk); malBaksider(); renderButikk(); si('Baksiden er byttet.'); }
+});
+butikkSheet.addEventListener('input', e => { if (e.target.id === 'velgSok') paintVelg(); });
 
 /* ---- seeds fly from the card to the counter ----
    While seeds are on their way the counter is held; each flight lets go of it when the last seed lands. */
@@ -3268,12 +3521,11 @@ function froEffekt(c, f0) {
   froNullstill();
   const na = froRegnskap();
   // the celebrations this action set off keep their own seeds (never more than the action gave)
-  let niva = Math.max(0, na.niva - f0.niva), bonus = Math.max(0, na.bonus - f0.bonus);
+  let niva = Math.max(0, na.niva - f0.niva);
   festKo.forEach(f => {
     if (!f.ny) return;
     f.ny = false;
     if (f.type === 'niva') { f.fro = Math.min(f.fro, niva); niva -= f.fro; }
-    else if (f.type === 'bonus') { f.fro = Math.min(f.fro, bonus); bonus -= f.fro; }
   });
   const dt = na.tjent - f0.tjent - (froParkert() - f0.parkert);
   if (dt > 0) froVent.push({ c, belop: dt, mot: 'fro' }); else froSlipp();
@@ -3413,9 +3665,9 @@ function stromSteg(t) {
 /* ---- test: wipe everything, here and in the shared list ---- */
 $('#nullstillAlt').addEventListener('click', () => sporsmal({
   tittel: 'Nullstille alt?',
-  tekst: 'Alle observasjoner, tellinger, frø og bonuskort slettes, også i den delte lista. Det kan ikke angres.',
+  tekst: 'Alle observasjoner, tellinger, frø, kjøp og dyrekort slettes, også i den delte lista. Det kan ikke angres.',
   knapper: [{ tekst: 'Nullstill alt', pri: true, fn: () => {
-    [Store, Tell, Vist].forEach(x => x.replaceAll({}));
+    [Store, Tell, Vist, Kjop].forEach(x => x.replaceAll({}));
     tittelFeiret = 0; lsSet(TITTEL_KEY(), '0');
     froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
     STROM.liste = []; festKo.forEach(f => { f.fro = 0; }); $('#openFro').classList.remove('mottar');
@@ -3446,6 +3698,7 @@ function lukkOverste() {
   if (festAapen) { lukkFest(); return; }
   if (menyApen()) { lukkMeny(true); return; }
   if (openSheet && openSheet.id === 'statsSheet' && artVis) { lukkArt(); return; }
+  if (openSheet === butikkSheet && butikkVelg) { butikkVelg = null; renderButikk(); return; }
   if (openSheet) closeSheets();
 }
 let tilbakeVakt = false, tilbakeEgen = false, tilbakeT = null, synkT = null;
@@ -3473,7 +3726,7 @@ document.querySelectorAll('section.sheet, section.help, #storbilde, #dlg, #fest,
   .forEach(el => lagObs.observe(el, { attributes: true, attributeFilter: ['hidden', 'class'] }));
 
 /* ---- react to data ---- */
-[Store, Vist, Tell].forEach(x => x.on(planleggTittel));
+[Store, Vist, Tell, Kjop].forEach(x => x.on(planleggTittel));
 sjekkTittel();
 let dagNa = todayISO();
 function sjekkNyDag() {
@@ -3490,6 +3743,14 @@ Store.on(() => {
   paintChrome();
   if (openSheet && openSheet.id === 'statsSheet') renderStats();
   if (openSheet && openSheet.id === 'searchSheet') renderSearch();
+});
+
+Kjop.on(() => {
+  pool.forEach(paintCard);                                 // the multiplier on the front
+  paintChrome();                                           // what is left to spend
+  malBaksider();
+  if (openSheet === butikkSheet) renderButikk();
+  if (openSheet && openSheet.id === 'statsSheet') renderStats();
 });
 
 Tell.on(() => {
@@ -3513,6 +3774,7 @@ paintTell();
 Store.connectRemote();
 Tell.connectRemote();
 Vist.connectRemote();
-setTimeout(sjekkBonus, 900);                              // bonus cards earned before this version: revealed now
+Kjop.connectRemote();
+setTimeout(sjekkBonus, 900);                              // dyrekort bought on another device: revealed now
 })();
 </script>
