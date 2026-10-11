@@ -198,33 +198,23 @@ button{cursor:pointer;touch-action:manipulation}
 .frobtn.fylt{animation:frofylt 1s ease-out}
 .frobtn.fram{position:relative;z-index:61;background:var(--surface);box-shadow:0 0 0 2px color-mix(in srgb, var(--gold) 70%, transparent),0 0 26px 6px color-mix(in srgb, var(--gold) 45%, transparent)}
 .frobtn.fram.mottar{background:color-mix(in srgb, var(--gold) 34%, var(--surface))}
-/* "+10 000" just below the counter */
-.froplus{position:fixed;left:0;top:0;z-index:54;pointer-events:none;padding:3px 10px 4px;border-radius:99px;background:var(--gold);color:#1b1402;
-  font-weight:800;font-size:14px;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.01em;
-  box-shadow:0 4px 12px -4px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.35);opacity:0;transform:translateX(-50%);visibility:hidden}
+/* what the seeds were for, just below the counter: one pill per kind, «+400 Registrering 200 × 1★ × 2» (no sum) */
+.froplus{position:fixed;right:10px;top:0;z-index:54;pointer-events:none;display:flex;flex-direction:column;align-items:flex-end;gap:5px;visibility:hidden}
 .froplus.fram{z-index:62}
-.froplus.vis{visibility:visible;animation:froplus-inn .35s cubic-bezier(.2,1.4,.4,1) forwards}
-.froplus.vis.ut{animation:froplus-ut .6s ease-in forwards}
-@keyframes froplus-inn{from{opacity:0;transform:translate(-50%,-6px) scale(.6)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
-@keyframes froplus-ut{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-12px) scale(.9)}}
-/* the sum behind the seeds, under "+1 300": one line per kind, e.g. «Registrering 200 × 3★ × 2 = 1 200» */
-.froregn{position:fixed;right:10px;top:0;z-index:54;pointer-events:none;width:max-content;min-width:190px;max-width:min(290px,calc(100vw - 20px));box-sizing:border-box;
-  padding:7px 12px 8px;border-radius:14px;background:color-mix(in srgb, var(--surface) 95%, transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-  box-shadow:0 12px 28px -12px rgba(0,0,0,.5),0 0 0 1px var(--line);color:var(--ink);font-size:13px;line-height:1.25;font-variant-numeric:tabular-nums;
-  opacity:0;visibility:hidden}
-.froregn.fram{z-index:62}
-.froregn.vis{visibility:visible;animation:froregn-inn .4s ease-out forwards}
-.froregn.vis.ut{animation:froregn-ut .6s ease-in forwards}
-@keyframes froregn-inn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-@keyframes froregn-ut{from{opacity:1}to{opacity:0;transform:translateY(-8px)}}
-.fr-l{display:grid;grid-template-columns:1fr auto;column-gap:14px;align-items:center;padding:4px 0}
-.fr-l + .fr-l{border-top:1px dashed var(--line)}
-.fr-l span{font-weight:600}
-.fr-l em{grid-column:1;font-style:normal;font-size:12px;color:var(--muted)}
-.fr-l em i{font-style:normal;color:var(--card-gold)}
-.fr-l b{grid-column:2;grid-row:1 / span 2;font-weight:700;text-align:right}
-.fr-sum{display:flex;justify-content:space-between;gap:14px;margin-top:3px;padding-top:5px;border-top:2px solid var(--ink);font-weight:800}
-.fr-sum .froikon{width:13px;height:13px;vertical-align:-2px;margin-right:3px}
+.froplus.vis{visibility:visible}
+.fp{display:block;max-width:calc(100vw - 20px);overflow:hidden;text-overflow:ellipsis;padding:4px 11px 5px;border-radius:99px;background:var(--gold);color:#1b1402;
+  font-size:13px;font-weight:600;line-height:1.15;white-space:nowrap;box-shadow:0 4px 12px -4px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.35);
+  animation:fp-inn .35s cubic-bezier(.2,1.4,.4,1) both}
+.fp b{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em;margin-right:3px}
+.fp em{font-style:normal;font-weight:500;opacity:.78;margin-left:2px;font-variant-numeric:tabular-nums}
+.fp em i{font-style:normal}
+.fp-neste{background:var(--surface);color:var(--spruce-ink);font-weight:700;box-shadow:0 4px 12px -4px rgba(0,0,0,.35),0 0 0 1px var(--line);animation-delay:.25s}
+.froplus.ut .fp{animation:fp-ut .55s ease-in forwards}
+@keyframes fp-inn{from{opacity:0;transform:translateY(-6px) scale(.7)}to{opacity:1;transform:none}}
+@keyframes fp-ut{to{opacity:0;transform:translateY(-10px) scale(.92)}}
+/* while «Trykk for neste» shows: the next tap anywhere goes on to the next event, and does nothing else */
+.fest-vent{position:fixed;inset:0;z-index:53;cursor:pointer;background:transparent}
+.fest-vent[hidden]{display:none}
 .fest.strommer .fest-tekst small,.bfest.strommer .bf-t2 small{visibility:hidden}
 .fest.strommer,.bfest.strommer{cursor:default}
 @keyframes frofylt{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--gold) 75%, transparent)}100%{box-shadow:0 0 0 16px color-mix(in srgb, var(--gold) 0%, transparent)}}
@@ -446,7 +436,14 @@ button{cursor:pointer;touch-action:manipulation}
 /* a new title: the icon instead of a card */
 .fest-ikon{display:none;margin:0;opacity:0;transform:scale(.4) rotate(-8deg)}
 .fest-ikon .ti{width:min(60vw, 38vh, 250px);height:min(60vw, 38vh, 250px);box-shadow:0 0 0 5px var(--glod, #f6c64a),0 24px 60px -16px rgba(0,0,0,.7)}
-.fest[data-type="tittel"] .fest-kort{display:none}
+.fest[data-type="tittel"] .fest-kort,.fest[data-type="merke"] .fest-kort{display:none}
+.fest-medalje{display:none;margin:0;opacity:0;transform:scale(.4) rotate(-8deg)}
+.fest[data-type="merke"] .fest-medalje{display:block}
+.fest[data-type="merke"].on .fest-medalje{animation:ikon-inn .9s cubic-bezier(.25,1.45,.45,1) .05s forwards}
+.fm{width:min(52vw, 32vh, 210px);height:min(52vw, 32vh, 210px);border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:min(16vw, 10vh, 66px);
+  letter-spacing:-.03em;color:#3b2a00;background:radial-gradient(circle at 35% 30%, #fff6cf 0, #f7cf5a 38%, #d99a12 100%);
+  box-shadow:0 0 0 6px #fffaf0,0 0 0 12px color-mix(in srgb, var(--gold) 55%, transparent),0 24px 60px -16px rgba(0,0,0,.7)}
+.fm svg{width:46%;height:46%}
 .fest[data-type="tittel"] .fest-ikon{display:block}
 .fest[data-type="tittel"].on .fest-ikon{animation:ikon-inn .9s cubic-bezier(.25,1.45,.45,1) .05s forwards}
 @keyframes ikon-inn{to{opacity:1;transform:none}}
@@ -832,7 +829,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   .float{animation:none}
   .card,.card .inner,.sheet,.scrim,.tick path,.hand{transition-duration:.01s!important}
   .antall.pop,.card.idag .idag-merke.ny,.ring .ti.pop{animation:none}
-  .fest.on .fest-straaler,.fest.on .fest-kort,.fest.on .fest-tekst,.fest.on .fest-kort .mkant,.fest.on .fest-kort .mk-blits{animation:none;opacity:1;transform:none}
+  .fest.on .fest-straaler,.fest.on .fest-kort,.fest.on .fest-ikon,.fest.on .fest-medalje,.fest.on .fest-tekst,.fest.on .fest-kort .mkant,.fest.on .fest-kort .mk-blits{animation:none;opacity:1;transform:none}
   .bfest.on .bf-kort,.bfest .bf-inner,.bfest .bf-bak,.bfest .bf-q,.bfest .bf-lys,.bfest.snudd .bf-stempel{animation:none!important;transform:none;opacity:1}
   .bfest.snudd .bf-inner{transform:rotateY(180deg)}
   .bf-blader,.bf-ring{display:none}
@@ -899,7 +896,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <!-- sunflower seeds flying from a card to the counter -->
 <div class="frolag" id="froLag" aria-hidden="true"></div>
 <canvas class="frostrom" id="froStrom" aria-hidden="true"></canvas>
-<span class="froplus" id="froPluss" aria-hidden="true"></span><div class="froregn" id="froRegn" aria-hidden="true"></div>
+<div class="froplus" id="froPluss" aria-hidden="true"></div><div class="fest-vent" id="festVent" hidden></div>
 
 <section class="sheet search" id="searchSheet" role="dialog" aria-modal="true" aria-label="Søk">
   <div class="qrow">
@@ -1013,7 +1010,8 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <div class="fest-straaler"></div>
   <figure class="fest-kort seen"><img id="festBilde" alt=""><span id="festMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></figure>
   <figure class="fest-ikon" aria-hidden="true"><span class="ti" id="festIkon"></span></figure>
-  <div class="fest-tekst"><b id="festNavn"></b><span id="festArt"></span><small>Trykk for å fortsette</small></div>
+  <figure class="fest-medalje" aria-hidden="true"><span class="fm" id="festMedalje"></span></figure>
+  <div class="fest-tekst"><b id="festNavn"></b><span id="festArt"></span><small id="festHint">Trykk for å gå videre</small></div>
 </div>
 <div class="storbilde" id="storbilde" role="dialog" aria-modal="true" aria-labelledby="sbNavn" tabindex="-1" hidden>
   <div class="sb-navn"><b id="sbNavn"></b><i id="sbLatin"></i></div>
@@ -1396,10 +1394,7 @@ function froTekst(for_) {
   if (dt > 0) ut.push(`+${fmtFro(dt)} frø`);
   return ut.length ? ` ${ut.join(', ')}.` : '';
 }
-const froFor = () => {
-  froNullstill(); const t = nokkeltall();
-  return Object.assign({}, froRegnskap(), { parkert: froParkert(), merkerOk: new Set(merkerListe(t).filter(m => m.v(t) >= m.mal).map(m => m.id)) });
-};
+const froFor = () => { froNullstill(); return Object.assign({}, froRegnskap(), { parkert: froParkert() }); };
 
 /* ================= Hagefugltelling =================
    A count keeps its start and end time, the area, and the highest number of each species seen at the
@@ -1503,7 +1498,7 @@ function opptjent() {
 function nyheter(for_) {
   const na = opptjent(), ut = [];
   CARDS.forEach(c => { const n = na.niva[c.key]; if (erApen(c) && n > for_.niva[c.key]) { ut.push(`${c.navn} fikk ${kantNavn(n)}!`); feir(c, n); } });
-  merkerListe(nokkeltall()).forEach(m => { if (na.merker.has(m.id) && !for_.merker.has(m.id)) ut.push(`Nytt merke: ${m.navn}!`); });
+  merkerListe(nokkeltall()).forEach(m => { if (na.merker.has(m.id) && !for_.merker.has(m.id)) { ut.push(`Nytt merke: ${m.navn}!`); feirMerke(m); } });
   return ut.length ? ' ' + ut.join(' ') : '';
 }
 
@@ -2982,13 +2977,16 @@ sumSheet.addEventListener('click', async e => {
 });
 $('#tSlutt').addEventListener('click', () => openSum(Tell.aktivId()));
 
-/* ---- celebrations: one at a time, in order (new border, new dyrekort, new title); they stay until tapped ---- */
+/* ---- events: one at a time, in order (the seeds of a registration, new border, new badge, new dyrekort, new title).
+   Nothing goes on by itself: each one waits for a tap. A celebration with seeds takes two: the first pours the seeds
+   into the counter, the second goes on. ---- */
 const festEl = $('#fest'), bfEl = $('#bfest'), festKo = [];
 let festAapen = false, festPlanlagt = false, festFokus = null, aktivFest = null;
 const planleggFest = () => { if (!festAapen && !festPlanlagt) { festPlanlagt = true; setTimeout(nesteFest, 250); } };
 // ny: set off by a registration now in progress (the counter is held); froEffekt settles its seeds
 function feir(c, niva) { festKo.push({ type: 'niva', c, niva, fro: FRO.niva[niva - 1] || 0, ny: froHold > 0 }); planleggFest(); }
 function feirBonus(c) { festKo.push({ type: 'bonus', c, fro: 0 }); planleggFest(); }   // a bought card gives no seeds
+function feirMerke(m) { festKo.push({ type: 'merke', m, fro: merkeFro(m), ny: froHold > 0 }); planleggFest(); }
 /* seeds that wait for a celebration: the counter does not show them until they have streamed in */
 const froParkert = () => festKo.reduce((a, f) => a + (f.fro || 0), 0) + (aktivFest && aktivFest.fro ? aktivFest.fro : 0);
 /* the pen marks as on the card itself: tick, "× N" and the date of the first sighting */
@@ -3005,9 +3003,12 @@ function nesteFest() {
   if (festAapen) return;
   const vent = froFlyTil - Date.now();
   if (vent > 0 && festKo.length) { festPlanlagt = true; setTimeout(nesteFest, vent + 120); return; }
-  const f = festKo.shift(); if (!f) return;
+  if (!festKo.length) return;
+  if (froVent.length) return;                               // the seeds of the registration first: their pills lead on (ferdigPluss)
+  if (pillVent) { visNeste(); return; }                     // the seeds of the registration are showing: on with a tap
+  const f = festKo.shift();
   festAapen = true; festFokus = document.activeElement; aktivFest = f;
-  if (f.type === 'bonus') visBonus(f); else if (f.type === 'tittel') visTittel(f); else visNiva(f);
+  if (f.type === 'bonus') visBonus(f); else if (f.type === 'tittel') visTittel(f); else if (f.type === 'merke') visMerke(f); else visNiva(f);
 }
 function visTittel(f) {
   const t = TITLER[f.k];
@@ -3015,6 +3016,7 @@ function visTittel(f) {
   $('#festIkon').setAttribute('style', tittelPos(f.k));
   $('#festNavn').textContent = `${t.navn}!`;
   $('#festArt').textContent = `Ny tittel · ${f.k + 1} av ${TITLER.length}`;
+  $('#festHint').textContent = 'Trykk for å gå videre';
   vis(festEl);
   haptic([18, 70, 28, 70, 40]);
   $('#live').textContent = `Ny tittel: ${t.navn}.`;
@@ -3027,9 +3029,21 @@ function visNiva(f) {
   $('#festMerker').innerHTML = pennMerker(f.c);
   $('#festNavn').textContent = stor(kantNavn(f.niva)) + '!';
   $('#festArt').textContent = `${f.c.navn} · ${dagerTekst(Store.days(f.c.key).length)}`;
+  $('#festHint').textContent = f.fro ? 'Trykk for å samle frøene' : 'Trykk for å gå videre';
   vis(festEl);
   haptic([18, 70, 28, 70, 40]);
   $('#live').textContent = `${f.c.navn} fikk ${kantNavn(f.niva)}.`;
+}
+function visMerke(f) {
+  const m = f.m;
+  festEl.dataset.type = 'merke'; festEl.dataset.niva = '2';
+  $('#festMedalje').innerHTML = m.ikon;
+  $('#festNavn').textContent = `${m.navn}!`;
+  $('#festArt').textContent = `Nytt merke · ${m.tekst}${f.fro ? ` · ${fmtFro(f.fro)} frø` : ''}`;
+  $('#festHint').textContent = f.fro ? 'Trykk for å samle frøene' : 'Trykk for å gå videre';
+  vis(festEl);
+  haptic([18, 70, 28, 70, 40]);
+  $('#live').textContent = `Nytt merke: ${m.navn}. ${m.tekst}.${f.fro ? ` ${fmtFro(f.fro)} frø.` : ''}`;
 }
 const BLADFARGER = ['#6fb35a', '#3f8f4e', '#9ccc65', '#e98a2d', '#f2c14e', '#a9461a'];
 function visBonus(f) {
@@ -3068,19 +3082,21 @@ function lukkFest() {
   if (belop) {
     f.strommet = true;
     froFrys(); f.fro = 0;                                   // the seeds leave the celebration
-    const linjer = f.type === 'niva' ? [{ t: stor(kantNavn(f.niva)), r: f.c ? esc(f.c.navn) : '', v: belop }] : [];
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) { froSlipp(); visPluss(belop, linjer); ferdigPluss(); }
+    const linjer = f.type === 'niva' ? [{ t: stor(kantNavn(f.niva)), r: f.c ? esc(f.c.navn) : '', v: belop }]
+      : f.type === 'merke' ? [{ t: `Merke: ${f.m.navn}`, v: belop }] : [];
+    const samlet = () => { f.strommer = false; el.classList.remove('strommer'); if (el === festEl) $('#festHint').textContent = 'Trykk for å gå videre'; };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) { froSlipp(); visPluss(belop, linjer); ferdigPluss(); samlet(); }
     else {
       f.strommer = true; el.classList.add('strommer');
-      const kort = el.querySelector(f.type === 'tittel' ? '.fest-ikon' : '.fest-kort, .bf-kort'), bank = $('#openFro');
+      const kort = el.querySelector(f.type === 'tittel' ? '.fest-ikon' : f.type === 'merke' ? '.fest-medalje' : '.fest-kort, .bf-kort'), bank = $('#openFro');
       bank.classList.add('fram');
       haptic(10);
       froStrom(kort.getBoundingClientRect(), bank, belop, linjer, () => {
         froSlipp();
-        setTimeout(() => { bank.classList.remove('fram'); f.strommer = false; lukkFest(); }, 450);
+        setTimeout(() => { bank.classList.remove('fram'); samlet(); }, 450);
       });
-      return;
     }
+    return;                                                 // stays until the next tap
   }
   el.classList.remove('on', 'strommer');
   setTimeout(() => {
@@ -3091,8 +3107,8 @@ function lukkFest() {
       if (f.type !== 'niva') setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
     }
     if (f && f.type === 'tittel') { const ri = $('#ringIkon'); ri.classList.remove('pop'); void ri.offsetWidth; ri.classList.add('pop'); }
-    // the next celebration waits a moment, so the card can be seen in the deck first
-    if (festKo.length) { festPlanlagt = true; setTimeout(nesteFest, 1400); } else if (festFokus && festFokus.focus && !openSheet) festFokus.focus();
+    // this tap was the step on: the next event comes straight away
+    if (festKo.length) nesteFest(); else if (festFokus && festFokus.focus && !openSheet) festFokus.focus();
     froVentKjor(560);
   }, 350);
 }
@@ -3550,12 +3566,12 @@ function froKilde(c) {
   }
   return midt($('#stage'));
 }
-/* the sum behind the seeds of one action, one line per kind. One bird on one day shows the factors:
-   «200 × 3★ × 2» (registration × stars for rarity × the multiplier on the card). Border levels that wait for their
-   celebration are not in it (they come with the celebration). Returns [] if the lines do not add up to the amount. */
-function regnestykke(c, d, f0, na, dt) {
+/* what the seeds of one action were for, one line per kind. One bird on one day shows the factors:
+   «200 × 3★ × 2» (registration × stars for rarity × the multiplier on the card). Borders and badges that wait for
+   their own celebration are not in it. Returns [] if the lines do not add up to the amount. */
+function regnestykke(c, d, f0, na, dt, holdt) {
   const L = [], dReg = na.reg - f0.reg, dF = na.forste - f0.forste, dM = na.mult - f0.mult, dD = na.dag - f0.dag;
-  const dN = (na.niva - f0.niva) - (froParkert() - f0.parkert);
+  const dN = (na.niva - f0.niva) - holdt.niva, dB = (na.merker - f0.merker) - holdt.merker;
   const s = c ? c.stjerner : 0, x = c && multAv(c.key), xf = x && d && d >= x.dato ? x.faktor : 1;
   const en = !!(c && d && dReg === FRO.registrering * s);          // one bird, one day
   const inn = en && dM === (xf - 1) * (dReg + dF);                // the multiplier belongs to these lines
@@ -3569,8 +3585,7 @@ function regnestykke(c, d, f0, na, dt) {
     const del = b ? ['Sølv', 'Gull', 'Holo'].filter((x, k) => b >> k & 1) : [];
     L.push({ t: !del.length ? 'Glinskant' : del.length === 1 ? `${del[0]}kant` : `${del.slice(0, -1).map((x, k) => (k ? x.toLowerCase() : x) + '-').join(', ')} og ${del[del.length - 1].toLowerCase()}kant`, v: dN });
   }
-  const t = nokkeltall();
-  merkerListe(t).forEach(m => { if (m.v(t) >= m.mal && f0.merkerOk && !f0.merkerOk.has(m.id)) L.push({ t: `Merke: ${m.navn}`, v: merkeFro(m) }); });
+  if (dB > 0) L.push({ t: 'Merker', v: dB });
   return L.reduce((a, l) => a + l.v, 0) === dt ? L : [];
 }
 /* after a registration: the seeds it gave fly to the counter */
@@ -3578,14 +3593,16 @@ function froEffekt(c, f0, d) {
   froNullstill();
   const na = froRegnskap();
   // the celebrations this action set off keep their own seeds (never more than the action gave)
-  let niva = Math.max(0, na.niva - f0.niva);
+  let niva = Math.max(0, na.niva - f0.niva), merk = Math.max(0, na.merker - f0.merker);
+  const holdt = { niva: 0, merker: 0 };                     // what waits for the celebrations
   festKo.forEach(f => {
     if (!f.ny) return;
     f.ny = false;
-    if (f.type === 'niva') { f.fro = Math.min(f.fro, niva); niva -= f.fro; }
+    if (f.type === 'niva') { f.fro = Math.min(f.fro, niva); niva -= f.fro; holdt.niva += f.fro; }
+    else if (f.type === 'merke') { f.fro = Math.min(f.fro, merk); merk -= f.fro; holdt.merker += f.fro; }
   });
   const dt = na.tjent - f0.tjent - (froParkert() - f0.parkert);
-  if (dt > 0) froVent.push({ c, belop: dt, mot: 'fro', linjer: regnestykke(c, d, f0, na, dt) }); else froSlipp();
+  if (dt > 0) froVent.push({ c, belop: dt, mot: 'fro', hendelse: true, linjer: regnestykke(c, d, f0, na, dt, holdt) }); else froSlipp();
   froVentKjor(60);
 }
 /* flights wait while a sheet, a question or a celebration covers the screen */
@@ -3596,12 +3613,12 @@ function froVentKjor(forsink = 0) {
     const rolig = matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden;
     froVent.splice(0).forEach(v => {
       const fra = v.fra ? v.fra() : froKilde(v.c);
-      if (rolig) { froSlipp(); visPluss(v.belop, v.linjer); ferdigPluss(); }
-      else froFly(fra, $('#openFro'), v.belop, froSlipp, v.linjer);
+      if (rolig) { froSlipp(); visPluss(v.belop, v.linjer, v.hendelse); ferdigPluss(); }
+      else froFly(fra, $('#openFro'), v.belop, froSlipp, v.linjer, v.hendelse);
     });
   }, forsink);
 }
-function froFly(fra, tilEl, belop, ferdig, linjer) {
+function froFly(fra, tilEl, belop, ferdig, linjer, hendelse) {
   const lag = $('#froLag'), til = midt(tilEl), n = Math.max(4, Math.min(14, Math.round(Math.log10(Math.max(belop, 1)) * 3)));
   const tilFro = tilEl.id === 'openFro';
   let landet = 0;
@@ -3628,46 +3645,58 @@ function froFly(fra, tilEl, belop, ferdig, linjer) {
     a.onfinish = () => {
       froAktive.delete(a); s.remove(); landet++;
       tilEl.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.13)' }, { transform: 'scale(1)' }], { duration: 200, easing: 'ease-out' });
-      if (landet === 1 && tilFro) { haptic(8); froTell((froVist || 0) + belop, Math.max(350, siste - varighet)); visPluss(belop, linjer); }
+      if (landet === 1 && tilFro) { haptic(8); froTell((froVist || 0) + belop, Math.max(350, siste - varighet)); visPluss(belop, linjer, hendelse); }
       if (landet === n) { if (tilFro) { haptic(12); ferdigPluss(); } if (ferdig) ferdig(); }
     };
   }
 }
-/* ---- "+10 000" just below the counter: what this event gave ----
-   Flights landing at the same time add up; it goes a moment after the last seed has landed. */
-const plussEl = $('#froPluss'), regnEl = $('#froRegn');
-let plussSum = 0, plussAktive = 0, plussT = 0, plussLinjer = [];
-function visPluss(belop, linjer) {
+/* ---- what the seeds were for, just below the counter: one pill per kind, no sum ----
+   The pills of a registration are an event of their own: while they show, the next event (a border, a badge, a
+   title) waits for a tap («Trykk for neste»). With nothing waiting, they go by themselves after a few seconds. */
+const plussEl = $('#froPluss'), festVentEl = $('#festVent');
+let plussAktive = 0, plussT = 0, pillVent = false;
+function visPluss(belop, linjer, hendelse) {
   const r = $('#openFro').getBoundingClientRect();
-  plussEl.style.left = `${Math.round(r.left + r.width / 2)}px`; plussEl.style.top = `${Math.round(r.bottom + 7)}px`;
-  const synlig = plussEl.classList.contains('vis') && !plussEl.classList.contains('ut');
-  plussSum = (synlig ? plussSum : 0) + belop; plussAktive++;
-  plussLinjer = (synlig ? plussLinjer : []).concat(linjer && linjer.length ? linjer : [{ t: 'Frø', v: belop }]);
-  plussEl.textContent = `+${fmtFro(plussSum)}`;
-  const fram = $('#openFro').classList.contains('fram');      // over a celebration only while the counter is
-  plussEl.classList.toggle('fram', fram);
+  plussEl.style.top = `${Math.round(r.bottom + 7)}px`; plussEl.style.right = `${Math.max(8, Math.round(innerWidth - r.right))}px`;
+  if (!plussEl.classList.contains('vis') || plussEl.classList.contains('ut')) { plussEl.innerHTML = ''; plussEl.classList.remove('ut'); plussEl.classList.add('vis'); }
+  if (hendelse) pillVent = true;
+  plussAktive++;
   clearTimeout(plussT);
-  if (!synlig) { plussEl.classList.remove('vis', 'ut'); void plussEl.offsetWidth; plussEl.classList.add('vis'); }
-  // the sum, when there is more to it than one number
-  const vis = plussLinjer.length > 1 || plussLinjer.some(l => l.r);
-  if (vis) {
-    regnEl.innerHTML = plussLinjer.map(l => `<div class="fr-l"><span>${esc(l.t)}</span>${l.r ? `<em>${l.r}</em>` : ''}<b>${fmtFro(l.v)}</b></div>`).join('')
-      + `<div class="fr-sum"><span>Sum</span><span>${FROIKON}${fmtFro(plussSum)}</span></div>`;
-    regnEl.style.top = `${Math.round(r.bottom + 40)}px`;
-    regnEl.classList.toggle('fram', fram);
-    if (!regnEl.classList.contains('vis') || regnEl.classList.contains('ut')) { regnEl.classList.remove('vis', 'ut'); void regnEl.offsetWidth; regnEl.classList.add('vis'); }
-  }
+  plussEl.classList.toggle('fram', $('#openFro').classList.contains('fram'));   // over a celebration only while the counter is
+  const foran = plussEl.querySelector('.fp-neste');
+  (linjer && linjer.length ? linjer : [{ v: belop }]).forEach((l, k) => {
+    const p = document.createElement('span');
+    p.className = 'fp'; p.style.animationDelay = `${k * 140}ms`;
+    p.innerHTML = `<b>+${fmtFro(l.v)}</b>${l.t ? esc(l.t) : 'frø'}${l.r ? ` <em>${l.r}</em>` : ''}`;
+    plussEl.insertBefore(p, foran);
+  });
 }
 function ferdigPluss() {
   plussAktive = Math.max(0, plussAktive - 1); if (plussAktive) return;
+  if (pillVent && festKo.length) { visNeste(); return; }   // something waits: on with a tap
   clearTimeout(plussT);
-  // longer when there is a sum to read
-  const lese = regnEl.classList.contains('vis') ? Math.min(4500, 2200 + 450 * plussLinjer.length) : 1500;
-  plussT = setTimeout(() => {
-    plussEl.classList.add('ut'); regnEl.classList.add('ut');
-    plussT = setTimeout(() => { plussEl.classList.remove('vis', 'ut'); regnEl.classList.remove('vis', 'ut'); plussSum = 0; plussLinjer = []; }, 650);
-  }, lese);
+  plussT = setTimeout(skjulPluss, Math.min(5200, 2400 + 700 * plussEl.querySelectorAll('.fp').length));
 }
+function skjulPluss() {
+  clearTimeout(plussT);
+  pillVent = false; festVentEl.hidden = true;
+  if (!plussEl.classList.contains('vis')) return;
+  plussEl.classList.add('ut');
+  plussT = setTimeout(() => { plussEl.classList.remove('vis', 'ut'); plussEl.innerHTML = ''; }, 560);
+}
+/* «Trykk for neste»: the pills stay, and the next tap anywhere opens the next event */
+function visNeste() {
+  if (plussAktive) return;                                  // still landing: ferdigPluss comes back here
+  clearTimeout(plussT);
+  if (!plussEl.querySelector('.fp-neste')) { const n = document.createElement('span'); n.className = 'fp fp-neste'; n.textContent = 'Trykk for neste ›'; plussEl.appendChild(n); }
+  festVentEl.hidden = false;
+  $('#live').textContent = 'Trykk for neste.';
+}
+function videre() { if (festVentEl.hidden) return; skjulPluss(); nesteFest(); }
+festVentEl.addEventListener('click', videre);
+document.addEventListener('keydown', e => {
+  if (!festVentEl.hidden && (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape')) { e.preventDefault(); e.stopPropagation(); videre(); }
+}, true);
 /* ---- the big stream after a celebration: many seeds pour from the card into the counter ----
    Drawn on one canvas so a hundred seeds stay smooth on a phone. */
 const stromAntall = b => Math.max(30, Math.min(120, Math.round(18 * Math.log2(b / 500 + 1))));
@@ -3744,7 +3773,7 @@ $('#nullstillAlt').addEventListener('click', () => sporsmal({
     tittelFeiret = 0; lsSet(TITTEL_KEY(), '0');
     froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
     STROM.liste = []; festKo.forEach(f => { f.fro = 0; }); $('#openFro').classList.remove('mottar');
-    clearTimeout(plussT); plussAktive = 0; plussSum = 0; plussLinjer = []; plussEl.classList.remove('vis', 'ut'); regnEl.classList.remove('vis', 'ut');
+    clearTimeout(plussT); plussAktive = 0; pillVent = false; festVentEl.hidden = true; plussEl.classList.remove('vis', 'ut'); plussEl.innerHTML = '';
     froVent.length = 0; froHold = 0; froFlyTil = 0; froVist = null; paintFro(); closeSheets(true); jump(DECK[0], 'instant');
     si('Alt er nullstilt.');
   } }, { tekst: 'Avbryt' }],
@@ -3764,9 +3793,10 @@ function si(msg) { const l = $('#live'); l.textContent = ''; setTimeout(() => { 
    While something lies over the deck (a picture in full screen, a sheet, the menu, a question, a celebration),
    there is one extra entry in the history. Back takes it away and closes the top layer, the same as Esc; if
    more is still open, a new entry is added. Closing with a button or a tap removes the entry again. */
-const antallLag = () => (dlgApen ? 1 : 0) + (sbEl.hidden ? 0 : 1) + (festAapen ? 1 : 0) + (menyApen() ? 1 : 0) + (openSheet ? 1 : 0);
+const antallLag = () => (dlgApen ? 1 : 0) + (sbEl.hidden ? 0 : 1) + (festAapen ? 1 : 0) + (menyApen() ? 1 : 0) + (openSheet ? 1 : 0) + (festVentEl.hidden ? 0 : 1);
 function lukkOverste() {
   if (dlgApen) { lukkDlg(); return; }
+  if (!festVentEl.hidden) { videre(); return; }
   if (!sbEl.hidden) { lukkStorbilde(); return; }
   if (festAapen) { lukkFest(); return; }
   if (menyApen()) { lukkMeny(true); return; }
@@ -3795,7 +3825,7 @@ addEventListener('popstate', () => {
   setTimeout(synkTilbake, 450);                             // still open (e.g. seeds streaming): one more entry
 });
 const lagObs = new MutationObserver(planleggSynk);
-document.querySelectorAll('section.sheet, section.help, #storbilde, #dlg, #fest, #bfest, #meny')
+document.querySelectorAll('section.sheet, section.help, #storbilde, #dlg, #fest, #bfest, #meny, #festVent')
   .forEach(el => lagObs.observe(el, { attributes: true, attributeFilter: ['hidden', 'class'] }));
 
 /* ---- react to data ---- */
