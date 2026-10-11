@@ -108,7 +108,7 @@ Prisene står i `DYRPRIS` i `src/app.html`; et nytt dyr fra Fuglekort-builder f�
 - Før det er kjøpt, vises dyret ingen steder: ikke i kortstokken, scrubberen, søket, samlingen, «Sist sett», glinskortene, telleliste (ekorn står der som en vanlig rad, siden det er med i skjemaet) eller under **Om kortene**. `#b03` i adressen virker først når kortet er kjøpt. Kortet «Bildekreditering bonuskort» (b00) kommer under **?** når alle er kjøpt (navnet står på kortbildet fra Fuglekort-builder).
 - **Når et dyrekort er kjøpt**, lukkes butikken, og et kort med baksiden opp faller inn på skjermen og vugger, med et lysende spørsmålstegn. Trykk, så snur det seg: blader virvler ut, et stempel sier DYREKORT, og det står hvilke kort det er stokket inn blant. Trykk igjen, så viser kortstokken hvor det havnet, og kortet lyser opp. Avsløringen vises én gang (i Claude lagres det i samlingen `bonusvist`); et dyrekort kjøpt på en annen enhet avsløres neste gang appen åpnes.
 - Kortet stokkes inn blant fuglekortene med like mange stjerner, et sted mellom to av dem. Plassen er fast (regnes ut fra artsnavnet), så den er lik hver gang og på alle enheter. Ekorn (★★) havner blant kortene 018–032, rådyr (★★★) blant 033–048, og hare, elg og rødrev (★★★★) blant 049–068.
-- Dyrekortene har **bronsekant** fra de er kjøpt; sølv, gull og holo erstatter den når kortet når de nivåene. Overskriften viser «Dyrekort» uten nummer, og samlingen viser dyrekortene med bronsekant og «Dyr» på dem som ikke er sett. Fargestripa ved navnet er den fra Fuglekort-builder.
+- Dyrekortene følger samme stige som fuglene (bronse, sølv, gull og holo) fra første registrering; et kjøpt kort som ikke er sett, har vanlig kant. Overskriften viser «Dyrekort» uten nummer, og samlingen viser «Dyr» på dem som ikke er sett. Fargestripa ved navnet er den fra Fuglekort-builder.
 - Angres kjøpet (innen to minutter), forsvinner kortet igjen og avsløres på nytt hvis det kjøpes igjen.
 - Dyrekortene får observasjonsdager, frø og glinskant som fuglene, men teller ikke med i fuglelista: ringen, «av 100 fugler sett», sjeldenhetsstolpene og merkene gjelder bare fuglene.
 - De har KI-illustrasjoner og fotografier som fuglene: KI-kortene i `docs/cards/`, kortene med fotografi i `docs/cards-foto/` (med `bildeFoto`, `fotograf` og `lisens` i `cards.json`). Med fotografier står fotografen og lisensen også nederst på baksiden av kortet.
@@ -119,7 +119,7 @@ Prisene står i `DYRPRIS` i `src/app.html`; et nytt dyr fra Fuglekort-builder f�
 Frøene tjenes ved å registrere fugler og samles i to tall: **frø samlet** (alt du har tjent) gir titlene, og **å bruke** (frø samlet minus det du har kjøpt for) er det du handler for i Frøbutikken. Å handle trekker aldri fra titlene. Alle tallene står samlet i `FRO` øverst i frødelen av `src/app.html`.
 
 - **Alle fuglekortene er åpne** fra start, med bilde og tekst, så kortstokken kan brukes som oppslagsverk.
-- **Tjene frø:** Premien vektes mot daglige observasjoner: registrering (én observasjonsdag for en fugl) 200 × stjerner, hver dag med minst én fugl registrert 300 (én gang per dag), første gang man ser en art 400 × stjerner, sølv-/gull-/holokant 2 000 / 5 000 / 15 000, og merkene: 10 arter 2 500, 25 arter 5 000, 50 arter 15 000, hele kortstokken 50 000, sju på rad 5 000, hver 5. observasjonsdag 2 500, fire årstider 10 000, Tellekorps 7 500, Flokk 7 500. Et kort med multiplikator gir mer (se under). Frøene flyr fra SETT-ruta på kortet opp til frøtallet, som teller opp mens de lander. Frøene toner fram mens de forlater kortet, så de ikke ser ut til å ligge på det før de flyr.
+- **Tjene frø:** Premien vektes mot daglige observasjoner: registrering (én observasjonsdag for en fugl) 200 × stjerner, hver dag med minst én fugl registrert 300 (én gang per dag), første gang man ser en art 400 × stjerner, bronse-/sølv-/gull-/holokant 1 000 / 2 000 / 5 000 / 15 000, og merkene: 10 arter 2 500, 25 arter 5 000, 50 arter 15 000, hele kortstokken 50 000, sju på rad 5 000, hver 5. observasjonsdag 2 500, fire årstider 10 000, Tellekorps 7 500, Flokk 7 500. Et kort med multiplikator gir mer (se under). Frøene flyr fra SETT-ruta på kortet opp til frøtallet, som teller opp mens de lander. Frøene toner fram mens de forlater kortet, så de ikke ser ut til å ligge på det før de flyr.
 - **Hva frøene var for:** Når frøene lander, kommer ett gult merke per post rett under frøtallet, uten sum (totalen ser du i frøtallet): «+800 Registrering 200 × 4★», «+1 600 Første gang 400 × 4★», «+300 Ny dag med fugler». Med multiplikator: «+400 Registrering 200 × 1★ × 2» (grunnpoeng × stjerner for sjeldenhet × multiplikatoren på kortet). Kanter som ikke får egen feiring, står som «Sølv- og gullkant»; etter en telling står postene samlet («Registreringer», «Multiplikator»).
 - **Hendelser, én om gangen:** Etter en registrering kommer hendelsene i denne rekkefølgen: frøene for registreringen, ny kant, nye merker (hvert merke er en egen hendelse), ny tittel. Ingenting går videre av seg selv. Venter det en hendelse, blir frømerkene stående med «Trykk for neste ›», og det neste trykket hvor som helst (eller Enter, mellomrom, Esc eller tilbake-knappen) åpner den; det trykket gjør ingenting annet, så du kan ikke registrere en fugl ved et uhell. Venter det ingenting, forsvinner frømerkene av seg selv etter noen sekunder.
 - **En feiring med frø** (kant eller merke) tar to trykk: «Trykk for å samle frøene» lar frøtallet lyse opp over feiringen, og en stor strøm av frø (30–120 frø, flere jo større beløp) renner inn i det mens tallet teller opp, med et frømerke som «+5 000 Gullkant Kjøttmeis» eller «+2 500 Merke: 5 dager». Så står det «Trykk for å gå videre», og neste trykk lukker feiringen og åpner neste hendelse med en gang. Frøene for kanter og merker vises ikke i frøtallet før de har strømmet inn. Strømmen tegnes på én canvas.
@@ -137,21 +137,23 @@ Mens appen testes, tas ikke gamle data vare på. `TESTMERKE` i `src/app.html`: n
 
 ## Glinskort og merker
 
-Kanten på et kort blir sølv, gull eller holo når du har sett fuglen mange dager. Jo sjeldnere fugl, jo færre dager trengs:
+Alle kortene går gjennom fire kanter: bronse, sølv, gull og til slutt holo, etter hvert som du ser fuglen flere dager (én registrering er én dag). Antall dager dobles fra nivå til nivå, og én stjerne mindre dobler veien til holo; fem stjerner går ett nivå om dagen (`GRENSER` i `src/app.html`):
 
-| Sjeldenhet | Sølv | Gull | Holo |
-|---|---|---|---|
-| ★ | 10 | 25 | 50 |
-| ★★ | 5 | 15 | 30 |
-| ★★★ | 3 | 8 | 15 |
-| ★★★★ | 1 | 3 | 6 |
-| ★★★★★ | Holo med én gang | | |
+| Sjeldenhet | Bronse | Sølv | Gull | Holo |
+|---|---|---|---|---|
+| ★ | 8 | 16 | 32 | 64 |
+| ★★ | 4 | 8 | 16 | 32 |
+| ★★★ | 2 | 4 | 8 | 16 |
+| ★★★★ | 1 | 2 | 4 | 8 |
+| ★★★★★ | 1 | 2 | 3 | 4 |
 
-- Bare den trykte kanten (den hvite kanten og den gule dobbeltstreken ytterst) byttes ut med **sølv**, **gull** eller **holo** (regnbue). Resten av kortet er uendret. En lysstripe glir sakte langs kanten av seg selv, følger fingeren når du drar i kortet og musa på datamaskin.
+Kantene gir 1 000 / 2 000 / 5 000 / 15 000 frø. (Fram til oktober 2026 var det tre nivåer, sølv, gull og holo, ved f.eks. 10 / 25 / 50 dager for ★ og holo med én gang for ★★★★★, og bronse bare for dyrekortene. Nivåene regnes ut på nytt fra dagene, så kortene fikk den nye kanten med en gang, uten feiring. Titlene kommer omtrent like fort som før, så tittelgrensene er ikke endret.)
+
+- Bare den trykte kanten (den hvite kanten og den gule dobbeltstreken ytterst) byttes ut med **bronse**, **sølv**, **gull** eller **holo** (regnbue). Resten av kortet er uendret. En lysstripe glir sakte langs kanten av seg selv, følger fingeren når du drar i kortet og musa på datamaskin.
 - **Vipping:** Under Innstillinger kan du la lyset følge telefonen når du vipper den. På Android er det på fra start; på iPhone må du slå det på, og telefonen spør om lov til å bruke bevegelsessensoren.
 - **Merker:** 10, 25 og 50 arter, hele kortstokken, sju dager på rad, et merke for hver 5. observasjonsdag (5, 10, 15 … uten slutt; fanen Merker viser dem du har og det neste), fire årstider (vår, sommer, høst og vinter), Tellekorps (en hagefugltelling på minst én time) og Flokk (minst 20 av én art i en telling).
 - Nivåer og merker regnes ut fra observasjonene og tellingene hver gang, så de lagres ikke for seg. Sletter du dager, kan et kort miste kanten igjen.
-- Når et kort får sølv-, gull- eller holokant, kommer kortet fram over alt annet med lysstråler bak, den nye kanten lyser opp, og nivået står med store bokstaver. Første trykk strømmer frøene for kanten fra kortet inn i frøtallet, det andre går videre, og kortet vises i kortstokken. Får flere kort nytt nivå samtidig, for eksempel etter en telling, vises de etter hverandre.
+- Når et kort får bronse-, sølv-, gull- eller holokant, kommer kortet fram over alt annet med lysstråler bak, den nye kanten lyser opp, og nivået står med store bokstaver. Første trykk strømmer frøene for kanten fra kortet inn i frøtallet, det andre går videre, og kortet vises i kortstokken. Får flere kort nytt nivå samtidig, for eksempel etter en telling, vises de etter hverandre.
 - Et nytt merke er en egen hendelse: medaljen kommer stort fram (gull, med tallet eller ikonet fra fanen Merker) med lysstråler bak, navnet («5 dager!»), hva det gjelder og hvor mange frø det gir. Første trykk strømmer frøene fra medaljen inn i frøtallet, det andre går videre. Får du flere merker samtidig, kommer de etter hverandre. Statistikken viser antall glinskort, hvilke kort som er nærmest neste nivå, og alle merkene med fremdrift. I samlingen har glinskortene sølv-, gull- eller holokant. Dyrekortene har bronsekant til de får et høyere nivå.
 - Baksiden av et kort viser nivået og hvor mange dager som mangler til neste.
 

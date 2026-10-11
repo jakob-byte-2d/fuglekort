@@ -130,9 +130,10 @@ button{cursor:pointer;touch-action:manipulation}
 .lniva{display:flex;align-items:center;gap:2cqw;margin-top:.6cqw}
 .nchip{font-style:normal;font-weight:700;font-size:3.3cqw;line-height:1.2;padding:.5cqw 2.2cqw;border-radius:99px;color:#1c2a22;letter-spacing:.02em;
   box-shadow:inset 0 0 0 .25cqw rgba(20,35,29,.12)}
-.n1{background:linear-gradient(115deg,#dfe5ea,#ffffff 45%,#c9d2d8)}
-.n2{background:linear-gradient(115deg,#f3c95f,#fff3c4 45%,#e5ad2c)}
-.n3{background:linear-gradient(115deg,#ffb3b3,#fff1a8 20%,#b8ffb0 40%,#a8f3ff 60%,#c3b5ff 80%,#ffb3e6)}
+.n1{background:linear-gradient(115deg,#d9965c,#f8d6b2 45%,#b97a45)}
+.n2{background:linear-gradient(115deg,#dfe5ea,#ffffff 45%,#c9d2d8)}
+.n3{background:linear-gradient(115deg,#f3c95f,#fff3c4 45%,#e5ad2c)}
+.n4{background:linear-gradient(115deg,#ffb3b3,#fff1a8 20%,#b8ffb0 40%,#a8f3ff 60%,#c3b5ff 80%,#ffb3e6)}
 .llist{list-style:none;margin:0;padding:.5cqw 2.5cqw .5cqw 5cqw;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
 .llist li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:3.4cqw;min-height:12.5cqw;border-bottom:.3cqw dashed #dcd8c2}
 .llist li:last-child{border-bottom:0}
@@ -148,7 +149,7 @@ button{cursor:pointer;touch-action:manipulation}
 .ladd:focus-within{outline:2px solid var(--pen);outline-offset:2px}
 
 
-/* ---------- glinskort: the printed border turns Sølv (1), Gull (2) or Holo (3) ----------
+/* ---------- glinskort: the printed border turns Bronse (1), Sølv (2), Gull (3) and at last Holo (4) ----------
    A metal band over the card's white edge and gold double line (about 3.75 % of the width); the rest of the
    card is untouched. A streak of light moves along it: by itself, or following the finger, the mouse or the
    tilt of the phone (--mx/--my, 0–100 %). */
@@ -161,16 +162,16 @@ button{cursor:pointer;touch-action:manipulation}
 .mkant i{position:absolute;inset:0;border-radius:inherit;display:block}
 .mkant::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 .35cqw rgba(0,0,0,.18)}
 .mkant::before{content:"";position:absolute;inset:3.75cqw;border-radius:1.4cqw;box-shadow:0 0 0 .3cqw rgba(0,0,0,.15)}
-[data-niva="1"] .mk-metall{background:linear-gradient(135deg,#7f878d 0%,#eef1f3 16%,#a7afb5 30%,#fbfcfd 46%,#949ca2 60%,#e3e7ea 78%,#7a8288 100%)}
-[data-niva="2"] .mk-metall{background:linear-gradient(135deg,#7d4f06 0%,#f7d97d 16%,#b67f1a 30%,#fff3c2 46%,#a36c0e 60%,#f2cb58 78%,#6f4605 100%)}
-[data-niva="b"] .mk-metall{background:linear-gradient(135deg,#5a2d0f 0%,#e2a36e 16%,#9a5829 30%,#f8d0a8 46%,#87491f 60%,#d99459 78%,#4d260b 100%)}
-[data-niva="3"] .mk-metall{background:linear-gradient(115deg,#ff7b7b,#ffd76b,#8dff8a,#72e5ff,#8b87ff,#ff86d8,#ff7b7b,#ffd76b,#8dff8a,#72e5ff);
+[data-niva="1"] .mk-metall{background:linear-gradient(135deg,#5a2d0f 0%,#e2a36e 16%,#9a5829 30%,#f8d0a8 46%,#87491f 60%,#d99459 78%,#4d260b 100%)}
+[data-niva="2"] .mk-metall{background:linear-gradient(135deg,#7f878d 0%,#eef1f3 16%,#a7afb5 30%,#fbfcfd 46%,#949ca2 60%,#e3e7ea 78%,#7a8288 100%)}
+[data-niva="3"] .mk-metall{background:linear-gradient(135deg,#7d4f06 0%,#f7d97d 16%,#b67f1a 30%,#fff3c2 46%,#a36c0e 60%,#f2cb58 78%,#6f4605 100%)}
+[data-niva="4"] .mk-metall{background:linear-gradient(115deg,#ff7b7b,#ffd76b,#8dff8a,#72e5ff,#8b87ff,#ff86d8,#ff7b7b,#ffd76b,#8dff8a,#72e5ff);
   background-size:300% 300%;background-position:var(--mx) var(--my)}
-[data-niva="3"] .mk-metall::after{content:"";position:absolute;inset:0;border-radius:inherit;
+[data-niva="4"] .mk-metall::after{content:"";position:absolute;inset:0;border-radius:inherit;
   background:linear-gradient(135deg,rgba(255,255,255,.35),rgba(255,255,255,0) 40%,rgba(255,255,255,.3) 70%,rgba(255,255,255,0));mix-blend-mode:soft-light}
 .mk-lys{background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.95) 50%,transparent 62%);background-size:300% 300%;
   background-position:var(--mx) var(--my);mix-blend-mode:overlay}
-[data-niva="3"] .mk-lys{mix-blend-mode:soft-light}
+[data-niva="4"] .mk-lys{mix-blend-mode:soft-light}
 /* the light drifts slowly back and forth when nothing steers it */
 @keyframes drift{0%{--mx:0%;--my:20%}50%{--mx:60%;--my:70%}100%{--mx:100%;--my:40%}}
 .card.is-top[data-niva]:not(.styrt) .mkant{animation:drift 7s ease-in-out infinite alternate}
@@ -414,7 +415,7 @@ button{cursor:pointer;touch-action:manipulation}
 .bf-art{font-size:20px;font-weight:700}
 .bf-info{font-size:14px;opacity:.85}
 
-/* ---------- the celebration when a card gets sølv-, gull- or holokant ----------
+/* ---------- the celebration when a card gets bronse-, sølv-, gull- or holokant ----------
    The card comes forward over everything, light rays turn behind it, the new border lights up and the
    level is named. Tap to close; it closes by itself after a few seconds. */
 .fest{position:fixed;inset:0;z-index:55;display:grid;place-items:center;align-content:center;gap:18px;padding:24px 16px;
@@ -422,14 +423,15 @@ button{cursor:pointer;touch-action:manipulation}
   --glod:#e9eef1;--straale:rgba(235,242,246,.22)}
 .fest.on{opacity:1;visibility:visible;transition:opacity .35s}
 .fest[hidden]{display:none}
-.fest[data-niva="2"]{--glod:#f6c64a;--straale:rgba(255,205,90,.26)}
-.fest[data-niva="3"]{--glod:#b9a4ff;--straale:rgba(190,170,255,.26)}
+.fest[data-niva="1"]{--glod:#e2a36e;--straale:rgba(226,163,110,.24)}
+.fest[data-niva="3"]{--glod:#f6c64a;--straale:rgba(255,205,90,.26)}
+.fest[data-niva="4"]{--glod:#b9a4ff;--straale:rgba(190,170,255,.26)}
 .fest-straaler{position:absolute;left:50%;top:50%;width:170vmax;height:170vmax;margin:-85vmax 0 0 -85vmax;pointer-events:none;
   background:repeating-conic-gradient(from 0deg, transparent 0deg 7deg, var(--straale) 7deg 14deg);
   -webkit-mask-image:radial-gradient(circle, #000 0, rgba(0,0,0,.6) 22%, transparent 48%);mask-image:radial-gradient(circle, #000 0, rgba(0,0,0,.6) 22%, transparent 48%);
   transform:scale(.4);opacity:0}
 .fest.on .fest-straaler{animation:straaler-inn .9s cubic-bezier(.2,.8,.2,1) forwards, snurr 24s linear infinite}
-.fest[data-niva="3"].on .fest-straaler{animation:straaler-inn .9s cubic-bezier(.2,.8,.2,1) forwards, snurr 24s linear infinite, regnbue 4s linear infinite}
+.fest[data-niva="4"].on .fest-straaler{animation:straaler-inn .9s cubic-bezier(.2,.8,.2,1) forwards, snurr 24s linear infinite, regnbue 4s linear infinite}
 @keyframes straaler-inn{to{opacity:1;transform:scale(1)}}
 @keyframes snurr{from{rotate:0deg}to{rotate:360deg}}
 @keyframes regnbue{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}
@@ -462,9 +464,10 @@ button{cursor:pointer;touch-action:manipulation}
 @keyframes tekst-inn{to{opacity:1;transform:none}}
 .fest-tekst b{font-size:clamp(30px, 9vw, 44px);font-weight:800;letter-spacing:-.01em;line-height:1;padding:8px 22px 10px;border-radius:999px;color:#1c2a22;
   box-shadow:0 10px 30px -10px rgba(0,0,0,.6), inset 0 0 0 2px rgba(255,255,255,.35)}
-.fest[data-niva="1"] .fest-tekst b{background:linear-gradient(135deg,#8b9399,#f4f7f9 30%,#aeb6bc 55%,#ffffff 75%,#8b9399)}
-.fest[data-niva="2"] .fest-tekst b{background:linear-gradient(135deg,#8a5a0a,#f9dc86 30%,#c08a1f 55%,#fff4c6 75%,#7d4f06)}
-.fest[data-niva="3"] .fest-tekst b{background:linear-gradient(115deg,#ffa0a0,#ffe38a,#aaffa8,#96ecff,#b0a8ff,#ffa6e3)}
+.fest[data-niva="1"] .fest-tekst b{background:linear-gradient(135deg,#7b4119,#e9b07c 30%,#a9642f 55%,#f8d6b2 75%,#6f3a15)}
+.fest[data-niva="2"] .fest-tekst b{background:linear-gradient(135deg,#8b9399,#f4f7f9 30%,#aeb6bc 55%,#ffffff 75%,#8b9399)}
+.fest[data-niva="3"] .fest-tekst b{background:linear-gradient(135deg,#8a5a0a,#f9dc86 30%,#c08a1f 55%,#fff4c6 75%,#7d4f06)}
+.fest[data-niva="4"] .fest-tekst b{background:linear-gradient(115deg,#ffa0a0,#ffe38a,#aaffa8,#96ecff,#b0a8ff,#ffa6e3)}
 .fest-tekst span{font-size:15px;opacity:.9}
 .fest-tekst small{font-size:13px;opacity:.8;margin-top:6px}
 
@@ -672,9 +675,9 @@ button{cursor:pointer;touch-action:manipulation}
 a.btn{text-decoration:none;color:inherit;display:inline-block}
 /* glinskort and merker in the stats */
 .h3n{float:right;letter-spacing:.02em;text-transform:none;font-weight:600}
-.nivaer{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.nv{border-radius:14px;padding:12px 14px;color:#1c2a22;box-shadow:inset 0 0 0 1px rgba(20,35,29,.1)}
-.nv b{display:block;font-size:26px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.nivaer{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.nv{border-radius:14px;padding:11px 10px;color:#1c2a22;box-shadow:inset 0 0 0 1px rgba(20,35,29,.1)}
+.nv b{display:block;font-size:24px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
 .nv span{font-size:13px;font-weight:600;margin-top:4px;display:block}
 .stats .nchip{font-size:11.5px;padding:2px 8px}
 .nx{font-size:12.5px;color:var(--muted);text-align:right;display:grid;justify-items:end;gap:3px}
@@ -745,12 +748,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .mbar i{display:block;height:100%;background:var(--gold)}
 .merke small.mfro{display:flex;align-items:center;gap:3px;font-weight:600;color:var(--ink)}
 .merke small.mv{font-size:11px;font-variant-numeric:tabular-nums}
-.alb.g1::before,.alb.g2::before{content:"";position:absolute;inset:-3px;border-radius:7px;background:linear-gradient(135deg,#7f878d,#eef1f3 30%,#a7afb5 50%,#fbfcfd 70%,#7a8288)}
-.alb.g2::before{background:linear-gradient(135deg,#7d4f06,#f7d97d 30%,#b67f1a 50%,#fff3c2 70%,#6f4605)}
-.alb.g3::before{content:"";position:absolute;inset:-3px;border-radius:7px;background:linear-gradient(135deg,#ff8a8a,#ffe066,#8dff85,#7ee8ff,#9b8cff,#ff8ad8)}
-.alb.gb::before{content:"";position:absolute;inset:-3px;border-radius:7px;padding:3px;background:linear-gradient(135deg,#5a2d0f,#e2a36e 30%,#9a5829 50%,#f8d0a8 70%,#4d260b);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
-.alb.bn .th::after{content:"";position:absolute;left:4.93%;top:3.81%;width:6%;height:11.85%;border-radius:1px 0 0 1px;background:linear-gradient(90deg,#8a4d22,#e0a672 50%,#8a4d22)}
+.alb.g1::before,.alb.g2::before,.alb.g3::before,.alb.g4::before{content:"";position:absolute;inset:-3px;border-radius:7px}
+.alb.g1::before{background:linear-gradient(135deg,#5a2d0f,#e2a36e 30%,#9a5829 50%,#f8d0a8 70%,#4d260b)}
+.alb.g2::before{background:linear-gradient(135deg,#7f878d,#eef1f3 30%,#a7afb5 50%,#fbfcfd 70%,#7a8288)}
+.alb.g3::before{background:linear-gradient(135deg,#7d4f06,#f7d97d 30%,#b67f1a 50%,#fff3c2 70%,#6f4605)}
+.alb.g4::before{background:linear-gradient(135deg,#ff8a8a,#ffe066,#8dff85,#7ee8ff,#9b8cff,#ff8ad8)}
 
 .restore textarea{width:100%;min-height:90px;border-radius:10px;border:1px solid var(--line);background:var(--bg-hi);padding:10px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
 /* counting sheets: start, list of species, summary */
@@ -1036,7 +1038,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <div class="bf-kort">
     <div class="bf-inner">
       <div class="bf-side bf-bak"><img id="bfBak" src="cards/bakside.webp" alt=""><b class="bf-q" aria-hidden="true">?</b></div>
-      <div class="bf-side bf-for seen" id="bfFor" data-niva="b"><img id="bfBilde" alt=""><span id="bfMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></div>
+      <div class="bf-side bf-for seen" id="bfFor"><img id="bfBilde" alt=""><span id="bfMerker"></span><span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span></div>
     </div>
   </div>
   <div class="bf-tekst">
@@ -1355,7 +1357,7 @@ const FRO = {
   registrering: 200,                         // × stars, per observation day of the bird
   forsteGang: 400,                           // × stars, the first time a species is seen
   daglig: 300,                               // once for each day with at least one bird registered
-  niva: [2000, 5000, 15000],                 // sølv-, gull-, holokant
+  niva: [1000, 2000, 5000, 15000],           // bronse-, sølv-, gull-, holokant
   merker: { a10: 2500, a25: 5000, a50: 15000, aalle: 50000, rekke: 5000, arstider: 10000, tellekorps: 7500, flokk: 7500 },
   dagMerke: 2500,                            // each «N dager» badge: one for every 5 observation days
   angreTid: 120000,                          // the newest purchase can be undone for 2 minutes
@@ -1444,9 +1446,11 @@ Tell.on(froNullstill);
 /* ================= Glinskort og merker =================
    Worked out from the sightings and counts every time, so they follow the data on every device.
    A card gets shinier the more days the bird has been seen; rarer birds need fewer days. */
-const NIVA = ['', 'Sølv', 'Gull', 'Holo'];
-const kantNavn = n => `${NIVA[n].toLowerCase()}kant`;     // "sølvkant", "gullkant", "holokant"
-const GRENSER = { 1: [10, 25, 50], 2: [5, 15, 30], 3: [3, 8, 15], 4: [1, 3, 6], 5: [1, 1, 1] };
+const NIVA = ['', 'Bronse', 'Sølv', 'Gull', 'Holo'];
+const kantNavn = n => `${NIVA[n].toLowerCase()}kant`;     // "bronsekant", "sølvkant", "gullkant", "holokant"
+/* registrations (days seen) for bronse, sølv, gull and holo: every card goes through all four, doubling each time;
+   one star fewer doubles the way (★ 64 days to holo … ★★★★ 8); ★★★★★ goes one level a day (holo on the 4th day) */
+const GRENSER = { 1: [8, 16, 32, 64], 2: [4, 8, 16, 32], 3: [2, 4, 8, 16], 4: [1, 2, 4, 8], 5: [1, 2, 3, 4] };
 const grenser = c => GRENSER[c.stjerner] || GRENSER[1];
 const nivaAv = c => { const n = Store.days(c.key).length; return grenser(c).filter(x => n >= x).length; };
 function nesteNiva(c) {
@@ -1594,7 +1598,7 @@ function paintCard(el) {
   inp.value = s ? s.date : ''; inp.max = t;
   // glinskort level; a flash when it goes up while the card is on screen
   const niva = nivaAv(c);
-  if (niva) el.dataset.niva = niva; else if (c.bonus) el.dataset.niva = 'b'; else delete el.dataset.niva;
+  if (niva) el.dataset.niva = niva; else delete el.dataset.niva;
   if (el._niva != null && niva > el._niva) { el.classList.remove('glinsny'); void el.offsetWidth; el.classList.add('glinsny'); clearTimeout(el._glT); el._glT = setTimeout(() => el.classList.remove('glinsny'), 1400); }
   el._niva = niva;
   const tall = el.querySelector('.tall'), n = Tell.antall(c.key), f = +tall.dataset.n || 0;
@@ -2580,7 +2584,7 @@ $('#closeStats').addEventListener('click', () => closeSheets());
 const miniatyr = (c, i, kl = '') => `<span class="ph ${kl}" style="background-position:${spritePos(i)}" aria-hidden="true"></span>`;
 function albumKort(c, i) {
   const nv = nivaAv(c), nd = Store.days(c.key).length, iDag = nd && Store.days(c.key).includes(todayISO());
-  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : c.bonus ? 'gb' : ''} ${c.bonus ? 'bn' : ''}" data-i="${i}" aria-label="${c.bonus ? 'Dyrekort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : c.bonus ? ', bronsekant' : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Dyr' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}</span></button>`;
+  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${c.bonus ? 'Dyrekort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Dyr' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}</span></button>`;
 }
 function merkeHtml(m, nt) {
   const v = m.v(nt), ok = v >= m.mal;
@@ -2608,7 +2612,7 @@ function renderStats() {
   const cardOf = key => BY_KEY[key];
   const aktivT = Tell.aktiv(), ferdigeT = Tell.ferdige();
   const nt = nokkeltall(), dagM = dagMerker(nt), merkerOk = merkerListe(nt).filter(m => m.v(nt) >= m.mal).length;
-  const perNiva = [0, 0, 0, 0]; CARDS.filter(c => erApen(c)).forEach(c => perNiva[nivaAv(c)]++);
+  const perNiva = [0, 0, 0, 0, 0]; CARDS.filter(c => erApen(c)).forEach(c => perNiva[nivaAv(c)]++);
   const naermest = CARDS.map((c, i) => ({ c, i, n: erApen(c) && Store.has(c.key) && nesteNiva(c) })).filter(x => x.n).sort((a, b) => a.n.mangler - b.n.mangler || b.c.stjerner - a.c.stjerner).slice(0, 3);
   const obsDager = new Set(ids.flatMap(id => Store.data[id].dager)).size;
   const regs = ids.reduce((a, id) => a + Store.data[id].dager.length, 0);
@@ -2653,12 +2657,12 @@ function renderStats() {
     </div>
 
     <div class="s-sec"><h3>Glinskort</h3>
-      <div class="nivaer">${[1, 2, 3].map(k => `<div class="nv n${k}"><b>${perNiva[k]}</b><span>${NIVA[k]}</span></div>`).join('')}</div>
+      <div class="nivaer">${[1, 2, 3, 4].map(k => `<div class="nv n${k}"><b>${perNiva[k]}</b><span>${NIVA[k]}</span></div>`).join('')}</div>
       ${naermest.length ? `<p class="cap" style="margin:14px 0 6px">Nærmest neste nivå</p><ul class="recent">${naermest.map(x => `<li><button data-i="${x.i}"><span class="ph" style="background-position:${spritePos(x.i)}" aria-hidden="true"></span><span><b style="font-weight:600">${esc(x.c.navn)}</b><br><span style="font-size:12.5px;color:var(--muted)">${dagerTekst(Store.days(x.c.key).length)}</span></span><span class="nx">${x.n.mangler} ${x.n.mangler === 1 ? 'dag' : 'dager'} til <em class="nchip n${x.n.niva}">${NIVA[x.n.niva]}</em></span></button></li>`).join('')}</ul>` : ''}
       <details class="grenser"><summary>Hvor mange dager trengs?</summary>
-        <p class="cap" style="margin:8px 0 10px">Kortet får sølv-, gull- eller holokant når du har sett fuglen mange dager. Jo sjeldnere fugl, jo færre dager trengs.</p>
-        <table><thead><tr><th></th>${[1, 2, 3].map(k => `<th><em class="nchip n${k}">${NIVA[k]}</em></th>`).join('')}</tr></thead>
-        <tbody>${[1, 2, 3, 4, 5].map(r => `<tr><td>${stars(r)}</td>${r === 5 ? '<td colspan="3">Holo med én gang</td>' : GRENSER[r].map(x => `<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table>
+        <p class="cap" style="margin:8px 0 10px">Alle kortene får bronse-, sølv-, gull- og til slutt holokant etter hvert som du ser fuglen flere dager. Jo sjeldnere fugl, jo færre dager trengs.</p>
+        <table><thead><tr><th></th>${[1, 2, 3, 4].map(k => `<th><em class="nchip n${k}">${NIVA[k]}</em></th>`).join('')}</tr></thead>
+        <tbody>${[1, 2, 3, 4, 5].map(r => `<tr><td>${stars(r)}</td>${GRENSER[r].map(x => `<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table>
       </details>
     </div>
 
@@ -3012,7 +3016,7 @@ function nesteFest() {
 }
 function visTittel(f) {
   const t = TITLER[f.k];
-  festEl.dataset.type = 'tittel'; festEl.dataset.niva = '2';
+  festEl.dataset.type = 'tittel'; festEl.dataset.niva = '3';
   $('#festIkon').setAttribute('style', tittelPos(f.k));
   $('#festNavn').textContent = `${t.navn}!`;
   $('#festArt').textContent = `Ny tittel · ${f.k + 1} av ${TITLER.length}`;
@@ -3036,7 +3040,7 @@ function visNiva(f) {
 }
 function visMerke(f) {
   const m = f.m;
-  festEl.dataset.type = 'merke'; festEl.dataset.niva = '2';
+  festEl.dataset.type = 'merke'; festEl.dataset.niva = '3';
   $('#festMedalje').innerHTML = m.ikon;
   $('#festNavn').textContent = `${m.navn}!`;
   $('#festArt').textContent = `Nytt merke · ${m.tekst}${f.fro ? ` · ${fmtFro(f.fro)} frø` : ''}`;
@@ -3051,7 +3055,7 @@ function visBonus(f) {
   f.snudd = false;
   $('#bfBilde').src = bildeAv(c);
   $('#bfBak').src = baksideBilde();
-  $('#bfFor').dataset.niva = nivaAv(c) || 'b';
+  const bnv = nivaAv(c); if (bnv) $('#bfFor').dataset.niva = bnv; else delete $('#bfFor').dataset.niva;
   $('#bfMerker').innerHTML = pennMerker(c);
   $('#bfArt').textContent = c.navn;
   $('#bfInfo').textContent = `Stokket inn blant kortene med ${c.stjerner} ${c.stjerner === 1 ? 'stjerne' : 'stjerner'}.`;
@@ -3581,8 +3585,8 @@ function regnestykke(c, d, f0, na, dt, holdt) {
   if (dM > 0 && !inn) L.push({ t: 'Multiplikator', v: dM });
   if (dD > 0) L.push({ t: dD === FRO.daglig ? 'Ny dag med fugler' : 'Nye dager med fugler', v: dD });
   if (dN > 0) {                                                    // e.g. silver and gold at once, holo waiting for its celebration
-    const b = [1, 2, 3, 4, 5, 6, 7].find(b => [0, 1, 2].reduce((a, k) => a + (b >> k & 1 ? FRO.niva[k] : 0), 0) === dN);
-    const del = b ? ['Sølv', 'Gull', 'Holo'].filter((x, k) => b >> k & 1) : [];
+    const b = Array.from({ length: 15 }, (_, k) => k + 1).find(b => FRO.niva.reduce((a, v, k) => a + (b >> k & 1 ? v : 0), 0) === dN);
+    const del = b ? NIVA.slice(1).filter((x, k) => b >> k & 1) : [];
     L.push({ t: !del.length ? 'Glinskant' : del.length === 1 ? `${del[0]}kant` : `${del.slice(0, -1).map((x, k) => (k ? x.toLowerCase() : x) + '-').join(', ')} og ${del[del.length - 1].toLowerCase()}kant`, v: dN });
   }
   if (dB > 0) L.push({ t: 'Merker', v: dB });
