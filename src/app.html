@@ -268,6 +268,65 @@ button{cursor:pointer;touch-action:manipulation}
   border:3px solid #fffdf6;background:radial-gradient(circle at 32% 26%,#fff6cf 0,#f9d45e 34%,#eaa922 68%,#c07d0a 100%);box-shadow:0 2px 3px rgba(35,22,0,.35),0 5px 10px -4px rgba(35,22,0,.3);transform:rotate(-10deg)}
 .xdisk.x10{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5);background:conic-gradient(from 20deg,#ff8a8a,#ffd24d,#7fe07a,#6fd8f0,#9b8cff,#ff8ad8,#ff8a8a)}
 .bk-go[disabled]{cursor:default}
+/* Frøbutikken: the balance and the tabs stay at the top; each tab fits on one phone screen */
+.bk-saldo{display:flex;align-items:baseline;gap:8px;margin-top:4px}
+.bk-saldo .froikon{width:24px;height:24px;align-self:center}
+.bk-saldo b{font-size:30px;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.bk-saldo span{font-size:14px;color:var(--muted)}
+.bk-tit{margin:4px 0 0;font-size:12.5px;color:var(--muted)}
+#butikkTopp .angre{margin:10px 0 0}
+#butikkBody{padding-top:26px}  /* the sticky top overlaps the first 14px */
+#butikkBody > :first-child{margin-top:0}
+.faner button[hidden],.faner[hidden]{display:none}
+#butikkFaner button{font-size:13.5px;padding-inline:4px}
+.fane-n{display:inline-grid;place-items:center;min-width:17px;height:17px;padding:0 4px;box-sizing:border-box;margin-left:4px;border-radius:9px;
+  background:var(--gold);color:#1b1402;font-size:10.5px;font-weight:800;line-height:1;vertical-align:1px;font-variant-numeric:tabular-nums}
+.bk-cap{margin:12px 0 0}
+.bk-rute{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.bk-flis{width:100%;height:100%;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--line);border-radius:12px;
+  background:var(--surface);color:inherit;font:inherit;text-align:left;min-height:52px}
+.bk-flis .bk-kort{width:24px;border-radius:3px}
+.bk-flis .bk-kort b{font-size:13px}
+.bk-flis .ph{width:34px;height:34px;border-radius:8px;flex-shrink:0}
+.bk-flis .bk-t{gap:2px}
+.bk-flis .bk-t b{font-size:13.5px;line-height:1.15;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
+.bk-flis small{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bk-flis small .stars{font-size:10px;color:var(--gold)}
+.bk-flis .bk-p,.bk-flis .bk-ok{display:inline-flex;align-items:center;gap:3px}
+.bk-flis .froikon{width:12px;height:12px}
+.bk-flis .bk-ok svg{width:12px;height:12px}
+.bk-flis.nok{border-color:color-mix(in srgb, var(--ok) 55%, var(--line));background:color-mix(in srgb, var(--ok) 6%, var(--surface))}
+.bk-flis.nok .bk-p{color:var(--ok);font-weight:700}
+.bk-flis.kjopt .bk-ok{color:var(--ok);font-weight:600}
+.bk-mult{list-style:none;margin:16px -4px 0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
+.bk-mflis{width:100%;display:grid;justify-items:center;gap:7px;padding:4px 0 6px;border:0;border-radius:12px;background:none;color:inherit;font:inherit}
+.bk-mflis .xdisk{width:52px;height:52px;font-size:17px;position:relative}
+.bk-mflis.kjopt .xdisk,.bk-mflis.nok .xdisk{opacity:1}
+.bk-mflis:not(.nok):not(.kjopt) .xdisk{opacity:.5;filter:saturate(.5)}
+.bk-mflis small{display:block;max-width:100%;font-size:11px;font-weight:700;color:var(--muted);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.bk-mflis.nok small{color:var(--ok)}
+.bk-mflis.kjopt small{color:var(--ink);font-weight:600}
+.bk-hake{position:absolute;right:-5px;bottom:-5px;width:20px;height:20px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 2px var(--surface)}
+.bk-hake svg{width:12px;height:12px}
+.bk-mer{margin-top:6px;font-size:13px}
+.bk-mer summary{cursor:pointer;color:var(--spruce-ink);font-weight:600;padding:4px 0}
+.bk-mer .cap{margin:6px 0 0}
+.bak-grid.bak5{grid-template-columns:repeat(5,1fr);gap:14px 8px;margin-top:14px}
+.bak5 li{gap:4px}
+.bak5 .bak-bilde{border-radius:5px}
+.bak5 small{display:flex;align-items:center;gap:3px;font-size:11.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.bak5 small .froikon{width:11px;height:11px}
+.bak5 small.nok{color:var(--ok)}
+.bak5 small.bruk{color:var(--ok)}
+.bak5 small.har{color:var(--ink);font-weight:600}
+@media (max-height:760px){
+  .bk-tit{display:none}
+  .bk-saldo b{font-size:26px}
+  .bk-rute{gap:5px}
+  #butikkBody{padding-top:22px}
+  .bk-flis{min-height:46px;padding:4px 8px}
+}
 .velg-h{margin:8px 0 0;font-size:17px}
 .bak-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px 10px}
 .bak-grid li{display:grid;justify-items:center;gap:6px;text-align:center}
@@ -969,11 +1028,19 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 </section>
 
 <section class="sheet stats" id="butikkSheet" role="dialog" aria-modal="true" aria-labelledby="butikkTitle">
-  <div class="s-head">
-    <h2 id="butikkTitle">Frøbutikken</h2>
-    <button class="textbtn" id="closeButikk">Lukk</button>
+  <div class="s-topp">
+    <div class="s-head">
+      <h2 id="butikkTitle">Frøbutikken</h2>
+      <button class="textbtn" id="closeButikk">Lukk</button>
+    </div>
+    <div id="butikkTopp"></div>
+    <div class="faner" id="butikkFaner" role="tablist" aria-labelledby="butikkTitle">
+      <button role="tab" id="bfane-dyr" data-bfane="dyr" aria-controls="butikkBody">Dyrekort</button>
+      <button role="tab" id="bfane-mult" data-bfane="mult" aria-controls="butikkBody">Multiplikatorer</button>
+      <button role="tab" id="bfane-bak" data-bfane="bak" aria-controls="butikkBody">Baksider</button>
+    </div>
   </div>
-  <div id="butikkBody"></div>
+  <div id="butikkBody" role="tabpanel" tabindex="-1"></div>
 </section>
 
 <section class="sheet stats" id="startSheet" role="dialog" aria-modal="true" aria-labelledby="startTitle">
@@ -1289,7 +1356,7 @@ const DYRPRIS = { 1: 8000, 2: 12000, 3: 19000, 4: 32000, 5: 48000 };
 const dyrPris = c => DYRPRIS[c.stjerner] || DYRPRIS[4];
 const DYR = BONUS.slice().sort((a, b) => a.stjerner - b.stjerner || (a.id < b.id ? -1 : 1));
 // multipliers: one of each, exponentially dearer (about ×3 for each step)
-const MULT = [{ f: 2, pris: 5000 }, { f: 3, pris: 15000 }, { f: 4, pris: 42000 }, { f: 5, pris: 125000 }, { f: 10, pris: 375000 }];
+const MULT = [{ f: 2, pris: 15000 }, { f: 3, pris: 45000 }, { f: 4, pris: 126000 }, { f: 5, pris: 375000 }, { f: 10, pris: 1125000 }];
 const XFRI = 5;                     // registrations with the multiplier before it can be moved for free
 const MULTNAVN = { 2: 'Dobbelt frø', 3: 'Tre ganger frø', 4: 'Fire ganger frø', 5: 'Fem ganger frø', 10: 'Ti ganger frø' };
 /* card backs: the deck's own back is free. More can be added in data/baksider.json (see README); the shelf in the
@@ -2821,7 +2888,7 @@ function renderStats() {
     ${NBON ? `<div class="s-sec"><h3>Dyrekort <span class="h3n">${APNE.size} av ${NBON}</span></h3>
       ${APNE.size ? `<div class="album">${DYR.filter(erApen).map(c => albumKort(c, BY_KEY[c.key])).join('')}</div>` : ''}
       <p class="cap">${APNE.size ? 'Dyrekortene er stokket inn blant kortene med like mange stjerner. De får glinskant som fuglene, men teller ikke med i fuglelista eller merkene.' : 'Andre dyr enn fugler kjøper du for solsikkefrø i Frøbutikken. De stokkes inn i kortstokken.'}</p>
-      ${APNE.size < NBON ? '<div class="row"><button class="btn" data-butikk>Til Frøbutikken</button></div>' : ''}
+      ${APNE.size < NBON ? '<div class="row"><button class="btn" data-butikk="dyr">Til Frøbutikken</button></div>' : ''}
     </div>` : ''}`,
     merker: () => `
     <div class="s-sec"><h3>Merker <span class="h3n">${merkerOk} oppnådd</span></h3>
@@ -2846,7 +2913,7 @@ sb.addEventListener('change', e => {
 });
 sb.addEventListener('keydown', e => { if (e.target.id === 'profilNavn' && e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
 sb.addEventListener('click', async e => {
-  if (e.target.closest('[data-butikk]')) { openButikk(); return; }
+  if (e.target.closest('[data-butikk]')) { openButikk(e.target.closest('[data-butikk]').dataset.butikk); return; }
   const kv = e.target.closest('[data-kalvalg]');
   if (kv) { const [k, v] = kv.dataset.kalvalg.split(':'); kalVis[k] = v; lsSet('fuglekort:kalender', JSON.stringify(kalVis)); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
   const kc = e.target.closest('[data-kal]');
@@ -3500,7 +3567,10 @@ function paintFro() {
 /* ---- Frøbutikken: dyrekort and multipliers (and card backs, when there are more than the standard one) ---- */
 const butikkSheet = $('#butikkSheet'), butikkBody = $('#butikkBody');
 let butikkVelg = null;                                     // a multiplier waiting for its card: { f } (bought) or { f, flytt: id } (moved)
-function openButikk() { butikkVelg = null; showSheet(butikkSheet); renderButikk(); butikkSheet.scrollTop = 0; setTimeout(() => $('#closeButikk').focus(), 60); }
+function openButikk(fane) {
+  butikkVelg = null;
+  if (typeof fane === 'string' && BFANER().includes(fane)) { butikkFane = fane; lsSet('fuglekort:butikkfane', fane); }
+  showSheet(butikkSheet); renderButikk(); butikkSheet.scrollTop = 0; setTimeout(() => $('#closeButikk').focus(), 60); }
 $('#openFro').addEventListener('click', openButikk);
 $('#closeButikk').addEventListener('click', () => closeSheets());
 const mmss = ms => { const t = Math.ceil(ms / 1000); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };
@@ -3551,46 +3621,88 @@ function flyttRad(p, saldo) {
   return `<li><span class="xdisk x${p.f}" aria-hidden="true">×${p.f}</span>
     <button class="bk-go" ${vis} aria-label="${esc(c.navn)}, ×${p.f}. ${status}. Vis kortet"><span class="bk-t"><b>${esc(c.navn)}</b><small>${status}</small></span></button>${knapp}</li>`;
 }
-function renderButikk() {
-  if (butikkVelg) { renderVelg(); return; }
-  const r = froRegnskap();
-  const knapp = (attr, pris, hva) => {
-    const nok = r.saldo >= pris;
-    return `<button class="btn ${nok ? 'pri' : ''} bk-kjop" ${attr} ${nok ? '' : 'disabled'} aria-label="${esc(hva)} for ${fmtFro(pris)} frø${nok ? '' : `. Du mangler ${fmtFro(pris - Math.max(0, r.saldo))}`}">${FROIKON}${fmtFro(pris)}</button>`;
-  };
+/* the shop in three tabs, each on one screen: dyrekort, multipliers and card backs. The balance (and the undo box)
+   stay at the top. Each tab says how many things you can afford now; the last tab used is opened again */
+const BFANER = () => [...(NBON ? ['dyr'] : []), 'mult', ...(BAKSIDER.length > 1 ? ['bak'] : [])];
+let butikkFane = lsGet('fuglekort:butikkfane') || 'dyr';
+const butikkFanerEl = $('#butikkFaner');
+const kanKjope = r => ({
+  dyr: DYR.filter(c => !Kjop.data['dyr-' + c.key] && r.saldo >= dyrPris(c)).length,
+  mult: MULT.filter(x => !harFaktor(x.f) && r.saldo >= x.pris).length,
+  bak: BAKSIDER.filter(b => !harBakside(b.id) && r.saldo >= +b.pris).length,
+});
+const BFANENAVN = { dyr: 'Dyrekort', mult: 'Multiplikatorer', bak: 'Baksider' };
+function paintButikkFaner(r, faner) {
+  const n = kanKjope(r);
+  butikkFanerEl.hidden = !!butikkVelg;
+  butikkFanerEl.querySelectorAll('[data-bfane]').forEach(b => {
+    const f = b.dataset.bfane, pa = f === butikkFane;
+    b.hidden = !faner.includes(f);
+    b.setAttribute('aria-selected', pa ? 'true' : 'false'); b.tabIndex = pa ? 0 : -1;
+    b.innerHTML = `${BFANENAVN[f]}${n[f] ? `<span class="fane-n" aria-hidden="true">${n[f]}</span>` : ''}`;
+    b.setAttribute('aria-label', `${BFANENAVN[f]}${n[f] ? `, ${n[f]} du har råd til` : ''}`);
+  });
+}
+function velgButikkFane(f, fokus) {
+  if (!BFANER().includes(f)) return;
+  butikkFane = f; lsSet('fuglekort:butikkfane', f);
+  renderButikk(); butikkSheet.scrollTop = 0;
+  if (fokus) butikkFanerEl.querySelector(`[data-bfane="${f}"]`).focus();
+}
+butikkFanerEl.addEventListener('click', e => { const b = e.target.closest('[data-bfane]'); if (b) velgButikkFane(b.dataset.bfane); });
+butikkFanerEl.addEventListener('keydown', e => {
+  const F = BFANER(), i = F.indexOf(butikkFane);
+  const ny = e.key === 'ArrowRight' ? F[(i + 1) % F.length] : e.key === 'ArrowLeft' ? F[(i - 1 + F.length) % F.length]
+    : e.key === 'Home' ? F[0] : e.key === 'End' ? F[F.length - 1] : null;
+  if (ny) { e.preventDefault(); velgButikkFane(ny, true); }
+});
+const prisHtml = pris => `${FROIKON}${fmtFro(pris)}`;
+const mangler = (pris, r) => `Du mangler ${fmtFro(pris - Math.max(0, r.saldo))} frø`;
+function dyrFane(r) {
+  return `<ul class="bk-rute">${DYR.map(c => {
+    const i = BY_KEY[c.key], k = !!Kjop.data['dyr-' + c.key], p = dyrPris(c), nok = r.saldo >= p;
+    const tekst = k ? `${c.navn}, kjøpt. Vis kortet` : `${c.navn}, ${c.stjerner} ${c.stjerner === 1 ? 'stjerne' : 'stjerner'}, ${fmtFro(p)} frø${nok ? '' : `. ${mangler(p, r)}`}`;
+    return `<li><button class="bk-flis ${k ? 'kjopt' : nok ? 'nok' : ''}" ${k ? `data-go="${i}"` : `data-dyr="${c.key}"`} aria-label="${esc(tekst)}">
+      ${k ? miniatyr(c, i) : `<span class="bk-kort" aria-hidden="true"><img src="${esc(baksideBilde())}" alt=""><b>?</b></span>`}
+      <span class="bk-t"><b>${esc(c.navn)}</b><small>${stars(c.stjerner)}${k ? `<span class="bk-ok">${CHECK}Kjøpt</span>` : `<span class="bk-p">${prisHtml(p)}</span>`}</small></span></button></li>`;
+  }).join('')}</ul>`;
+}
+function multFane(r) {
   const merket = plasseringer().filter(p => p.sist).sort((a, b) => b.f - a.f || (POS[BY_KEY[a.key]] ?? 999) - (POS[BY_KEY[b.key]] ?? 999));
-  butikkBody.innerHTML = `
-    <div class="fro-saldo">${FROIKON}<b>${fmtFro(r.saldo)}</b><span>frø å bruke</span></div>
-    <p class="cap" style="margin:6px 0 0">Titlene regnes av alle frøene du har samlet (${fmtFro(r.tjent)}), så du mister ingen tittel på å handle.</p>
-    <div class="angre" id="butikkAngre" hidden></div>
-    ${NBON ? `<div class="s-sec"><h3>Dyrekort</h3>
-      <ul class="butikk">${DYR.map((c, n) => {
-        const k = !!Kjop.data['dyr-' + c.key], ny = !n || DYR[n - 1].stjerner !== c.stjerner;
-        return `${ny ? `<li class="bk-stj" aria-label="${c.stjerner} ${c.stjerner === 1 ? 'stjerne' : 'stjerner'}, ${fmtFro(dyrPris(c))} frø">${stars(c.stjerner)}</li>` : ''}<li><span class="bk-kort ${k ? 'kjopt' : ''}" aria-hidden="true"><img src="${esc(baksideBilde())}" alt=""><b>${k ? CHECK : '?'}</b></span>
-          <span class="bk-t"><b>${esc(c.navn)}</b>${k ? '<small>Kjøpt</small>' : ''}</span>
-          ${k ? `<button class="btn" data-go="${BY_KEY[c.key]}" aria-label="Vis ${esc(c.navn)} i kortstokken">Vis</button>` : knapp(`data-dyr="${c.key}"`, dyrPris(c), `Kjøp ${c.navn}`)}</li>`;
-      }).join('')}</ul>
-      <p class="cap">Et dyrekort stokkes inn i kortstokken når du kjøper det.</p>
-    </div>` : ''}
-    <div class="s-sec"><h3>Multiplikatorer</h3>
-      <p class="cap" style="margin:0 0 8px">Sett et merke på et kort. Hver gang du registrerer fuglen etter det, får du så mange ganger frøene for registreringen, og for første gang du ser den. Du kan ha ett av hvert merke. Når fuglen er registrert ${XFRI} dager med merket, kan du flytte det gratis til et annet kort. Før det koster det litt, mindre for hver registrering.</p>
-      <ul class="butikk">${MULT.map(x => {
-        const p = merket.find(q => q.f === x.f && !q.gammel) || merket.find(q => q.f === x.f);
-        return `<li><span class="xdisk x${x.f}" aria-hidden="true">×${x.f}</span>
-        <span class="bk-t"><b>${MULTNAVN[x.f]}</b><small>${p ? `Kjøpt · på ${esc(kortNavn(p.key))}` : `×${x.f} på ett kort`}</small></span>${p ? '' : knapp(`data-mult="${x.f}"`, x.pris, `Velg et kort som skal få ×${x.f}`)}</li>`;
-      }).join('')}</ul>
-      ${merket.length ? `<p class="cap" style="margin:14px 0 4px">På kortene dine</p>
-      <ul class="butikk">${merket.map(p => flyttRad(p, r.saldo)).join('')}</ul>` : ''}
-    </div>
-    ${BAKSIDER.length > 1 ? `<div class="s-sec"><h3>Baksider</h3>
-      <p class="cap" style="margin:0 0 12px">Baksiden vises når du snur et kort. En kjøpt bakside kan du bytte til og fra når du vil.</p>
-      <ul class="bak-grid">${BAKSIDER.map(b => {
-        const har = harBakside(b.id), bruk = baksideValgt() === b.id;
-        return `<li class="${bruk ? 'bruk' : ''}"><button class="bak-bilde" data-vis-bak="${b.id}" aria-label="Vis baksiden ${esc(b.navn)} stort"><img src="${esc(b.bilde)}" alt="" loading="lazy" decoding="async"></button>
-          <b>${esc(b.navn)}</b>
-          ${bruk ? '<span class="bak-bruk">I bruk</span>' : har ? `<button class="btn" data-bruk="${b.id}">Bruk</button>` : knapp(`data-bakside="${b.id}"`, +b.pris, `Kjøp baksiden ${b.navn}`)}</li>`;
-      }).join('')}</ul>
-    </div>` : ''}`;
+  return `<ul class="bk-mult">${MULT.map(x => {
+    const p = merket.find(q => q.f === x.f && !q.gammel) || merket.find(q => q.f === x.f), nok = r.saldo >= x.pris;
+    const i = p ? BY_KEY[p.key] : null;
+    const tekst = p ? `${MULTNAVN[x.f]}, kjøpt, på ${kortNavn(p.key)}. Vis kortet` : `${MULTNAVN[x.f]}, ×${x.f} på ett kort, ${fmtFro(x.pris)} frø${nok ? '' : `. ${mangler(x.pris, r)}`}`;
+    return `<li><button class="bk-mflis ${p ? 'kjopt' : nok ? 'nok' : ''}" ${p ? (POS[i] != null ? `data-go="${i}"` : 'disabled') : `data-mult="${x.f}"`} aria-label="${esc(tekst)}">
+      <span class="xdisk x${x.f}" aria-hidden="true">×${x.f}${p ? `<i class="bk-hake">${CHECK}</i>` : ''}</span>
+      <small aria-hidden="true">${p ? esc(kortNavn(p.key)) : fmtFro(x.pris)}</small></button></li>`;
+  }).join('')}</ul>
+  <p class="cap bk-cap">Et merke på et kort gir så mange ganger frøene hver gang du registrerer fuglen. Du kan ha ett av hvert.</p>
+  <details class="bk-mer"><summary>Slik virker det</summary>
+    <p class="cap">Fra og med dagen merket settes på, gir hver registrering av fuglen, og første gang du ser den, så mange ganger frøene. Er fuglen alt registrert den dagen, gjelder det fra i morgen. Når fuglen er registrert ${XFRI} dager med merket, kan du flytte det gratis til et annet kort. Før det koster det 5 % av prisen for hver registrering som mangler. Kortet merket kom fra, beholder frøene det har gitt.</p></details>
+  ${merket.length ? `<p class="cap" style="margin:14px 0 2px">På kortene dine</p>
+  <ul class="butikk">${merket.map(p => flyttRad(p, r.saldo)).join('')}</ul>` : ''}`;
+}
+function bakFane(r) {
+  return `<ul class="bak-grid bak5">${BAKSIDER.map(b => {
+    const har = harBakside(b.id), bruk = baksideValgt() === b.id, nok = r.saldo >= +b.pris;
+    const status = bruk ? 'I bruk' : b.id === 'standard' ? 'Gratis' : har ? 'Kjøpt' : '';
+    const tekst = `Baksiden ${b.navn}${status ? `, ${status.toLowerCase()}` : `, ${fmtFro(+b.pris)} frø${nok ? '' : `. ${mangler(+b.pris, r)}`}`}. Vis den stort`;
+    return `<li class="${bruk ? 'bruk' : ''}"><button class="bak-bilde" data-vis-bak="${b.id}" aria-label="${esc(tekst)}"><img src="${esc(b.bilde)}" alt="" loading="lazy" decoding="async"></button>
+      <small class="${bruk ? 'bruk' : status ? 'har' : nok ? 'nok' : ''}" aria-hidden="true">${status || prisHtml(+b.pris)}</small></li>`;
+  }).join('')}</ul>
+  <p class="cap bk-cap">Trykk på en bakside for å se den stort, kjøpe den eller bytte til den.</p>`;
+}
+function renderButikk() {
+  const r = froRegnskap(), faner = BFANER();
+  if (!faner.includes(butikkFane)) butikkFane = faner[0];
+  $('#butikkTopp').innerHTML = `<div class="bk-saldo">${FROIKON}<b>${fmtFro(r.saldo)}</b><span>frø å bruke</span></div>
+    <p class="bk-tit">Å handle trekker ikke fra titlene (${fmtFro(r.tjent)} frø samlet).</p>
+    <div class="angre" id="butikkAngre" hidden></div>`;
+  paintButikkFaner(r, faner);
+  if (butikkVelg) { renderVelg(); return; }
+  butikkBody.setAttribute('aria-labelledby', 'bfane-' + butikkFane);
+  butikkBody.innerHTML = { dyr: dyrFane, mult: multFane, bak: bakFane }[butikkFane](r);
   paintAngre();
 }
 /* placing a multiplier, bought or moved: choose the card (every card in the deck without a multiplier) */
@@ -3729,7 +3841,7 @@ butikkSheet.addEventListener('click', e => {
   }
   if (d.go != null) { closeSheets(true); jump(+d.go); return; }
   if (d.dyr) { kjopDyr(d.dyr); return; }
-  if (d.mult) { butikkVelg = { f: +d.mult }; renderButikk(); butikkSheet.scrollTop = 0; return; }
+  if (d.mult) { const x = MULT.find(m => m.f === +d.mult); if (!x || harFaktor(x.f) || manglerFro(x.pris)) return; butikkVelg = { f: x.f }; renderButikk(); butikkSheet.scrollTop = 0; return; }
   if (d.flytt) { const p = multPlass(d.flytt); if (!p || p.gammel) return; butikkVelg = { f: p.f, flytt: d.flytt }; renderButikk(); butikkSheet.scrollTop = 0; return; }
   if (b.hasAttribute('data-tilbake')) { butikkVelg = null; renderButikk(); butikkSheet.scrollTop = 0; return; }
   if (d.velg && butikkVelg) { if (butikkVelg.flytt) flyttMult(butikkVelg.flytt, d.velg); else kjopMult(butikkVelg.f, d.velg); return; }
