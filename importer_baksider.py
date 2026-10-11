@@ -22,10 +22,10 @@ JSON = ROT / "data" / "baksider.json"
 W, H = 750, 1050
 # relativt høye priser: de enkleste først, perlemor dyrest
 PRISER = {
-    "nordisk-minimal": 25000, "typografisk": 25000, "nordisk-tresnitt": 30000, "japansk-ro": 30000, "botanisk": 35000,
-    "klassisk-samlekort": 40000, "klassisk-spillekort": 40000, "art-deco": 45000, "perlemor": 60000,
+    "nordisk-minimal": 37000, "typografisk": 37000, "nordisk-tresnitt": 44000, "japansk-ro": 44000, "botanisk": 52000,
+    "klassisk-samlekort": 58000, "klassisk-spillekort": 58000, "art-deco": 64000, "perlemor": 86000,
 }
-STANDARDPRIS = 35000
+STANDARDPRIS = 52000
 LIK = 50          # gjennomsnittlig fargeforskjell (0–255) under dette regnes som samme bilde som baksiden i dag
 
 
