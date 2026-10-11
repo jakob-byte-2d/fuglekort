@@ -224,6 +224,24 @@ button{cursor:pointer;touch-action:manipulation}
 .froplus.vis.ut{animation:froplus-ut .6s ease-in forwards}
 @keyframes froplus-inn{from{opacity:0;transform:translate(-50%,-6px) scale(.6)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
 @keyframes froplus-ut{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-12px) scale(.9)}}
+/* the sum behind the seeds, under "+1 300": one line per kind, e.g. «Registrering 200 × 3★ × 2 = 1 200» */
+.froregn{position:fixed;right:10px;top:0;z-index:54;pointer-events:none;width:max-content;min-width:190px;max-width:min(290px,calc(100vw - 20px));box-sizing:border-box;
+  padding:7px 12px 8px;border-radius:14px;background:color-mix(in srgb, var(--surface) 95%, transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:0 12px 28px -12px rgba(0,0,0,.5),0 0 0 1px var(--line);color:var(--ink);font-size:13px;line-height:1.25;font-variant-numeric:tabular-nums;
+  opacity:0;visibility:hidden}
+.froregn.fram{z-index:62}
+.froregn.vis{visibility:visible;animation:froregn-inn .4s ease-out forwards}
+.froregn.vis.ut{animation:froregn-ut .6s ease-in forwards}
+@keyframes froregn-inn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes froregn-ut{from{opacity:1}to{opacity:0;transform:translateY(-8px)}}
+.fr-l{display:grid;grid-template-columns:1fr auto;column-gap:14px;align-items:center;padding:4px 0}
+.fr-l + .fr-l{border-top:1px dashed var(--line)}
+.fr-l span{font-weight:600}
+.fr-l em{grid-column:1;font-style:normal;font-size:12px;color:var(--muted)}
+.fr-l em i{font-style:normal;color:var(--card-gold)}
+.fr-l b{grid-column:2;grid-row:1 / span 2;font-weight:700;text-align:right}
+.fr-sum{display:flex;justify-content:space-between;gap:14px;margin-top:3px;padding-top:5px;border-top:2px solid var(--ink);font-weight:800}
+.fr-sum .froikon{width:13px;height:13px;vertical-align:-2px;margin-right:3px}
 .fest.strommer .fest-tekst small,.bfest.strommer .bf-t2 small{visibility:hidden}
 .fest.strommer,.bfest.strommer{cursor:default}
 @keyframes frofylt{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--gold) 75%, transparent)}100%{box-shadow:0 0 0 16px color-mix(in srgb, var(--gold) 0%, transparent)}}
@@ -898,7 +916,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <!-- sunflower seeds flying from a card to the counter -->
 <div class="frolag" id="froLag" aria-hidden="true"></div>
 <canvas class="frostrom" id="froStrom" aria-hidden="true"></canvas>
-<span class="froplus" id="froPluss" aria-hidden="true"></span>
+<span class="froplus" id="froPluss" aria-hidden="true"></span><div class="froregn" id="froRegn" aria-hidden="true"></div>
 
 <section class="sheet search" id="searchSheet" role="dialog" aria-modal="true" aria-label="Søk">
   <div class="qrow">
@@ -1395,7 +1413,10 @@ function froTekst(for_) {
   if (dt > 0) ut.push(`+${fmtFro(dt)} frø`);
   return ut.length ? ` ${ut.join(', ')}.` : '';
 }
-const froFor = () => { froNullstill(); return Object.assign({}, froRegnskap(), { parkert: froParkert() }); };
+const froFor = () => {
+  froNullstill(); const t = nokkeltall();
+  return Object.assign({}, froRegnskap(), { parkert: froParkert(), merkerOk: new Set(merkerListe(t).filter(m => m.v(t) >= m.mal).map(m => m.id)) });
+};
 
 /* ================= Hagefugltelling =================
    A count keeps its start and end time, the area, and the highest number of each species seen at the
@@ -2188,7 +2209,7 @@ function settIDag(c) {
   Store.addDay(c.key, t);
   haptic(10);
   si(`${c.navn}: ${dager.length + 1}. observasjonsdag.${froTekst(f0)}${nyheter(for_)}`);
-  froEffekt(c, f0);
+  froEffekt(c, f0, t);
 }
 function registrer(c, d) {
   const for_ = opptjent(), f0 = froFor();
@@ -2201,7 +2222,7 @@ function registrer(c, d) {
     : c.stjerner >= 4 ? `${c.navn}! ${c.stjerner === 5 ? 'Svært sjelden' : 'Sjelden'} i norske hager. ${n} av ${NB} sett.`
     : `${c.navn} er sett for første gang. ${n} av ${NB} arter.`;
   si(msg + froTekst(f0) + nyheter(for_));
-  froEffekt(c, f0);
+  froEffekt(c, f0, d);
 }
 function leggTilDag(c, d) {
   const gml = Store.days(c.key);
@@ -2211,7 +2232,7 @@ function leggTilDag(c, d) {
   froFrys();
   Store.addDay(c.key, d);
   si(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${froTekst(f0)}${nyheter(for_)}`);
-  froEffekt(c, f0);
+  froEffekt(c, f0, d);
 }
 function slettDag(c, d) {
   const gml = Store.days(c.key);
@@ -3064,13 +3085,14 @@ function lukkFest() {
   if (belop) {
     f.strommet = true;
     froFrys(); f.fro = 0;                                   // the seeds leave the celebration
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) { froSlipp(); visPluss(belop); ferdigPluss(); }
+    const linjer = f.type === 'niva' ? [{ t: stor(kantNavn(f.niva)), r: f.c ? esc(f.c.navn) : '', v: belop }] : [];
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) { froSlipp(); visPluss(belop, linjer); ferdigPluss(); }
     else {
       f.strommer = true; el.classList.add('strommer');
       const kort = el.querySelector(f.type === 'tittel' ? '.fest-ikon' : '.fest-kort, .bf-kort'), bank = $('#openFro');
       bank.classList.add('fram');
       haptic(10);
-      froStrom(kort.getBoundingClientRect(), bank, belop, () => {
+      froStrom(kort.getBoundingClientRect(), bank, belop, linjer, () => {
         froSlipp();
         setTimeout(() => { bank.classList.remove('fram'); f.strommer = false; lukkFest(); }, 450);
       });
@@ -3545,8 +3567,31 @@ function froKilde(c) {
   }
   return midt($('#stage'));
 }
+/* the sum behind the seeds of one action, one line per kind. One bird on one day shows the factors:
+   «200 × 3★ × 2» (registration × stars for rarity × the multiplier on the card). Border levels that wait for their
+   celebration are not in it (they come with the celebration). Returns [] if the lines do not add up to the amount. */
+function regnestykke(c, d, f0, na, dt) {
+  const L = [], dReg = na.reg - f0.reg, dF = na.forste - f0.forste, dM = na.mult - f0.mult, dD = na.dag - f0.dag;
+  const dN = (na.niva - f0.niva) - (froParkert() - f0.parkert);
+  const s = c ? c.stjerner : 0, x = c && multAv(c.key), xf = x && d && d >= x.dato ? x.faktor : 1;
+  const en = !!(c && d && dReg === FRO.registrering * s);          // one bird, one day
+  const inn = en && dM === (xf - 1) * (dReg + dF);                // the multiplier belongs to these lines
+  const faktor = grunn => `${fmtFro(grunn)} × ${s}<i>★</i>${inn && xf > 1 ? ` × ${xf}` : ''}`;
+  if (dReg > 0) L.push(en ? { t: 'Registrering', r: faktor(FRO.registrering), v: dReg * (inn ? xf : 1) } : { t: 'Registreringer', v: dReg });
+  if (dF > 0) L.push(en && dF === FRO.forsteGang * s ? { t: 'Første gang', r: faktor(FRO.forsteGang), v: dF * (inn ? xf : 1) } : { t: 'Første gang', v: dF });
+  if (dM > 0 && !inn) L.push({ t: 'Multiplikator', v: dM });
+  if (dD > 0) L.push({ t: dD === FRO.daglig ? 'Ny dag med fugler' : 'Nye dager med fugler', v: dD });
+  if (dN > 0) {                                                    // e.g. silver and gold at once, holo waiting for its celebration
+    const b = [1, 2, 3, 4, 5, 6, 7].find(b => [0, 1, 2].reduce((a, k) => a + (b >> k & 1 ? FRO.niva[k] : 0), 0) === dN);
+    const del = b ? ['Sølv', 'Gull', 'Holo'].filter((x, k) => b >> k & 1) : [];
+    L.push({ t: !del.length ? 'Glinskant' : del.length === 1 ? `${del[0]}kant` : `${del.slice(0, -1).map((x, k) => (k ? x.toLowerCase() : x) + '-').join(', ')} og ${del[del.length - 1].toLowerCase()}kant`, v: dN });
+  }
+  const t = nokkeltall();
+  merkerListe(t).forEach(m => { if (m.v(t) >= m.mal && f0.merkerOk && !f0.merkerOk.has(m.id)) L.push({ t: `Merke: ${m.navn}`, v: merkeFro(m) }); });
+  return L.reduce((a, l) => a + l.v, 0) === dt ? L : [];
+}
 /* after a registration: the seeds it gave fly to the counter */
-function froEffekt(c, f0) {
+function froEffekt(c, f0, d) {
   froNullstill();
   const na = froRegnskap();
   // the celebrations this action set off keep their own seeds (never more than the action gave)
@@ -3557,7 +3602,7 @@ function froEffekt(c, f0) {
     if (f.type === 'niva') { f.fro = Math.min(f.fro, niva); niva -= f.fro; }
   });
   const dt = na.tjent - f0.tjent - (froParkert() - f0.parkert);
-  if (dt > 0) froVent.push({ c, belop: dt, mot: 'fro' }); else froSlipp();
+  if (dt > 0) froVent.push({ c, belop: dt, mot: 'fro', linjer: regnestykke(c, d, f0, na, dt) }); else froSlipp();
   froVentKjor(60);
 }
 /* flights wait while a sheet, a question or a celebration covers the screen */
@@ -3568,12 +3613,12 @@ function froVentKjor(forsink = 0) {
     const rolig = matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden;
     froVent.splice(0).forEach(v => {
       const fra = v.fra ? v.fra() : froKilde(v.c);
-      if (rolig) { froSlipp(); visPluss(v.belop); ferdigPluss(); }
-      else froFly(fra, $('#openFro'), v.belop, froSlipp);
+      if (rolig) { froSlipp(); visPluss(v.belop, v.linjer); ferdigPluss(); }
+      else froFly(fra, $('#openFro'), v.belop, froSlipp, v.linjer);
     });
   }, forsink);
 }
-function froFly(fra, tilEl, belop, ferdig) {
+function froFly(fra, tilEl, belop, ferdig, linjer) {
   const lag = $('#froLag'), til = midt(tilEl), n = Math.max(4, Math.min(14, Math.round(Math.log10(Math.max(belop, 1)) * 3)));
   const tilFro = tilEl.id === 'openFro';
   let landet = 0;
@@ -3600,29 +3645,45 @@ function froFly(fra, tilEl, belop, ferdig) {
     a.onfinish = () => {
       froAktive.delete(a); s.remove(); landet++;
       tilEl.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.13)' }, { transform: 'scale(1)' }], { duration: 200, easing: 'ease-out' });
-      if (landet === 1 && tilFro) { haptic(8); froTell((froVist || 0) + belop, Math.max(350, siste - varighet)); visPluss(belop); }
+      if (landet === 1 && tilFro) { haptic(8); froTell((froVist || 0) + belop, Math.max(350, siste - varighet)); visPluss(belop, linjer); }
       if (landet === n) { if (tilFro) { haptic(12); ferdigPluss(); } if (ferdig) ferdig(); }
     };
   }
 }
 /* ---- "+10 000" just below the counter: what this event gave ----
    Flights landing at the same time add up; it goes a moment after the last seed has landed. */
-const plussEl = $('#froPluss');
-let plussSum = 0, plussAktive = 0, plussT = 0;
-function visPluss(belop) {
+const plussEl = $('#froPluss'), regnEl = $('#froRegn');
+let plussSum = 0, plussAktive = 0, plussT = 0, plussLinjer = [];
+function visPluss(belop, linjer) {
   const r = $('#openFro').getBoundingClientRect();
   plussEl.style.left = `${Math.round(r.left + r.width / 2)}px`; plussEl.style.top = `${Math.round(r.bottom + 7)}px`;
   const synlig = plussEl.classList.contains('vis') && !plussEl.classList.contains('ut');
   plussSum = (synlig ? plussSum : 0) + belop; plussAktive++;
+  plussLinjer = (synlig ? plussLinjer : []).concat(linjer && linjer.length ? linjer : [{ t: 'Frø', v: belop }]);
   plussEl.textContent = `+${fmtFro(plussSum)}`;
-  plussEl.classList.toggle('fram', $('#openFro').classList.contains('fram'));   // over a celebration only while the counter is
+  const fram = $('#openFro').classList.contains('fram');      // over a celebration only while the counter is
+  plussEl.classList.toggle('fram', fram);
   clearTimeout(plussT);
   if (!synlig) { plussEl.classList.remove('vis', 'ut'); void plussEl.offsetWidth; plussEl.classList.add('vis'); }
+  // the sum, when there is more to it than one number
+  const vis = plussLinjer.length > 1 || plussLinjer.some(l => l.r);
+  if (vis) {
+    regnEl.innerHTML = plussLinjer.map(l => `<div class="fr-l"><span>${esc(l.t)}</span>${l.r ? `<em>${l.r}</em>` : ''}<b>${fmtFro(l.v)}</b></div>`).join('')
+      + `<div class="fr-sum"><span>Sum</span><span>${FROIKON}${fmtFro(plussSum)}</span></div>`;
+    regnEl.style.top = `${Math.round(r.bottom + 40)}px`;
+    regnEl.classList.toggle('fram', fram);
+    if (!regnEl.classList.contains('vis') || regnEl.classList.contains('ut')) { regnEl.classList.remove('vis', 'ut'); void regnEl.offsetWidth; regnEl.classList.add('vis'); }
+  }
 }
 function ferdigPluss() {
   plussAktive = Math.max(0, plussAktive - 1); if (plussAktive) return;
   clearTimeout(plussT);
-  plussT = setTimeout(() => { plussEl.classList.add('ut'); plussT = setTimeout(() => { plussEl.classList.remove('vis', 'ut'); plussSum = 0; }, 650); }, 1500);
+  // longer when there is a sum to read
+  const lese = regnEl.classList.contains('vis') ? Math.min(4500, 2200 + 450 * plussLinjer.length) : 1500;
+  plussT = setTimeout(() => {
+    plussEl.classList.add('ut'); regnEl.classList.add('ut');
+    plussT = setTimeout(() => { plussEl.classList.remove('vis', 'ut'); regnEl.classList.remove('vis', 'ut'); plussSum = 0; plussLinjer = []; }, 650);
+  }, lese);
 }
 /* ---- the big stream after a celebration: many seeds pour from the card into the counter ----
    Drawn on one canvas so a hundred seeds stay smooth on a phone. */
@@ -3638,7 +3699,7 @@ function lagSprite() {
   froSprite = c;
 }
 const STROM = { liste: [], raf: 0 };
-function froStrom(fra, tilEl, belop, ferdig) {
+function froStrom(fra, tilEl, belop, linjer, ferdig) {
   if (!froBilde) { froBilde = new Image(); froBilde.onload = lagSprite; froBilde.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(FROIKON.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" ')); }
   const n = stromAntall(belop), spre = stromSpre(belop), t0 = performance.now();
   froFlyTil = Math.max(froFlyTil, Date.now() + stromTid(belop) + 60);
@@ -3649,7 +3710,7 @@ function froStrom(fra, tilEl, belop, ferdig) {
       start: (k / n) * spre * (.85 + Math.random() * .3), varighet: 720 + Math.random() * 260,
       rot: Math.random() * 6.3, spin: (Math.random() - .5) * 12, str: 20 + Math.random() * 10, landet: false };
   });
-  STROM.liste.push({ fro, t0, tilEl, belop, ferdig, landet: 0, bump: 0 });
+  STROM.liste.push({ fro, t0, tilEl, belop, linjer, ferdig, landet: 0, bump: 0 });
   tilEl.classList.add('mottar');
   if (!STROM.raf) STROM.raf = requestAnimationFrame(stromSteg);
 }
@@ -3666,7 +3727,7 @@ function stromSteg(t) {
       if (p < 0) return;
       if (p >= 1) {
         f.landet = true; s.landet++;
-        if (s.landet === 1) { haptic(8); froTell((froVist || 0) + s.belop, stromSpre(s.belop) * 1.1 + 300); visPluss(s.belop); }
+        if (s.landet === 1) { haptic(8); froTell((froVist || 0) + s.belop, stromSpre(s.belop) * 1.1 + 300); visPluss(s.belop, s.linjer); }
         if (t - s.bump > 110) { s.bump = t; s.tilEl.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.12)' }, { transform: 'scale(1)' }], { duration: 180, easing: 'ease-out' }); }
         return;
       }
@@ -3700,7 +3761,7 @@ $('#nullstillAlt').addEventListener('click', () => sporsmal({
     tittelFeiret = 0; lsSet(TITTEL_KEY(), '0');
     froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
     STROM.liste = []; festKo.forEach(f => { f.fro = 0; }); $('#openFro').classList.remove('mottar');
-    clearTimeout(plussT); plussAktive = 0; plussSum = 0; plussEl.classList.remove('vis', 'ut');
+    clearTimeout(plussT); plussAktive = 0; plussSum = 0; plussLinjer = []; plussEl.classList.remove('vis', 'ut'); regnEl.classList.remove('vis', 'ut');
     froVent.length = 0; froHold = 0; froFlyTil = 0; froVist = null; paintFro(); closeSheets(true); jump(DECK[0], 'instant');
     si('Alt er nullstilt.');
   } }, { tekst: 'Avbryt' }],
