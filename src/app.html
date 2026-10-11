@@ -248,6 +248,8 @@ button{cursor:pointer;touch-action:manipulation}
 .butikk{list-style:none;margin:0 -8px;padding:0}
 .butikk li{display:flex;align-items:center;gap:12px;padding:7px 8px;border-radius:14px}
 .butikk li.empty{display:block}
+.butikk li.bk-stj{padding:12px 8px 2px;font-size:13px}
+.butikk li.bk-stj:first-child{padding-top:0}
 .bk-t{flex:1;min-width:0;display:grid;gap:1px}
 .bk-t b{font-weight:600;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bk-t small{font-size:12.5px;color:var(--muted)}
@@ -1279,10 +1281,11 @@ Store.loadLocal();
      x-<art>        a multiplier stuck on a card     { pris, dato, ts, faktor }   one per card, never moved
      bakside-<id>   a card back                      { pris, dato, ts }
    The price is kept with the purchase, so changing a price later does not change what was paid. */
-// the other animals (b01 …) are bought; the cheapest first. A new animal from Fuglekort-builder gets the next price.
-const DYRPRIS = { b01: 6500, b02: 8000, b03: 12000, b05: 16000, b04: 20000 };
-const dyrPris = c => DYRPRIS[c.id] != null ? DYRPRIS[c.id] : 20000 + 5000 * (1 + BONUS.filter(b => DYRPRIS[b.id] == null && b.id < c.id).length);
-const DYR = BONUS.slice().sort((a, b) => dyrPris(a) - dyrPris(b) || (a.id < b.id ? -1 : 1));
+// the other animals (b01 …) are bought: one price for each number of stars, and the shop sorted by stars
+// (then as in Fuglekort-builder: b01, b02 …). A purchase keeps the price it was bought for.
+const DYRPRIS = { 1: 6500, 2: 9000, 3: 13000, 4: 20000, 5: 30000 };
+const dyrPris = c => DYRPRIS[c.stjerner] || DYRPRIS[4];
+const DYR = BONUS.slice().sort((a, b) => a.stjerner - b.stjerner || (a.id < b.id ? -1 : 1));
 // multipliers: exponentially dearer (×3 for each step)
 const MULT = [{ f: 2, pris: 4000 }, { f: 3, pris: 12000 }, { f: 4, pris: 36000 }, { f: 5, pris: 108000 }, { f: 10, pris: 324000 }];
 const MULTNAVN = { 2: 'Dobbelt frø', 3: 'Tre ganger frø', 4: 'Fire ganger frø', 5: 'Fem ganger frø', 10: 'Ti ganger frø' };
@@ -2438,7 +2441,7 @@ function renderSearch() {
       <span class="t"><span class="n">${terms.length ? hl(c.navn, IDX[i].navn, terms) : esc(c.navn)}</span>
         <span class="l">${terms.length ? hl(c.latin, IDX[i].latin, terms) : esc(c.latin)}</span>
         ${hit ? `<span class="sn"><em>${label}:</em> ${snippet(c[hit], IDX[i][hit], terms)}</span>` : ''}</span>
-      <span class="r">${s ? `<span class="okdot ${s.dager.includes(todayISO()) ? 'idag' : ''}" title="Sett første gang ${fmtLong(s.date)}, ${dagerTekst(s.dager.length)}${s.dager.includes(todayISO()) ? ', også i dag' : ''}">${antDager(s.dager.length)}</span>` : `<span>${c.bonus ? 'Bonus' : c.id}</span>`}${stars(c.stjerner)}</span>
+      <span class="r">${s ? `<span class="okdot ${s.dager.includes(todayISO()) ? 'idag' : ''}" title="Sett første gang ${fmtLong(s.date)}, ${dagerTekst(s.dager.length)}${s.dager.includes(todayISO()) ? ', også i dag' : ''}">${antDager(s.dager.length)}</span>` : `<span>${c.bonus ? 'Dyr' : c.id}</span>`}${stars(c.stjerner)}</span>
     </button></li>`;
   }).join('');
 }
@@ -2892,9 +2895,10 @@ function renderListe() {
   const q = norm(lq.value.trim()).s;
   const forst = c => Object.values(ALIAS).includes(c.key);      // f.eks. ekorn: øverst som før, nå med eget kort
   const kort = CARDS.map((c, i) => ({ key: c.key, navn: c.navn, i }));
-  // ekorn is on Fuglevennen's form, so it is always on top; as a plain row until its bonus card is found
+  // the count is for birds; of the other animals only ekorn is on Fuglevennen's form, so it is always on top
+  // (as a plain row until its dyrekort is bought). Other dyrekort are not in the list, bought or not.
   const rader = [...kort.filter(r => forst(CARDS[r.i])).map(r => erApen(CARDS[r.i]) ? r : { ...r, i: null }), ...EKSTRA.map(e => ({ key: e.key, navn: e.navn, i: null })),
-    ...kort.filter(r => !CARDS[r.i].bonus), ...kort.filter(r => CARDS[r.i].bonus && !forst(CARDS[r.i]) && erApen(CARDS[r.i]))]
+    ...kort.filter(r => !CARDS[r.i].bonus)]
     .filter(r => !q || norm(r.navn).s.includes(q));
   if (!rader.length) { tlisteEl.innerHTML = `<li class="empty">Ingen art passer til «${esc(lq.value)}».</li>`; return; }
   tlisteEl.innerHTML = rader.map(r => {
@@ -3438,9 +3442,9 @@ function renderButikk() {
     <p class="cap" style="margin:6px 0 0">Titlene regnes av alle frøene du har samlet (${fmtFro(r.tjent)}), så du mister ingen tittel på å handle.</p>
     <div class="angre" id="butikkAngre" hidden></div>
     ${NBON ? `<div class="s-sec"><h3>Dyrekort</h3>
-      <ul class="butikk">${DYR.map(c => {
-        const k = !!Kjop.data['dyr-' + c.key];
-        return `<li><span class="bk-kort ${k ? 'kjopt' : ''}" aria-hidden="true"><img src="${esc(baksideBilde())}" alt=""><b>${k ? CHECK : '?'}</b></span>
+      <ul class="butikk">${DYR.map((c, n) => {
+        const k = !!Kjop.data['dyr-' + c.key], ny = !n || DYR[n - 1].stjerner !== c.stjerner;
+        return `${ny ? `<li class="bk-stj" aria-label="${c.stjerner} ${c.stjerner === 1 ? 'stjerne' : 'stjerner'}, ${fmtFro(dyrPris(c))} frø">${stars(c.stjerner)}</li>` : ''}<li><span class="bk-kort ${k ? 'kjopt' : ''}" aria-hidden="true"><img src="${esc(baksideBilde())}" alt=""><b>${k ? CHECK : '?'}</b></span>
           <span class="bk-t"><b>${esc(c.navn)}</b>${k ? '<small>Kjøpt</small>' : ''}</span>
           ${k ? `<button class="btn" data-go="${BY_KEY[c.key]}" aria-label="Vis ${esc(c.navn)} i kortstokken">Vis</button>` : knapp(`data-dyr="${c.key}"`, dyrPris(c), `Kjøp ${c.navn}`)}</li>`;
       }).join('')}</ul>

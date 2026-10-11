@@ -6,6 +6,8 @@ Kortene lages i repoet **Fuglekort-builder** (kortfabrikken, tidligere Fuglekort
 
 Appen ligger på **https://jakob-byte-2d.github.io/fuglekort/** når GitHub Pages er slått på (se under).
 
+Claude-versjonen (artifacten i Claude) bygges og publiseres ikke lenger fra oktober 2026. Den som ligger der, står som den er (versjon 57, før de tolv nye dyrekortene). Grunnen er at en artifact kan ha høyst 511 filer, og appen har flere enn det nå. Koden for delt lagring i Claude ligger fortsatt i `src/app.html`, men slår seg bare på inne i Claude.
+
 Appen het tidligere **Hagefugler** og lå på jakob-byte-2d.github.io/hagefugler/ (før det hagefugler-oslo/). Den gamle adressen virker ikke lenger. Avkrysningene og tellingene ligger på samme nettsted (jakob-byte-2d.github.io), så de følger med til den nye adressen i samme nettleser. Lagringsnøklene heter fortsatt `hagefugler…` av den grunn, og sikkerhetskopien har fortsatt `kortstokk: "hagefugler"`, så gamle kopier kan gjenopprettes. En hjemskjerm-app på iPhone har sitt eget lager: åpne den gamle appen (den virker fra hurtiglageret), trykk på ringen øverst og velg *Kopier sikkerhetskopi* under *Lagring* i fanen *Profil*, legg den nye adressen på hjemskjermen og velg *Gjenopprett* samme sted der.
 
 ## Innhold
@@ -15,9 +17,9 @@ fuglekort/
 ├── data/cards.json          Navn, sjeldenhet og teksten fra kortene (til søket) + posisjonen til SETT-ruta og datolinja
 ├── src/app.html             Selve appen (HTML, CSS og JavaScript i én fil)
 ├── src/sw.template.js       Mal for offline-støtte (service worker)
-├── build.py                 Bygger docs/index.html og artifact.html fra src + data
+├── build.py                 Bygger docs/index.html fra src + data
 ├── importer_fuglekort.py    Henter kort, forklaringskort og bakside fra Fuglekort-builder
-├── artifact.html            Versjonen som ligger publisert hos Claude
+├── importer_baksider.py     Henter baksidene som kan kjøpes i Frøbutikken
 └── docs/                    Ferdig app – det er denne mappen GitHub Pages viser
     ├── index.html
     ├── manifest.webmanifest  Gjør at appen kan legges på hjemskjermen (PWA)
@@ -87,25 +89,22 @@ I fanen **Telling** under ringen øverst til høyre finnes **Start telling**. Sk
 
 ## Dyrekort (andre dyr)
 
-Fem dyrekort med de vanligste ville pattedyrene i hager: b01 ekorn, b02 rådyr, b03 hare, b04 elg og b05 rødrev
-(rangert etter Hagefugltellingen 2024–2026). De lages i Fuglekort-builder (arket Bonuskort) og kommer med i importen fra
-feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`, `id` som `b01` og `lengde` i stedet for `vingespenn`.
+17 dyrekort med andre dyr i hagen. b01–b05 er de vanligste ville pattedyrene i hager (ekorn, rådyr, hare, elg og rødrev, rangert etter Hagefugltellingen 2024–2026). b06–b17 er laget bare til appen: neslesommerfugl, sjuprikket marihøne, mørk jordhumle, hagesnegl, buttsnutefrosk, småskogmus, pinnsvin, krattspissmus, nordpadde, grevling, stålorm og hoggorm (stjernene er en skjønnsvurdering i Fuglekort-builder). De lages i Fuglekort-builder (arket Bonuskort) og kommer med i importen fra feltet `bonus` i `kort.json`. I `data/cards.json` har de `bonus: true`, `id` som `b01` og `lengde` i stedet for `vingespenn` (sommerfuglen har `vingespenn`). Alle 17 har tegneseriekort fra Fuglekort-builder; b06–b17 har ikke fotografi, så fotosettet viser KI-bildet for dem.
 I appen heter de dyrekort, og ordet «bonus» står ingen steder (bortsett fra på kortbildet «Bildekreditering bonuskort» fra Fuglekort-builder).
 
-**De kjøpes for solsikkefrø i Frøbutikken** (se Solsikkefrø), det billigste først:
+**De kjøpes for solsikkefrø i Frøbutikken** (se Solsikkefrø), med én pris per antall stjerner (`DYRPRIS` i `src/app.html`). Butikken viser dem sortert etter stjerner, med stjernene som små overskrifter, og innenfor samme antall stjerner i rekkefølgen fra Fuglekort-builder:
 
-| Dyrekort | Pris |
-|---|---|
-| Ekorn | 6 500 |
-| Rådyr | 8 000 |
-| Hare | 12 000 |
-| Rødrev | 16 000 |
-| Elg | 20 000 |
+| Stjerner | Dyrekort | Pris |
+|---|---|---|
+| ★ | Neslesommerfugl, Sjuprikket marihøne | 6 500 |
+| ★★ | Ekorn, Mørk jordhumle, Hagesnegl, Buttsnutefrosk | 9 000 |
+| ★★★ | Rådyr, Småskogmus, Pinnsvin, Krattspissmus, Nordpadde | 13 000 |
+| ★★★★ | Hare, Elg, Rødrev, Grevling, Stålorm, Hoggorm | 20 000 |
 
-Prisene står i `DYRPRIS` i `src/app.html`; et nytt dyr fra Fuglekort-builder får neste pris (20 000 + 5 000 per dyr). Med to nye fugler og ti registreringer på fem dager har man ca. 6 800 frø, altså råd til ekornet i løpet av den første uka. Etter to uker i samme tempo har man ca. 15 000 frø samlet, nok til ett kort til.
+Alle 17 koster 234 000 frø. Med to nye fugler og ti registreringer på fem dager har man ca. 6 800 frø, altså råd til et av de billigste dyrekortene i løpet av den første uka; etter to uker i samme tempo (ca. 15 000 frø samlet) har man råd til ett til. Et kjøp beholder prisen det ble kjøpt for. (Før de tolv nye dyrene kostet ekorn 6 500, rådyr 8 000, hare 12 000, rødrev 16 000 og elg 20 000.)
 
 - I butikken står bare navnet og prisen, med baksiden og et spørsmålstegn som bilde.
-- Før det er kjøpt, vises dyret ingen steder: ikke i kortstokken, scrubberen, søket, samlingen, «Sist sett», glinskortene, telleliste (ekorn står der som en vanlig rad, siden det er med i skjemaet) eller under **Om kortene**. `#b03` i adressen virker først når kortet er kjøpt. Kortet «Bildekreditering bonuskort» (b00) kommer under **?** når alle er kjøpt (navnet står på kortbildet fra Fuglekort-builder).
+- Før det er kjøpt, vises dyret ingen steder: ikke i kortstokken, scrubberen, søket, samlingen, «Sist sett», glinskortene, telleliste (ekorn står der som en vanlig rad, siden det er med i skjemaet til Fuglevennen; de andre dyrekortene kommer aldri med i tellelista, heller ikke når de er kjøpt) eller under **Om kortene**. `#b03` i adressen virker først når kortet er kjøpt. Kortet «Bildekreditering bonuskort» (b00) kommer under **?** når alle er kjøpt (navnet står på kortbildet fra Fuglekort-builder).
 - **Når et dyrekort er kjøpt**, lukkes butikken, og et kort med baksiden opp faller inn på skjermen og vugger, med et lysende spørsmålstegn. Trykk, så snur det seg: blader virvler ut, et stempel sier DYREKORT, og det står hvilke kort det er stokket inn blant. Trykk igjen, så viser kortstokken hvor det havnet, og kortet lyser opp. Avsløringen vises én gang (i Claude lagres det i samlingen `bonusvist`); et dyrekort kjøpt på en annen enhet avsløres neste gang appen åpnes.
 - Kortet stokkes inn blant fuglekortene med like mange stjerner, et sted mellom to av dem. Plassen er fast (regnes ut fra artsnavnet), så den er lik hver gang og på alle enheter. Ekorn (★★) havner blant kortene 018–032, rådyr (★★★) blant 033–048, og hare, elg og rødrev (★★★★) blant 049–068.
 - Dyrekortene følger samme stige som fuglene (bronse, sølv, gull og holo) fra første registrering; et kjøpt kort som ikke er sett, har vanlig kant. Overskriften viser «Dyrekort» uten nummer, og samlingen viser «Dyr» på dem som ikke er sett. Fargestripa ved navnet er den fra Fuglekort-builder.
@@ -127,7 +126,7 @@ Frøene tjenes ved å registrere fugler og samles i to tall: **frø samlet** (al
 - **Frøbutikken** har hyllene Dyrekort og Multiplikatorer (og Baksider, når det finnes flere enn standardbaksiden). Øverst står hvor mange frø du har å bruke. En knapp er grå når du ikke har råd. Hvert kjøp bekreftes i et spørsmål.
 - **Angre:** Det siste kjøpet kan angres i to minutter (`FRO.angreTid`): øverst i butikken står «Siste kjøp: Ekorn · 6 500 frø · kan angres i 1:53» med knappen Angre, og du får hele prisen tilbake. Bare det nyeste kjøpet kan angres, og ikke etter to minutter.
 - **Multiplikatorer:** ×2 4 000, ×3 12 000, ×4 36 000, ×5 108 000 og ×10 324 000 frø (tre ganger dyrere for hvert steg, `MULT` i `src/app.html`). Du velger kortet når du kjøper: trykk på prisen, søk opp kortet (alle kortene i kortstokken uten merke, med sjeldenhet og hvor mange dager du har sett fuglen), og bekreft. Merket sitter for alltid og kan ikke flyttes, og hvert kort kan ha ett merke. Fra og med dagen merket settes på, gir hver registrering av fuglen så mange ganger frøene (200 × stjerner × faktor), og det samme gjelder frøene for første gang hvis fuglen ikke er sett før. Er fuglen alt registrert den dagen, gjelder merket fra dagen etter, så det ikke kan settes på i etterkant. Kanter og merker ganges ikke. Merket vises bare på forsiden av kortet, som et klistremerke i øverste venstre hjørne: rundt og litt skjevt, med hvit kant, skygge og glans, og med nedre høyre kant som har løsnet litt fra kortet. Det er gull med «×2» og «FRØ» (×10 i regnbuefarger), og det stemples på når det kjøpes. Butikken viser hvilke kort som har merke.
-- **Baksider:** Ni baksider kan kjøpes, med relativt høye priser: Nordisk minimal og Typografisk 25 000, Nordisk tresnitt og Japansk ro 30 000, Botanisk 35 000, Klassisk samlekort og Klassisk spillekort 40 000, Art deco 45 000 og Perlemor 60 000 frø. Hylla viser dem som et rutenett med standardbaksiden først; trykk på en bakside for å se den stort med kjøpsknappen, og spørsmålet før kjøpet viser den også. En kjøpt bakside kan velges («Bruk») og byttes tilbake til standard når som helst; valget huskes på enheten (`fuglekort:bakside`) og gjelder alle kortene og avsløringen av dyrekort. Baksidene hentes inn med `python3 importer_baksider.py STI/TIL/baksider.zip` (eller en mappe): nummer og navn tas fra filnavnet («Fuglekort_04_Botanisk_744x1039_300dpi.png»), et bilde som er likt baksiden kortstokken har fra før (`docs/cards/bakside.webp`, her «Leken geometri»), hoppes over, resten lagres som `docs/cards/bakside-<id>.webp` (750 × 1050), og `data/baksider.json` får navn, bilde og pris (`PRISER` i skriptet; en bakside som alt står i fila, beholder prisen). `build.py` tar dem med i appen og i lagringen på telefonen. Fila ligger utenfor `cards.json`, så importen fra Fuglekort-builder ikke sletter den. Husk å publisere bildene sammen med `artifact.html` i Claude.
+- **Baksider:** Ni baksider kan kjøpes, med relativt høye priser: Nordisk minimal og Typografisk 25 000, Nordisk tresnitt og Japansk ro 30 000, Botanisk 35 000, Klassisk samlekort og Klassisk spillekort 40 000, Art deco 45 000 og Perlemor 60 000 frø. Hylla viser dem som et rutenett med standardbaksiden først; trykk på en bakside for å se den stort med kjøpsknappen, og spørsmålet før kjøpet viser den også. En kjøpt bakside kan velges («Bruk») og byttes tilbake til standard når som helst; valget huskes på enheten (`fuglekort:bakside`) og gjelder alle kortene og avsløringen av dyrekort. Baksidene hentes inn med `python3 importer_baksider.py STI/TIL/baksider.zip` (eller en mappe): nummer og navn tas fra filnavnet («Fuglekort_04_Botanisk_744x1039_300dpi.png»), et bilde som er likt baksiden kortstokken har fra før (`docs/cards/bakside.webp`, her «Leken geometri»), hoppes over, resten lagres som `docs/cards/bakside-<id>.webp` (750 × 1050), og `data/baksider.json` får navn, bilde og pris (`PRISER` i skriptet; en bakside som alt står i fila, beholder prisen). `build.py` tar dem med i appen og i lagringen på telefonen. Fila ligger utenfor `cards.json`, så importen fra Fuglekort-builder ikke sletter den.
 - **Profil:** delen «Solsikkefrø» viser frø samlet, frø å bruke, brukt i Frøbutikken, en knapp til butikken og hva frøene kom fra (registreringer, dager med fugler, første gang du så en art, glinskant, merker og multiplikatorer). Merkene viser hvor mange frø de gir.
 - **Lagring:** Frøene regnes ut fra observasjonene, nivåene, merkene og multiplikatorene hver gang; sletter man en dag, går frøtallet ned av seg selv. Bare kjøpene lagres, i samlingen `kjop`: `kjop/dyr-sciurus-vulgaris = { pris, dato, ts }`, `kjop/x-parus-major = { pris, dato, ts, faktor }` (dato er dagen merket gjelder fra) og `kjop/bakside-natt = { pris, dato, ts }`. Prisen lagres med kjøpet. I Claude deles de, på telefonen ligger de i `localStorage` (`hagefugler:kjop:v1`), og de er med i sikkerhetskopien (versjon 7). Kjøp fra de grå kortene i eldre versjoner (dokumenter med bare fuglens navn) blir ikke lest.
 
@@ -179,7 +178,7 @@ Ringen øverst til høyre åpner **Min fugleliste**, delt i fem faner. Tittelen 
 
 All lagring går gjennom objektet `Store` øverst i skriptet i `src/app.html`:
 
-- **Som Claude-artifact** lagres observasjonene i artifactens database (samlingen `sett`, ett dokument per art, f.eks. `sett/parus-major = { art, date, dager, ts }`), så de følger med på alle enheter der du er logget inn. `dager` er alle dagene fuglen er sett, eldste først, og `date` er den første av dem (feltet er beholdt så eldre versjoner av appen fortsatt kan lese lista).
+- **Som Claude-artifact** (fram til oktober 2026, se øverst) lagres observasjonene i artifactens database (samlingen `sett`, ett dokument per art, f.eks. `sett/parus-major = { art, date, dager, ts }`), så de følger med på alle enheter der du er logget inn. `dager` er alle dagene fuglen er sett, eldste først, og `date` er den første av dem (feltet er beholdt så eldre versjoner av appen fortsatt kan lese lista).
 - Tellingene ligger i samlingen `tellinger`, ett dokument per telling, f.eks. `tellinger/t1790700000000 = { start, slutt, omrade, arter: { "parus-major": 4, "ekorn": 1 }, ts }`. `start` og `slutt` er tidspunkter i millisekunder, og `slutt` er 0 mens tellingen pågår. I den frittstående appen ligger de i `localStorage` under `hagefugler:tellinger:v1`.
 - Avkrysninger fra før observasjonsdagene kom (bare `date`) blir automatisk fuglens første observasjonsdag.
 - **Som frittstående app** lagres de i nettleserens `localStorage` på enheten. Under «Lagring» i fanen Profil finnes «Kopier sikkerhetskopi» og «Gjenopprett», så du kan flytte listen mellom enheter. Gjenoppretting legger dagene i kopien til dem du har, og tar også imot eldre kopier med én dato per fugl. Sikkerhetskopien har også med de avsluttede tellingene og kjøpene i Frøbutikken.

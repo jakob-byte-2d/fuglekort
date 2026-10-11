@@ -1,7 +1,7 @@
 {
  "tittel": "Fuglekort",
  "antall": 100,
- "bonus": 5,
+ "bonus": 17,
  "bakside": "cards/bakside.webp",
  "hjelp": [
   {
@@ -3555,6 +3555,402 @@
    "fotograf": "Steinar Stueflotten",
    "lisens": "CC BY 4.0",
    "bildeTegneserie": "cards-tegneserie/b05.webp"
+  },
+  {
+   "nr": 6,
+   "id": "b06",
+   "bonus": true,
+   "key": "aglais-urticae",
+   "navn": "Neslesommerfugl",
+   "latin": "Aglais urticae",
+   "stjerner": 1,
+   "status": "Vanlig hagegjest",
+   "kjennetegn": "Oransje vinger med svarte, gule og hvite flekker.",
+   "nar": "April–mai og juli–september.",
+   "mat": "Larver: brennesle. Voksne: blomster.",
+   "fakta": "Overvintrer hengende opp ned i taket i uthus og kjellere.",
+   "vingespenn": "4–5 cm",
+   "vekt": "Under 1 g",
+   "utbredelse": "Hele Norge, Europa, Tyrkia, Sentral-Asia, Sibir, Kina og Japan",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b06.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b06.webp"
+  },
+  {
+   "nr": 7,
+   "id": "b07",
+   "bonus": true,
+   "key": "coccinella-septempunctata",
+   "navn": "Sjuprikket marihøne",
+   "latin": "Coccinella septempunctata",
+   "stjerner": 1,
+   "status": "Vanlig hagegjest",
+   "kjennetegn": "Røde dekkvinger med sju svarte prikker.",
+   "nar": "April–september; overvintrer i jorda.",
+   "mat": "Bladlus, både larver og voksne.",
+   "fakta": "Noen år kommer de i så store mengder at folk blir plaget.",
+   "lengde": "5–8 mm",
+   "vekt": "Under 0,1 g",
+   "utbredelse": "Hele Norge, Europa, Nord-Afrika og store deler av Asia; innført i Nord-Amerika",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b07.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b07.webp"
+  },
+  {
+   "nr": 8,
+   "id": "b08",
+   "bonus": true,
+   "key": "bombus-terrestris",
+   "navn": "Mørk jordhumle",
+   "latin": "Bombus terrestris",
+   "stjerner": 2,
+   "status": "Regelmessig hagegjest",
+   "kjennetegn": "Svart og gul med hvit bakende; stor og lodden.",
+   "nar": "Mars–november; dronningene først.",
+   "mat": "Nektar og pollen fra mange blomster.",
+   "fakta": "Kan bite hull i blomsten og stjele nektaren.",
+   "lengde": "1–2,2 cm",
+   "vekt": "Under 1 g",
+   "utbredelse": "Sør-Norge, Europa, Nord-Afrika og Vest-Asia; innført i Japan, Tasmania, New Zealand og Chile",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b08.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b08.webp"
+  },
+  {
+   "nr": 9,
+   "id": "b09",
+   "bonus": true,
+   "key": "cepaea-hortensis",
+   "navn": "Hagesnegl",
+   "latin": "Cepaea hortensis",
+   "stjerner": 2,
+   "status": "Regelmessig hagegjest",
+   "kjennetegn": "Gult, rosa eller brunt skall med opptil fem mørke bånd.",
+   "nar": "Sommerhalvåret, mest etter regn.",
+   "mat": "Gress og ulike urter.",
+   "fakta": "Har fire følehorn – bare de to bakerste har øyne.",
+   "lengde": "Skall 1,6–2,2 cm",
+   "vekt": "Noen få gram",
+   "utbredelse": "Sør-Norge, Sverige, Danmark, Storbritannia, Irland, Vest- og Sentral-Europa og kysten nordøst i Nord-Amerika",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b09.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b09.webp"
+  },
+  {
+   "nr": 10,
+   "id": "b10",
+   "bonus": true,
+   "key": "rana-temporaria",
+   "navn": "Buttsnutefrosk",
+   "latin": "Rana temporaria",
+   "stjerner": 2,
+   "status": "Regelmessig hagegjest",
+   "kjennetegn": "Brun med mørke flekker og en mørk stripe forbi øyet.",
+   "nar": "Mars–oktober; gyter mars–mai.",
+   "mat": "Meitemark, insekter, larver og snegler.",
+   "fakta": "Kan overvintre under isen og ta oksygen rett fra vannet.",
+   "lengde": "5–11 cm",
+   "vekt": "Rundt 23 g",
+   "utbredelse": "Hele Norge, Sverige, Finland, Danmark, Storbritannia, Irland og Europa øst til Uralfjellene",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b10.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b10.webp"
+  },
+  {
+   "nr": 11,
+   "id": "b11",
+   "bonus": true,
+   "key": "apodemus-sylvaticus",
+   "navn": "Småskogmus",
+   "latin": "Apodemus sylvaticus",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest",
+   "kjennetegn": "Rødbrun rygg, lys buk, store ører og lang hale.",
+   "nar": "Hele året; mest om natta.",
+   "mat": "Frø, nøtter, bær, sopp og insekter.",
+   "fakta": "Vikingene tok den med seg til Island.",
+   "lengde": "Opptil 11 cm",
+   "vekt": "Opptil 30 g",
+   "utbredelse": "Sør-Norge, Sverige, Danmark, Storbritannia, Irland, resten av Europa og Nordvest-Afrika; innført på Island",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b11.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b11.webp"
+  },
+  {
+   "nr": 12,
+   "id": "b12",
+   "bonus": true,
+   "key": "erinaceus-europaeus",
+   "navn": "Pinnsvin",
+   "latin": "Erinaceus europaeus",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest",
+   "kjennetegn": "Brune pigger på ryggen, spiss snute og korte bein.",
+   "nar": "April–oktober, om natta.",
+   "mat": "Meitemark, biller, snegler og larver.",
+   "fakta": "Har 6000–8000 pigger og kan rulle seg til en ball.",
+   "lengde": "Ca. 30 cm",
+   "vekt": "1,2–1,5 kg",
+   "utbredelse": "Norge (mest kysten fra Bergen til Østfold), Sverige, Finland, Danmark, Storbritannia, Irland og Vest-Europa; innført på New Zealand",
+   "rodliste": "Nær truet",
+   "bilde": "cards/b12.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b12.webp"
+  },
+  {
+   "nr": 13,
+   "id": "b13",
+   "bonus": true,
+   "key": "sorex-araneus",
+   "navn": "Krattspissmus",
+   "latin": "Sorex araneus",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest",
+   "kjennetegn": "Bitteliten med lang, spiss snute og trefarget pels.",
+   "nar": "Hele året, både dag og natt.",
+   "mat": "Meitemark, insekter og edderkopper.",
+   "fakta": "Kanskje Norges vanligste pattedyr, men sjelden sett.",
+   "lengde": "4,5–7,5 cm",
+   "vekt": "5–14 g",
+   "utbredelse": "Hele Norge, Sverige, Finland, Danmark, Storbritannia, store deler av Europa, Russland og Sibir øst til Bajkalsjøen",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b13.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b13.webp"
+  },
+  {
+   "nr": 14,
+   "id": "b14",
+   "bonus": true,
+   "key": "bufo-bufo",
+   "navn": "Nordpadde",
+   "latin": "Bufo bufo",
+   "stjerner": 3,
+   "status": "Uvanlig hagegjest",
+   "kjennetegn": "Brun, vortete hud, korte bein og rødlige øyne.",
+   "nar": "April–oktober; mest om natta.",
+   "mat": "Insekter, edderkopper og tusenbein.",
+   "fakta": "Giftkjertler i nakken gjør den farlig å spise for rovdyr.",
+   "lengde": "5–12 cm",
+   "vekt": "Opptil 80 g",
+   "utbredelse": "Sør-Norge og kysten til Midt-Norge, Sverige, Finland, Danmark, Storbritannia, Europa, Nordvest-Afrika, Tyrkia og Vest-Sibir",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b14.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b14.webp"
+  },
+  {
+   "nr": 15,
+   "id": "b15",
+   "bonus": true,
+   "key": "meles-meles",
+   "navn": "Grevling",
+   "latin": "Meles meles",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest",
+   "kjennetegn": "Svart-hvite striper på hodet og grå, kraftig kropp.",
+   "nar": "Mars–november, mest om natta.",
+   "mat": "Meitemark, insektlarver, mus og egg.",
+   "fakta": "Kan spise over 200 meitemark på én natt.",
+   "lengde": "60–90 cm",
+   "vekt": "7–17 kg",
+   "utbredelse": "Norge (mest Østlandet og Trøndelag), Sverige, Finland, Danmark, Storbritannia, Irland, resten av Europa, Tyrkia, Kaukasus og Midtøsten",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b15.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b15.webp"
+  },
+  {
+   "nr": 16,
+   "id": "b16",
+   "bonus": true,
+   "key": "anguis-fragilis",
+   "navn": "Stålorm",
+   "latin": "Anguis fragilis",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest",
+   "kjennetegn": "Blank, brun og slangeaktig, men har øyelokk.",
+   "nar": "Mai–september; i skumring og fukt.",
+   "mat": "Meitemark, snegler og insekter.",
+   "fakta": "En øgle uten bein, ikke en slange – og kan kaste halen.",
+   "lengde": "25–45 cm",
+   "vekt": "Opptil 100 g",
+   "utbredelse": "Lavlandet på Østlandet og Sørlandet vest til Bergen, Sverige, Finland, Danmark, Storbritannia, resten av Europa, Tyrkia og Kaukasus",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b16.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b16.webp"
+  },
+  {
+   "nr": 17,
+   "id": "b17",
+   "bonus": true,
+   "key": "vipera-berus",
+   "navn": "Hoggorm",
+   "latin": "Vipera berus",
+   "stjerner": 4,
+   "status": "Sjelden hagegjest",
+   "kjennetegn": "Mørkt sikksakkbånd på ryggen; grå, brun eller svart.",
+   "nar": "April–september, varme dager.",
+   "mat": "Mus, frosker, øgler og fugleunger.",
+   "fakta": "Huggtennene er bare 3–4 mm, så en tykk sokk beskytter.",
+   "lengde": "50–70 cm",
+   "vekt": "150–200 g",
+   "utbredelse": "Norge nord til Nordland, Sverige, Finland, Storbritannia, store deler av Europa, Russland, Sibir, Mongolia og Nord-Kina",
+   "rodliste": "Livskraftig",
+   "bilde": "cards/b17.webp",
+   "sett": {
+    "boks": [
+     0.0747,
+     0.88,
+     0.0707,
+     0.0495
+    ],
+    "linje": [
+     0.532,
+     0.9152,
+     0.392
+    ]
+   },
+   "bildeTegneserie": "cards-tegneserie/b17.webp"
   }
  ],
  "hjelpFoto": [

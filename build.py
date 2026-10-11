@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Bygger Fuglekort fra src/app.html + data/cards.json.
 
-Lager to utgaver av samme side:
-  docs/index.html     – frittstående app (PWA): full HTML med manifest og offline-støtte
-  artifact.html       – fragmentet som publiseres som Claude-artifact
+Lager docs/index.html: den frittstående appen (PWA) med manifest og offline-støtte, publisert med GitHub Pages.
+(Claude-versjonen, artifact.html, bygges ikke lenger fra oktober 2026; den som ligger i Claude, står som den er.)
 
 Kjør:  python3 build.py
 """
@@ -21,10 +20,7 @@ if bak.is_file():
 payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 fragment = src.replace("__CARDS_JSON__", payload)
 
-# 1) Claude artifact: the fragment as-is (the platform adds <html>/<head>/<body>)
-(ROOT / "artifact.html").write_text(fragment, encoding="utf-8")
-
-# 2) Standalone app: full document, title moved into <head>, manifest + service worker
+# The standalone app: full document, title moved into <head>, manifest + service worker
 title_m = re.search(r"<title>.*?</title>\s*", fragment, re.S)
 title = title_m.group(0).strip() if title_m else "<title>Fuglekort</title>"
 body = fragment.replace(title_m.group(0), "", 1) if title_m else fragment
@@ -90,4 +86,4 @@ sw = (ROOT / "src" / "sw.template.js").read_text(encoding="utf-8").replace("__AS
 sw = re.sub(r"const CACHE = '[^']*';", f"const CACHE = 'fuglekort-{h.hexdigest()[:10]}';", sw)
 (ROOT / "docs" / "sw.js").write_text(sw, encoding="utf-8")
 
-print(f"Bygget {len(data['kort'])} kort → docs/index.html og artifact.html")
+print(f"Bygget {len(data['kort'])} kort → docs/index.html")

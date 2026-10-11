@@ -9,10 +9,10 @@ der STI/TIL/app er mappen `ut/app` fra `python bygg.py` i Fuglekort-builder, ell
 (og kort_tegneserie/ og bilder_tegneserie/ når Fuglekort-builder har tegneseriesettet).
 
 Skriptet
-  1. kopierer kortbildene (001–NNN), bonuskortene (b01–b05, andre dyr), de to forklaringskortene (000a, 000b)
+  1. kopierer kortbildene (001–NNN), bonuskortene (b01–b17, andre dyr: dyrekortene i appen), de to forklaringskortene (000a, 000b)
      og baksiden til docs/cards/, og kortene med fotografi (også bonuskortene og bildekrediteringen deres, b00)
      til docs/cards-foto/, og kortene med tegneseriebilde til docs/cards-tegneserie/ (bonuskortene i
-     tegneseriestil fra kilder/bonus_tegneserie/, laget med lag_bonus_tegneserie.py, når kort.json ikke har dem)
+     tegneseriestil fra kort.json, eller fra kilder/bonus_tegneserie/ (lag_bonus_tegneserie.py) når kort.json ikke har dem)
   2. finner SETT-ruta og datolinja på kortene, så avkrysningen havner riktig
   3. lager data/cards.json (navn, sjeldenhet og korttekst til søket)
   4. lager miniatyrene i docs/sprites/ og app-ikonene i docs/icons/ (fra baksiden)
@@ -120,7 +120,8 @@ def main(app):
     for mappe in ("cards", "cards-foto", "cards-tegneserie"):
         (DOCS / mappe).mkdir(parents=True, exist_ok=True)
         for f in (DOCS / mappe).glob("*.webp"):
-            f.unlink()
+            if not f.name.startswith("bakside-"):    # baksidene i Frøbutikken (importer_baksider.py) får ligge
+                f.unlink()
     fotosett = kilde.get("fotosett")   # kortene med fotografier (valget «Fotografier» i innstillingene)
     # tegneseriefuglene (valget «Tegneseriefugler»): bare fuglekort, og bare de som har et tegneseriebilde
     tegneserie = kilde.get("tegneserie") if any(k.get("tegneserie") for k in kort_inn) else None
@@ -197,7 +198,9 @@ def main(app):
         "nr": k["nr"], "id": k["nr_tekst"], "bonus": True, "key": nokkel(k["latin"]), "navn": k["norsk"], "latin": k["latin"],
         "stjerner": k["stjerner"], "status": k["stjernetekst"],
         "kjennetegn": k["kjennetegn"], "nar": k["naar"], "mat": k["mat"], "fakta": k["funfact"],
-        "lengde": k["lengde"], "vekt": k["vekt"], "utbredelse": k["land"],
+        # «lengde» for de fleste dyrene; sommerfugler har «vingespenn» som fuglene
+        **({"vingespenn": k["vingespenn"]} if k.get("vingespenn") and not k.get("lengde") else {"lengde": k.get("lengde", "")}),
+        "vekt": k["vekt"], "utbredelse": k["land"],
         "rodliste": (k.get("rodliste") or {}).get("navn", ""),
         "bilde": f"cards/{k['nr_tekst']}.webp", "sett": sett,
         **foto_felt(k, k["nr_tekst"]),
