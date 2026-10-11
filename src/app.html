@@ -253,12 +253,12 @@ button{cursor:pointer;touch-action:manipulation}
 .bk-go{flex:1;min-width:0;display:flex;align-items:center;gap:12px;border:0;background:none;padding:0;text-align:left;color:inherit}
 .bk-go .ph{width:40px;height:40px;border-radius:10px;flex-shrink:0}
 /* a multiplier: a round sticker, gold; ×10 in all colours */
-.xdisk{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-weight:800;font-size:15px;letter-spacing:-.02em;color:#4a2a00;
-  background:radial-gradient(circle at 35% 30%,#fff6d0,#f4c24c 52%,#c4860f);box-shadow:inset 0 0 0 2px rgba(255,250,235,.8),0 3px 8px -3px rgba(var(--shadow),.6)}
-.xdisk.x10,.xmerke.x10{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5);background:conic-gradient(from 20deg,#ff8a8a,#ffd24d,#7fe07a,#6fd8f0,#9b8cff,#ff8ad8,#ff8a8a)}
+.xdisk{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-weight:900;font-size:15px;letter-spacing:-.04em;color:#4a2a00;box-sizing:border-box;
+  border:3px solid #fffdf6;background:radial-gradient(circle at 32% 26%,#fff6cf 0,#f9d45e 34%,#eaa922 68%,#c07d0a 100%);box-shadow:0 2px 3px rgba(35,22,0,.35),0 5px 10px -4px rgba(35,22,0,.3);transform:rotate(-10deg)}
+.xdisk.x10{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5);background:conic-gradient(from 20deg,#ff8a8a,#ffd24d,#7fe07a,#6fd8f0,#9b8cff,#ff8ad8,#ff8a8a)}
 .xpaa{display:flex;flex-wrap:wrap;gap:6px}
 .xchip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface-2);border-radius:99px;padding:3px 11px 3px 3px;font-size:13px;font-weight:600;color:inherit}
-.xchip .xdisk{width:24px;height:24px;font-size:10px;box-shadow:inset 0 0 0 1.5px rgba(255,250,235,.8)}
+.xchip .xdisk{width:24px;height:24px;font-size:9.5px;border-width:2px;box-shadow:0 1px 2px rgba(35,22,0,.35)}
 .velg-h{margin:8px 0 0;font-size:17px}
 .velg-sok{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:15px;background:var(--surface);color:var(--ink);margin-bottom:8px}
 /* the newest purchase can be undone for 2 minutes */
@@ -268,13 +268,25 @@ button{cursor:pointer;touch-action:manipulation}
 .angre b{font-size:14.5px;color:var(--ink)}
 .angre small{font-size:12.5px;font-variant-numeric:tabular-nums}
 .angre .btn{flex-shrink:0}
-/* the multiplier on the front of a card, stuck on the corner of the picture */
-.xmerke{position:absolute;z-index:3;display:none;place-items:center;width:15cqw;height:15cqw;margin:-7.5cqw 0 0 -7.5cqw;border-radius:50%;pointer-events:none;
-  font-weight:800;font-size:6cqw;letter-spacing:-.03em;line-height:1;color:#4a2a00;transform:rotate(-12deg);
-  background:radial-gradient(circle at 35% 30%,#fff6d0,#f4c24c 52%,#c4860f);box-shadow:0 0 0 .7cqw #fffaf0,0 1.2cqw 2.6cqw rgba(40,25,0,.45)}
-.card.xm .xmerke{display:grid}
+/* the multiplier on the front of a card: a sticker stuck on the top left corner, a little crooked, with a white
+   die-cut edge, a gloss, and its lower right edge lifting off the card (the flap is the cut-off piece, folded back) */
+.xmerke{position:absolute;z-index:4;left:-2.2cqw;top:-2cqw;width:16cqw;height:16cqw;display:none;pointer-events:none;transform:rotate(-13deg);
+  filter:drop-shadow(0 .35cqw .4cqw rgba(35,22,0,.4)) drop-shadow(0 1.3cqw 2cqw rgba(35,22,0,.22))}
+.card.xm .xmerke{display:block}
+.xm-b{position:absolute;inset:0;border-radius:50%;background:#fffdf6;clip-path:polygon(0 0,100% 0,100% 54%,54% 100%,0 100%);
+  display:grid;place-content:center;justify-items:center}
+.xm-b::before{content:"";position:absolute;inset:1.15cqw;border-radius:50%;box-shadow:inset 0 0 0 .3cqw rgba(150,90,0,.3);
+  background:radial-gradient(circle at 32% 26%,#fff6cf 0,#f9d45e 34%,#eaa922 68%,#c07d0a 100%)}
+.xm-b::after{content:"";position:absolute;inset:1.15cqw;border-radius:50%;background:linear-gradient(125deg,transparent 26%,rgba(255,255,255,.6) 35%,transparent 44%)}
+.xm-b b{position:relative;z-index:1;font-size:5.8cqw;font-weight:900;letter-spacing:-.05em;line-height:1;color:#4a2a00;margin-top:.6cqw}
+.xm-b small{position:relative;z-index:1;font-size:1.8cqw;font-weight:800;letter-spacing:.2em;line-height:1;color:#6b4200;margin:.35cqw 0 0 .2cqw;text-transform:uppercase}
+.xm-f{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:50%;transform-origin:0 0;transform:translate(154%,154%) matrix(0,-1,-1,0,0,0);
+  clip-path:polygon(100% 54%,100% 100%,54% 100%);background:linear-gradient(315deg,#fffdf6 30%,#ebe5d6 62%,#c9c0aa 100%)}
+.xmerke.x10 .xm-b::before{background:conic-gradient(from 20deg,#ff8a8a,#ffd24d,#7fe07a,#6fd8f0,#9b8cff,#ff8ad8,#ff8a8a);box-shadow:inset 0 0 0 .3cqw rgba(0,0,0,.12)}
+.xmerke.x10 .xm-b b,.xmerke.x10 .xm-b small{color:#fff;text-shadow:0 .2cqw .4cqw rgba(0,0,0,.45)}
+.xmerke.x10 .xm-b b{font-size:4.7cqw}
 .xmerke.ny{animation:xpaa .75s cubic-bezier(.3,1.6,.5,1)}
-@keyframes xpaa{0%{transform:scale(2.8) rotate(-50deg);opacity:0}55%{opacity:1}100%{transform:rotate(-12deg)}}
+@keyframes xpaa{0%{transform:scale(2.6) rotate(-50deg);opacity:0}55%{opacity:1}100%{transform:rotate(-13deg)}}
 /* question box */
 /* ---------- the picture in full screen ---------- */
 .storbilde{position:fixed;inset:0;z-index:53;overflow:hidden;display:grid;align-content:center;justify-items:center;gap:16px;padding:24px 16px;
@@ -1515,7 +1527,7 @@ function makeCard(i) {
   <div class="inner">
     <div class="face front" style="background-position:${spritePos(i)}">
       <img src="${esc(bildeAv(c))}" alt="${esc(altTekst(c))}" draggable="false" decoding="async">
-      <span class="xmerke" aria-hidden="true" style="left:${P(BILDEFELT.x + BILDEFELT.w - 0.082)};top:${P(BILDEFELT.y + 0.056)}"></span>
+      <span class="xmerke" aria-hidden="true"><span class="xm-b"><b></b><small>frø</small></span><span class="xm-f"></span></span>
       <span class="mkant" aria-hidden="true"><i class="mk-metall"></i><i class="mk-lys"></i><i class="mk-blits"></i></span>
       <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
       <button class="ctl bilde-hit" data-act="bilde" tabindex="0" aria-label="Vis bildet av ${esc(c.navn)} stort" style="left:${P(BILDEFELT.x)};top:${P(BILDEFELT.y)};width:${P(BILDEFELT.w)};height:${P(BILDEFELT.h)}"></button>
@@ -1576,7 +1588,7 @@ function paintCard(el) {
   // the multiplier: only on the front; it is stamped on when it is new
   const xf = (multAv(c.key) || {}).faktor || 0, xm = el.querySelector('.xmerke');
   el.classList.toggle('xm', !!xf);
-  if (xf) { xm.className = `xmerke x${xf}`; xm.textContent = `×${xf}`; }
+  if (xf) { xm.className = `xmerke x${xf}`; xm.querySelector('b').textContent = `×${xf}`; }
   if (el._x != null && xf > el._x) { xm.classList.remove('ny'); void xm.offsetWidth; xm.classList.add('ny'); }
   el._x = xf;
   el.setAttribute('aria-label', `${c.bonus ? 'Dyrekort' : `Kort ${c.id}`}: ${c.navn}${xf ? `, merket ×${xf}` : ''}`);
