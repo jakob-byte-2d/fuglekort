@@ -675,6 +675,8 @@ button{cursor:pointer;touch-action:manipulation}
 /* Min fugleliste: the title and the tabs stay at the top while the tab scrolls */
 .s-topp{position:sticky;top:0;z-index:3;background:var(--surface);margin:calc(-1 * (env(safe-area-inset-top,0px) + 14px)) -20px 0;
   padding:calc(env(safe-area-inset-top,0px) + 14px) 20px 0;box-shadow:0 1px 0 var(--line)}
+/* it sticks below the sheet's own space at the top; this fills that space too, so nothing shows above it */
+.s-topp::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:calc(env(safe-area-inset-top,0px) + 15px);background:var(--surface);pointer-events:none}
 .faner{display:flex;gap:2px;margin:8px -8px 0;overflow-x:auto;scrollbar-width:none}
 .faner::-webkit-scrollbar{display:none}
 .faner button{flex:1 0 auto;border:0;background:none;color:var(--muted);font:inherit;font-size:14px;font-weight:600;padding:10px 6px 11px;

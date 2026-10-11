@@ -1,6 +1,6 @@
 // Fuglekort – offline-støtte for den frittstående appen.
 // build.py setter versjonen ut fra innholdet, så telefonene henter alt på nytt etter hver endring.
-const CACHE = 'fuglekort-f2bc23f0d0';
+const CACHE = 'fuglekort-95bf73fd27';
 const ASSETS = [
   "./",
   "index.html",
