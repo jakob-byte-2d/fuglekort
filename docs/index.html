@@ -24,7 +24,7 @@
   --bg:#e1e8e0; --bg-hi:#f3f6f0; --ink:#15251e; --muted:#586a61; --line:#c6d2c8;
   --surface:#f7f9f4; --surface-2:#e9efe8; --spruce:#0f4a36; --spruce-ink:#0f4a36; --on-spruce:#f3f8f2;
   --gold:#eea914; --gold-ink:#8a5a00; --track:#cfdacf; --shadow:22,44,33; --scrim:rgba(12,26,20,.36); --rec:#d6452f; --ok:#2f9a5f; --warn-bg:#fdf1d6; --warn-ink:#6b4700;
-  --card-cream:#fdfcf3; --card-ink:#14231d; --card-teal:#d5eeee; --card-gold:#f4b41a; --card-green:#0f4a36; --pen:#1c3aa0;
+  --card-cream:#fdfcf3; --card-ink:#14231d; --card-teal:#d5eeee; --card-gold:#f4b41a; --card-green:#0f4a36; --pen:#1c3aa0; --strek:#1c3aa0;
   --font:"Familjen Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --hand:"Caveat", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
   color-scheme:light;
@@ -33,14 +33,14 @@
   :root:not([data-theme="light"]){
     --bg:#0c1712; --bg-hi:#18291f; --ink:#e3ebe5; --muted:#8fa298; --line:#26392f;
     --surface:#122019; --surface-2:#1a2b22; --spruce:#1d6a4d; --spruce-ink:#8bd0aa; --on-spruce:#f3f8f2;
-    --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a;
+    --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a; --strek:#a9bbff;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0c1712; --bg-hi:#18291f; --ink:#e3ebe5; --muted:#8fa298; --line:#26392f;
   --surface:#122019; --surface-2:#1a2b22; --spruce:#1d6a4d; --spruce-ink:#8bd0aa; --on-spruce:#f3f8f2;
-  --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a;
+  --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a; --strek:#a9bbff;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -819,10 +819,26 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .art-aar b{font-variant-numeric:tabular-nums}
 .merker{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px}
 /* the day badges: smaller, five in a row; only the next one shows seeds and how far there is left */
-.merker.dagmerker{grid-template-columns:repeat(5,1fr);gap:12px 6px}
-.dagmerker .merke .med{width:44px;height:44px;font-size:15px;margin-bottom:2px}
-.dagmerker .merke b{font-size:11.5px;font-weight:600}
-.dagmerker .merke.neste{grid-column:span 2}
+/* the observation days as tally marks, in pen */
+.strek-tavle{display:grid;gap:8px}
+.strek-rad{display:flex;align-items:center;gap:4px}
+.strek-rad svg{width:27px;height:29px;flex-shrink:0;overflow:visible}
+.strek-rad path{fill:none;stroke:var(--strek);stroke-width:2.3;stroke-linecap:round}
+.strek-rad path.tom{stroke:var(--muted);opacity:.5;stroke-width:1.8;stroke-dasharray:.1 4.2}
+.strek-sum{margin-left:auto;padding-left:6px;font-family:var(--hand);font-size:19px;font-weight:600;line-height:1;color:var(--strek);transform:rotate(-4deg)}
+.strek-neste{margin:10px 0 0}
+.mtidl{font-size:11.5px;color:var(--muted)}
+/* in the celebration: the four strokes and then the one across, drawn */
+.fm .strek{width:62%;height:62%;overflow:visible}
+.fm .strek path{fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+.fest.on .fm .strek path{animation:strek-tegn .2s ease-out forwards}
+.fest.on .fm .strek path:nth-child(1){animation-delay:.55s}
+.fest.on .fm .strek path:nth-child(2){animation-delay:.72s}
+.fest.on .fm .strek path:nth-child(3){animation-delay:.89s}
+.fest.on .fm .strek path:nth-child(4){animation-delay:1.06s}
+.fest.on .fm .strek path:nth-child(5){animation-delay:1.35s;animation-duration:.32s}
+@keyframes strek-tegn{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion: reduce){.fm .strek path{stroke-dashoffset:0}.fest.on .fm .strek path{animation:none}}
 .merke{display:grid;justify-items:center;text-align:center;gap:3px;align-content:start}
 .merke .med{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:17px;letter-spacing:-.02em;margin-bottom:4px;
   color:var(--muted);background:var(--surface-2);border:2px dashed var(--line)}
@@ -1516,8 +1532,8 @@ const FRO = {
   forsteGang: 1000,                          // × stars, the first time a species is seen
   daglig: 600,                               // once for each day with at least one bird registered
   niva: [500, 1500, 3000, 6000],             // bronse-, sølv-, gull-, holokant
-  merker: { a10: 12500, a15: 25000, a20: 50000, a25: 75000, a30: 100000, a50: 150000, aalle: 250000,
-    rekke: 5000, arstider: 10000, tellekorps: 7500, flokk: 7500 },
+  merker: { a10: 15000, a15: 30000, a20: 75000, a25: 125000, a30: 250000, a50: 500000, aalle: 1000000,
+    rekke: 5000, arstider: 10000, tellekorps: 75000, flokk: 7500 },      // tellekorps: once every calendar year
   dagMerkeForste: 10000,                     // the «5 dager» badge
   dagMerke: 2000,                            // each «N dager» badge after that: one for every 5 observation days
   arsliste: { 10: 5000, 15: 12500, 20: 25000, 25: 50000 },   // species seen in one calendar year
@@ -1642,6 +1658,7 @@ function nokkeltall() {
     arter: seenCount(), obsDager: alle.length, rekke, arstider, iAar, startAar,
     aarene: startAar ? Array.from({ length: Math.max(0, naa - startAar + 1) }, (_, k) => startAar + k) : [],
     langeTellinger: ferdige.filter(v => v.slutt - v.start >= 3600000).length,
+    tellAar: ferdige.filter(v => v.slutt - v.start >= 3600000).reduce((a, v) => { const y = new Date(v.start).getFullYear(); a[y] = (a[y] || 0) + 1; return a; }, {}),
     flokk: Math.max(0, ...ferdige.flatMap(v => Object.keys(v.arter).filter(erFugl).map(k => v.arter[k]))),
   };
 }
@@ -1656,20 +1673,31 @@ const MERKER = [
   { id: 'aalle', navn: 'Hele kortstokken', tekst: `Sett alle ${NB} fuglene`, mal: NB, v: t => t.arter, ikon: String(NB) },
   { id: 'rekke', navn: 'Sju på rad', tekst: 'Observasjoner sju dager på rad', mal: 7, v: t => t.rekke, ikon: MIKON.rekke },
   { id: 'arstider', navn: 'Fire årstider', tekst: 'Observasjoner vår, sommer, høst og vinter', mal: 4, v: t => t.arstider, ikon: MIKON.arstider },
-  { id: 'tellekorps', navn: 'Tellekorps', tekst: 'En hagefugltelling på minst én time', mal: 1, v: t => t.langeTellinger, ikon: MIKON.telling },
   { id: 'flokk', navn: 'Flokk', tekst: 'Minst 20 av én art i en telling', mal: 20, v: t => t.flokk, ikon: MIKON.flokk },
 ];
+/* Tellekorps: a garden bird count of at least an hour, once every calendar year (like Hagefugltellingen) */
+const tellekorps = y => ({ id: 'tellekorps-' + y, tAar: y, navn: `Tellekorps ${y}`, tekst: `En hagefugltelling på minst én time i ${y}`, mal: 1, v: t => t.tellAar[y] || 0, ikon: MIKON.telling });
+const tellekorpsMerker = t => [...new Set([...Object.keys(t.tellAar).map(Number), aarIdag()])].sort().map(tellekorps);
+const aarIdag = () => +todayISO().slice(0, 4);
+/* tally marks in pen: four strokes and the fifth across them. Each one a little crooked, the same every time
+   (from the bunch number g). n of the five are drawn; with tom, the rest are dotted */
+function strekBunt(g, n, kl = '', tom = false) {
+  const r = k => (hashTall(`${g}:${k}`) % 1000) / 500 - 1;            // −1 … 1
+  const d = [0, 1, 2, 3].map(k => { const x = 5 + k * 6 + r(k) * .7, l = r(k + 9) * 1.1; return `M${(x + l).toFixed(1)} ${(4 + r(k + 4) * 1.2).toFixed(1)} L${(x - l * .4).toFixed(1)} ${(28 + r(k + 6)).toFixed(1)}`; });
+  d.push(`M${(1 + r(20)).toFixed(1)} ${(23.5 + r(21) * 1.5).toFixed(1)} L${(28.5 + r(22)).toFixed(1)} ${(8.5 + r(23) * 1.5).toFixed(1)}`);
+  return `<svg class="${kl}" viewBox="0 0 30 32" aria-hidden="true">${d.map((x, k) => k < n ? `<path pathLength="1" d="${x}"/>` : tom ? `<path class="tom" d="${x}"/>` : '').join('')}</svg>`;
+}
 /* a badge for every 5 observation days (5, 10, 15 …), with no end: the ones reached and the next one.
    The first (5 dager) gives FRO.dagMerkeForste, each one after it FRO.dagMerke */
 const DAGSTEG = 5;
-const dagMerke = n => ({ id: 'd' + n, dag: true, navn: `${n} dager`, tekst: `${n} observasjonsdager`, mal: n, v: t => t.obsDager, ikon: String(n) });
+const dagMerke = n => ({ id: 'd' + n, dag: true, navn: `${n} dager`, tekst: `${n} observasjonsdager`, mal: n, v: t => t.obsDager, ikon: strekBunt(n / DAGSTEG - 1, 5, 'strek') });
 const dagMerker = t => Array.from({ length: Math.floor(t.obsDager / DAGSTEG) + 1 }, (_, k) => dagMerke((k + 1) * DAGSTEG));
 /* the year list: four badges for each calendar year, from the first 1 January after the first bird */
 const ARSMAL = [10, 15, 20, 25];
 const aarMerke = (y, n) => ({ id: `y${y}-${n}`, aar: y, navn: `${n} arter i ${y}`, tekst: `Sett ${n} ulike arter i løpet av ${y}`, mal: n, v: t => t.iAar[y] || 0, ikon: String(n) });
 const aarMerker = t => t.aarene.flatMap(y => ARSMAL.map(n => aarMerke(y, n)));
-const merkerListe = t => [...MERKER, ...dagMerker(t), ...aarMerker(t)];
-const merkeFro = m => (m.dag ? (m.mal === DAGSTEG ? FRO.dagMerkeForste : FRO.dagMerke) : m.aar ? FRO.arsliste[m.mal] || 0 : FRO.merker[m.id] || 0);
+const merkerListe = t => [...MERKER, ...tellekorpsMerker(t), ...dagMerker(t), ...aarMerker(t)];
+const merkeFro = m => (m.dag ? (m.mal === DAGSTEG ? FRO.dagMerkeForste : FRO.dagMerke) : m.aar ? FRO.arsliste[m.mal] || 0 : m.tAar ? FRO.merker.tellekorps : FRO.merker[m.id] || 0);
 function opptjent() {
   const t = nokkeltall();
   return { niva: Object.fromEntries(CARDS.map(c => [c.key, nivaAv(c)])), merker: new Set(merkerListe(t).filter(m => m.v(t) >= m.mal).map(m => m.id)) };
@@ -2768,7 +2796,19 @@ function merkeHtml(m, nt) {
   const fro = `<small class="mfro">${FROIKON} ${fmtFro(merkeFro(m))}</small>`;
   const igjen = `<i class="mbar" role="img" aria-label="${Math.min(v, m.mal)} av ${m.mal}"><i style="width:${(Math.min(v, m.mal) / m.mal * 100).toFixed(1)}%"></i></i><small class="mv">${Math.min(v, m.mal)} av ${m.mal}</small>`;
   if (m.dag) return `<div class="merke ${ok ? 'ok' : 'neste'}" title="${esc(m.tekst)}"><span class="med">${m.ikon}</span><b>${esc(m.navn)}</b>${ok ? '' : fro + igjen}</div>`;
-  return `<div class="merke ${ok ? 'ok' : ''}" title="${esc(m.tekst)}"><span class="med ${m.ikon.startsWith('<') ? 'ik' : ''}">${m.ikon}</span><b>${esc(m.navn)}</b><small>${ok ? 'Oppnådd' : esc(m.tekst)}</small>${fro}${ok ? '' : igjen}</div>`;
+  const tidl = m.tAar ? Object.keys(nt.tellAar).map(Number).filter(y => y < m.tAar) : [];
+  return `<div class="merke ${ok ? 'ok' : ''}" title="${esc(m.tekst)}"><span class="med ${m.ikon.startsWith('<') ? 'ik' : ''}">${m.ikon}</span><b>${esc(m.navn)}</b><small>${ok ? 'Oppnådd' : esc(m.tekst)}</small>${tidl.length ? `<small class="mtidl">Også ${tidl.join(', ')}</small>` : ''}${fro}${ok ? '' : igjen}</div>`;
+}
+/* the observation days as tally marks: a bunch for every 5 days (each one a badge), 10 bunches (50 days) to a row;
+   the bunch on its way has the days so far, and the rest dotted */
+function strekHtml(nt) {
+  const n = nt.obsDager, hele = Math.floor(n / DAGSTEG), rest = n % DAGSTEG, PR = 10;
+  const bunter = Array.from({ length: hele + 1 }, (_, g) => strekBunt(g, g < hele ? 5 : rest, g < hele ? '' : 'neste', true));
+  const rader = [];
+  for (let i = 0; i < bunter.length; i += PR) rader.push(`<div class="strek-rad">${bunter.slice(i, i + PR).join('')}${i + PR <= hele ? `<span class="strek-sum">${(i + PR) * DAGSTEG}</span>` : ''}</div>`);
+  const igjen = DAGSTEG - rest, fro = hele ? FRO.dagMerke : FRO.dagMerkeForste;
+  return `<div class="strek-tavle" role="img" aria-label="${dagerTekst(n)}, ${flertall(hele, 'merke', 'merker')}">${rader.join('')}</div>
+    <p class="cap strek-neste">${n ? '' : 'Ingen observasjonsdager ennå. '}${igjen === 1 ? '1 dag' : `${igjen} dager`} igjen til neste merke · ${fmtFro(fro)} frø</p>`;
 }
 /* the year list in Merker: this year's species and four badges, and a line for each year before */
 function arslisteHtml(nt) {
@@ -2799,7 +2839,7 @@ function renderStats() {
     .sort((a, b) => (b.d > a.d ? 1 : b.d < a.d ? -1 : b.ts - a.ts)).slice(0, 6);
   const cardOf = key => BY_KEY[key];
   const aktivT = Tell.aktiv(), ferdigeT = Tell.ferdige();
-  const nt = nokkeltall(), dagM = dagMerker(nt), merkerOk = merkerListe(nt).filter(m => m.v(nt) >= m.mal).length;
+  const nt = nokkeltall(), merkerOk = merkerListe(nt).filter(m => m.v(nt) >= m.mal).length;
   const perNiva = [0, 0, 0, 0, 0]; CARDS.filter(c => erApen(c)).forEach(c => perNiva[nivaAv(c)]++);
   const naermest = CARDS.map((c, i) => ({ c, i, n: erApen(c) && Store.has(c.key) && nesteNiva(c) })).filter(x => x.n).sort((a, b) => a.n.mangler - b.n.mangler || b.c.stjerner - a.c.stjerner).slice(0, 3);
   const obsDager = new Set(ids.flatMap(id => Store.data[id].dager)).size;
@@ -2909,9 +2949,11 @@ function renderStats() {
     </div>` : ''}`,
     merker: () => `
     <div class="s-sec"><h3>Merker <span class="h3n">${merkerOk} oppnådd</span></h3>
-      <div class="merker">${MERKER.map(m => merkeHtml(m, nt)).join('')}</div>
-      <p class="cap" style="margin:22px 0 10px">Observasjonsdager: et merke for hver 5. dag. De første 5 dagene gir ${fmtFro(FRO.dagMerkeForste)} frø, hvert merke etter det ${fmtFro(FRO.dagMerke)}.</p>
-      <div class="merker dagmerker">${dagM.map(m => merkeHtml(m, nt)).join('')}</div>
+      <div class="merker">${[...MERKER.filter(m => m.id !== 'flokk'), tellekorps(aarIdag()), ...MERKER.filter(m => m.id === 'flokk')].map(m => merkeHtml(m, nt)).join('')}</div>
+    </div>
+    <div class="s-sec"><h3>Observasjonsdager <span class="h3n">${nt.obsDager}</span></h3>
+      <p class="cap" style="margin:0 0 12px">En strek for hver dag du har registrert fugler, og et merke for hver 5. dag. De første 5 dagene gir ${fmtFro(FRO.dagMerkeForste)} frø, hvert merke etter det ${fmtFro(FRO.dagMerke)}.</p>
+      ${strekHtml(nt)}
     </div>
     ${arslisteHtml(nt)}`
   };
