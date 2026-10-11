@@ -269,6 +269,18 @@ button{cursor:pointer;touch-action:manipulation}
 .xchip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface-2);border-radius:99px;padding:3px 11px 3px 3px;font-size:13px;font-weight:600;color:inherit}
 .xchip .xdisk{width:24px;height:24px;font-size:9.5px;border-width:2px;box-shadow:0 1px 2px rgba(35,22,0,.35)}
 .velg-h{margin:8px 0 0;font-size:17px}
+.bak-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px 10px}
+.bak-grid li{display:grid;justify-items:center;gap:6px;text-align:center}
+.bak-bilde{display:block;width:100%;aspect-ratio:750/1050;padding:0;border:0;border-radius:7px;overflow:hidden;background:var(--track);
+  box-shadow:0 6px 14px -6px rgba(var(--shadow),.55)}
+.bak-bilde img{display:block;width:100%;height:100%;object-fit:cover}
+.bak-grid li.bruk .bak-bilde{box-shadow:0 0 0 3px var(--ok),0 6px 14px -6px rgba(var(--shadow),.55)}
+.bak-grid b{font-size:13px;font-weight:600;line-height:1.2}
+.bak-grid .btn{padding:6px 10px;font-size:12.5px}
+.bak-grid .bk-kjop .froikon{width:13px;height:13px}
+.bak-bruk{font-size:12.5px;font-weight:700;color:var(--ok);padding:6px 0}
+.dlg-bak{display:block;width:120px;aspect-ratio:750/1050;margin:2px auto 14px;border-radius:8px;box-shadow:0 8px 20px -8px rgba(0,0,0,.5)}
+.dlg-bak.stor{width:min(62vw,240px)}
 .velg-sok{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:15px;background:var(--surface);color:var(--ink);margin-bottom:8px}
 /* the newest purchase can be undone for 2 minutes */
 .angre{display:flex;align-items:center;gap:12px;margin:14px 0 4px;padding:10px 10px 10px 14px;border-radius:14px;background:var(--warn-bg);color:var(--warn-ink)}
@@ -3352,7 +3364,7 @@ function lukkDlg(fn) {
   if (!dlgApen) return;
   dlgApen = false; dlgEl.classList.remove('on');
   app.inert = dlgInert[0]; if (openSheet) openSheet.inert = !!dlgInert[1];
-  setTimeout(() => { dlgEl.hidden = true; }, 200);
+  setTimeout(() => { if (!dlgApen) dlgEl.hidden = true; }, 200);   // not if a new question opened in the meantime
   if (fn) fn(); else if (dlgFor && dlgFor.focus) dlgFor.focus();
   froVentKjor(220);
 }
@@ -3442,13 +3454,13 @@ function renderButikk() {
       <div class="xpaa">${merket.map(x => `<button class="xchip" data-go="${x.i}" aria-label="${esc(CARDS[x.i].navn)}, ×${x.f}. Vis kortet"><span class="xdisk x${x.f}" aria-hidden="true">×${x.f}</span>${esc(CARDS[x.i].navn)}</button>`).join('')}</div>` : ''}
     </div>
     ${BAKSIDER.length > 1 ? `<div class="s-sec"><h3>Baksider</h3>
-      <ul class="butikk">${BAKSIDER.map(b => {
+      <p class="cap" style="margin:0 0 12px">Baksiden vises når du snur et kort. En kjøpt bakside kan du bytte til og fra når du vil.</p>
+      <ul class="bak-grid">${BAKSIDER.map(b => {
         const har = harBakside(b.id), bruk = baksideValgt() === b.id;
-        return `<li><span class="bk-kort" aria-hidden="true"><img src="${esc(b.bilde)}" alt=""></span>
-          <span class="bk-t"><b>${esc(b.navn)}</b>${bruk ? '<small>I bruk</small>' : har && b.id !== 'standard' ? '<small>Kjøpt</small>' : ''}</span>
-          ${bruk ? '' : har ? `<button class="btn" data-bruk="${b.id}">Bruk</button>` : knapp(`data-bakside="${b.id}"`, +b.pris, `Kjøp baksiden ${b.navn}`)}</li>`;
+        return `<li class="${bruk ? 'bruk' : ''}"><button class="bak-bilde" data-vis-bak="${b.id}" aria-label="Vis baksiden ${esc(b.navn)} stort"><img src="${esc(b.bilde)}" alt="" loading="lazy" decoding="async"></button>
+          <b>${esc(b.navn)}</b>
+          ${bruk ? '<span class="bak-bruk">I bruk</span>' : har ? `<button class="btn" data-bruk="${b.id}">Bruk</button>` : knapp(`data-bakside="${b.id}"`, +b.pris, `Kjøp baksiden ${b.navn}`)}</li>`;
       }).join('')}</ul>
-      <p class="cap">Baksiden vises når du snur et kort.</p>
     </div>` : ''}`;
   paintAngre();
 }
@@ -3513,7 +3525,7 @@ function kjopBakside(bid) {
   if (!b || harBakside(bid) || manglerFro(+b.pris)) return;
   sporsmal({
     tittel: `Kjøpe baksiden ${b.navn}?`,
-    tekst: `Det koster <b>${fmtFro(+b.pris)} frø</b>. Den brukes på alle kortene med en gang, og du kan bytte tilbake når du vil.`,
+    tekst: `<img class="dlg-bak" src="${esc(b.bilde)}" alt="">Det koster <b>${fmtFro(+b.pris)} frø</b>, og du har ${fmtFro(froRegnskap().saldo)}. Den brukes på alle kortene med en gang, og du kan bytte tilbake når du vil.`,
     knapper: [{ tekst: `Kjøp for ${fmtFro(+b.pris)} frø`, pri: true, fn: () => {
       froNullstill(); if (harBakside(bid) || manglerFro(+b.pris)) return;
       lsSet(BAKSIDE_KEY(), bid);
@@ -3549,6 +3561,14 @@ butikkSheet.addEventListener('click', e => {
   if (b.hasAttribute('data-tilbake')) { butikkVelg = null; renderButikk(); butikkSheet.scrollTop = 0; return; }
   if (d.velg && butikkVelg) { kjopMult(butikkVelg.f, d.velg); return; }
   if (d.bakside) { kjopBakside(d.bakside); return; }
+  if (d.visBak) {
+    const bk = BAKSIDER.find(x => x.id === d.visBak); if (!bk) return;
+    const har = harBakside(bk.id), bruk = baksideValgt() === bk.id, nok = froRegnskap().saldo >= +bk.pris;
+    sporsmal({ tittel: bk.navn, tekst: `<img class="dlg-bak stor" src="${esc(bk.bilde)}" alt="Baksiden ${esc(bk.navn)}">${bruk ? 'Denne baksiden er i bruk.' : har ? 'Du har kjøpt denne baksiden.' : `${fmtFro(+bk.pris)} frø.${nok ? '' : ` Du mangler ${fmtFro(+bk.pris - Math.max(0, froRegnskap().saldo))}.`}`}`,
+      knapper: [...(bruk ? [] : har ? [{ tekst: 'Bruk denne', pri: true, fn: () => { lsSet(BAKSIDE_KEY(), bk.id); malBaksider(); renderButikk(); si('Baksiden er byttet.'); } }]
+        : [{ tekst: nok ? `Kjøp for ${fmtFro(+bk.pris)} frø` : 'Ikke nok frø ennå', pri: true, av: !nok, fn: () => kjopBakside(bk.id) }]), { tekst: 'Lukk' }] });
+    return;
+  }
   if (d.bruk && harBakside(d.bruk)) { lsSet(BAKSIDE_KEY(), d.bruk); malBaksider(); renderButikk(); si('Baksiden er byttet.'); }
 });
 butikkSheet.addEventListener('input', e => { if (e.target.id === 'velgSok') paintVelg(); });

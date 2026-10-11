@@ -1,1 +1,56 @@
-[]
+[
+  {
+    "id": "nordisk-minimal",
+    "navn": "Nordisk minimal",
+    "bilde": "cards/bakside-nordisk-minimal.webp",
+    "pris": 25000
+  },
+  {
+    "id": "typografisk",
+    "navn": "Typografisk",
+    "bilde": "cards/bakside-typografisk.webp",
+    "pris": 25000
+  },
+  {
+    "id": "nordisk-tresnitt",
+    "navn": "Nordisk tresnitt",
+    "bilde": "cards/bakside-nordisk-tresnitt.webp",
+    "pris": 30000
+  },
+  {
+    "id": "japansk-ro",
+    "navn": "Japansk ro",
+    "bilde": "cards/bakside-japansk-ro.webp",
+    "pris": 30000
+  },
+  {
+    "id": "botanisk",
+    "navn": "Botanisk",
+    "bilde": "cards/bakside-botanisk.webp",
+    "pris": 35000
+  },
+  {
+    "id": "klassisk-samlekort",
+    "navn": "Klassisk samlekort",
+    "bilde": "cards/bakside-klassisk-samlekort.webp",
+    "pris": 40000
+  },
+  {
+    "id": "klassisk-spillekort",
+    "navn": "Klassisk spillekort",
+    "bilde": "cards/bakside-klassisk-spillekort.webp",
+    "pris": 40000
+  },
+  {
+    "id": "art-deco",
+    "navn": "Art deco",
+    "bilde": "cards/bakside-art-deco.webp",
+    "pris": 45000
+  },
+  {
+    "id": "perlemor",
+    "navn": "Perlemor",
+    "bilde": "cards/bakside-perlemor.webp",
+    "pris": 60000
+  }
+]
