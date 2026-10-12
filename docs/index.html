@@ -788,9 +788,10 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .alb.s .th{filter:none;opacity:1;box-shadow:0 3px 8px -3px rgba(var(--shadow),.5)}
 .alb .nr{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .alb.s .nr{display:none}
-.alb .okdot{position:absolute;right:-5px;top:-5px;min-width:19px;height:19px;padding:0 4px;border-radius:10px;font-size:10.5px;display:none;box-shadow:0 0 0 2px var(--surface)}
+.alb .okdot{position:absolute;right:-5px;top:-5px;min-width:19px;height:19px;padding:0 4px;border-radius:10px;font-size:10.5px;display:none;
+  background:color-mix(in srgb, var(--gold) 26%, var(--surface));color:var(--gold-ink);box-shadow:0 0 0 2px var(--surface),inset 0 0 0 1px color-mix(in srgb, var(--gold) 50%, transparent)}
 .alb.s .okdot{display:grid}
-.alb.idag .okdot{background:var(--ok);color:#fff}
+.alb.idag .okdot{background:var(--ok);color:#fff;box-shadow:0 0 0 2px var(--surface)}
 .store{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center}
 .store i{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0}
 .store.sky i{background:#3aa66f}
@@ -1011,17 +1012,21 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .intro-kort .tick path{transition-delay:.25s}
 .intro-konge{width:min(46vw,30vh,200px);height:min(46vw,30vh,200px);border-radius:22%;
   box-shadow:0 0 0 4px var(--gold),0 0 60px 10px color-mix(in srgb, var(--gold) 40%, transparent),0 20px 40px -18px rgba(0,0,0,.6)}
-.intro-ikoner{display:flex;gap:min(5vw,26px);justify-content:center}
-.intro-ik{display:grid;justify-items:center;gap:10px}
-.intro-ik i{width:min(21vw,84px);height:min(21vw,84px);border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:28px;color:#3b2a00;
-  background:radial-gradient(circle at 35% 30%, #fff6cf 0, #f7cf5a 38%, #d99a12 100%);box-shadow:0 0 0 3px #fffaf0,0 10px 22px -10px rgba(0,0,0,.55)}
-.intro-ik svg{width:44%;height:44%}
-.intro-ik b{font-size:13.5px}
-.intro-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;max-width:480px;box-sizing:border-box;margin:0 auto;padding:10px 20px 0}
+.intro-oppdrag{width:min(100%,330px);box-sizing:border-box;padding:6px 16px 4px;border-radius:18px;text-align:left;background:var(--surface);
+  border:1px solid color-mix(in srgb, var(--gold) 45%, var(--line));box-shadow:0 14px 30px -14px rgba(var(--shadow),.55)}
+.intro-oppdrag ul{list-style:none;margin:0;padding:0}
+.intro-oppdrag li{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.intro-oppdrag li.ok .o-ring{background:var(--ok);box-shadow:none;color:#fff}
+.intro-oppdrag li.ok .o-t{color:var(--muted)}
+.intro-oppdrag p{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0;padding:11px 0 9px;font-size:13px;color:var(--muted)}
+.intro-oppdrag p b{display:flex;align-items:center;gap:4px;color:var(--ink);font-variant-numeric:tabular-nums}
+.intro-oppdrag .froikon{width:14px;height:14px}
+.intro-bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;width:100%;max-width:480px;box-sizing:border-box;margin:0 auto;padding:10px 20px 0}
+#introNeste{justify-self:end}
 .intro-bar.tom{display:none}
 .intro-bar>.skjul{visibility:hidden}
-.intro-bar .btn{min-width:112px;padding:12px 18px;font-size:15px;border-radius:12px}
-#introHopp{min-width:112px;text-align:left;padding-left:0}
+.intro-bar .btn{padding:12px 18px;font-size:15px;border-radius:12px;white-space:nowrap}
+#introHopp{justify-self:start;text-align:left;padding-left:0;white-space:nowrap}
 .intro-prikker{display:flex;gap:8px}
 .intro-prikker i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:transform .2s,background .2s}
 .intro-prikker i.na{background:var(--spruce-ink);transform:scale(1.25)}
@@ -2058,6 +2063,7 @@ let kalVis = (() => { try { return JSON.parse(lsGet('fuglekort:kalender')) || {}
 kalVis = { aar: kalVis.aar === 'alle' ? 'alle' : 'iaar', sort: kalVis.sort === 'tid' ? 'tid' : 'nr' };
 const kalAar = () => (kalVis.aar === 'iaar' ? new Date().getFullYear() : null);
 const nivaKal = v => (v >= 8 ? 4 : v >= 4 ? 3 : v >= 2 ? 2 : v ? 1 : 0);
+const mndVis = () => (lsGet('fuglekort:mndvis') === 'reg' ? 'reg' : 'arter');   // Statistikk: new species or registrations per month
 const kalValg = (k, v, t) => `<button class="chip" data-kalvalg="${k}:${v}" aria-pressed="${kalVis[k] === v}">${t}</button>`;
 /* the calendar: one row per species seen (birds, then the other animals), one column per month */
 function kalenderHtml() {
@@ -2671,19 +2677,30 @@ function paintChrome() {
   const c = CARDS[cur];
   const n = seenCount();
   $('#sub').textContent = c.bonus ? `Dyrekort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
-  paintFro();
-  // the title: its icon in the ring, and how far it is to the next title around it
-  const C = 2 * Math.PI * 19, fT = froTotalt(), tk = tittelAv(fT), tt = TITLER[tk], tn = TITLER[tk + 1];
+  paintFro();                                                // the ring around the title comes after the counter
+  ticks.forEach((t, p) => { const i = DECK[p]; t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
+  paintTeller();
+  scrub.setAttribute('aria-valuenow', POS[cur] + 1);
+  scrub.setAttribute('aria-valuetext', `${c.bonus ? 'Dyrekort' : `Kort ${c.nr}`}: ${c.navn}`);
+}
+
+/* the title: its icon in the ring, and how far it is to the next title around it. Worked out from the seeds the
+   counter shows (not those still flying or waiting for a celebration), and moved last: after the counter has
+   counted up */
+let ringVist = null, ringT = 0;
+const planleggRing = ms => { clearTimeout(ringT); ringT = setTimeout(paintRing, ms); };
+function paintRing() {
+  if (froHold > 0) return;                                  // seeds on their way: the counter first, then the ring
+  const fT = froRegnskap().tjent - froParkert();
+  if (fT === ringVist) return;
+  ringVist = fT;
+  const C = 2 * Math.PI * 19, tk = tittelAv(fT), tt = TITLER[tk], tn = TITLER[tk + 1];
   const andel = tn ? Math.max(0, Math.min(1, (fT - tt.fra) / (tn.fra - tt.fra))) : 1;
   $('#ringIkon').setAttribute('style', tittelPos(tk));
   $('#ringArc').setAttribute('stroke-dasharray', `${(andel * C).toFixed(2)} ${C.toFixed(2)}`);
   $('#ringArc').style.opacity = andel > 0 ? 1 : 0;           // no dot when the way has just started
   $('#openStats').setAttribute('aria-label', `Min fugleliste. ${tt.navn}${tn ? `, ${Math.round(andel * 100)} prosent av veien til ${tn.navn}` : ', den høyeste tittelen'}`);
   $('#openStats').title = tt.navn;
-  ticks.forEach((t, p) => { const i = DECK[p]; t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
-  paintTeller();
-  scrub.setAttribute('aria-valuenow', POS[cur] + 1);
-  scrub.setAttribute('aria-valuetext', `${c.bonus ? 'Dyrekort' : `Kort ${c.nr}`}: ${c.navn}`);
 }
 
 let hintCount = lsGet('hagefugler-oslo:hint') === 'ok' ? 99 : 0;
@@ -3030,11 +3047,18 @@ function renderStats() {
   const byRar = [1, 2, 3, 4, 5].map(r => ({ r, tot: BIRDS.filter(c => c.stjerner === r).length, seen: BIRDS.filter(c => c.stjerner === r && Store.has(c.key)).length }));
   const rarest = BIRDS.filter(c => Store.has(c.key)).sort((a, b) => b.nr - a.nr)[0];
   // last 12 months
+  // last 12 months: new species (a) and registrations (r: a species on a day); the chart shows the one chosen
   const now = new Date(); const months = [];
-  for (let k = 11; k >= 0; k--) { const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push({ y: d.getFullYear(), m: d.getMonth() + 1, n: 0 }); }
-  ids.forEach(id => { const [y, m] = Store.data[id].date.split('-').map(Number); const b = months.find(x => x.y === y && x.m === m); if (b) b.n++; });
+  for (let k = 11; k >= 0; k--) { const d = new Date(now.getFullYear(), now.getMonth() - k, 1); months.push({ y: d.getFullYear(), m: d.getMonth() + 1, a: 0, r: 0, n: 0 }); }
+  const mndKart = Object.fromEntries(months.map(x => [`${x.y}-${String(x.m).padStart(2, '0')}`, x]));
+  ids.forEach(id => {
+    const b = mndKart[Store.data[id].date.slice(0, 7)]; if (b) b.a++;
+    Store.data[id].dager.forEach(d => { const c = mndKart[d.slice(0, 7)]; if (c) c.r++; });
+  });
+  const mndReg = mndVis() === 'reg', enhet = v => (mndReg ? (v === 1 ? 'registrering' : 'registreringer') : (v === 1 ? 'art' : 'arter'));
+  months.forEach(x => { x.n = mndReg ? x.r : x.a; });
   const maxM = Math.max(1, ...months.map(x => x.n));
-  const inYear = months.reduce((a, x) => a + x.n, 0);
+  const inYear = months.reduce((a, x) => a + x.a, 0), regYear = months.reduce((a, x) => a + x.r, 0);
   const last = id => Store.data[id].dager[Store.data[id].dager.length - 1];
   const recent = alleIds.map(id => ({ id, d: last(id), ant: Store.data[id].dager.length, ts: Store.data[id].ts }))
     .sort((a, b) => (b.d > a.d ? 1 : b.d < a.d ? -1 : b.ts - a.ts)).slice(0, 6);
@@ -3121,13 +3145,14 @@ function renderStats() {
       ${byRar.map(x => `<div class="rrow">${stars(x.r)}<div class="lab"><span>${RAR[x.r]}</span><div class="bar"><i style="width:${(x.seen / x.tot * 100).toFixed(1)}%"></i></div></div><span class="num">${x.seen}/${x.tot}</span></div>`).join('')}
     </div></div>
 
-    <div class="s-sec"><h3>Nye arter per måned</h3>
+    <div class="s-sec"><h3>${mndReg ? 'Registreringer' : 'Nye arter'} per måned</h3>
+      <div class="kal-valg" role="group" aria-label="Vis per måned"><button class="chip" data-mndvalg="arter" aria-pressed="${!mndReg}">Nye arter</button><button class="chip" data-mndvalg="reg" aria-pressed="${mndReg}">Registreringer</button></div>
       <div class="months" id="months">
-        ${months.map((x, k) => `<button class="mcol ${x.n ? '' : 'zero'}" data-k="${k}" style="--h:${(x.n / maxM * 100).toFixed(1)}%" aria-label="${MND[x.m - 1]} ${x.y}: ${x.n} ${x.n === 1 ? 'art' : 'arter'}"><i style="height:${(x.n / maxM * 100).toFixed(1)}%"></i>${x.n === maxM && x.n > 0 ? `<span class="v">${x.n}</span>` : ''}</button>`).join('')}
+        ${months.map((x, k) => `<button class="mcol ${x.n ? '' : 'zero'}" data-k="${k}" style="--h:${(x.n / maxM * 100).toFixed(1)}%" aria-label="${MND[x.m - 1]} ${x.y}: ${x.n} ${enhet(x.n)}"><i style="height:${(x.n / maxM * 100).toFixed(1)}%"></i>${x.n === maxM && x.n > 0 ? `<span class="v">${x.n}</span>` : ''}</button>`).join('')}
         <div class="tip" id="mtip"></div>
       </div>
       <div class="mlabels">${months.map(x => `<span>${MND[x.m - 1]}</span>`).join('')}</div>
-      <p class="cap">${n ? `${inYear} ${inYear === 1 ? 'art' : 'arter'} krysset av de siste 12 månedene.` : 'Ingen avkrysninger ennå. Trykk på SETT-ruta nederst på et kort når du ser fuglen.'}</p>
+      <p class="cap">${!n ? 'Ingen avkrysninger ennå. Trykk på SETT-ruta nederst på et kort når du ser fuglen.' : mndReg ? `${regYear} ${enhet(regYear)} de siste 12 månedene: én for hver art hver dag.` : `${inYear} ${enhet(inYear)} krysset av de siste 12 månedene.`}</p>
     </div>
 
     ${recent.length ? `<div class="s-sec"><h3>Sist sett</h3><ul class="recent">
@@ -3167,7 +3192,7 @@ function renderStats() {
 
   const tip = $('#mtip'), mEl = $('#months');
   if (!mEl) return;
-  const showTip = b => { const x = months[+b.dataset.k]; tip.textContent = `${MND[x.m - 1]}. ${x.y}: ${x.n} ${x.n === 1 ? 'art' : 'arter'}`; const r = b.getBoundingClientRect(), pr = mEl.getBoundingClientRect(); tip.style.left = (r.left - pr.left + r.width / 2) + 'px'; tip.style.top = Math.max(0, r.bottom - pr.top - (b.querySelector('i').offsetHeight) - 6) + 'px'; tip.classList.add('on'); };
+  const showTip = b => { const x = months[+b.dataset.k]; tip.textContent = `${MND[x.m - 1]}. ${x.y}: ${x.n} ${enhet(x.n)}`; const r = b.getBoundingClientRect(), pr = mEl.getBoundingClientRect(); tip.style.left = (r.left - pr.left + r.width / 2) + 'px'; tip.style.top = Math.max(0, r.bottom - pr.top - (b.querySelector('i').offsetHeight) - 6) + 'px'; tip.classList.add('on'); };
   mEl.querySelectorAll('.mcol').forEach(b => { b.addEventListener('pointerenter', () => showTip(b)); b.addEventListener('focus', () => showTip(b)); b.addEventListener('click', () => showTip(b)); b.addEventListener('pointerleave', () => tip.classList.remove('on')); b.addEventListener('blur', () => tip.classList.remove('on')); });
 }
 sb.addEventListener('click', async e => {
@@ -3181,6 +3206,8 @@ sb.addEventListener('click', async e => {
   if (tr) { tavleRad(tr.dataset.tavleRad); return; }
   if (e.target.closest('[data-lukk-melding]')) { lsDel(DK('navn-melding')); paintDeling(); return; }
   if (e.target.closest('[data-butikk]')) { openButikk(e.target.closest('[data-butikk]').dataset.butikk); return; }
+  const mv = e.target.closest('[data-mndvalg]');
+  if (mv) { lsSet('fuglekort:mndvis', mv.dataset.mndvalg); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
   const kv = e.target.closest('[data-kalvalg]');
   if (kv) { const [k, v] = kv.dataset.kalvalg.split(':'); kalVis[k] = v; lsSet('fuglekort:kalender', JSON.stringify(kalVis)); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
   const kc = e.target.closest('[data-kal]');
@@ -3848,21 +3875,23 @@ dlgEl.addEventListener('click', e => {
 
 /* ---- the seed counter at the top ---- */
 $('#froIkon').outerHTML = FROIKON;
-let froVist = null, froAnim = 0;
-/* the number counts up to a new value */
+let froVist = null, froAnim = 0, froTeller = false;            // froTeller: the number is counting up now
+/* the number counts up to a new value; the ring around the title follows when it is done (paintRing) */
 function froTell(mal, ms = 700) {
   const el = $('#froTall'), fra = froVist == null ? mal : froVist;
   froVist = mal; cancelAnimationFrame(froAnim);
-  if (mal <= fra || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = fmtFro(mal); return; }
-  const t0 = performance.now();
-  const steg = t => { const k = Math.min(1, (t - t0) / ms); el.textContent = fmtFro(Math.round(fra + (mal - fra) * (1 - Math.pow(1 - k, 3)))); if (k < 1) froAnim = requestAnimationFrame(steg); };
+  if (mal <= fra || matchMedia('(prefers-reduced-motion: reduce)').matches) { froTeller = false; el.textContent = fmtFro(mal); planleggRing(0); return; }
+  const t0 = performance.now(); froTeller = true; clearTimeout(ringT);
+  const steg = t => { const k = Math.min(1, (t - t0) / ms); el.textContent = fmtFro(Math.round(fra + (mal - fra) * (1 - Math.pow(1 - k, 3)))); if (k < 1) froAnim = requestAnimationFrame(steg); else { froTeller = false; planleggRing(120); } };
   froAnim = requestAnimationFrame(steg);
 }
 function paintFro() {
   const r = froRegnskap(), mal = r.saldo - froParkert();
   $('#openFro').setAttribute('aria-label', `Solsikkefrø: ${fmtFro(mal)} å bruke. Åpne Frøbutikken`);
-  if (froHold > 0 || mal === froVist) return;              // seeds on their way: the counter waits for them
-  if (froVist != null && mal > froVist) { const b = $('#openFro'); b.classList.remove('pluss'); void b.offsetWidth; b.classList.add('pluss'); }
+  if (froHold > 0) return;                                  // seeds on their way: the counter waits for them
+  if (mal === froVist) { if (!froTeller) planleggRing(0); return; }   // while counting: the ring waits for the end
+  const fra = froVist;
+  if (fra != null && mal > fra) { const b = $('#openFro'); b.classList.remove('pluss'); void b.offsetWidth; b.classList.add('pluss'); }
   froTell(mal);
 }
 
@@ -4488,7 +4517,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = 'a7a3153cd0';
+const APPVERSJON = '620b11148a';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
 const lsJson = (k, v) => { try { const x = JSON.parse(lsGet(k) || 'null'); return x == null ? v : x; } catch (e) { return v; } };
@@ -4881,11 +4910,12 @@ function slettMegSporsmal() {
   });
 }
 
-/* ---- the first time: a short introduction (four cards), then the username and the postcode, which also says
-   what is shared. Existing users who have not answered get the last step only; turning sharing on later shows it
-   too, so the name on the board is seen first. From the menu: the four cards again ---- */
+/* ---- the first time: a short introduction (three cards), then the username and the postcode, which also says
+   what is shared, and last the tasks («Kom i gang»), added when the name step is answered. Existing users who have
+   not answered get the name step only; turning sharing on later shows it too, so the name on the board is seen
+   first. From the menu: the three cards and the tasks ---- */
 const introEl = $('#introSheet'), introSpor = $('#introSpor'), introPrikker = $('#introPrikker'), introBar = $('#introBar');
-let introModus = null, introTilbake = null, introRaf = 0;
+let introModus = null, introTilbake = null, introRaf = 0, introOppdrag = false, introSvart = false;
 const introKort = key => CARDS[BY_KEY[key] != null ? BY_KEY[key] : BY_KEY[BIRDS[0].key]];
 const INTRO = [
   { tittel: 'Velkommen til Fuglekort', tekst: 'Bla gjennom fuglekort for de mest kjente fuglene i Norge. Sveip mellom kortene, eller søk på navn eller kjennetegn.',
@@ -4897,9 +4927,6 @@ const INTRO = [
         <span class="idag-merke" aria-hidden="true" style="left:${P(BILDEFELT.x + 0.022)};top:${P(BILDEFELT.y + BILDEFELT.h - 0.058)}">${CHECK}Sett i dag</span></figure>`; } },
   { tittel: 'Frø og titler', tekst: 'Du får frø for hver registrering, mest for nye og sjeldne arter. Klarer du å oppnå tittelen Fuglekonge?',
     bilde: () => `<span class="ti intro-konge" style="${tittelPos(TITLER.length - 1)}" role="img" aria-label="${TITLER[TITLER.length - 1].navn}"></span>` },
-  { tittel: 'Min fugleliste', tekst: 'Her finner du merkene dine, hagetellingen og ledertavlen.',
-    bilde: () => `<div class="intro-ikoner"><span class="intro-ik"><i>10</i><b>Merker</b></span><span class="intro-ik"><i>${MIKON.telling}</i><b>Hagetelling</b></span>
-      <span class="intro-ik"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20V9h6v11M3 20v-7h6M15 20v-4h6v4M2 20h20"/></svg></i><b>Ledertavle</b></span></div>` },
 ];
 function navnSideHtml(modus) {
   const n = kallenavn() || tilfeldigNavn(), pn = lsGet(DK('postnr')) || '', pa = modus === 'slaPa';
@@ -4912,16 +4939,38 @@ function navnSideHtml(modus) {
     <label class="felt" for="inPostnr">Postnummer <small>valgfritt, bare til statistikk, vises ikke på tavlen</small></label>
     <input class="felt-inp" id="inPostnr" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870" value="${esc(pn)}">
     <p class="cap">Observasjonene dine (art og dato), tellingene og kjøpene sendes anonymt til en felles database, så vi kan lage statistikk over hagefuglene. Ingen e-post eller posisjon. ${pa ? '' : 'Du kan endre dette under Innstillinger.'}</p>
-    <div class="navn-knapper"><button class="btn pri" id="inStart">${pa ? 'Del og se ledertavlen' : 'Start'}</button><button class="textbtn" id="inIkke">${pa ? 'Avbryt' : 'Ikke del'}</button></div>
+    <div class="navn-knapper"><button class="btn pri" id="inStart">${pa ? 'Del og se ledertavlen' : introOppdrag ? 'Neste' : 'Start'}</button><button class="textbtn" id="inIkke">${pa ? 'Avbryt' : 'Ikke del'}</button></div>
   </div></section>`;
 }
-/* modus: 'forste' (the cards and the name), 'navn' (the name only), 'slaPa' (the name, to turn sharing on), 'vis' (the cards) */
+/* the last card: the tasks, the first three with a tick when done, how many more and the seeds for all */
+function oppdragSideHtml() {
+  const ol = oppdragLogg(), liste = oppdragListe(), neste = liste.find(o => !ol[o.id]), sum = liste.reduce((a, o) => a + oppdragFro(o), 0);
+  const tekst = !neste ? 'Du har fullført alle oppdragene.' : neste.id === 'forste' ? 'Fullfør små oppdrag og få frø. Det første er å registrere din første fugl.'
+    : `Fullfør små oppdrag og få frø. Neste er: ${neste.tekst.charAt(0).toLowerCase() + neste.tekst.slice(1)}.`;
+  return `<section class="intro-side" data-s="oppdrag" aria-labelledby="introToppdrag"><div class="intro-bilde"><div class="intro-oppdrag">
+      <ul>${liste.slice(0, 3).map(o => `<li class="${ol[o.id] ? 'ok' : ''}"><span class="o-ring" aria-hidden="true">${ol[o.id] ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5.5 12.5 4 4 9-9"/></svg>' : ''}</span><span class="o-t">${esc(o.tekst)}${ol[o.id] ? '<span class="sr">, fullført</span>' : ''}</span><span class="o-fro">${FROIKON}${fmtFro(oppdragFro(o))}</span></li>`).join('')}</ul>
+      <p><span>+ ${flertall(liste.length - 3, 'oppdrag', 'oppdrag')} til</span><b>${FROIKON}${fmtFro(sum)} frø i alt</b></p>
+    </div></div><h2 id="introToppdrag" tabindex="-1">Kom i gang</h2><p>${tekst}</p></section>`;
+}
+/* the tasks after the name step: added when it is answered, and the name step can no longer be changed here */
+function introVidere() {
+  introSvart = true;
+  const inp = $('#inNavn'); if (inp) { inp.readOnly = true; $('#inForslag').hidden = true; $('#inPostnr').readOnly = true; $('#inIkke').hidden = true; $('#inStart').textContent = 'Neste'; }
+  if (!introSpor.querySelector('[data-s="oppdrag"]')) introSpor.insertAdjacentHTML('beforeend', oppdragSideHtml());
+  tegnPrikker(); introTil(introSpor.children.length - 1);
+}
+const tegnPrikker = () => {
+  const n = introSpor.children.length + (introOppdrag && !introSpor.querySelector('[data-s="oppdrag"]') ? 1 : 0);   // the tasks still to come
+  introPrikker.innerHTML = n > 1 ? '<i></i>'.repeat(n) : '';
+};
+/* modus: 'forste' (the cards, the name and the tasks), 'navn' (the name only), 'slaPa' (the name, to turn sharing on),
+   'vis' (the cards and the tasks, and the name first if it has not been answered) */
 function visIntro(modus, tilbake = null) {
   const sider = modus === 'forste' || modus === 'vis', navn = modus !== 'vis' || (delingValg() == null && !deler());
-  introModus = modus; introTilbake = tilbake;
+  introModus = modus; introTilbake = tilbake; introOppdrag = sider; introSvart = false;
   introSpor.innerHTML = [...(sider ? INTRO.map((s, k) => `<section class="intro-side" data-s="${k}" aria-labelledby="introT${k}"><div class="intro-bilde">${s.bilde()}</div><h2 id="introT${k}" tabindex="-1">${s.tittel}</h2><p>${s.tekst}</p></section>`) : []),
-    ...(navn ? [navnSideHtml(modus)] : [])].join('');
-  introPrikker.innerHTML = introSpor.children.length > 1 ? [...introSpor.children].map(() => '<i></i>').join('') : '';
+    ...(navn ? [navnSideHtml(modus)] : []), ...(sider && !navn ? [oppdragSideHtml()] : [])].join('');
+  tegnPrikker();
   showSheet(introEl);
   introSpor.scrollLeft = 0; paintIntro();
   setTimeout(() => { const h = introSpor.querySelector('h2'); if (h) h.focus({ preventScroll: true }); }, 80);
@@ -4934,8 +4983,8 @@ function paintIntro() {
   $('#introHopp').classList.toggle('skjul', navnSide || k === n - 1);    // hidden, but keeping the dots in the middle
   $('#introNeste').classList.toggle('skjul', navnSide);
   $('#introHopp').tabIndex = $('#introHopp').classList.contains('skjul') ? -1 : 0; $('#introNeste').tabIndex = navnSide ? -1 : 0;
-  $('#introNeste').textContent = k === n - 1 ? 'Ferdig' : 'Neste';
-  introBar.classList.toggle('tom', navnSide && n === 1);
+  $('#introNeste').textContent = k < n - 1 ? 'Neste' : side && side.dataset.s === 'oppdrag' && introModus === 'forste' ? 'Kom i gang' : 'Ferdig';
+  introBar.classList.toggle('tom', navnSide && introPrikker.children.length < 2);
   if (side && side.dataset.s === '1') side.querySelector('.intro-kort').classList.add('seen');   // the pen draws the tick
 }
 introSpor.addEventListener('scroll', () => { cancelAnimationFrame(introRaf); introRaf = requestAnimationFrame(paintIntro); }, { passive: true });
@@ -4951,11 +5000,13 @@ function lukkIntro() {
   if (tilbake) tilbake(); else menyBtn.focus();
 }
 $('#introNeste').addEventListener('click', () => { const k = introIndeks(); if (k >= introSpor.children.length - 1) lukkIntro(); else introTil(k + 1); });
-$('#introHopp').addEventListener('click', () => { if (introSpor.lastElementChild.dataset.s === 'navn') introTil(introSpor.children.length - 1); else lukkIntro(); });
+const navnSideUbesvart = () => { const i = [...introSpor.children].findIndex(x => x.dataset.s === 'navn'); return i >= 0 && !introSvart ? i : -1; };
+$('#introHopp').addEventListener('click', () => { const i = navnSideUbesvart(); if (i >= 0) introTil(i); else lukkIntro(); });
 $('#openIntro').addEventListener('click', () => visIntro('vis'));
 function introFeil(m, sel = '#inNavn') { $('#inFeil').textContent = m; const f = $(sel); f.setAttribute('aria-invalid', 'true'); f.focus(); }
 /* «Start»: the name by the rules and free (when there is a network), the postcode, and sharing on */
 async function introStart() {
+  if (introSvart) { introTil(introSpor.children.length - 1); return; }   // answered: on to the tasks
   const inp = $('#inNavn'), t = rensNavn(inp.value), feil = navnFeil(t), forslag = t === inp.dataset.forslag;
   if (feil) { introFeil(feil); return; }
   const pn = $('#inPostnr').value.trim();
@@ -4970,21 +5021,22 @@ async function introStart() {
   lagreKallenavn({ navn: t, forslag }); lsDel(DK('navn-stengt')); lsDel(DK('navn-melding'));
   if (pn) lsSet(DK('postnr'), pn); else lsDel(DK('postnr'));
   startDeling(); si(`Velkommen, ${t}!`);
-  lukkIntro();
+  if (introOppdrag) introVidere(); else lukkIntro();
 }
 function introIkke() {
   if (introModus === 'slaPa') { lukkIntro(); return; }
   sporsmal({
     tittel: 'Ikke dele?',
     tekst: 'Da får du ikke se ledertavlen. Du kan slå på delingen senere under Innstillinger.',
-    knapper: [{ tekst: 'Ikke del', pri: true, fn: () => { lsSet(DK('deling'), 'nei'); paintDeling(); paintOppdrag(); lukkIntro(); si('Du deler ikke. Det kan du endre under Innstillinger.'); } },
+    knapper: [{ tekst: 'Ikke del', pri: true, fn: () => { lsSet(DK('deling'), 'nei'); paintDeling(); paintOppdrag(); si('Du deler ikke. Det kan du endre under Innstillinger.'); if (introOppdrag) introVidere(); else lukkIntro(); } },
       { tekst: 'Tilbake' }],
   });
 }
-/* Esc: from the cards to the name; on the name the same as «Start» (or «Avbryt» when turning sharing on) */
+/* Esc: from the cards to the name; on the name the same as «Start»/«Neste» (or «Avbryt» when turning sharing on);
+   on the tasks (or with the name answered) it closes */
 function introEsc() {
-  const side = introSpor.children[introIndeks()];
-  if (side && side.dataset.s !== 'navn') { if (introSpor.lastElementChild.dataset.s === 'navn') introTil(introSpor.children.length - 1); else lukkIntro(); }
+  const side = introSpor.children[introIndeks()], i = navnSideUbesvart();
+  if (side && side.dataset.s !== 'navn') { if (i >= 0) introTil(i); else lukkIntro(); }
   else if (introModus === 'slaPa') lukkIntro();
   else introStart();
 }
