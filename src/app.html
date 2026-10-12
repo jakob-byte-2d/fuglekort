@@ -785,10 +785,15 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .alb.s .th{filter:none;opacity:1;box-shadow:0 3px 8px -3px rgba(var(--shadow),.5)}
 .alb .nr{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .alb.s .nr{display:none}
-.alb .okdot{position:absolute;right:-5px;top:-5px;min-width:19px;height:19px;padding:0 4px;border-radius:10px;font-size:10.5px;display:none;
-  background:color-mix(in srgb, var(--gold) 26%, var(--surface));color:var(--gold-ink);box-shadow:0 0 0 2px var(--surface),inset 0 0 0 1px color-mix(in srgb, var(--gold) 50%, transparent)}
+.alb .okdot{position:absolute;right:-5px;top:-5px;min-width:19px;height:19px;padding:0 4px;border-radius:10px;font-size:10.5px;display:none;box-shadow:0 0 0 2px var(--surface)}
+/* seen today: a green tick next to the number (the number stays yellow) */
+.idag-hake{display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:var(--ok);color:#fff;box-shadow:0 0 0 2px var(--surface)}
+.idag-hake svg{width:11px;height:11px}
+.alb .idag-hake{position:absolute;right:calc(100% + 3px);top:0}
+.tegnf{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin:-2px 0 14px;font-size:12.5px;color:var(--muted)}
+.tegnf span{display:inline-flex;align-items:center;gap:6px}
+.tegnf .okdot{min-width:19px;height:19px;padding:0 4px;font-size:10.5px}
 .alb.s .okdot{display:grid}
-.alb.idag .okdot{background:var(--ok);color:#fff;box-shadow:0 0 0 2px var(--surface)}
 .store{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center}
 .store i{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0}
 .store.sky i{background:#3aa66f}
@@ -2988,7 +2993,7 @@ $('#closeStats').addEventListener('click', () => closeSheets());
 const miniatyr = (c, i, kl = '') => `<span class="ph ${kl}" style="background-position:${spritePos(i)}" aria-hidden="true"></span>`;
 function albumKort(c, i) {
   const nv = nivaAv(c), nd = Store.days(c.key).length, iDag = nd && Store.days(c.key).includes(todayISO());
-  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${c.bonus ? 'Dyrekort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Dyr' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}</span></button>`;
+  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${c.bonus ? 'Dyrekort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Dyr' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}${iDag ? `<i class="idag-hake">${CHECK}</i>` : ''}</span></button>`;
 }
 function merkeHtml(m, nt) {
   const v = m.v(nt), ok = v >= m.mal;
@@ -3161,7 +3166,9 @@ function renderStats() {
       ${ferdigeT.length ? `<ul class="recent tl-hist">${ferdigeT.map(id => { const v = Tell.data[id], x = sumAv(v), d = new Date(v.start); return `<li><button data-tid="${id}"><span class="ph tdato" aria-hidden="true"><span>${d.getDate()}.<small>${MND[d.getMonth()]}</small></span></span><span><b style="font-weight:600">${esc(stor(datoLang(v.start)))}</b><br><span style="font-size:12.5px;color:var(--muted)">${flertall(x.arter, 'art', 'arter')} · ${flertall(x.ind, 'individ', 'individer')} · ${varighet(v.slutt - v.start)}${v.omrade ? ` · ${esc(v.omrade)}` : ''}</span></span><span></span></button></li>`; }).join('')}</ul>` : ''}
     </div>`,
     kort: () => `
-    <div class="s-sec"><h3>Samlingen</h3><div class="album">
+    <div class="s-sec"><h3>Samlingen</h3>
+      <div class="tegnf" role="note" aria-label="Tegnforklaring"><span><b class="okdot" aria-hidden="true">3</b>dager sett</span><span><i class="idag-hake" aria-hidden="true">${CHECK}</i>sett i dag</span></div>
+      <div class="album">
       ${CARDS.map((c, i) => c.bonus ? '' : albumKort(c, i)).join('')}
     </div></div>
 
