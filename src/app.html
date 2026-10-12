@@ -2591,10 +2591,18 @@ function leggTilDag(c, d) {
   si(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${froTekst(f0)}${nyheter(for_)}`);
   froEffekt(c, f0, d);
 }
+/* × on the back: asked first, since the day and its seeds go */
 function slettDag(c, d) {
-  const gml = Store.days(c.key);
-  Store.removeDay(c.key, d);
-  si(gml.length === 1 ? `${c.navn} er ikke lenger merket som sett.` : `Slettet ${fmtHand(d)} for ${c.navn}.`);
+  const gml = Store.days(c.key); if (!gml.includes(d)) return;
+  const siste = gml.length === 1;
+  sporsmal({
+    tittel: 'Slette registreringen?',
+    tekst: `<p><b>${esc(c.navn)}</b>, ${fmtLong(d)}.</p><p>${siste ? `Det er den eneste dagen, så ${esc(c.navn)} blir ikke lenger merket som sett. ` : ''}Frøene du fikk for registreringen, forsvinner også.</p>`,
+    knapper: [{ tekst: 'Slett', pri: true, fn: () => {
+      Store.removeDay(c.key, d);
+      si(siste ? `${c.navn} er ikke lenger merket som sett.` : `Slettet ${fmtHand(d)} for ${c.navn}.`);
+    } }, { tekst: 'Avbryt' }],
+  });
 }
 /* the date line on the front is the first day: changing it moves that day */
 function flyttForsteDag(c, d) {

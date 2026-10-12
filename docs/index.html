@@ -2608,10 +2608,18 @@ function leggTilDag(c, d) {
   si(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${froTekst(f0)}${nyheter(for_)}`);
   froEffekt(c, f0, d);
 }
+/* × on the back: asked first, since the day and its seeds go */
 function slettDag(c, d) {
-  const gml = Store.days(c.key);
-  Store.removeDay(c.key, d);
-  si(gml.length === 1 ? `${c.navn} er ikke lenger merket som sett.` : `Slettet ${fmtHand(d)} for ${c.navn}.`);
+  const gml = Store.days(c.key); if (!gml.includes(d)) return;
+  const siste = gml.length === 1;
+  sporsmal({
+    tittel: 'Slette registreringen?',
+    tekst: `<p><b>${esc(c.navn)}</b>, ${fmtLong(d)}.</p><p>${siste ? `Det er den eneste dagen, så ${esc(c.navn)} blir ikke lenger merket som sett. ` : ''}Frøene du fikk for registreringen, forsvinner også.</p>`,
+    knapper: [{ tekst: 'Slett', pri: true, fn: () => {
+      Store.removeDay(c.key, d);
+      si(siste ? `${c.navn} er ikke lenger merket som sett.` : `Slettet ${fmtHand(d)} for ${c.navn}.`);
+    } }, { tekst: 'Avbryt' }],
+  });
 }
 /* the date line on the front is the first day: changing it moves that day */
 function flyttForsteDag(c, d) {
@@ -4517,7 +4525,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '620b11148a';
+const APPVERSJON = '1e8e8ac2aa';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
 const lsJson = (k, v) => { try { const x = JSON.parse(lsGet(k) || 'null'); return x == null ? v : x; } catch (e) { return v; } };
