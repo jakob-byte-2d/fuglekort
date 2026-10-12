@@ -19,6 +19,9 @@ if bak.is_file():
 # Inline the card data (</ is escaped so the JSON can never close the <script> tag)
 payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 fragment = src.replace("__CARDS_JSON__", payload)
+# the version sent with the statistics (Deling): follows the code and the card data
+import hashlib
+fragment = fragment.replace("__VERSJON__", hashlib.sha1((src + payload).encode("utf-8")).hexdigest()[:10])
 
 # The standalone app: full document, title moved into <head>, manifest + service worker
 title_m = re.search(r"<title>.*?</title>\s*", fragment, re.S)

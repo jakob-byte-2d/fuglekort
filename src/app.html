@@ -320,6 +320,33 @@ button{cursor:pointer;touch-action:manipulation}
 .bak5 small.nok{color:var(--ok)}
 .bak5 small.bruk{color:var(--ok)}
 .bak5 small.har{color:var(--ink);font-weight:600}
+/* Ledertavlen */
+.tv-meg{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface-2)}
+.tv-meg .ti{width:44px;height:44px;flex-shrink:0}
+.tv-t{flex:1;min-width:0;display:grid;gap:2px}
+.tv-t b{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tv-t small{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tavle{list-style:none;margin:0 -8px;padding:0}
+.tavle li{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:12px}
+.tavle li.meg{background:color-mix(in srgb, var(--gold) 16%, transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--gold) 55%, transparent)}
+.tavle .ti{width:30px;height:30px;flex-shrink:0}
+.tv-nr{width:26px;flex-shrink:0;text-align:right;font-weight:700;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tavle li:nth-child(-n+3) .tv-nr{color:var(--gold-ink)}
+.tv-fro{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.tavle li.tv-mer{justify-content:center;color:var(--muted);padding:0 8px}
+.tv-status{margin:12px 0 0}
+.tv-slett{color:var(--rec);padding-left:0}
+.felt{display:block;margin:16px 0 6px;font-size:14px;font-weight:600}
+.felt small{display:block;margin-top:2px;font-weight:400;color:var(--muted);font-size:12.5px}
+.dlg-felt small{font-weight:400;color:var(--muted);font-size:12.5px;margin-top:-4px}
+.felt-inp,.dlg-felt input,.nv-valg select{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;background:var(--surface);color:var(--ink)}
+.felt-inp,.dlg-felt input{max-width:160px;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.felt-inp:disabled{opacity:.5}
+.dlg-felt{display:grid;gap:6px;margin:12px 0 8px;font-size:14px;font-weight:600;color:var(--ink)}
+.nv-valg{display:grid;gap:10px;margin-top:4px}
+.nv-valg label{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+#nvTilf{padding-left:0;margin-top:6px}
+#delingSek #slettMeg{margin-top:12px}
 @media (max-height:760px){
   .bk-tit{display:none}
   .bk-saldo b{font-size:26px}
@@ -423,8 +450,10 @@ button{cursor:pointer;touch-action:manipulation}
   transform:translateY(10px) scale(.97);transition:transform .2s}
 .dlg.on .dlg-kort{transform:none}
 .dlg-kort h3{margin:0;font-size:19px;line-height:1.25}
-.dlg-kort p{margin:10px 0 0;font-size:15px;line-height:1.45;color:var(--muted)}
-.dlg-kort p b{color:var(--ink)}
+.dlg-kort p,.dlg-tekst{margin:10px 0 0;font-size:15px;line-height:1.45;color:var(--muted)}
+.dlg-tekst p{margin:0 0 8px}
+.dlg-tekst p:last-child{margin-bottom:0}
+.dlg-kort p b,.dlg-tekst b{color:var(--ink)}
 .dlg-knapper{display:grid;gap:8px;margin-top:18px}
 .dlg-knapper .btn{padding:12px 14px;font-size:15px;border-radius:12px}
 .dlg-knapper .btn[disabled]{opacity:.55;cursor:default}
@@ -665,7 +694,8 @@ button{cursor:pointer;touch-action:manipulation}
 .faner button{flex:1 0 auto;border:0;background:none;color:var(--muted);font:inherit;font-size:14px;font-weight:600;padding:10px 6px 11px;
   border-bottom:3px solid transparent;white-space:nowrap;min-height:44px}
 .faner button[aria-selected="true"]{color:var(--spruce-ink);border-bottom-color:var(--gold)}
-@media (max-width:370px){.faner button{font-size:13.5px;padding-inline:4px}}
+@media (max-width:440px){#faner button{font-size:13.5px;padding-inline:4px}}
+@media (max-width:370px){.faner button,#faner button{font-size:12.5px;padding-inline:3px}}
 .faner button:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-2px;border-radius:8px}
 #statsBody:focus{outline:none}
 /* the profile at the top of Profil: today one person per device, ready for more */
@@ -1018,6 +1048,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
       <button role="tab" id="fane-telling" data-fane="telling" aria-controls="statsBody">Telling</button>
       <button role="tab" id="fane-kort" data-fane="kort" aria-controls="statsBody">Kort</button>
       <button role="tab" id="fane-merker" data-fane="merker" aria-controls="statsBody">Merker</button>
+      <button role="tab" id="fane-tavle" data-fane="tavle" aria-controls="statsBody" aria-label="Ledertavle">Tavle</button>
     </div>
   </div>
   <div id="statsBody" role="tabpanel" tabindex="-1"></div>
@@ -1038,6 +1069,13 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   </div>
   <div class="s-sec" id="vippSek" hidden><h3>Glinskort</h3>
     <button class="bryter" id="vippBtn" role="switch" aria-checked="false"><span><b>Glinset følger telefonen</b><small>Lyset på glinskortene flytter seg når du vipper telefonen. Ellers følger det fingeren når du drar i kortet.</small></span><i aria-hidden="true"></i></button>
+  </div>
+  <div class="s-sec" id="delingSek"><h3>Ledertavle og statistikk</h3>
+    <button class="bryter" id="delBtn" role="switch" aria-checked="false"><span><b>Del med ledertavlen og statistikken</b><small>Du vises på ledertavlen med kallenavnet ditt, frø, arter, observasjonsdager og tittel. Observasjonene, tellingene og kjøpene sendes anonymt til en felles database for statistikk over hagefuglene.</small></span><i aria-hidden="true"></i></button>
+    <label class="felt" for="postnrFelt">Postnummer <small>valgfritt, bare til statistikk, vises ikke på tavlen</small></label>
+    <input class="felt-inp" id="postnrFelt" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870">
+    <p class="valg-merk" id="delStatus" role="status"></p>
+    <button class="btn" id="slettMeg">Slett meg fra ledertavlen</button>
   </div>
   <div class="s-sec"><h3>Test</h3>
     <button class="btn" id="nullstillAlt">Nullstill alt (test)</button>
@@ -1126,7 +1164,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <p class="sb-innst"><span id="sbInnstTekst"></span> <button class="sb-lenke" id="sbTilInnst">Endre i Innstillinger</button></p>
 </div>
 <div class="dlg" id="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgTekst" hidden>
-  <div class="dlg-kort"><h3 id="dlgT"></h3><p id="dlgTekst"></p><div class="dlg-knapper" id="dlgKnapper"></div></div>
+  <div class="dlg-kort"><h3 id="dlgT"></h3><div id="dlgTekst" class="dlg-tekst"></div><div class="dlg-knapper" id="dlgKnapper"></div></div>
 </div>
 <div class="bfest" id="bfest" role="dialog" aria-modal="true" aria-labelledby="bfTittel" hidden>
   <div class="bf-lys" aria-hidden="true"></div>
@@ -1239,6 +1277,9 @@ function samling({ col, key, norm, toDoc, migrate, hva }) {
   col = brukerSamling(col); key = brukerNokkel(key);
   return {
     KEY: key, data: {}, mode: 'lokal', readOnly: false, db: null, subs: new Set(), queue: {},
+    /* Supabase (see «Deling»): a copy of every change goes there, while the device stays the master. Set before
+       connectRemote; then connectRemote sends what has not been sent, and push(id) queues each change */
+    speil: null,
     loadLocal() {
       let raw = {};
       try { raw = JSON.parse(lsGet(this.KEY) || '{}') || {}; } catch (e) { raw = {}; }
@@ -1250,6 +1291,7 @@ function samling({ col, key, norm, toDoc, migrate, hva }) {
     emit() { this.subs.forEach(fn => fn()); },
     on(fn) { this.subs.add(fn); },
     async connectRemote() {
+      if (this.speil) { this.speil.koble(); return; }
       const db = await hentDb();
       if (!db) return;
       this.db = db;
@@ -1274,6 +1316,7 @@ function samling({ col, key, norm, toDoc, migrate, hva }) {
     },
     replaceAll(obj) { const prev = Object.keys(this.data); this.data = obj; this.saveLocal(); this.emit(); new Set([...prev, ...Object.keys(obj)]).forEach(id => this.push(id)); },
     push(id) {
+      if (this.speil) this.speil.endret(id);
       if (!this.db || this.readOnly) return;
       const q = this.queue[id] || (this.queue[id] = { busy: false, again: false });
       if (q.busy) { q.again = true; return; }
@@ -2708,7 +2751,7 @@ $('#vippBtn').addEventListener('click', async () => {
   else if (await slaPaVipp(true)) { lsSet('hagefugler:vipp', 'på'); si('Vipp telefonen for å se glinset på glinskortene.'); }
   paintSettings();
 });
-function openSettings() { paintSettings(); showSheet(setSheet); setTimeout(() => (HAR_FOTO || HAR_TEGNESERIE ? setSheet.querySelector('[data-bilder][aria-checked="true"]') : $('#vippBtn')).focus(), 60); }
+function openSettings() { paintSettings(); paintDeling(); showSheet(setSheet); setTimeout(() => (HAR_FOTO || HAR_TEGNESERIE ? setSheet.querySelector('[data-bilder][aria-checked="true"]') : $('#vippBtn')).focus(), 60); }
 function settBilder(v) {
   if (v === bildevalg || !finnesSett(v)) return;
   bildevalg = v; lsSet('hagefugler:bilder', v);
@@ -2740,7 +2783,7 @@ setSheet.addEventListener('keydown', e => {
 /* ---- stats ---- */
 const sb = $('#statsBody');
 /* the tabs of Min fugleliste; the last one used is opened again (on this device) */
-const FANER = ['profil', 'statistikk', 'telling', 'kort', 'merker'];
+const FANER = ['profil', 'statistikk', 'telling', 'kort', 'merker', 'tavle'];
 let statsFane = FANER.includes(lsGet('fuglekort:fane')) ? lsGet('fuglekort:fane') : 'profil';
 const fanerEl = $('#faner');
 function paintFaner() {
@@ -2756,6 +2799,7 @@ function velgFane(f, fokus) {
   statsFane = f; lsSet('fuglekort:fane', f); artVis = null;
   renderStats();
   if (ny) $('#statsSheet').scrollTop = 0;
+  if (f === 'tavle') hentTavle();
   const b = fanerEl.querySelector(`[data-fane="${f}"]`);
   b.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   if (fokus) b.focus();
@@ -2767,7 +2811,7 @@ fanerEl.addEventListener('keydown', e => {
     : e.key === 'Home' ? FANER[0] : e.key === 'End' ? FANER[FANER.length - 1] : null;
   if (ny) { e.preventDefault(); velgFane(ny, true); }
 });
-function openStats(fane) { artVis = null; if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; setTimeout(() => $('#closeStats').focus(), 60); }
+function openStats(fane) { artVis = null; if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; if (statsFane === 'tavle') hentTavle(); setTimeout(() => $('#closeStats').focus(), 60); }
 $('#openStats').addEventListener('click', () => openStats('profil'));
 $('#closeStats').addEventListener('click', () => closeSheets());
 /* a small picture of the card */
@@ -2940,7 +2984,8 @@ function renderStats() {
       <p class="cap" style="margin:0 0 12px">En strek for hver dag du har registrert fugler, og et merke for hver 5. dag. De første 5 dagene gir ${fmtFro(FRO.dagMerkeForste)} frø, hvert merke etter det ${fmtFro(FRO.dagMerke)}.</p>
       ${strekHtml(nt)}
     </div>
-    ${arslisteHtml(nt)}`
+    ${arslisteHtml(nt)}`,
+    tavle: () => tavleHtml(),
   };
   paintFaner();
   sb.innerHTML = statsFane === 'statistikk' && artVis ? artHtml(artVis) : FANER_HTML[statsFane]();
@@ -2957,6 +3002,9 @@ sb.addEventListener('change', e => {
 });
 sb.addEventListener('keydown', e => { if (e.target.id === 'profilNavn' && e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
 sb.addEventListener('click', async e => {
+  if (e.target.closest('[data-bytt-navn]')) { byttNavn(); return; }
+  if (e.target.closest('[data-slett-meg]')) { slettMegSporsmal(); return; }
+  if (e.target.closest('[data-del-pa]')) { startDeling(); return; }
   if (e.target.closest('[data-butikk]')) { openButikk(e.target.closest('[data-butikk]').dataset.butikk); return; }
   const kv = e.target.closest('[data-kalvalg]');
   if (kv) { const [k, v] = kv.dataset.kalvalg.split(':'); kalVis[k] = v; lsSet('fuglekort:kalender', JSON.stringify(kalVis)); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
@@ -3563,8 +3611,10 @@ function storbildeTast(e) {
 
 /* ---- a small question box (warning on grey cards, buying) ---- */
 const dlgEl = $('#dlg');
-let dlgApen = false, dlgValg = [], dlgFor = null, dlgInert = null;
-function sporsmal({ tittel, tekst, knapper }) {
+let dlgApen = false, dlgValg = [], dlgFor = null, dlgInert = null, dlgAvbryt = null;
+/* avbryt: what closing the question without a button means (Esc, a tap outside, the back button) */
+function sporsmal({ tittel, tekst, knapper, avbryt }) {
+  dlgAvbryt = avbryt || null;
   $('#dlgT').textContent = tittel;
   $('#dlgTekst').innerHTML = tekst;
   dlgValg = knapper;
@@ -3576,6 +3626,7 @@ function sporsmal({ tittel, tekst, knapper }) {
 }
 function lukkDlg(fn) {
   if (!dlgApen) return;
+  const avbryt = dlgAvbryt; dlgAvbryt = null; if (!fn && avbryt) fn = avbryt;
   dlgApen = false; dlgEl.classList.remove('on');
   app.inert = dlgInert[0]; if (openSheet) openSheet.inert = !!dlgInert[1];
   setTimeout(() => { if (!dlgApen) dlgEl.hidden = true; }, 200);   // not if a new question opened in the meantime
@@ -4217,6 +4268,312 @@ Tell.on(() => {
   if (openSheet && openSheet.id === 'statsSheet') renderStats();
 });
 
+/* ================= Deling: ledertavle og statistikk (Supabase) =================
+   Each person in the app is an anonymous Supabase user (no e-mail or password); the session is kept on the device.
+   The device stays the master. The sightings (sett), counts (tellinger) and purchases (kjop) get a copy in Supabase
+   through the storage layer (samling.speil: connectRemote sends what has not been sent, push(id) queues a change),
+   with the queue kept on the device, so the app works as before without a network. The leaderboard gets a summary
+   (seeds earned, bird species, observation days, title) under a nickname made of set words, never free text. The
+   postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
+   Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
+const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
+const APPVERSJON = '__VERSJON__';
+const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
+const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
+const lsJson = (k, v) => { try { const x = JSON.parse(lsGet(k) || 'null'); return x == null ? v : x; } catch (e) { return v; } };
+const delingValg = () => lsGet(DK('deling'));             // 'ja', 'nei', or null: not asked yet
+const deler = () => delingValg() === 'ja' && !lsGet(DK('slett'));
+const naarTekst = ts => (new Date(ts).toDateString() === new Date().toDateString() ? `kl. ${klokke(ts)}` : `${fmtLong(new Date(ts).toISOString().slice(0, 10))} kl. ${klokke(ts)}`);
+
+/* ---- Supabase: plain fetch, no library. The publishable key goes in apikey, the person's token in Authorization ---- */
+function supa(sti, { metode = 'GET', data, okt, hoder = {} } = {}) {
+  return fetch(SUPA.url + sti, {
+    method: metode, body: data !== undefined ? JSON.stringify(data) : undefined,
+    headers: { apikey: SUPA.key, ...(okt ? { Authorization: 'Bearer ' + okt.access } : {}), ...(data !== undefined ? { 'Content-Type': 'application/json' } : {}), ...hoder },
+  });
+}
+const lagreOkt = (j, uid) => {
+  const o = { access: j.access_token, refresh: j.refresh_token, uid: (j.user && j.user.id) || uid,
+    utloper: j.expires_at || Math.floor(Date.now() / 1000) + (j.expires_in || 3600) };
+  lsSet(DK('okt'), JSON.stringify(o)); return o;
+};
+/* the anonymous session: kept, renewed before it runs out, and made the first time (lag) */
+let oktP = null;
+function hentOkt(lag = true) {
+  return oktP || (oktP = (async () => {
+    let o = lsJson(DK('okt'), null);
+    if (o && o.utloper - 60 > Date.now() / 1000) return o;
+    if (o && o.refresh) {
+      const r = await supa('/auth/v1/token?grant_type=refresh_token', { metode: 'POST', data: { refresh_token: o.refresh } });
+      if (r.ok) return lagreOkt(await r.json(), o.uid);
+      if (r.status >= 400 && r.status < 500) { lsDel(DK('okt')); o = null; }           // the user is gone
+      else throw new Error('auth ' + r.status);
+    }
+    if (!lag) return null;
+    const r = await supa('/auth/v1/signup', { metode: 'POST', data: { data: {} } });   // signInAnonymously
+    if (!r.ok) throw new Error('signup ' + r.status);
+    return lagreOkt(await r.json());
+  })().finally(() => { oktP = null; }));
+}
+/* a call as the person; once more with a new token if the old one was turned down */
+async function supaSom(sti, opts = {}, lag = true) {
+  let okt = await hentOkt(lag); if (!okt) return { r: null, okt };
+  let r = await supa(sti, { ...opts, okt });
+  if (r.status === 401) {
+    const o = lsJson(DK('okt'), null); if (o) { o.utloper = 0; lsSet(DK('okt'), JSON.stringify(o)); }
+    okt = await hentOkt(lag); if (!okt) return { r: null, okt };
+    r = await supa(sti, { ...opts, okt });
+  }
+  return { r, okt };
+}
+
+/* ---- the copy of the sightings, counts and purchases: a queue of changed ids on the device ---- */
+const SPEIL = [];
+function lagSpeil(s, tabell, konflikt, tilRad) {
+  const uk = () => DK('usendt:' + tabell), felt = konflikt.split(',')[1];
+  const sp = {
+    tabell,
+    usendt: () => new Set(lsJson(uk(), [])),
+    lagre(u) { if (u.size) lsSet(uk(), JSON.stringify([...u])); else lsDel(uk()); },
+    endret(id) { if (!deler()) return; const u = sp.usendt(); u.add(id); sp.lagre(u); planleggSending(); },
+    alt() { const u = sp.usendt(); Object.keys(s.data).forEach(id => u.add(id)); sp.lagre(u); },
+    tom() { lsDel(uk()); },
+    koble() { planleggSending(1500); },
+    async send(okt) {
+      const ids = [...sp.usendt()]; if (!ids.length) return;
+      const rad = id => (s.data[id] ? JSON.stringify(tilRad(id, s.data[id])) : null);
+      const sendt = Object.fromEntries(ids.map(id => [id, rad(id)]));
+      const opp = ids.filter(id => sendt[id]).map(id => ({ user_id: okt.uid, ...JSON.parse(sendt[id]) }));
+      const ned = ids.filter(id => !sendt[id]);
+      for (let i = 0; i < opp.length; i += 200) {
+        const { r } = await supaSom(`/rest/v1/${tabell}?on_conflict=${konflikt}`, { metode: 'POST', data: opp.slice(i, i + 200), hoder: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
+        if (!r || !r.ok) throw new Error(`${tabell} ${r && r.status}`);
+      }
+      for (let i = 0; i < ned.length; i += 100) {
+        const del = ned.slice(i, i + 100).map(encodeURIComponent).join(',');
+        const { r } = await supaSom(`/rest/v1/${tabell}?user_id=eq.${okt.uid}&${felt}=in.(${del})`, { metode: 'DELETE' });
+        if (!r || !r.ok) throw new Error(`${tabell} ${r && r.status}`);
+      }
+      // sent: what changed again in the meantime stays in the queue
+      const u = sp.usendt(); ids.forEach(id => { if (rad(id) === sendt[id]) u.delete(id); }); sp.lagre(u);
+    },
+  };
+  s.speil = sp; SPEIL.push(sp); return sp;
+}
+const isoTid = ms => new Date(ms).toISOString();
+lagSpeil(Store, 'sett', 'user_id,art', (id, v) => ({ art: id, dager: v.dager }));
+lagSpeil(Tell, 'tellinger', 'user_id,id', (id, v) => ({ id, start: isoTid(v.start), slutt: v.slutt ? isoTid(v.slutt) : null, omrade: v.omrade || null, arter: v.arter }));
+lagSpeil(Kjop, 'kjop', 'user_id,id', (id, v) => ({ id, pris: v.pris, dato: v.dato, faktor: v.faktor || null, kort: v.kort || null }));
+
+/* ---- the nickname: a word, a bird and a number («Rask Kjøttmeis 42»). The words are stored, so the order of
+   the list does not matter; a word that is taken out shows as «Fuglevenn». Only add words ---- */
+const ORD = ['rask', 'kvikk', 'modig', 'glad', 'lur', 'sprek', 'blid', 'stille', 'nysgjerrig', 'tapper', 'flink', 'lun',
+  'snill', 'klok', 'rolig', 'ivrig', 'kjapp', 'spretten', 'munter', 'lystig', 'våken', 'sterk', 'liten', 'stor', 'gylden',
+  'fjærlett', 'vill', 'fri', 'tøff', 'smart', 'heldig', 'frisk', 'trofast', 'sindig', 'myk', 'livlig', 'travel', 'fornøyd',
+  'staselig', 'eventyrlysten'];
+const tilfeldig = a => a[Math.floor(Math.random() * a.length)];
+const tilfeldigNavn = () => ({ ord: tilfeldig(ORD), fugl: tilfeldig(BIRDS).key, tall: 1 + Math.floor(Math.random() * 99) });
+const kallenavn = () => { const n = lsJson(DK('kallenavn'), null); return n && n.ord ? n : null; };
+const lagreKallenavn = n => lsSet(DK('kallenavn'), JSON.stringify({ ord: n.ord, fugl: n.fugl, tall: n.tall }));
+function navnTekst(n) {
+  const i = n && BY_KEY[n.fugl];
+  return n && ORD.includes(n.ord) && i != null && !CARDS[i].bonus ? `${stor(n.ord)} ${CARDS[i].navn} ${n.tall}` : `Fuglevenn${n && n.tall ? ' ' + n.tall : ''}`;
+}
+const oppsummering = () => { const t = froTotalt(); return { fro: Math.max(0, Math.min(1e8, Math.round(t))), arter: seenCount(), dager: Math.min(40000, nokkeltall().obsDager), tittel: tittelAv(t) }; };
+
+/* ---- what is sent besides the copy: the row on the board and the profile ---- */
+async function sendTavlerad(okt) {
+  const rad = { ...kallenavn(), ...oppsummering() };
+  if (lsGet(DK('tavle-sendt')) === okt.uid + JSON.stringify(rad)) return;
+  for (let forsok = 0; forsok < 8; forsok++) {
+    const { r } = await supaSom('/rest/v1/ledertavle?on_conflict=user_id', { metode: 'POST', data: [{ user_id: okt.uid, ...rad }], hoder: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
+    if (r && r.ok) { lsSet(DK('tavle-sendt'), okt.uid + JSON.stringify(rad)); return; }
+    if (r && r.status === 409) { rad.tall = 1 + Math.floor(Math.random() * 99); lagreKallenavn(rad); continue; }   // the name is taken: another number
+    throw new Error(`ledertavle ${r && r.status}`);
+  }
+}
+async function sendProfil(okt) {
+  const rad = { postnr: lsGet(DK('postnr')) || null, appversjon: APPVERSJON, bilder: bildevalg, bakside: baksideValgt() };
+  if (lsGet(DK('profil-sendt')) === okt.uid + JSON.stringify(rad)) return;
+  const { r } = await supaSom('/rest/v1/profil?on_conflict=user_id', { metode: 'POST', data: [{ user_id: okt.uid, ...rad }], hoder: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
+  if (!r || !r.ok) throw new Error(`profil ${r && r.status}`);
+  lsSet(DK('profil-sendt'), okt.uid + JSON.stringify(rad));
+}
+/* everything that waits, a little after the last change; without a network it waits for the next time */
+let sendT = null, sender = false, sletter = false;
+function planleggSending(ms = 3000) { clearTimeout(sendT); sendT = setTimeout(sendAlt, ms); }
+async function sendAlt() {
+  if (sender) { planleggSending(); return; }
+  if (lsGet(DK('slett'))) { await slettPaServer(); if (lsGet(DK('slett'))) return; }
+  if (!deler() || !navigator.onLine) return;
+  sender = true;
+  try {
+    const okt = await hentOkt();
+    if (lsGet(DK('delt-id')) !== okt.uid) {           // a new anonymous user: everything on the device, once
+      SPEIL.forEach(sp => sp.alt()); lsSet(DK('delt-id'), okt.uid); lsDel(DK('tavle-sendt')); lsDel(DK('profil-sendt'));
+    }
+    await sendTavlerad(okt);
+    await sendProfil(okt);
+    for (const sp of SPEIL) await sp.send(okt);
+    lsSet(DK('sist-sendt'), String(Date.now()));
+    if (statsFane === 'tavle' && !lsGet(DK('tavle'))) hentTavle();
+  } catch (e) { /* no network, or the tables are not made yet: tried again later */ }
+  finally { sender = false; paintDeling(); }
+}
+/* turning sharing on and off. Off deletes the anonymous user in Supabase (and with it everything shared); without
+   a network that waits, and nothing is sent meanwhile */
+function startDeling() {
+  lsSet(DK('deling'), 'ja');
+  if (!kallenavn()) lagreKallenavn(tilfeldigNavn());
+  planleggSending(300); paintDeling();
+}
+function stoppDeling() {
+  lsSet(DK('deling'), 'nei');
+  SPEIL.forEach(sp => sp.tom());
+  ['tavle-sendt', 'profil-sendt', 'tavle', 'delt-id', 'sist-sendt'].forEach(k => lsDel(DK(k)));
+  if (lsGet(DK('okt'))) { lsSet(DK('slett'), '1'); slettPaServer(); }
+  paintDeling();
+}
+async function slettPaServer() {
+  if (sletter) return; sletter = true;
+  try {
+    const { r } = await supaSom('/rest/v1/rpc/slett_meg', { metode: 'POST', data: {} }, false);
+    if (r && !r.ok) throw new Error('slett_meg ' + r.status);
+    ['okt', 'slett', 'kallenavn'].forEach(k => lsDel(DK(k)));          // deleted (or there was nothing left to delete)
+    si('Det du har delt, er slettet fra ledertavlen og statistikken.');
+  } catch (e) { /* tried again when there is a network */ }
+  finally { sletter = false; paintDeling(); }
+}
+const lagrePostnr = v => {
+  v = String(v || '').trim();
+  if (/^\d{4}$/.test(v)) lsSet(DK('postnr'), v);
+  else if (!v) lsDel(DK('postnr'));
+  else { si('Postnummeret må ha fire sifre.'); return false; }
+  planleggSending(); return true;
+};
+
+/* ---- the board: the top 50 and your place, kept on the device so it shows without a network ---- */
+let henter = false, tavleFeil = false;
+const tallFra = cr => { const m = /\/(\d+)$/.exec(cr || ''); return m ? +m[1] : null; };
+async function hentTavle() {
+  if (!deler() || henter) return;
+  if (!navigator.onLine) { tavleFeil = true; paintDeling(); return; }
+  henter = true; paintDeling();
+  try {
+    const okt = lsGet(DK('okt')) ? await hentOkt(false).catch(() => null) : null;
+    const r = await supa('/rest/v1/ledertavle?select=user_id,ord,fugl,tall,fro,arter,dager,tittel&order=fro.desc,oppdatert.asc&limit=50', { okt, hoder: { Prefer: 'count=exact' } });
+    if (!r.ok) throw new Error('tavle ' + r.status);
+    const rader = await r.json(), antall = tallFra(r.headers.get('content-range')) || rader.length;
+    let plass = null;
+    const i = okt ? rader.findIndex(x => x.user_id === okt.uid) : -1;
+    if (i >= 0) plass = i + 1;
+    else if (okt && lsGet(DK('tavle-sendt'))) {
+      const r2 = await supa(`/rest/v1/ledertavle?select=user_id&fro=gt.${oppsummering().fro}&limit=1`, { okt, hoder: { Prefer: 'count=exact' } });
+      if (r2.ok) plass = (tallFra(r2.headers.get('content-range')) || 0) + 1;
+    }
+    lsSet(DK('tavle'), JSON.stringify({ rader, antall, plass, hentet: Date.now() }));
+    tavleFeil = false;
+  } catch (e) { tavleFeil = true; }
+  finally { henter = false; paintDeling(); }
+}
+setInterval(() => { if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle' && !document.hidden) hentTavle(); }, 60000);
+function tavleHtml() {
+  if (lsGet(DK('slett'))) return `<div class="s-sec"><h3>Ledertavle</h3><p class="cap">Det du har delt, slettes så snart du har nett. Imens vises ikke ledertavlen.</p></div>`;
+  if (!deler()) return `<div class="s-sec tv-av"><h3>Ledertavle</h3>
+    <p class="cap">Du deler ikke, og ser derfor ikke ledertavlen. Når du deler, vises du med et kallenavn sammen med frø, arter, observasjonsdager og tittel, og observasjonene dine sendes anonymt til statistikk over hagefuglene.</p>
+    <div class="row"><button class="btn pri" data-del-pa>Del og se ledertavlen</button></div></div>`;
+  const c = lsJson(DK('tavle'), null), uid = (lsJson(DK('okt'), null) || {}).uid, n = kallenavn(), o = oppsummering();
+  const status = henter && !c ? 'Henter tavlen …' : (tavleFeil || !navigator.onLine) ? (c ? `Uten nett – viser tavlen fra ${naarTekst(c.hentet)}` : 'Tavlen hentes når du har nett.') : c ? `Oppdatert ${naarTekst(c.hentet)}` : 'Henter tavlen …';
+  const rad = (x, nr, meg) => `<li class="${meg ? 'meg' : ''}"><span class="tv-nr">${nr}</span><span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>
+    <span class="tv-t"><b>${esc(navnTekst(x))}</b><small>${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span><span class="tv-fro">${fmtFro(x.fro)}</span></li>`;
+  const rader = c ? c.rader : [], erMeg = rader.some(x => x.user_id === uid);
+  return `<div class="s-sec">
+    <div class="tv-meg"><span class="ti" style="${tittelPos(o.tittel)}" aria-hidden="true"></span>
+      <span class="tv-t"><b>${esc(navnTekst(n))}</b><small>${c && c.plass ? `Nr. ${c.plass} av ${c.antall}` : 'Plassen din kommer når tavlen er hentet'} · ${fmtFro(o.fro)} frø</small></span>
+      <button class="btn" data-bytt-navn>Bytt navn</button></div>
+    <h3 style="margin-top:22px">Ledertavle <span class="h3n">topp ${Math.min(50, rader.length || 50)}</span></h3>
+    ${rader.length ? `<ol class="tavle">${rader.map((x, i) => rad(x, i + 1, x.user_id === uid)).join('')}${!erMeg && c && c.plass ? `<li class="tv-mer" aria-hidden="true">…</li>${rad({ ...n, ...o }, c.plass, true)}` : ''}</ol>` : ''}
+    <p class="cap tv-status" role="status">${esc(status)}</p>
+    <div class="row"><button class="textbtn tv-slett" data-slett-meg>Slett meg fra ledertavlen</button></div>
+  </div>`;
+}
+
+/* ---- the first time: what is shared, with an optional postcode. Closing it is the same as «Greit» ---- */
+function visDelingsinfo() {
+  const eks = kallenavn() || tilfeldigNavn(); lagreKallenavn(eks);
+  const pn = lsGet(DK('postnr')) || '';
+  const ok = () => { lagrePostnr($('#infoPostnr') ? $('#infoPostnr').value : pn); startDeling(); };
+  sporsmal({
+    tittel: 'Ledertavle og statistikk',
+    tekst: `<p>Du kommer på en felles ledertavle som «${esc(navnTekst(eks))}», med frø, arter, observasjonsdager og tittel. Kallenavnet kan du bytte.</p>
+      <p>Observasjonene dine (art og dato), tellingene og kjøpene sendes også anonymt til en felles database, så vi kan lage statistikk over hagefuglene. Ingen navn, e-post eller posisjon.</p>
+      <label class="dlg-felt">Postnummer <small>valgfritt, bare til statistikk</small><input id="infoPostnr" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870" value="${esc(pn)}"></label>
+      <p class="cap">Du kan endre dette under Innstillinger.</p>`,
+    knapper: [{ tekst: 'Greit', pri: true, fn: ok }, { tekst: 'Ikke del', fn: () => sporsmal({
+      tittel: 'Ikke dele?',
+      tekst: 'Da får du ikke se ledertavlen. Du kan slå på delingen senere under Innstillinger.',
+      knapper: [{ tekst: 'Ikke del', pri: true, fn: () => { lsSet(DK('deling'), 'nei'); paintDeling(); si('Du deler ikke. Det kan du endre under Innstillinger.'); } },
+        { tekst: 'Tilbake', fn: visDelingsinfo }],
+      avbryt: visDelingsinfo,
+    }) }],
+    avbryt: ok,
+  });
+}
+function sporOmDeling(forsok = 0) {
+  if (delingValg() != null) return;
+  const opptatt = dlgApen || festAapen || festKo.length || openSheet || !$('#festVent').hidden;
+  if (opptatt) { if (forsok < 120) setTimeout(() => sporOmDeling(forsok + 1), 1000); return; }
+  visDelingsinfo();
+}
+/* choosing the nickname: the word, the bird and the number, or one at random */
+function byttNavn() {
+  const n = kallenavn() || tilfeldigNavn();
+  const fugler = BIRDS.slice().sort((a, b) => a.navn.localeCompare(b.navn, 'nb'));
+  const valg = (id, liste, v) => `<select id="${id}">${liste.map(([k, t]) => `<option value="${esc(String(k))}" ${String(k) === String(v) ? 'selected' : ''}>${esc(t)}</option>`).join('')}</select>`;
+  sporsmal({
+    tittel: 'Bytt kallenavn',
+    tekst: `<div class="nv-valg"><label>Ord${valg('nvOrd', ORD.map(o => [o, stor(o)]), n.ord)}</label>
+      <label>Fugl${valg('nvFugl', fugler.map(c => [c.key, c.navn]), n.fugl)}</label>
+      <label>Tall${valg('nvTall', Array.from({ length: 99 }, (_, i) => [i + 1, i + 1]), n.tall)}</label></div>
+      <button type="button" class="textbtn" id="nvTilf">Tilfeldig</button>`,
+    knapper: [{ tekst: 'Lagre', pri: true, fn: () => {
+      const ny = { ord: $('#nvOrd').value, fugl: $('#nvFugl').value, tall: +$('#nvTall').value };
+      lagreKallenavn(ny); planleggSending(200); si(`Kallenavnet ditt er ${navnTekst(ny)}.`); paintDeling();
+    } }, { tekst: 'Avbryt' }],
+  });
+}
+dlgEl.addEventListener('click', e => {
+  if (e.target.id !== 'nvTilf') return;
+  const t = tilfeldigNavn(); $('#nvOrd').value = t.ord; $('#nvFugl').value = t.fugl; $('#nvTall').value = String(t.tall);
+});
+function slettMegSporsmal() {
+  sporsmal({
+    tittel: 'Slutte å dele?',
+    tekst: 'Det du har delt, slettes fra ledertavlen og statistikken, og du får ikke se ledertavlen. Observasjonene dine på telefonen beholdes.',
+    knapper: [{ tekst: 'Slett meg', pri: true, fn: () => { stoppDeling(); si('Du deler ikke lenger.'); } }, { tekst: 'Avbryt' }],
+  });
+}
+
+/* ---- Innstillinger: sharing on and off, the postcode, and what is waiting ---- */
+function paintDeling() {
+  if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') { const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; }
+  const b = $('#delBtn'); if (!b) return;
+  const pa = deler(), slett = !!lsGet(DK('slett'));
+  b.setAttribute('aria-checked', pa ? 'true' : 'false');
+  const pf = $('#postnrFelt'); if (document.activeElement !== pf) pf.value = lsGet(DK('postnr')) || '';
+  pf.disabled = !pa; $('#slettMeg').hidden = !pa;
+  const n = SPEIL.reduce((a, sp) => a + sp.usendt().size, 0), sist = +lsGet(DK('sist-sendt')) || 0;
+  $('#delStatus').textContent = slett ? 'Slettingen fullføres når du har nett.'
+    : !pa ? 'Du deler ikke, og ser derfor ikke ledertavlen.'
+    : `Kallenavn: ${navnTekst(kallenavn())}. ` + (n ? `${flertall(n, 'endring', 'endringer')} venter på nett.` : sist ? `Sist sendt ${naarTekst(sist)}.` : 'Sendes når du har nett.');
+}
+$('#delBtn').addEventListener('click', () => { if (deler()) slettMegSporsmal(); else if (!lsGet(DK('slett'))) startDeling(); });
+$('#slettMeg').addEventListener('click', slettMegSporsmal);
+$('#postnrFelt').addEventListener('change', e => { if (lagrePostnr(e.target.value)) si(e.target.value.trim() ? 'Postnummeret er lagret.' : 'Postnummeret er fjernet.'); paintDeling(); });
+[Store, Tell, Kjop].forEach(x => x.on(() => { if (deler()) planleggSending(4000); }));
+addEventListener('online', () => { planleggSending(500); if (statsFane === 'tavle') hentTavle(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) planleggSending(1500); });
+
 let rz = 0;
 addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => sync({ instant: true })); });
 
@@ -4231,6 +4588,8 @@ Store.connectRemote();
 Tell.connectRemote();
 Vist.connectRemote();
 Kjop.connectRemote();
+if (lsGet(DK('slett'))) planleggSending(1000);
+setTimeout(sporOmDeling, 1500);                           // the first time: what is shared (ledertavle og statistikk)
 setTimeout(sjekkBonus, 900);                              // dyrekort bought on another device: revealed now
 })();
 </script>

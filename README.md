@@ -20,6 +20,7 @@ fuglekort/
 ├── build.py                 Bygger docs/index.html fra src + data
 ├── importer_fuglekort.py    Henter kort, forklaringskort og bakside fra Fuglekort-builder
 ├── importer_baksider.py     Henter baksidene som kan kjøpes i Frøbutikken
+├── supabase/fuglekort.sql   Tabellene til ledertavlen og statistikken (limes inn i Supabase SQL Editor)
 └── docs/                    Ferdig app – det er denne mappen GitHub Pages viser
     ├── index.html
     ├── manifest.webmanifest  Gjør at appen kan legges på hjemskjermen (PWA)
@@ -166,7 +167,7 @@ Kantene gir 500 / 1 500 / 3 000 / 6 000 frø (1 000 / 2 000 / 5 000 / 15 000 fø
 
 ## Min fugleliste
 
-Ringen øverst til høyre åpner **Min fugleliste**, delt i fem faner. Tittelen og fanene står fast øverst mens du ruller, og appen husker hvilken fane du brukte sist (på enheten, `fuglekort:fane`). Piltastene bytter fane.
+Ringen øverst til høyre åpner **Min fugleliste**, delt i seks faner. Tittelen og fanene står fast øverst mens du ruller, og appen husker hvilken fane du brukte sist (på enheten, `fuglekort:fane`). Piltastene bytter fane.
 
 - **Profil:** ikonet og tittelen din med en linje mot neste tittel (se under), navnet ditt, hvor mange fugler du har sett av 100, observasjonsdager, merker oppnådd, solsikkefrøene (frø samlet, å bruke, brukt og hva de kom fra, med knapp til Frøbutikken), glinskortene og lagring/sikkerhetskopi.
 - **Statistikk:** sjeldneste funn, fuglen du har sett flest dager, observasjonsdager og registreringer, nye arter siste 12 måneder, «Pleier å dukke opp nå», fuglekalenderen, fordeling etter sjeldenhet, nye arter per måned og «Sist sett».
@@ -177,6 +178,7 @@ Ringen øverst til høyre åpner **Min fugleliste**, delt i fem faner. Tittelen 
 - **Telling:** start eller fortsett en hagefugltelling, og tidligere tellinger.
 - **Kort:** samlingen (fuglekortene med antall dager i hjørnet) og dyrekortene du har kjøpt, med en knapp til Frøbutikken.
 - **Merker:** alle merkene, observasjonsdagene som streker og årslisten.
+- **Tavle:** den felles ledertavlen (se Ledertavle og statistikk).
 
 **Titler:** Hvor langt du har kommet, regnet ut fra alle frøene du har samlet. 13 titler med hvert sitt ikon: Egg (start), Nyklekket 15 000, Dununge 30 000, Reirunge 60 000, Flygeferdig 105 000, Hagegjest 155 000, Fuglevenn 220 000, Kikkertbærer 325 000, Fuglekikker 500 000, Artsjeger 700 000, Ornitolog 1 000 000, Mesterornitolog 1 350 000 og Fuglekonge 2 000 000 frø (`TITLER` i `src/app.html`). For en vanlig bruker (se Solsikkefrø) kommer de omtrent etter 6 dager, 8 dager (5-dagersmerket og 10 arter gir et hopp den andre uka), 2½ uke, 6 uker, 2½ måned, 4 måneder, et halvt år, 9 måneder, 13 måneder, 1½ år, 2 år og litt over 3 år; en ivrig bruker som også teller, blir Fuglekonge etter ca. 14½ måned. Det du bruker i Frøbutikken, trekkes ikke fra. Ikonet står også i ringen øverst til høyre i appen, med ringen fylt mot neste tittel. Øverst i Profil står ikonet, tittelen («Ornitolog 11 av 13») og en linje med «1 013 300 av 1 300 000 frø til Mesterornitolog» og neste ikon i grått; trykk på ikonet for å se alle titlene. En ny tittel feires én gang med ikonet stort (etter feiringene for kant og dyrekort), og hvilken tittel som er feiret, huskes per bruker på enheten (`fuglekort:tittel:v2`; ny nøkkel etter balanseringen i oktober 2026, så det som var feiret før, starter på nytt uten feiring). Første gang appen åpnes med titler, starter den på tittelen du har, uten feiring. Ikonene ligger i `kilder/titler/` (01_egg.jpg … 13_fuglekonge_med_krone.jpg, 512 × 512); `python3 lag_titler.py` setter dem sammen til `docs/sprites/titler.webp`. Poengene (stjerner per sett fugl) er tatt bort.
 
@@ -191,7 +193,26 @@ All lagring går gjennom objektet `Store` øverst i skriptet i `src/app.html`:
 - Avkrysninger fra før observasjonsdagene kom (bare `date`) blir automatisk fuglens første observasjonsdag.
 - **Som frittstående app** lagres de i nettleserens `localStorage` på enheten. Under «Lagring» i fanen Profil finnes «Kopier sikkerhetskopi» og «Gjenopprett», så du kan flytte listen mellom enheter. Gjenoppretting legger dagene i kopien til dem du har, og tar også imot eldre kopier med én dato per fugl. Sikkerhetskopien har også med de avsluttede tellingene og kjøpene i Frøbutikken.
 
-Vil du ha synkronisering i den frittstående appen, bytter du ut `connectRemote()` og `push()` i `Store` med kall mot din egen backend, for eksempel Firebase eller Supabase. Resten av appen trenger ingen endringer.
+Observasjonene, tellingene og kjøpene sendes også som en kopi til Supabase når man deler (se under). Telefonen er fortsatt fasit.
+
+## Ledertavle og statistikk (Supabase)
+
+Appen har en felles ledertavle, og observasjonene sendes anonymt til en felles database så man kan lage statistikk over hagefuglene etterpå. Prosjektet ligger i Supabase (`SUPA` i `src/app.html`: adressen og den offentlige publishable-nøkkelen). Tabellene lages ved å lime inn `supabase/fuglekort.sql` i SQL Editor og trykke Run (kan kjøres flere ganger). I Supabase er «Automatically expose new tables» av og «automatic RLS» på, så SQL-en gir tilgangen uttrykkelig med GRANT og slår på RLS selv.
+
+- **Anonym bruker:** Hver person i appen blir en anonym Supabase-bruker (`/auth/v1/signup` uten e-post, som `signInAnonymously`), uten e-post eller passord. Økten (nøklene og ID-en) ligger på telefonen (`fuglekort:okt`) og fornyes før den går ut. Appen bruker vanlige `fetch`-kall, ikke supabase-js: publishable-nøkkelen i `apikey`, personens nøkkel i `Authorization`.
+- **Første gang appen åpnes** kommer kortet «Ledertavle og statistikk», som forteller hva som deles, med et valgfritt postnummer. «Greit» (eller å lukke kortet) starter delingen. «Ikke del» varsler først at man da ikke får se ledertavlen. Ingenting sendes før man har svart. Valget ligger i `fuglekort:deling` (`ja`/`nei`).
+- **Det som sendes** (tabellene i SQL-en):
+  - `ledertavle`: kallenavnet, tjente frø (det titlene regnes av), antall fuglearter, observasjonsdager og tittelen (0–12). Alle kan lese tavlen; hver bruker kan bare skrive sin egen rad.
+  - `profil`: postnummer (valgfritt), appversjonen (`__VERSJON__`, satt av `build.py`), bildevalget og baksiden.
+  - `sett`: observasjonsdagene, én rad per art med alle datoene, som på telefonen. Visningen `observasjoner` gir én rad per art og dag til statistikk.
+  - `tellinger` og `kjop`: hagefugltellingene og kjøpene i Frøbutikken.
+  - Alt utenom tavlen kan bare eieren av raden lese. Du som eier prosjektet ser alt i SQL Editor; nederst i SQL-fila står eksempler på statistikk.
+- **Kallenavn:** et ord, en fugl og et tall, f.eks. «Rask Kjøttmeis 42» (`ORD`). Det lagres som ord-ID-er (`rask`, `parus-major`, 42), aldri fritekst, og appen viser bare ord den kjenner. Databasen sier nei til to like navn; da velger appen et annet tall. Navnet byttes med «Bytt navn» i fanen Tavle (ord, fugl og tall fra lister, eller «Tilfeldig»).
+- **Lagringslaget:** `samling()` har fått en `speil`. `connectRemote()` sender det som ikke er sendt, og hver `push(id)` legger endringen i en kø på telefonen (`fuglekort:usendt:<tabell>`) som sendes noen sekunder etter siste endring, når nettet kommer tilbake og når appen åpnes. Køen overlever at appen lukkes uten nett. Det som er på telefonen, skrives aldri over fra Supabase. Første gang en anonym bruker deler, sendes alt som finnes fra før.
+- **Fanen Tavle** i Min fugleliste: din rad øverst (kallenavn, «Nr. 12 av 340», frø og «Bytt navn»), så topp 50 sortert etter frø med plass, tittelikon, kallenavn, arter og dager. Din rad er uthevet; er du utenfor topp 50, står den nederst etter «…». Tavlen hentes når fanen åpnes og hvert minutt mens den er åpen, og lagres på telefonen, så uten nett står «Uten nett – viser tavlen fra kl. 10.16».
+- **Innstillinger → Ledertavle og statistikk:** bryteren «Del med ledertavlen og statistikken», postnummeret (fire sifre, valgfritt, bare til statistikk, vises ikke på tavlen), hva som venter på å bli sendt, og «Slett meg fra ledertavlen».
+- **Slett meg** (også nederst i fanen Tavle, og når bryteren slås av): funksjonen `slett_meg()` sletter den anonyme brukeren i Supabase, og alle radene forsvinner med den (on delete cascade). Appen glemmer økten og kallenavnet og slutter å sende. Uten nett venter slettingen (`fuglekort:slett`) og fullføres så snart nettet er tilbake; imens sendes ingenting og tavlen vises ikke. Observasjonene på telefonen beholdes. Slår man på deling igjen, blir man en ny anonym bruker.
+- **Verdt å vite:** Tallene kommer fra telefonen, så en teknisk kyndig kan sende falske tall for sin egen rad; databasen sier nei til umulige verdier, og rader kan slettes i Supabase. Supabase tillater 30 anonyme innlogginger i timen fra samme IP-adresse, og anbefaler CAPTCHA (Cloudflare Turnstile) mot misbruk. Anonym ID sammen med observasjoner og postnummer er trolig personopplysninger etter GDPR, og Google Play krever personvernerklæring og opplysninger i skjemaet om datasikkerhet.
 
 ## Hente nye kort fra Fuglekort-builder
 
