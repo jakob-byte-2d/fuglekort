@@ -98,8 +98,7 @@ button{cursor:pointer;touch-action:manipulation}
 /* the picture field: a tap opens it in full screen (found from the tap position, so a swipe can still start there);
    this button is only for the keyboard */
 .bilde-hit{position:absolute;background:none;border:0;border-radius:2cqw;padding:0;pointer-events:none}
-.dato{position:absolute;display:block;cursor:pointer}
-.dato input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;margin:0;padding:0;-webkit-appearance:none;appearance:none}
+.dato{position:absolute;display:block;pointer-events:none}
 .hand{position:absolute;bottom:22%;font-family:var(--hand);font-weight:600;font-size:7cqw;line-height:1;color:var(--pen);
   white-space:nowrap;transform:rotate(-2.5deg);transform-origin:0 100%;pointer-events:none;
   clip-path:inset(-30% 100% -30% 0);transition:clip-path .55s steps(14, end) .12s}
@@ -143,10 +142,6 @@ button{cursor:pointer;touch-action:manipulation}
 .ldel{width:10.5cqw;height:10.5cqw;padding:0;border:0;border-radius:50%;background:none;display:grid;place-items:center;color:#6d7a72}
 .ldel svg{width:4.2cqw;height:4.2cqw}
 .ldel:hover{background:rgba(20,35,29,.07)}
-.ladd{position:relative;display:flex;align-items:center;justify-content:center;margin:2.4cqw 4cqw 4cqw;min-height:12cqw;border-radius:2.8cqw;
-  background:var(--card-green);color:#f3f8f2;font-weight:600;font-size:4.3cqw;cursor:pointer}
-.ladd input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;margin:0;padding:0;-webkit-appearance:none;appearance:none}
-.ladd:focus-within{outline:2px solid var(--pen);outline-offset:2px}
 
 
 /* ---------- glinskort: the printed border turns Bronse (1), Sølv (2), Gull (3) and at last Holo (4) ----------
@@ -334,6 +329,23 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .tv-t.skjult b{font-style:italic;font-weight:500;color:var(--muted)}
 .tv-varsel{display:grid;gap:8px;justify-items:start;margin:12px 0 0;padding:11px 12px;border-radius:12px;background:var(--warn-bg);color:var(--warn-ink);font-size:13.5px;line-height:1.4}
 .tv-varsel .textbtn{padding:2px 0;color:inherit;text-decoration:underline}
+.tv-varsel+.tv-varsel{margin-top:8px}
+.tv-valg{margin:0 0 10px}
+.tv-periode{margin:0 0 12px;line-height:1.45}
+.tv-periode b{color:var(--ink)}
+.tv-merket{display:inline-grid;place-items:center;width:16px;height:16px;margin-left:6px;border-radius:50%;vertical-align:1px;
+  background:var(--warn-bg);color:var(--warn-ink);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--warn-ink) 45%, transparent);font-size:11px;font-weight:800}
+.tv-forrige{margin-top:18px}
+.tv-forrige h4{margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tv-forrige ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.tv-forrige li{display:grid;grid-template-columns:26px 1fr;column-gap:10px;align-items:center;padding:5px 8px;border-radius:12px}
+.tv-forrige li.meg{background:color-mix(in srgb, var(--gold) 16%, transparent)}
+.tv-forrige li b{font-size:14.5px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tv-forrige li small{grid-column:2;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tv-med{grid-row:span 2;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;color:#3b2a00;
+  background:radial-gradient(circle at 35% 30%, #fff6cf 0, #f7cf5a 40%, #d99a12 100%)}
+.tv-med.m2{color:#2f3740;background:radial-gradient(circle at 35% 30%, #fff 0, #d9dee3 40%, #9aa4ae 100%)}
+.tv-med.m3{color:#3d2412;background:radial-gradient(circle at 35% 30%, #ffe6cf 0, #d99a62 40%, #9a5a2c 100%)}
 .tavle li.meg{background:color-mix(in srgb, var(--gold) 16%, transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--gold) 55%, transparent)}
 .tavle .ti{width:30px;height:30px;flex-shrink:0}
 .tv-nr{width:26px;flex-shrink:0;text-align:right;font-weight:700;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -552,6 +564,8 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
   letter-spacing:-.03em;color:#3b2a00;background:radial-gradient(circle at 35% 30%, #fff6cf 0, #f7cf5a 38%, #d99a12 100%);
   box-shadow:0 0 0 6px #fffaf0,0 0 0 12px color-mix(in srgb, var(--gold) 55%, transparent),0 24px 60px -16px rgba(0,0,0,.7)}
 .fm svg{width:46%;height:46%}
+.fest[data-plass="2"] .fm{color:#2f3740;background:radial-gradient(circle at 35% 30%, #ffffff 0, #d9dee3 40%, #9aa4ae 100%)}
+.fest[data-plass="3"] .fm{color:#3d2412;background:radial-gradient(circle at 35% 30%, #ffe6cf 0, #d99a62 40%, #9a5a2c 100%)}
 .fest[data-type="tittel"] .fest-ikon{display:block}
 .fest[data-type="tittel"].on .fest-ikon{animation:ikon-inn .9s cubic-bezier(.25,1.45,.45,1) .05s forwards}
 @keyframes ikon-inn{to{opacity:1;transform:none}}
@@ -1687,7 +1701,7 @@ let froCache = null;
 const froNullstill = () => { froCache = null; };
 function froRegnskap() {
   if (froCache) return froCache;
-  const r = { reg: 0, forste: 0, dag: 0, niva: 0, merker: 0, mult: 0, oppdrag: 0 };
+  const r = { reg: 0, forste: 0, dag: 0, niva: 0, merker: 0, mult: 0, oppdrag: 0, premier: 0 };
   CARDS.forEach(c => {
     if (c.bonus && !erApen(c)) return;                     // a dyrekort not bought gives nothing
     const dager = Store.days(c.key); if (!dager.length) return;
@@ -1708,7 +1722,8 @@ function froRegnskap() {
   r.dag = t.obsDager * FRO.daglig;                                  // every day with a bird
   merkerListe(t).forEach(m => { if (m.v(t) >= m.mal) r.merker += merkeFro(m); });
   const ol = oppdragLogg(); r.oppdrag = OPPDRAG.reduce((a, o) => a + (ol[o.id] ? oppdragFro(o) : 0), 0);   // the tasks done
-  r.tjent = r.reg + r.forste + r.dag + r.niva + r.merker + r.mult + r.oppdrag;
+  r.premier = Object.values(premieLogg()).reduce((a, p) => a + (+p.fro || 0), 0);   // the prizes won on the boards
+  r.tjent = r.reg + r.forste + r.dag + r.niva + r.merker + r.mult + r.oppdrag + r.premier;
   r.brukt = Object.values(Kjop.data).reduce((a, v) => a + v.pris + (v.kort ? v.kort.reduce((b, p) => b + (p.pris || 0), 0) : 0), 0);   // moves too
   r.saldo = r.tjent - r.brukt;                                      // what can be spent; the titles go by r.tjent
   return (froCache = r);
@@ -1871,6 +1886,10 @@ const OPPDRAG = [
   { id: 'dager3', tekst: 'Registrer fugler på tre ulike dager', v: t => t.obsDager >= 3 },
 ];
 const OPPDRAG_KEY = () => brukerNokkel('fuglekort:oppdrag'), OPPDRAG_SKJULT = () => brukerNokkel('fuglekort:oppdrag-skjult');
+/* the prizes from the week, month and year boards: { 'uke:2026-42': { plass, fro, poeng, dato } }, per user on this
+   device; and the seeds and species that came from a backup. Neither counts on the week, month and year boards */
+const PREMIE_KEY = () => brukerNokkel('fuglekort:premier');
+function premieLogg() { try { const x = JSON.parse(lsGet(PREMIE_KEY()) || '{}'); return x && typeof x === 'object' && !Array.isArray(x) ? x : {}; } catch (e) { return {}; } }
 function oppdragLogg() { try { const x = JSON.parse(lsGet(OPPDRAG_KEY()) || '{}'); return x && typeof x === 'object' && !Array.isArray(x) ? x : {}; } catch (e) { return {}; } }
 const oppdragFro = o => FRO.oppdrag[o.id] || 0;
 const oppdragOk = (o, t, ol = oppdragLogg()) => !!ol[o.id] || (!!o.v && o.v(t));
@@ -1928,10 +1947,9 @@ function makeCard(i) {
       <span class="idag-merke" aria-hidden="true" style="left:${P(BILDEFELT.x + 0.022)};top:${P(BILDEFELT.y + BILDEFELT.h - 0.058)}">${CHECK}Sett i dag</span>
       <span class="tall" aria-hidden="true"></span>
       <span class="antall" aria-hidden="true" style="left:${P(bx + bw + 0.14)};top:${P(by - 0.006)};height:${P(bh + 0.012)}"></span>
-      <label class="ctl dato" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}">
+      <span class="dato" aria-hidden="true" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}">
         <span class="hand" style="left:${P((lx - dLeft + 0.012) / dW)}"></span>
-        <input type="date" data-act="date" aria-label="Første gang du så ${esc(c.navn)}">
-      </label>
+      </span>
     </div>
     <div class="face back">${BACK()}<div class="logg" hidden></div>${c.bonus ? '<p class="kred"></p>' : ''}</div>
   </div>`;
@@ -1967,8 +1985,6 @@ function paintCard(el) {
   ant.textContent = dager.length > 1 ? `× ${dager.length}` : '';
   ant.classList.toggle('tre', dager.length >= 100);
   if (before != null && dager.length > before && dager.length > 1) { ant.classList.remove('pop'); void ant.offsetWidth; ant.classList.add('pop'); }
-  const inp = el.querySelector('[data-act="date"]');
-  inp.value = s ? s.date : ''; inp.max = t;
   // glinskort level; a flash when it goes up while the card is on screen
   const niva = nivaAv(c);
   if (niva) el.dataset.niva = niva; else delete el.dataset.niva;
@@ -2138,8 +2154,7 @@ function paintLogg(el, c, dager) {
   const niva = nivaAv(c), neste = nesteNiva(c);
   const nivaLinje = `${niva ? `<em class="nchip n${niva}">${NIVA[niva]}</em>` : ''}${neste ? `${neste.mangler} ${neste.mangler === 1 ? 'dag' : 'dager'} til ${NIVA[neste.niva]}` : 'Høyeste nivå'}`;
   box.innerHTML = `<div class="lh"><b>${esc(c.navn)}</b><span>${dagerTekst(dager.length)}</span><span class="lniva">${nivaLinje}</span></div>
-    <ol class="b-body llist" aria-label="Dager du har sett ${esc(c.navn)}">${rows}</ol>
-    <label class="ctl ladd"><span>+ Legg til en dag</span><input type="date" data-act="addday" max="${t}" aria-label="Legg til en dag du så ${esc(c.navn)}"></label>`;
+    <ol class="b-body llist" aria-label="Dager du har sett ${esc(c.navn)}">${rows}</ol>`;
 }
 function setFlipped(el, on) {
   el.classList.toggle('flipped', on);
@@ -2538,17 +2553,6 @@ deckEl.addEventListener('click', e => {
   const c = CARDS[+el.dataset.i];
   if (b.dataset.act === 'toggle') trykkSett(c); else slettDag(c, b.dataset.d);
 });
-deckEl.addEventListener('click', e => {
-  const inp = e.target.closest('input[type="date"]'); if (!inp) return;
-  if (typeof inp.showPicker === 'function') { try { inp.showPicker(); } catch (err) {} }
-});
-deckEl.addEventListener('change', e => {
-  const inp = e.target.closest('input[type="date"]'); if (!inp || !inp.value || !ISO.test(inp.value)) return;
-  const c = CARDS[+inp.closest('.card').dataset.i], d = inp.value;
-  if (d > todayISO()) { si('Datoen kan ikke være fram i tid.'); paintCard(inp.closest('.card')); return; }
-  if (inp.dataset.act === 'addday') { inp.value = ''; leggTilDag(c, d); }
-  else flyttForsteDag(c, d);
-});
 
 /* Tapping SETT: the first time it ticks the box and writes the date; on a later day it adds that day.
    A second tap on the same day shows the list of days instead of removing anything. */
@@ -2572,6 +2576,7 @@ function registrer(c, d) {
   const for_ = opptjent(), f0 = froFor();
   froFrys();
   Store.put(c.key, [d]);
+  if (!c.bonus) sjekkTempo();
   haptic(12);
   const n = seenCount();
   const msg = c.bonus ? `${c.navn}! Dyrekortet er sett for første gang.`
@@ -2581,15 +2586,23 @@ function registrer(c, d) {
   si(msg + froTekst(f0) + nyheter(for_));
   froEffekt(c, f0, d);
 }
-function leggTilDag(c, d) {
-  const gml = Store.days(c.key);
-  if (gml.includes(d)) { si(`${fmtHand(d)} er allerede registrert for ${c.navn}.`); return; }
-  if (!gml.length) { registrer(c, d); return; }
-  const for_ = opptjent(), f0 = froFor();
-  froFrys();
-  Store.addDay(c.key, d);
-  si(`La til ${fmtHand(d)}. ${c.navn}: ${dagerTekst(gml.length + 1)}.${froTekst(f0)}${nyheter(for_)}`);
-  froEffekt(c, f0, d);
+/* 15 new species within an hour (with SETT; not from a count): a warning that names with unusually many seeds in a
+   short time are marked on the board. Once a day */
+function sjekkTempo() {
+  const k = brukerNokkel('fuglekort:nye-tider'), na = Date.now();
+  let t = []; try { t = JSON.parse(lsGet(k) || '[]'); } catch (e) {}
+  t = (Array.isArray(t) ? t : []).filter(x => na - x < 3600000); t.push(na); lsSet(k, JSON.stringify(t.slice(-40)));
+  const vk = brukerNokkel('fuglekort:tempo-varslet');
+  if (t.length >= 15 && lsGet(vk) !== todayISO()) { lsSet(vk, todayISO()); visTempoVarsel(); }
+}
+function visTempoVarsel(forsok = 0) {
+  const opptatt = dlgApen || festAapen || festKo.length || froVent.length || openSheet || !$('#festVent').hidden;
+  if (opptatt) { if (forsok < 240) setTimeout(() => visTempoVarsel(forsok + 1), 500); return; }
+  sporsmal({
+    tittel: 'Mange nye arter på kort tid',
+    tekst: '<p>Du har registrert mange nye arter den siste timen. Registrer bare fugler du har sett selv i dag.</p><p>Brukere som får uvanlig mange frø på kort tid, blir merket på ledertavlen og kan ikke vinne premier.</p>',
+    knapper: [{ tekst: 'Forstått', pri: true }],
+  });
 }
 /* × on the back: asked first, since the day and its seeds go */
 function slettDag(c, d) {
@@ -2603,14 +2616,6 @@ function slettDag(c, d) {
       si(siste ? `${c.navn} er ikke lenger merket som sett.` : `Slettet ${fmtHand(d)} for ${c.navn}.`);
     } }, { tekst: 'Avbryt' }],
   });
-}
-/* the date line on the front is the first day: changing it moves that day */
-function flyttForsteDag(c, d) {
-  const gml = Store.days(c.key);
-  if (!gml.length) { registrer(c, d); return; }
-  if (gml[0] === d) return;
-  Store.put(c.key, [...gml.slice(1), d]);
-  si(`Første gang flyttet fra ${fmtHand(gml[0])} til ${fmtHand(d)}.`);
 }
 function visLogg(c) {
   const i = BY_KEY[c.key];
@@ -3095,7 +3100,7 @@ function renderStats() {
       <div class="row"><button class="btn pri" data-butikk>Åpne Frøbutikken</button></div>
       <ul class="fro-kilder">
         ${[['Registreringer', fr.reg], ['Dager med fugler', fr.dag], ['Første gang du så en art', fr.forste], ['Glinskant', fr.niva], ['Merker', fr.merker],
-          ...(fr.oppdrag ? [['Oppdrag', fr.oppdrag]] : []),
+          ...(fr.oppdrag ? [['Oppdrag', fr.oppdrag]] : []), ...(fr.premier ? [['Premier', fr.premier]] : []),
           ...(fr.mult || Object.keys(Kjop.data).some(k => k.startsWith('x-')) ? [['Multiplikatorer', fr.mult]] : [])]
           .map(([t, v]) => `<li><span>${t}</span><b>${fmtFro(v)}</b></li>`).join('')}
       </ul>
@@ -3196,6 +3201,8 @@ sb.addEventListener('click', async e => {
   const tr = e.target.closest('[data-tavle-rad]');
   if (tr) { tavleRad(tr.dataset.tavleRad); return; }
   if (e.target.closest('[data-lukk-melding]')) { lsDel(DK('navn-melding')); paintDeling(); return; }
+  const tv = e.target.closest('[data-tavlevis]');
+  if (tv) { tavleVis = tv.dataset.tavlevis; lsSet('fuglekort:tavlevis', tavleVis); paintDeling(); hentTavle(); return; }
   if (e.target.closest('[data-butikk]')) { openButikk(e.target.closest('[data-butikk]').dataset.butikk); return; }
   const mv = e.target.closest('[data-mndvalg]');
   if (mv) { lsSet('fuglekort:mndvis', mv.dataset.mndvalg); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
@@ -3227,6 +3234,7 @@ sb.addEventListener('click', async e => {
   if (e.target.id === 'doRestore') {
     try {
       const obj = JSON.parse($('#restoreTxt').value);
+      froNullstill(); const tj0 = froRegnskap().tjent;
       // older copies have one date per bird, newer ones a list of days; either way the days are added to the ones here
       const src = entries(obj.sett || obj); migrateKeys(src);
       let arter = 0, dager = 0; const merged = { ...Store.data };
@@ -3259,6 +3267,8 @@ sb.addEventListener('click', async e => {
         km[k] = { ...v, ts: v.ts || 1 }; kjopt++;
       });
       if (kjopt) Kjop.replaceAll(km);
+      froNullstill(); const fraKopi = froRegnskap().tjent - tj0;
+      if (fraKopi > 0 || arter) leggTilGjenopprettet(Math.max(0, fraKopi), arter);
       const deler = [];
       if (dager) deler.push(flertall(dager, 'dag', 'dager') + (arter ? ` (${flertall(arter, 'ny art', 'nye arter')})` : ''));
       if (telt) deler.push(flertall(telt, 'telling', 'tellinger'));
@@ -3498,7 +3508,7 @@ function nesteFest() {
   const f = festKo.shift();
   festAapen = true; festFokus = document.activeElement; aktivFest = f;
   if (f.type === 'bonus') visBonus(f); else if (f.type === 'tittel') visTittel(f); else if (f.type === 'merke') visMerke(f);
-  else if (f.type === 'oppdrag') visOppdrag(f); else visNiva(f);
+  else if (f.type === 'oppdrag') visOppdrag(f); else if (f.type === 'premie') visPremie(f); else visNiva(f);
 }
 function visTittel(f) {
   const t = TITLER[f.k];
@@ -3526,7 +3536,7 @@ function visNiva(f) {
 }
 function visMerke(f) {
   const m = f.m;
-  festEl.dataset.type = 'merke'; festEl.dataset.niva = '3';
+  festEl.dataset.type = 'merke'; festEl.dataset.niva = '3'; delete festEl.dataset.plass;
   $('#festMedalje').innerHTML = m.ikon;
   $('#festNavn').textContent = `${m.navn}!`;
   $('#festArt').textContent = `Nytt merke · ${m.tekst}${f.fro ? ` · ${fmtFro(f.fro)} frø` : ''}`;
@@ -3537,7 +3547,7 @@ function visMerke(f) {
 }
 function visOppdrag(f) {
   const n = f.samlet ? f.samlet.length : 1;
-  festEl.dataset.type = 'merke'; festEl.dataset.niva = '3';
+  festEl.dataset.type = 'merke'; festEl.dataset.niva = '3'; delete festEl.dataset.plass;
   $('#festMedalje').innerHTML = MIKON.oppdrag;
   $('#festNavn').textContent = f.samlet ? `${n} oppdrag fullført!` : 'Oppdrag fullført!';
   $('#festArt').textContent = f.samlet ? `Kom i gang${f.fro ? ` · ${fmtFro(f.fro)} frø` : ''}` : `${f.o.tekst}${f.fro ? ` · ${fmtFro(f.fro)} frø` : ''}`;
@@ -3545,6 +3555,19 @@ function visOppdrag(f) {
   vis(festEl);
   haptic([18, 70, 28, 70, 40]);
   $('#live').textContent = `${f.samlet ? `${n} oppdrag fullført: ${f.samlet.map(o => o.tekst).join(', ')}.` : `Oppdrag fullført: ${f.o.tekst}.`}${f.fro ? ` ${fmtFro(f.fro)} frø.` : ''}`;
+}
+/* a prize: the medal with the place (gold, silver, bronze), and the seeds */
+const premieNavn = pid => { const [h, v] = String(pid).split(':'); return h === 'uke' ? `uke ${+v.split('-')[1]}` : h === 'mnd' ? `${MND_LANG[+v.split('-')[1] - 1]} ${v.split('-')[0]}` : v; };
+function visPremie(f) {
+  const p = f.p, [h] = p.periode.split(':');
+  festEl.dataset.type = 'merke'; festEl.dataset.niva = '3'; festEl.dataset.plass = p.plass;
+  $('#festMedalje').innerHTML = String(p.plass);
+  $('#festNavn').textContent = `${p.plass}. plass!`;
+  $('#festArt').textContent = `${h === 'aar' ? 'Årets' : h === 'mnd' ? 'Månedens' : 'Ukas'} ledertavle, ${premieNavn(p.periode)} · ${fmtFro(p.fro)} frø`;
+  $('#festHint').textContent = f.fro ? 'Trykk for å samle frøene' : 'Trykk for å gå videre';
+  vis(festEl);
+  haptic([18, 70, 28, 70, 40]);
+  $('#live').textContent = `${p.plass}. plass på ledertavlen for ${premieNavn(p.periode)}. ${fmtFro(p.fro)} frø.`;
 }
 const BLADFARGER = ['#6fb35a', '#3f8f4e', '#9ccc65', '#e98a2d', '#f2c14e', '#a9461a'];
 function visBonus(f) {
@@ -3585,12 +3608,13 @@ function lukkFest() {
     froFrys(); f.fro = 0;                                   // the seeds leave the celebration
     const linjer = f.type === 'niva' ? [{ t: stor(kantNavn(f.niva)), r: f.c ? esc(f.c.navn) : '', v: belop }]
       : f.type === 'merke' ? [{ t: `Merke: ${f.m.navn}`, v: belop }]
-      : f.type === 'oppdrag' ? [{ t: f.samlet ? `${f.samlet.length} oppdrag` : 'Oppdrag', v: belop }] : [];
+      : f.type === 'oppdrag' ? [{ t: f.samlet ? `${f.samlet.length} oppdrag` : 'Oppdrag', v: belop }]
+      : f.type === 'premie' ? [{ t: `${f.p.plass}. plass, ${premieNavn(f.p.periode)}`, v: belop }] : [];
     const samlet = () => { f.strommer = false; el.classList.remove('strommer'); if (el === festEl) $('#festHint').textContent = 'Trykk for å gå videre'; };
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) { froSlipp(); visPluss(belop, linjer); ferdigPluss(); samlet(); }
     else {
       f.strommer = true; el.classList.add('strommer');
-      const kort = el.querySelector(f.type === 'tittel' ? '.fest-ikon' : f.type === 'merke' || f.type === 'oppdrag' ? '.fest-medalje' : '.fest-kort, .bf-kort'), bank = $('#openFro');
+      const kort = el.querySelector(f.type === 'tittel' ? '.fest-ikon' : f.type === 'merke' || f.type === 'oppdrag' || f.type === 'premie' ? '.fest-medalje' : '.fest-kort, .bf-kort'), bank = $('#openFro');
       bank.classList.add('fram');
       haptic(10);
       froStrom(kort.getBoundingClientRect(), bank, belop, linjer, () => {
@@ -4404,7 +4428,7 @@ $('#nullstillAlt').addEventListener('click', () => sporsmal({
   knapper: [{ tekst: 'Nullstill alt', pri: true, fn: () => {
     [Store, Tell, Vist, Kjop].forEach(x => x.replaceAll({}));
     tittelFeiret = 0; lsSet(TITTEL_KEY(), '0');
-    lsDel(OPPDRAG_KEY()); lsDel(OPPDRAG_SKJULT()); froNullstill(); paintOppdrag();
+    lsDel(OPPDRAG_KEY()); lsDel(OPPDRAG_SKJULT()); lsDel(PREMIE_KEY()); ['fro-gjenopprettet', 'arter-gjenopprettet'].forEach(k => lsDel(DK(k))); froNullstill(); paintOppdrag();
     froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
     STROM.liste = []; festKo.forEach(f => { f.fro = 0; }); $('#openFro').classList.remove('mottar');
     clearTimeout(plussT); plussAktive = 0; pillVent = false; festVentEl.hidden = true; plussEl.classList.remove('vis', 'ut'); plussEl.innerHTML = '';
@@ -4681,7 +4705,9 @@ const oppsummering = () => { const t = froTotalt(); return { fro: Math.max(0, Ma
    empty and the person is asked for a new one. Gives true when the row was sent now */
 async function sendTavlerad(okt) {
   let n = kallenavn(); if (!n) { n = tilfeldigNavn(); lagreKallenavn(n); }
-  const rad = { navn: navnStengt() ? null : n.navn, ord: null, fugl: null, tall: null, ...oppsummering() };
+  const o = oppsummering(), ut = utenfor();
+  const rad = { navn: navnStengt() ? null : n.navn, ord: null, fugl: null, tall: null, ...o,
+    fro_utenfor: Math.min(o.fro, ut.fro), arter_utenfor: Math.min(o.arter, ut.arter, 200) };
   if (lsGet(DK('tavle-sendt')) === okt.uid + JSON.stringify(rad)) return false;
   const forst = n.navn;
   for (let forsok = 0; forsok < 10; forsok++) {
@@ -4699,6 +4725,35 @@ async function sendTavlerad(okt) {
     throw new Error(`ledertavle ${r && r.status}`);
   }
   return false;
+}
+/* seeds and species that were not earned now: the prizes, and what came from a backup */
+const utenfor = () => ({ fro: Object.values(premieLogg()).reduce((a, p) => a + (+p.fro || 0), 0) + (+lsGet(DK('fro-gjenopprettet')) || 0), arter: +lsGet(DK('arter-gjenopprettet')) || 0 });
+function leggTilGjenopprettet(fro, arter) {
+  lsSet(DK('fro-gjenopprettet'), String((+lsGet(DK('fro-gjenopprettet')) || 0) + Math.round(fro)));
+  lsSet(DK('arter-gjenopprettet'), String((+lsGet(DK('arter-gjenopprettet')) || 0) + arter));
+}
+/* the prizes won (the periods are closed by Supabase; here at most once an hour too), and my own row: marked for
+   unusually many seeds, or the name taken off by reports since it was sent */
+async function hentPremier(okt) {
+  if (Date.now() - (+lsGet(DK('avslutt')) || 0) > 3600000) {
+    lsSet(DK('avslutt'), String(Date.now()));
+    await supaSom('/rest/v1/rpc/avslutt_perioder', { metode: 'POST', data: {} }).catch(() => null);
+  }
+  const { r } = await supaSom(`/rest/v1/premier?user_id=eq.${okt.uid}&select=periode,plass,fro,poeng`);
+  if (!r || !r.ok) return;
+  const ol = premieLogg(), nye = (await r.json()).filter(p => p && p.periode && !ol[p.periode]);
+  if (!nye.length) return;
+  nye.forEach(p => { ol[p.periode] = { plass: p.plass, fro: Math.max(0, Math.min(100000, +p.fro || 0)), poeng: p.poeng, dato: todayISO() }; });
+  lsSet(PREMIE_KEY(), JSON.stringify(ol)); froNullstill();
+  nye.forEach(p => festKo.push({ type: 'premie', p: { ...p, fro: ol[p.periode].fro }, fro: ol[p.periode].fro, ventArk: true }));
+  planleggFest(); paintFro(); planleggTittel(); planleggSending(1500);   // the new total on the board
+}
+async function hentEgen(okt) {
+  const { r } = await supaSom(`/rest/v1/ledertavle?user_id=eq.${okt.uid}&select=navn,merket`);
+  if (!r || !r.ok) return;
+  const meg = (await r.json())[0]; if (!meg) return;
+  if (meg.merket) lsSet(DK('merket'), '1'); else lsDel(DK('merket'));
+  if (!meg.navn && kallenavn() && !navnStengt() && lsGet(DK('tavle-sendt'))) { lsDel(DK('tavle-sendt')); planleggSending(800); }
 }
 /* names reported on the board (hidden for the one who reported at once; three reports and the name is shut) */
 const skjulte = () => lsJson(DK('skjulte'), {});
@@ -4733,6 +4788,8 @@ async function sendAlt() {
       SPEIL.forEach(sp => sp.alt()); lsSet(DK('delt-id'), okt.uid); lsDel(DK('tavle-sendt')); lsDel(DK('profil-sendt'));
     }
     ny = await sendTavlerad(okt);
+    await hentPremier(okt).catch(() => null);
+    await hentEgen(okt).catch(() => null);
     await sendRapporter();
     await sendProfil(okt);
     for (const sp of SPEIL) await sp.send(okt);
@@ -4754,7 +4811,7 @@ function startDeling() {
 function stoppDeling() {
   lsSet(DK('deling'), 'nei');
   SPEIL.forEach(sp => sp.tom());
-  ['tavle-sendt', 'profil-sendt', 'tavle', 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding'].forEach(k => lsDel(DK(k)));
+  ['tavle-sendt', 'profil-sendt', 'tavle', 'tavle:uke', 'tavle:mnd', 'tavle:aar', 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding', 'merket'].forEach(k => lsDel(DK(k)));
   if (lsGet(DK('okt'))) { lsSet(DK('slett'), '1'); slettPaServer(); }
   paintDeling(); paintOppdrag();
 }
@@ -4776,33 +4833,62 @@ const lagrePostnr = v => {
   planleggSending(); return true;
 };
 
-/* ---- the board: the top 50 and your place, kept on the device so it shows without a network ---- */
+/* ---- the boards: this week, month and year (the seeds earned in the period, worked out by Supabase from the seeds
+   each hour) and in total (the top 50 and your place). Each is kept on the device, so it shows without a network ---- */
+const TAVLER = ['uke', 'mnd', 'aar', 'tot'], TAVLENAVN = { uke: 'Uke', mnd: 'Måned', aar: 'År', tot: 'Totalt' };
+const DENNE = { uke: 'denne uka', mnd: 'denne måneden', aar: 'i år' }, FORRIGE = { uke: 'Forrige uke', mnd: 'Forrige måned', aar: 'I fjor' };
+let tavleVis = TAVLER.includes(lsGet('fuglekort:tavlevis')) ? lsGet('fuglekort:tavlevis') : 'uke';
+const tavleNokkel = hva => DK(hva === 'tot' ? 'tavle' : 'tavle:' + hva);
+const periodeTekst = pid => { const t = premieNavn(pid); return t.charAt(0).toUpperCase() + t.slice(1); };
+function ukeSpenn(fra, til) {
+  const a = new Date(fra), b = new Date(new Date(til).getTime() - 1);
+  return a.getMonth() === b.getMonth() ? `${a.getDate()}.–${b.getDate()}. ${MND[b.getMonth()]}.` : `${a.getDate()}. ${MND[a.getMonth()]}.–${b.getDate()}. ${MND[b.getMonth()]}.`;
+}
+function igjenTekst(til) {
+  const ms = new Date(til).getTime() - Date.now(), d = Math.floor(ms / 864e5), t = Math.floor(ms / 36e5);
+  return ms <= 0 ? 'avsluttes nå' : d >= 1 ? `${flertall(d, 'dag', 'dager')} igjen` : t >= 1 ? `${flertall(t, 'time', 'timer')} igjen` : 'under en time igjen';
+}
+const premieTekst = p => (Array.isArray(p) && p.length === 3 ? `${fmtFro(p[0])}, ${fmtFro(p[1])} og ${fmtFro(p[2])}` : '');
 let henter = false, tavleFeil = false;
 const tallFra = cr => { const m = /\/(\d+)$/.exec(cr || ''); return m ? +m[1] : null; };
 async function hentTavle() {
   if (!deler() || henter) return;
   if (!navigator.onLine) { tavleFeil = true; paintDeling(); return; }
+  const hva = tavleVis;
   henter = true; paintDeling();
   try {
     const okt = lsGet(DK('okt')) ? await hentOkt(false).catch(() => null) : null;
-    const r = await supa('/rest/v1/ledertavle?select=user_id,navn,ord,fugl,tall,fro,arter,dager,tittel&order=fro.desc,oppdatert.asc&limit=50', { okt, hoder: { Prefer: 'count=exact' } });
-    if (!r.ok) throw new Error('tavle ' + r.status);
-    const rader = await r.json(), antall = tallFra(r.headers.get('content-range')) || rader.length;
     let plass = null;
-    const i = okt ? rader.findIndex(x => x.user_id === okt.uid) : -1;
-    if (i >= 0) plass = i + 1;
-    else if (okt && lsGet(DK('tavle-sendt'))) {
-      const r2 = await supa(`/rest/v1/ledertavle?select=user_id&fro=gt.${oppsummering().fro}&limit=1`, { okt, hoder: { Prefer: 'count=exact' } });
-      if (r2.ok) plass = (tallFra(r2.headers.get('content-range')) || 0) + 1;
+    if (hva === 'tot') {
+      const r = await supa('/rest/v1/ledertavle?select=user_id,navn,ord,fugl,tall,fro,arter,dager,tittel,merket&order=fro.desc,oppdatert.asc&limit=50', { okt, hoder: { Prefer: 'count=exact' } });
+      if (!r.ok) throw new Error('tavle ' + r.status);
+      const rader = await r.json(), antall = tallFra(r.headers.get('content-range')) || rader.length;
+      const i = okt ? rader.findIndex(x => x.user_id === okt.uid) : -1;
+      if (i >= 0) plass = i + 1;
+      else if (okt && lsGet(DK('tavle-sendt'))) {
+        const r2 = await supa(`/rest/v1/ledertavle?select=user_id&fro=gt.${oppsummering().fro}&limit=1`, { okt, hoder: { Prefer: 'count=exact' } });
+        if (r2.ok) plass = (tallFra(r2.headers.get('content-range')) || 0) + 1;
+      }
+      lsSet(tavleNokkel('tot'), JSON.stringify({ rader, antall, plass, hentet: Date.now() }));
+      // my row without a name: shut by reports since it was sent (or sent by an older version): sent again
+      const meg = i >= 0 ? rader[i] : null;
+      if (meg) { if (meg.merket) lsSet(DK('merket'), '1'); else lsDel(DK('merket')); }
+      if (meg && !meg.navn && kallenavn() && !navnStengt() && lsGet(DK('tavle-sendt'))) { lsDel(DK('tavle-sendt')); planleggSending(800); }
+    } else {
+      const r = await supa('/rest/v1/rpc/tavle', { metode: 'POST', data: { hva }, okt });
+      if (!r.ok) throw new Error('tavle ' + r.status);
+      const j = await r.json();
+      if (!j || !Array.isArray(j.rader)) throw new Error('tavle');
+      plass = j.plass || null;
+      lsSet(tavleNokkel(hva), JSON.stringify({ ...j, hentet: Date.now() }));
     }
-    lsSet(DK('tavle'), JSON.stringify({ rader, antall, plass, hentet: Date.now() }));
     tavleFeil = false;
-    // my row without a name: shut by reports since it was sent (or sent by an older version): sent again
-    const meg = i >= 0 ? rader[i] : null;
-    if (meg && !meg.navn && kallenavn() && !navnStengt() && lsGet(DK('tavle-sendt'))) { lsDel(DK('tavle-sendt')); planleggSending(800); }
     if (plass && openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') oppdragGjort('tavle');   // «Se deg selv på ledertavlen»
   } catch (e) { tavleFeil = true; }
-  finally { henter = false; paintDeling(); }
+  finally {
+    henter = false; paintDeling();
+    if (tavleVis !== hva && openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') hentTavle();   // another board chosen meanwhile
+  }
 }
 setInterval(() => { if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle' && !document.hidden) hentTavle(); }, 60000);
 function tavleHtml() {
@@ -4810,36 +4896,48 @@ function tavleHtml() {
   if (!deler()) return `<div class="s-sec tv-av"><h3>Ledertavle</h3>
     <p class="cap">Du deler ikke, og ser derfor ikke ledertavlen. Når du deler, vises du med brukernavnet ditt sammen med frø, arter, observasjonsdager og tittel, og observasjonene dine sendes anonymt til statistikk over hagefuglene.</p>
     <div class="row"><button class="btn pri" data-del-pa>Del og se ledertavlen</button></div></div>`;
-  const c = lsJson(DK('tavle'), null), uid = (lsJson(DK('okt'), null) || {}).uid, o = oppsummering(), sk = skjulte();
+  const hva = tavleVis, per = hva !== 'tot', c = lsJson(tavleNokkel(hva), null), uid = (lsJson(DK('okt'), null) || {}).uid, o = oppsummering(), sk = skjulte();
   const status = henter && !c ? 'Henter tavlen …' : (tavleFeil || !navigator.onLine) ? (c ? `Uten nett – viser tavlen fra ${naarTekst(c.hentet)}` : 'Tavlen hentes når du har nett.') : c ? `Oppdatert ${naarTekst(c.hentet)}` : 'Henter tavlen …';
+  const merke = '<span class="tv-merket" role="img" aria-label="merket for uvanlig mange frø på kort tid" title="Merket for uvanlig mange frø på kort tid">!</span>';
   const innhold = (x, nr, meg) => { const skjult = !meg && sk[x.user_id] != null, navn = meg ? (navnStengt() ? 'Fuglevenn' : mittNavn()) : skjult ? 'Skjult navn' : visNavn(x);
     return `<span class="tv-nr">${nr}</span><span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>
-    <span class="tv-t ${skjult ? 'skjult' : ''}"><b>${esc(navn)}</b><small>${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span><span class="tv-fro">${fmtFro(x.fro)}</span>`; };
+    <span class="tv-t ${skjult ? 'skjult' : ''}"><b>${esc(navn)}${x.merket ? merke : ''}</b><small>${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span><span class="tv-fro">${fmtFro(x.fro)}</span>`; };
   const rad = (x, nr, meg) => meg ? `<li class="meg"><div class="tv-rad">${innhold(x, nr, true)}</div></li>`
     : `<li><button class="tv-rad" data-tavle-rad="${esc(x.user_id)}" aria-haspopup="dialog">${innhold(x, nr, false)}</button></li>`;
-  const rader = c ? c.rader : [], erMeg = rader.some(x => x.user_id === uid);
+  const rader = c && Array.isArray(c.rader) ? c.rader : [], erMeg = rader.some(x => x.user_id === uid);
+  const megRad = per ? { ...o, fro: (c && c.meg) || 0, merket: !!lsGet(DK('merket')) } : { ...o, merket: !!lsGet(DK('merket')) };
   const melding = lsJson(DK('navn-melding'), null);
-  const varsel = navnStengt() ? `<div class="tv-varsel" role="status">Navnet «${esc(mittNavn())}» kan ikke brukes på ledertavlen, fordi det er rapportert eller ikke tillatt. Til du velger et nytt, står du som «Fuglevenn».<button class="btn" data-bytt-navn>Velg nytt navn</button></div>`
-    : melding ? `<div class="tv-varsel" role="status">«${esc(melding.fra)}» var tatt, så nå heter du «${esc(melding.til)}». Du kan bytte navn når du vil.<button class="textbtn" data-lukk-melding>OK</button></div>` : '';
+  const varsel = [lsGet(DK('merket')) ? '<div class="tv-varsel" role="status">Du er merket på ledertavlen fordi du har fått uvanlig mange frø på kort tid. Merket blir stående til det er sjekket, og imens kan du ikke vinne premier.</div>' : '',
+    navnStengt() ? `<div class="tv-varsel" role="status">Navnet «${esc(mittNavn())}» kan ikke brukes på ledertavlen, fordi det er rapportert eller ikke tillatt. Til du velger et nytt, står du som «Fuglevenn».<button class="btn" data-bytt-navn>Velg nytt navn</button></div>`
+    : melding ? `<div class="tv-varsel" role="status">«${esc(melding.fra)}» var tatt, så nå heter du «${esc(melding.til)}». Du kan bytte navn når du vil.<button class="textbtn" data-lukk-melding>OK</button></div>` : ''].join('');
+  const plassTekst = !c ? 'Plassen din kommer når tavlen er hentet'
+    : per ? (c.plass ? `Nr. ${c.plass} av ${c.antall} · ${fmtFro(c.meg || 0)} frø ${DENNE[hva]}` : `Ingen frø ${DENNE[hva]} ennå`)
+    : `${c.plass ? `Nr. ${c.plass} av ${c.antall}` : 'Plassen din kommer når tavlen er hentet'} · ${fmtFro(o.fro)} frø`;
+  const forrige = per && c && Array.isArray(c.forrige) && c.forrige.length ? `<div class="tv-forrige"><h4>${FORRIGE[hva]}</h4><ol>${c.forrige.map(p =>
+    `<li class="${p.user_id && p.user_id === uid ? 'meg' : ''}"><span class="tv-med m${p.plass}" aria-label="${p.plass}. plass">${p.plass}</span><b>${esc(p.navn || 'Fuglevenn')}</b><small>${fmtFro(p.poeng)} frø · premie ${fmtFro(p.fro)}</small></li>`).join('')}</ol></div>` : '';
   return `<div class="s-sec">
     <div class="tv-meg"><span class="ti" style="${tittelPos(o.tittel)}" aria-hidden="true"></span>
-      <span class="tv-t"><b>${esc(mittNavn())}</b><small>${c && c.plass ? `Nr. ${c.plass} av ${c.antall}` : 'Plassen din kommer når tavlen er hentet'} · ${fmtFro(o.fro)} frø</small></span>
+      <span class="tv-t"><b>${esc(mittNavn())}</b><small>${plassTekst}</small></span>
       <button class="btn" data-bytt-navn>Bytt navn</button></div>
     ${varsel}
     <h3 style="margin-top:22px">Ledertavle <span class="h3n">topp ${Math.min(50, rader.length || 50)}</span></h3>
-    ${rader.length ? `<ol class="tavle">${rader.map((x, i) => rad(x, i + 1, x.user_id === uid)).join('')}${!erMeg && c && c.plass ? `<li class="tv-mer" aria-hidden="true">…</li>${rad({ ...o }, c.plass, true)}` : ''}</ol>` : ''}
+    <div class="kal-valg tv-valg" role="group" aria-label="Ledertavle for">${TAVLER.map(h => `<button class="chip" data-tavlevis="${h}" aria-pressed="${h === hva}">${TAVLENAVN[h]}</button>`).join('')}</div>
+    ${per && c && c.periode ? `<p class="cap tv-periode"><b>${esc(periodeTekst(c.periode))}</b>${hva === 'uke' ? ` · ${ukeSpenn(c.fra, c.til)}` : ''} · ${igjenTekst(c.til)}<br>Premie til de tre beste: ${premieTekst(c.premier)} frø.</p>` : ''}
+    ${rader.length ? `<ol class="tavle">${rader.map((x, i) => rad(x, i + 1, x.user_id === uid)).join('')}${!erMeg && c && c.plass ? `<li class="tv-mer" aria-hidden="true">…</li>${rad(megRad, c.plass, true)}` : ''}</ol>`
+      : per && c ? `<p class="cap">Ingen har fått frø ${DENNE[hva]} ennå.</p>` : ''}
     <p class="cap tv-status" role="status">${esc(status)}</p>
-    ${rader.length > 1 ? '<p class="cap">Trykk på et navn for å rapportere det.</p>' : ''}
+    ${forrige}
+    ${rader.length > 1 ? '<p class="cap">Trykk på et navn for å se mer eller rapportere det.</p>' : ''}
     <div class="row"><button class="textbtn tv-slett" data-slett-meg>Slett meg fra ledertavlen</button></div>
   </div>`;
 }
 /* a row on the board: the person's numbers, and reporting the name (or showing a name hidden by you) */
 function tavleRad(uid) {
-  const c = lsJson(DK('tavle'), null), i = c ? c.rader.findIndex(x => x.user_id === uid) : -1; if (i < 0) return;
+  const c = lsJson(tavleNokkel(tavleVis), null), i = c && Array.isArray(c.rader) ? c.rader.findIndex(x => x.user_id === uid) : -1; if (i < 0) return;
   const x = c.rader[i], skjult = skjulte()[uid] != null, navn = visNavn(x), t = TITLER[Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0))];
   sporsmal({
     tittel: skjult ? 'Skjult navn' : navn,
-    tekst: `<p>Nr. ${i + 1} · ${esc(t.navn)}<br>${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'observasjonsdag', 'observasjonsdager')} · ${fmtFro(x.fro)} frø</p>${skjult ? '<p>Du har rapportert og skjult navnet.</p>' : ''}`,
+    tekst: `<p>Nr. ${i + 1} · ${esc(t.navn)}<br>${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'observasjonsdag', 'observasjonsdager')} · ${fmtFro(x.fro)} frø${tavleVis !== 'tot' ? ` ${DENNE[tavleVis]}` : ''}</p>${x.merket ? '<p>Merket for uvanlig mange frø på kort tid.</p>' : ''}${skjult ? '<p>Du har rapportert og skjult navnet.</p>' : ''}`,
     knapper: [{ tekst: 'Lukk', pri: true },
       skjult ? { tekst: 'Vis navnet igjen', fn: () => { const s = skjulte(); delete s[uid]; lagreSkjulte(s); paintDeling(); } }
         : { tekst: 'Rapporter navnet', fn: () => rapporterSporsmal(uid, navn) }],

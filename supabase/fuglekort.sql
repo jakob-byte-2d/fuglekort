@@ -10,6 +10,9 @@
 --   rapporter    navn andre har rapportert                 alle kan rapportere, bare du kan lese
 --   stengte_ord  ord som ikke kan stå i et brukernavn      bare du (Table Editor)
 --   stengte_navn navn som er sperret                       bare du (Table Editor)
+--   fro_logg     frøene hver time (til ukes-, måneds- og årstavla)   bare du
+--   premier      de tre beste i hver uke, måned og år       alle kan lese
+--   merket       brukere med uvanlig mange frø på kort tid  bare du (godkjenn i SQL Editor)
 -- Du som eier prosjektet, ser alt i SQL Editor (der gjelder ikke RLS), f.eks. via visningen observasjoner.
 -- «Slett meg» sletter den anonyme brukeren, og alle radene forsvinner med den (on delete cascade).
 
@@ -236,6 +239,197 @@ insert into public.stengte_ord (ord, helt_ord) values
   ('penis', false), ('vagina', false), ('fag', true), ('retard', false), ('rapist', false), ('kys', true)
 on conflict (ord) do nothing;
 
+-- ---------- Ukes-, måneds- og årstavla, med premier til de tre beste ----------
+-- Frøene i en periode = frøene nå minus frøene før perioden startet, fra et øyeblikksbilde hver time (fro_logg, satt
+-- av databasen når appen sender). Premier og gjenopprettede frø (fro_utenfor) teller ikke. Ukene går fra mandag, og
+-- grensene regnes i norsk tid. Den som begynner å dele midt i en periode, starter på 0.
+alter table public.ledertavle add column if not exists fro_utenfor bigint not null default 0 check (fro_utenfor between 0 and 100000000);
+alter table public.ledertavle add column if not exists arter_utenfor smallint not null default 0 check (arter_utenfor between 0 and 200);  -- arter fra en sikkerhetskopi
+alter table public.ledertavle add column if not exists merket boolean not null default false;   -- settes bare av databasen
+-- appen kan skrive sine egne kolonner, men aldri «merket»
+revoke insert, update on public.ledertavle from authenticated;
+grant insert (user_id, navn, ord, fugl, tall, fro, arter, dager, tittel, fro_utenfor, arter_utenfor),
+      update (user_id, navn, ord, fugl, tall, fro, arter, dager, tittel, fro_utenfor, arter_utenfor) on public.ledertavle to authenticated;
+
+create table if not exists public.fro_logg (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  tid     timestamptz not null,                     -- timen (det siste som ble sendt den timen)
+  fro     bigint not null,                          -- tjente frø uten premier og gjenopprettede frø
+  arter   smallint not null default 0,              -- arter uten dem fra en sikkerhetskopi
+  primary key (user_id, tid)
+);
+alter table public.fro_logg enable row level security;
+
+create or replace function public.periode_start(hva text, t timestamptz default now()) returns timestamptz
+language sql stable set search_path = '' as $$
+  select date_trunc(case hva when 'uke' then 'week' when 'mnd' then 'month' else 'year' end, t at time zone 'Europe/Oslo') at time zone 'Europe/Oslo'
+$$;
+create or replace function public.periode_slutt(hva text, s timestamptz) returns timestamptz
+language sql stable set search_path = '' as $$
+  select ((s at time zone 'Europe/Oslo') + case hva when 'uke' then interval '1 week' when 'mnd' then interval '1 month' else interval '1 year' end) at time zone 'Europe/Oslo'
+$$;
+create or replace function public.periode_navn(hva text, s timestamptz) returns text      -- uke:2026-42, mnd:2026-10, aar:2026
+language sql stable set search_path = '' as $$
+  select hva || ':' || to_char(s at time zone 'Europe/Oslo', case hva when 'uke' then 'IYYY-IW' when 'mnd' then 'YYYY-MM' else 'YYYY' end)
+$$;
+create or replace function public.premie(hva text, plass integer) returns integer
+language sql immutable set search_path = '' as $$
+  select (case hva when 'uke' then array[2000, 1000, 500] when 'mnd' then array[5000, 3000, 1500] else array[25000, 15000, 7500] end)[plass]
+$$;
+-- frøene hver bruker fikk i [s, e): de som har sendt noe i perioden
+create or replace function public.periode_poeng(s timestamptz, e timestamptz)
+returns table (user_id uuid, poeng bigint, sist timestamptz)
+language sql stable security definer set search_path = '' as $$
+  with slutt as (
+    select distinct on (l.user_id) l.user_id, l.fro, l.tid from public.fro_logg l
+    where l.tid >= s and l.tid < e order by l.user_id, l.tid desc
+  )
+  select sl.user_id,
+    greatest(0, sl.fro - coalesce(
+      (select l.fro from public.fro_logg l where l.user_id = sl.user_id and l.tid < s order by l.tid desc limit 1),
+      (select l.fro from public.fro_logg l where l.user_id = sl.user_id and l.tid >= s order by l.tid asc limit 1))) as poeng,
+    sl.tid as sist
+  from slutt sl
+$$;
+
+-- premiene: låst når perioden er over (de tre beste med frø, ikke merket; likt: den som kom dit først)
+create table if not exists public.premier (
+  periode text not null,                            -- uke:2026-42, mnd:2026-10, aar:2026
+  plass   smallint not null check (plass between 1 and 3),
+  user_id uuid references auth.users (id) on delete set null,
+  navn    text,                                     -- navnet da perioden ble avsluttet
+  poeng   bigint not null,                          -- frøene i perioden
+  fro     integer not null,                         -- premien
+  tid     timestamptz not null default now(),
+  primary key (periode, plass)
+);
+alter table public.premier enable row level security;
+drop policy if exists "alle kan lese premiene" on public.premier;
+create policy "alle kan lese premiene" on public.premier for select to anon, authenticated using (true);
+create table if not exists public.periode_sjekk (id smallint primary key default 1 check (id = 1), tid timestamptz not null);
+alter table public.periode_sjekk enable row level security;
+
+create or replace function public.avslutt_perioder() returns void
+language plpgsql security definer set search_path = '' as $$
+declare hva text; k integer; s timestamptz; e timestamptz; pid text;
+begin
+  perform pg_advisory_xact_lock(4242001);
+  if exists (select 1 from public.periode_sjekk c where c.tid > now() - interval '10 minutes') then return; end if;
+  insert into public.periode_sjekk (id, tid) values (1, now()) on conflict (id) do update set tid = excluded.tid;
+  foreach hva in array array['uke', 'mnd', 'aar'] loop
+    e := public.periode_start(hva);                                   -- the periods before this are over
+    for k in 1 .. (case hva when 'uke' then 8 when 'mnd' then 3 else 1 end) loop
+      s := public.periode_start(hva, e - interval '1 second');
+      pid := public.periode_navn(hva, s);
+      if not exists (select 1 from public.premier p where p.periode = pid) then
+        insert into public.premier (periode, plass, user_id, navn, poeng, fro)
+        select pid, r.nr, r.user_id, r.navn, r.poeng, public.premie(hva, r.nr::integer)
+        from (select pp.user_id, pp.poeng, coalesce(l.navn, 'Fuglevenn') as navn,
+                     row_number() over (order by pp.poeng desc, pp.sist asc, pp.user_id) as nr
+              from public.periode_poeng(s, e) pp join public.ledertavle l on l.user_id = pp.user_id
+              where pp.poeng > 0 and not l.merket) r
+        where r.nr <= 3;
+      end if;
+      e := s;
+    end loop;
+  end loop;
+end $$;
+
+-- tavla for en periode (uke, mnd, aar): topp 50, antall, plassen og frøene dine, og forrige periodes premier
+create or replace function public.tavle(hva text) returns jsonb
+language plpgsql security definer set search_path = '' as $$
+declare s timestamptz; e timestamptz; meg uuid := (select auth.uid()); ut jsonb;
+begin
+  if hva is null or hva not in ('uke', 'mnd', 'aar') then raise exception 'ukjent periode'; end if;
+  perform public.avslutt_perioder();
+  s := public.periode_start(hva); e := public.periode_slutt(hva, s);
+  with r as (
+    select pp.user_id, pp.poeng, l.navn, l.ord, l.fugl, l.tall, l.tittel, l.arter, l.dager, l.merket,
+           row_number() over (order by pp.poeng desc, pp.sist asc, pp.user_id) as nr
+    from public.periode_poeng(s, e) pp join public.ledertavle l on l.user_id = pp.user_id
+    where pp.poeng > 0
+  )
+  select jsonb_build_object(
+    'periode', public.periode_navn(hva, s), 'fra', s, 'til', e,
+    'antall', (select count(*) from r),
+    'plass', (select r.nr from r where r.user_id = meg),
+    'meg', (select r.poeng from r where r.user_id = meg),
+    'rader', coalesce((select jsonb_agg(jsonb_build_object('user_id', r.user_id, 'navn', r.navn, 'ord', r.ord, 'fugl', r.fugl, 'tall', r.tall,
+                         'tittel', r.tittel, 'arter', r.arter, 'dager', r.dager, 'merket', r.merket, 'fro', r.poeng) order by r.nr) from r where r.nr <= 50), '[]'::jsonb),
+    'forrige', coalesce((select jsonb_agg(jsonb_build_object('plass', p.plass, 'navn', p.navn, 'poeng', p.poeng, 'fro', p.fro, 'user_id', p.user_id) order by p.plass)
+                         from public.premier p where p.periode = public.periode_navn(hva, public.periode_start(hva, s - interval '1 second'))), '[]'::jsonb),
+    'premier', to_jsonb(array[public.premie(hva, 1), public.premie(hva, 2), public.premie(hva, 3)])
+  ) into ut;
+  return ut;
+end $$;
+
+-- ---------- Merking: uvanlig mange frø på kort tid ----------
+-- Siste døgn mer enn 25 nye arter eller mer enn 300 000 frø (uten premier og gjenopprettede frø): brukeren merkes
+-- på tavla og kan ikke vinne premier før du godkjenner: select public.godkjenn('<user_id>');
+create table if not exists public.merket (
+  user_id   uuid primary key references auth.users (id) on delete cascade,
+  tid       timestamptz not null default now(),     -- da brukeren ble merket
+  grunn     text not null,
+  fro_dogn  bigint,
+  arter_dogn integer,
+  godkjent  timestamptz                             -- satt av godkjenn(): det som kom før, teller ikke igjen
+);
+alter table public.merket enable row level security;
+create or replace function public.sjekk_merking(uid uuid) returns void
+language plpgsql security definer set search_path = '' as $$
+declare na record; fra record; g timestamptz; grense timestamptz; df bigint; da integer;
+begin
+  if exists (select 1 from public.ledertavle l where l.user_id = uid and l.merket) then return; end if;
+  select m.godkjent into g from public.merket m where m.user_id = uid;
+  grense := greatest(date_trunc('hour', now()) - interval '24 hours', coalesce(g, '-infinity'::timestamptz));
+  select l.fro, l.arter into na from public.fro_logg l where l.user_id = uid order by l.tid desc limit 1;
+  if not found then return; end if;
+  select l.fro, l.arter into fra from public.fro_logg l where l.user_id = uid and l.tid <= grense order by l.tid desc limit 1;
+  if not found then
+    select l.fro, l.arter into fra from public.fro_logg l where l.user_id = uid and l.tid > grense order by l.tid asc limit 1;
+  end if;
+  df := na.fro - fra.fro; da := na.arter - fra.arter;
+  if df > 300000 or da > 25 then
+    insert into public.merket (user_id, tid, grunn, fro_dogn, arter_dogn)
+      values (uid, now(), case when da > 25 then 'mer enn 25 nye arter på et døgn' else 'mer enn 300 000 frø på et døgn' end, df, da)
+      on conflict (user_id) do update set tid = excluded.tid, grunn = excluded.grunn, fro_dogn = excluded.fro_dogn, arter_dogn = excluded.arter_dogn;
+    update public.ledertavle set merket = true where user_id = uid;
+  end if;
+end $$;
+create or replace function public.godkjenn(uid uuid) returns void
+language sql security definer set search_path = '' as $$
+  update public.merket set godkjent = now() where user_id = uid;
+  update public.ledertavle set merket = false where user_id = uid;
+$$;
+
+-- hver gang frøene sendes: øyeblikksbildet for timen, og sjekken
+create or replace function public.logg_fro() returns trigger
+language plpgsql security definer set search_path = '' as $$
+begin
+  insert into public.fro_logg (user_id, tid, fro, arter)
+    values (new.user_id, date_trunc('hour', now()), greatest(0, new.fro - new.fro_utenfor), greatest(0, new.arter - new.arter_utenfor))
+    on conflict (user_id, tid) do update set fro = excluded.fro, arter = excluded.arter;
+  perform public.sjekk_merking(new.user_id);
+  return null;
+end $$;
+drop trigger if exists ledertavle_logg on public.ledertavle;
+create trigger ledertavle_logg after insert or update of fro, fro_utenfor, arter, arter_utenfor on public.ledertavle
+  for each row execute function public.logg_fro();
+
+revoke execute on function public.periode_poeng(timestamptz, timestamptz), public.sjekk_merking(uuid), public.godkjenn(uuid), public.logg_fro()
+  from public, anon, authenticated;
+grant execute on function public.tavle(text) to anon, authenticated;
+grant execute on function public.avslutt_perioder() to authenticated;
+grant select on public.premier to anon, authenticated;
+
+-- med Cron slått på (Integrations → Cron), avsluttes periodene hver time; ellers når noen åpner tavla eller sender
+do $$
+begin
+  if exists (select 1 from pg_extension where extname = 'pg_cron') then
+    execute $c$select cron.schedule('fuglekort-perioder', '7 * * * *', 'select public.avslutt_perioder()')$c$;
+  end if;
+end $$;
+
 -- ---------- «Slett meg»: den anonyme brukeren og alt som hører til ----------
 create or replace function public.slett_meg() returns void
 language sql security definer set search_path = '' as $$
@@ -262,6 +456,13 @@ grant execute on function public.slett_meg() to authenticated;
 --   update public.ledertavle set navn = null where public.navn_nokkel(navn) = lower('Navnet');
 -- Åpne et sperret navn igjen:
 --   delete from public.stengte_navn where navn = lower('Navnet');
+-- Ukestavla akkurat nå (som i appen):
+--   select public.tavle('uke');
+-- Premiene som er delt ut:
+--   select * from public.premier order by tid desc;
+-- Merkede brukere, og godkjenne en (fjerner merket; det som kom før, teller ikke igjen):
+--   select m.*, l.navn from public.merket m left join public.ledertavle l using (user_id) order by m.tid desc;
+--   select public.godkjenn('<user_id>');
 -- Tellinger: høyeste antall per art og telling:
 --   select t.user_id, t.start, a.key as art, a.value::int as antall
 --   from public.tellinger t cross join lateral jsonb_each_text(t.arter) a;
