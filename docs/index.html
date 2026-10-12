@@ -54,8 +54,8 @@ button{cursor:pointer;touch-action:manipulation}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* ---------- shell ---------- */
-.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto;padding-inline:16px;max-width:1100px;margin:0 auto}
-.app>.top{grid-row:1}.app>.tellebar{grid-row:2}.app>.stage{grid-row:3}.app>.bottom{grid-row:4}
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto minmax(0,1fr) auto;padding-inline:16px;max-width:1100px;margin:0 auto}
+.app>.top{grid-row:1}.app>.tellebar{grid-row:2}.app>.oppdrag-stripe{grid-row:3}.app>.stage{grid-row:4}.app>.bottom{grid-row:5}
 .top{display:flex;align-items:center;gap:8px;padding-block:12px 2px}
 .brand{flex:1;min-width:0}
 .brand h1{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
@@ -344,13 +344,19 @@ button{cursor:pointer;touch-action:manipulation}
 .tv-t b{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tv-t small{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
 .tavle{list-style:none;margin:0 -8px;padding:0}
-.tavle li{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:12px}
+.tavle li{border-radius:12px}
+.tv-rad{display:flex;align-items:center;gap:10px;width:100%;padding:7px 8px;border:0;border-radius:12px;background:none;color:inherit;font:inherit;text-align:left}
+button.tv-rad:hover{background:var(--surface-2)}
+button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-2px}
+.tv-t.skjult b{font-style:italic;font-weight:500;color:var(--muted)}
+.tv-varsel{display:grid;gap:8px;justify-items:start;margin:12px 0 0;padding:11px 12px;border-radius:12px;background:var(--warn-bg);color:var(--warn-ink);font-size:13.5px;line-height:1.4}
+.tv-varsel .textbtn{padding:2px 0;color:inherit;text-decoration:underline}
 .tavle li.meg{background:color-mix(in srgb, var(--gold) 16%, transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--gold) 55%, transparent)}
 .tavle .ti{width:30px;height:30px;flex-shrink:0}
 .tv-nr{width:26px;flex-shrink:0;text-align:right;font-weight:700;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
 .tavle li:nth-child(-n+3) .tv-nr{color:var(--gold-ink)}
 .tv-fro{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
-.tavle li.tv-mer{justify-content:center;color:var(--muted);padding:0 8px}
+.tavle li.tv-mer{display:flex;justify-content:center;color:var(--muted);padding:0 8px}
 .tv-status{margin:12px 0 0}
 .tv-slett{color:var(--rec);padding-left:0}
 .felt{display:block;margin:16px 0 6px;font-size:14px;font-weight:600}
@@ -973,6 +979,90 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   .bf-blader,.bf-ring{display:none}
   .card.is-top[data-niva]:not(.styrt) .mkant,.card.glinsny .mk-blits{animation:none}
 }
+
+/* ---------- the username (the first time, and «Bytt navn») ---------- */
+.navn-rad{display:flex;gap:8px;align-items:center}
+.felt-inp.navn-inp,.dlg-felt input.navn-inp{flex:1;min-width:0;max-width:none;letter-spacing:normal;font-variant-numeric:normal}
+.navn-inp[aria-invalid="true"]{border-color:var(--rec)}
+.navn-rad .btn{flex-shrink:0;padding:10px 12px}
+.navn-feil,.dlg-tekst .navn-feil{min-height:1.25em;margin:6px 0 0;font-size:13px;font-weight:600;color:var(--rec)}
+.navn-regel{margin-top:2px}
+.dlg-tekst .navn-rad{margin-top:4px}
+
+/* ---------- the introduction ---------- */
+.intro{inset:0;display:flex;flex-direction:column;background:var(--bg);transform:translateY(104%);
+  padding:calc(env(safe-area-inset-top,0px) + 6px) 0 calc(env(safe-area-inset-bottom,0px) + 14px)}
+.intro.on{transform:none}
+.intro-spor{flex:1;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior:contain}
+.intro-spor::-webkit-scrollbar{display:none}
+.intro-side{flex:0 0 100%;box-sizing:border-box;scroll-snap-align:center;scroll-snap-stop:always;overflow-y:auto;
+  display:flex;flex-direction:column;align-items:center;padding:12px 24px 8px;text-align:center}
+.intro-side>.intro-bilde{margin-top:auto}
+.intro-side>p{margin:10px auto auto;max-width:340px;font-size:16px;line-height:1.5;color:var(--muted)}
+.intro-side h2{margin:22px 0 0;font-size:24px;line-height:1.2;letter-spacing:-.01em;outline:none}
+.intro-bilde{height:min(46vh,360px);width:100%;display:grid;place-items:center}
+.intro-vifte{position:relative;width:100%;height:100%}
+.intro-vifte img{position:absolute;left:50%;top:50%;height:min(76%, calc((100vw - 88px) * .89), 300px);aspect-ratio:750/1050;border-radius:5%/3.6%;
+  box-shadow:0 14px 30px -12px rgba(var(--shadow),.65);transform:translate(-50%,-50%) translateX(calc(var(--j) * 29%)) rotate(calc(var(--j) * 8deg)) translateY(calc(var(--j) * var(--j) * 5%))}
+.intro-vifte img:nth-child(3){z-index:1}
+.intro-kort{position:relative;margin:0;height:94%;aspect-ratio:750/1050;container-type:inline-size;border-radius:5.07cqw;box-shadow:0 14px 30px -12px rgba(var(--shadow),.65)}
+.intro-kort img{display:block;width:100%;height:100%;border-radius:inherit}
+.intro-kort .idag-merke{display:flex}
+.intro-kort .tick path{transition-delay:.25s}
+.intro-konge{width:min(46vw,30vh,200px);height:min(46vw,30vh,200px);border-radius:22%;
+  box-shadow:0 0 0 4px var(--gold),0 0 60px 10px color-mix(in srgb, var(--gold) 40%, transparent),0 20px 40px -18px rgba(0,0,0,.6)}
+.intro-ikoner{display:flex;gap:min(5vw,26px);justify-content:center}
+.intro-ik{display:grid;justify-items:center;gap:10px}
+.intro-ik i{width:min(21vw,84px);height:min(21vw,84px);border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:28px;color:#3b2a00;
+  background:radial-gradient(circle at 35% 30%, #fff6cf 0, #f7cf5a 38%, #d99a12 100%);box-shadow:0 0 0 3px #fffaf0,0 10px 22px -10px rgba(0,0,0,.55)}
+.intro-ik svg{width:44%;height:44%}
+.intro-ik b{font-size:13.5px}
+.intro-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;max-width:480px;box-sizing:border-box;margin:0 auto;padding:10px 20px 0}
+.intro-bar.tom{display:none}
+.intro-bar>.skjul{visibility:hidden}
+.intro-bar .btn{min-width:112px;padding:12px 18px;font-size:15px;border-radius:12px}
+#introHopp{min-width:112px;text-align:left;padding-left:0}
+.intro-prikker{display:flex;gap:8px}
+.intro-prikker i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:transform .2s,background .2s}
+.intro-prikker i.na{background:var(--spruce-ink);transform:scale(1.25)}
+.navn-side{text-align:left;align-items:stretch}
+.navn-inn{width:100%;max-width:400px;margin:auto}
+.navn-inn h2{margin-top:0}
+.navn-inn .felt-inp:not(.navn-inp){max-width:160px}
+.navn-knapper{display:grid;gap:4px;margin-top:20px}
+.navn-knapper .btn{padding:14px;font-size:16px;border-radius:12px}
+.navn-knapper .textbtn{padding:12px}
+@media (max-height:700px){.intro-bilde{height:40vh}.intro-side h2{margin-top:14px;font-size:22px}.intro-side>p{font-size:15px}}
+
+/* ---------- the tasks: the strip under the top, and «Kom i gang» in Merker ---------- */
+.oppdrag-stripe{display:flex;align-items:stretch;margin-top:8px;border-radius:14px;
+  background:color-mix(in srgb, var(--gold) 13%, var(--surface));border:1px solid color-mix(in srgb, var(--gold) 45%, var(--line));box-shadow:0 6px 18px -12px rgba(var(--shadow),.5)}
+.oppdrag-stripe[hidden],.telling .oppdrag-stripe{display:none}
+.os-apne{flex:1;min-width:0;display:flex;align-items:center;gap:10px;border:0;background:none;color:inherit;font:inherit;text-align:left;padding:6px 4px 6px 8px;border-radius:14px 0 0 14px}
+.os-ikon{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:var(--gold);color:#3b2a00}
+.os-ikon svg{width:16px;height:16px}
+.os-t{flex:1;min-width:0;display:grid;line-height:1.2}
+.os-t small{font-size:11.5px;font-weight:600;color:var(--muted)}
+.os-t b{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.os-fro{display:flex;align-items:center;gap:4px;font-weight:700;font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.os-fro .froikon,.o-fro .froikon{width:14px;height:14px}
+.os-lukk{width:40px;flex-shrink:0;display:grid;place-items:center;border:0;background:none;color:var(--muted);border-radius:0 14px 14px 0}
+.os-lukk svg{width:16px;height:16px}
+.oppdrag{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.oppdrag li{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 2px;border-bottom:1px solid var(--line);font-size:14.5px}
+.o-ring{width:22px;height:22px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 2px var(--line)}
+.o-ring svg{width:14px;height:14px}
+.oppdrag li.ok .o-ring{background:var(--ok);box-shadow:none;color:#fff}
+.o-t{flex:1;min-width:0}
+.oppdrag li.ok .o-t{color:var(--muted)}
+.o-gaa{padding:5px 10px;font-size:12.5px}
+.o-fro{display:flex;align-items:center;gap:4px;font-weight:700;font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.oppdrag li.ok .o-fro{font-weight:600;color:var(--muted)}
+.o-vis{padding:2px 0;font-size:12.5px}
+.profil .p-navn{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;border:0;border-bottom:1px dashed var(--line);background:none;color:var(--ink);font:inherit;font-size:19px;font-weight:700;padding:4px 0;text-align:left}
+.p-navn span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-navn svg{width:16px;height:16px;flex-shrink:0;color:var(--muted)}
+.p-navn.tom{color:var(--muted);font-weight:500}
 </style>
 
 <div class="app" id="app">
@@ -996,6 +1086,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <div class="tb-t"><b id="tTid" role="timer">0:00</b><span id="tInfo"></span></div>
     <button class="tb-btn" id="tListe">Telleliste</button>
     <button class="tb-btn pri" id="tSlutt">Avslutt</button>
+  </div>
+
+  <div class="oppdrag-stripe" id="oppdragStripe" hidden>
+    <button class="os-apne" id="osApne"><span class="os-ikon" aria-hidden="true"></span><span class="os-t" id="osTekst"></span><span class="os-fro" id="osFro"></span></button>
+    <button class="os-lukk" id="osLukk" aria-label="Skjul oppdragene her. De står fortsatt under Merker."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
   </div>
 
   <main class="stage" id="stage" tabindex="-1" aria-roledescription="kortstokk" style="outline:none">
@@ -1028,6 +1123,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <div class="meny" id="meny" role="menu" aria-label="Meny" hidden>
   <button role="menuitem" id="openSearch"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg></span><span class="mt">Søk etter fugl</span><kbd aria-hidden="true">/</kbd></button>
   <button role="menuitem" id="openHelp"><span class="mi q" aria-hidden="true">?</span><span class="mt">Om kortene</span><kbd aria-hidden="true">?</kbd></button>
+  <button role="menuitem" id="openIntro"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg></span><span class="mt">Slik virker appen</span></button>
   <button role="menuitem" id="openSettings"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span><span class="mt">Innstillinger</span></button>
 </div>
 
@@ -1088,10 +1184,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <button class="bryter" id="vippBtn" role="switch" aria-checked="false"><span><b>Glinset følger telefonen</b><small>Lyset på glinskortene flytter seg når du vipper telefonen. Ellers følger det fingeren når du drar i kortet.</small></span><i aria-hidden="true"></i></button>
   </div>
   <div class="s-sec" id="delingSek"><h3>Ledertavle og statistikk</h3>
-    <button class="bryter" id="delBtn" role="switch" aria-checked="false"><span><b>Del med ledertavlen og statistikken</b><small>Du vises på ledertavlen med kallenavnet ditt, frø, arter, observasjonsdager og tittel. Observasjonene, tellingene og kjøpene sendes anonymt til en felles database for statistikk over hagefuglene.</small></span><i aria-hidden="true"></i></button>
+    <button class="bryter" id="delBtn" role="switch" aria-checked="false"><span><b>Del med ledertavlen og statistikken</b><small>Du vises på ledertavlen med brukernavnet ditt, frø, arter, observasjonsdager og tittel. Observasjonene, tellingene og kjøpene sendes anonymt til en felles database for statistikk over hagefuglene.</small></span><i aria-hidden="true"></i></button>
     <label class="felt" for="postnrFelt">Postnummer <small>valgfritt, bare til statistikk, vises ikke på tavlen</small></label>
     <input class="felt-inp" id="postnrFelt" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870">
     <p class="valg-merk" id="delStatus" role="status"></p>
+    <p class="valg-merk" id="skjulteInfo" hidden><span id="skjulteTekst"></span> <button class="textbtn" id="visSkjulte">Vis dem igjen</button></p>
     <button class="btn" id="slettMeg">Slett meg fra ledertavlen</button>
   </div>
   <div class="s-sec"><h3>Test</h3>
@@ -1150,6 +1247,15 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <button class="textbtn" id="closeSum">Lukk</button>
   </div>
   <div id="sumBody"></div>
+</section>
+
+<section class="sheet intro" id="introSheet" role="dialog" aria-modal="true" aria-label="Slik virker appen">
+  <div class="intro-spor" id="introSpor"></div>
+  <div class="intro-bar" id="introBar">
+    <button class="textbtn" id="introHopp">Hopp over</button>
+    <div class="intro-prikker" id="introPrikker" aria-hidden="true"></div>
+    <button class="btn pri" id="introNeste">Neste</button>
+  </div>
 </section>
 
 <section class="help" id="helpSheet" role="dialog" aria-modal="true" aria-label="Om kortene">
@@ -1582,6 +1688,7 @@ const FRO = {
   dagMerkeForste: 10000,                     // the «5 dager» badge
   dagMerke: 2000,                            // each «N dager» badge after that: one for every 5 observation days
   arsliste: { 10: 5000, 15: 12500, 20: 25000, 25: 50000 },   // species seen in one calendar year
+  oppdrag: { forste: 1000, sok: 500, arter3: 1500, tavle: 500, dager2: 1500, kjop: 1000, arter5: 2000, dager3: 2000 },   // «Kom i gang»
   angreTid: 120000,                          // the newest purchase or move can be undone for 2 minutes
   flyttPerReg: 0.05,                         // moving a multiplier early: this share of its price per registration missing
 };
@@ -1592,7 +1699,7 @@ let froCache = null;
 const froNullstill = () => { froCache = null; };
 function froRegnskap() {
   if (froCache) return froCache;
-  const r = { reg: 0, forste: 0, dag: 0, niva: 0, merker: 0, mult: 0 };
+  const r = { reg: 0, forste: 0, dag: 0, niva: 0, merker: 0, mult: 0, oppdrag: 0 };
   CARDS.forEach(c => {
     if (c.bonus && !erApen(c)) return;                     // a dyrekort not bought gives nothing
     const dager = Store.days(c.key); if (!dager.length) return;
@@ -1612,7 +1719,8 @@ function froRegnskap() {
   const t = nokkeltall();
   r.dag = t.obsDager * FRO.daglig;                                  // every day with a bird
   merkerListe(t).forEach(m => { if (m.v(t) >= m.mal) r.merker += merkeFro(m); });
-  r.tjent = r.reg + r.forste + r.dag + r.niva + r.merker + r.mult;
+  const ol = oppdragLogg(); r.oppdrag = OPPDRAG.reduce((a, o) => a + (ol[o.id] ? oppdragFro(o) : 0), 0);   // the tasks done
+  r.tjent = r.reg + r.forste + r.dag + r.niva + r.merker + r.mult + r.oppdrag;
   r.brukt = Object.values(Kjop.data).reduce((a, v) => a + v.pris + (v.kort ? v.kort.reduce((b, p) => b + (p.pris || 0), 0) : 0), 0);   // moves too
   r.saldo = r.tjent - r.brukt;                                      // what can be spent; the titles go by r.tjent
   return (froCache = r);
@@ -1712,6 +1820,7 @@ const MIKON = {
   arstider: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12V3.5A8.5 8.5 0 0 1 20.5 12z" opacity=".95"/><path d="M12 12h8.5A8.5 8.5 0 0 1 12 20.5z" opacity=".7"/><path d="M12 12v8.5A8.5 8.5 0 0 1 3.5 12z" opacity=".5"/><path d="M12 12H3.5A8.5 8.5 0 0 1 12 3.5z" opacity=".3"/></svg>',
   telling: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 5v14M10 5v14M14 5v14M18 5v14M3.5 16.5 20.5 7.5"/></svg>',
   flokk: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9c1.5-1.4 3-1.4 4.5 0C9 7.6 10.5 7.6 12 9M12 15c1.5-1.4 3-1.4 4.5 0 1.5-1.4 3-1.4 4.5 0M6 18.5c1.2-1.1 2.4-1.1 3.6 0 1.2-1.1 2.4-1.1 3.6 0M13.5 6c1.1-1 2.2-1 3.3 0 1.1-1 2.2-1 3.3 0"/></svg>',
+  oppdrag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 21V4"/><path d="M5.5 4.5c3-1.6 5.5 1.6 8.5 0s4.2-.4 4.5 0v8.2c-.3-.4-1.5-1.6-4.5 0s-5.5-1.6-8.5 0"/></svg>',
 };
 const MERKER = [
   ...[10, 15, 20, 25, 30, 50].map(n => ({ id: 'a' + n, navn: `${n} arter`, tekst: `Sett ${n} ulike arter`, mal: n, v: t => t.arter, ikon: String(n) })),
@@ -1744,15 +1853,42 @@ const aarMerker = t => t.aarene.flatMap(y => ARSMAL.map(n => aarMerke(y, n)));
 const merkerListe = t => [...MERKER, ...tellekorpsMerker(t), ...dagMerker(t), ...aarMerker(t)];
 const merkeFro = m => (m.dag ? (m.mal === DAGSTEG ? FRO.dagMerkeForste : FRO.dagMerke) : m.aar ? FRO.arsliste[m.mal] || 0 : m.tAar ? FRO.merker.tellekorps : FRO.merker[m.id] || 0);
 function opptjent() {
-  const t = nokkeltall();
-  return { niva: Object.fromEntries(CARDS.map(c => [c.key, nivaAv(c)])), merker: new Set(merkerListe(t).filter(m => m.v(t) >= m.mal).map(m => m.id)) };
+  const t = nokkeltall(), ol = oppdragLogg();
+  return { niva: Object.fromEntries(CARDS.map(c => [c.key, nivaAv(c)])), merker: new Set(merkerListe(t).filter(m => m.v(t) >= m.mal).map(m => m.id)),
+    oppdrag: new Set(OPPDRAG.filter(o => oppdragOk(o, t, ol)).map(o => o.id)) };
 }
 /* what was reached since `for` (taken just before a change), as text for the message at the bottom */
 function nyheter(for_) {
   const na = opptjent(), ut = [];
   CARDS.forEach(c => { const n = na.niva[c.key]; if (erApen(c) && n > for_.niva[c.key]) { ut.push(`${c.navn} fikk ${kantNavn(n)}!`); feir(c, n); } });
   merkerListe(nokkeltall()).forEach(m => { if (na.merker.has(m.id) && !for_.merker.has(m.id)) { ut.push(`Nytt merke: ${m.navn}!`); feirMerke(m); } });
+  const nyeO = OPPDRAG.filter(o => na.oppdrag.has(o.id) && !for_.oppdrag.has(o.id) && !oppdragLogg()[o.id]);
+  if (nyeO.length) { loggOppdrag(nyeO.map(o => o.id)); nyeO.forEach(o => { ut.push(`Oppdrag fullført: ${o.tekst}!`); feirOppdrag(o); }); paintOppdrag(); }
   return ut.length ? ' ' + ut.join(' ') : '';
+}
+
+/* ================= Oppdrag: «Kom i gang» =================
+   Small tasks for the first days, each with seeds (FRO.oppdrag). Most are read from the data, like the badges; two
+   are things you do (find a bird with the search, see yourself on the board). A task done stays done, also if a
+   sighting is deleted or a purchase undone: the day it was done is kept per user on this device, and the seeds
+   count from that list. */
+const OPPDRAG = [
+  { id: 'forste', tekst: 'Registrer din første fugl', v: t => t.arter >= 1 },
+  { id: 'sok', tekst: 'Finn en fugl med søket', gaa: 'sok' },
+  { id: 'arter3', tekst: 'Registrer tre ulike arter', v: t => t.arter >= 3 },
+  { id: 'tavle', tekst: 'Se deg selv på ledertavlen', gaa: 'tavle', deling: true },     // only for those who share
+  { id: 'dager2', tekst: 'Registrer fugler på to ulike dager', v: t => t.obsDager >= 2 },
+  { id: 'kjop', tekst: 'Kjøp noe i Frøbutikken', v: () => Object.keys(Kjop.data).length > 0, gaa: 'butikk' },
+  { id: 'arter5', tekst: 'Registrer fem arter', v: t => t.arter >= 5 },
+  { id: 'dager3', tekst: 'Registrer fugler på tre ulike dager', v: t => t.obsDager >= 3 },
+];
+const OPPDRAG_KEY = () => brukerNokkel('fuglekort:oppdrag'), OPPDRAG_SKJULT = () => brukerNokkel('fuglekort:oppdrag-skjult');
+function oppdragLogg() { try { const x = JSON.parse(lsGet(OPPDRAG_KEY()) || '{}'); return x && typeof x === 'object' && !Array.isArray(x) ? x : {}; } catch (e) { return {}; } }
+const oppdragFro = o => FRO.oppdrag[o.id] || 0;
+const oppdragOk = (o, t, ol = oppdragLogg()) => !!ol[o.id] || (!!o.v && o.v(t));
+function loggOppdrag(ids) {
+  const ol = oppdragLogg(); ids.forEach(id => { if (!ol[id]) ol[id] = todayISO(); });
+  lsSet(OPPDRAG_KEY(), JSON.stringify(ol)); froNullstill();
 }
 
 /* ================= Search index ================= */
@@ -2491,6 +2627,7 @@ document.addEventListener('keydown', e => {
   if (dlgApen) { if (e.key === 'Escape') { e.preventDefault(); lukkDlg(); } return; }
   if (!sbEl.hidden) { storbildeTast(e); return; }
   if (festAapen) { if (e.key === 'Escape') { e.preventDefault(); lukkFest(); } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); festTrykk(); } return; }
+  if (openSheet && openSheet.id === 'introSheet') { if (e.key === 'Escape') { e.preventDefault(); introEsc(); } return; }
   if (e.target.closest('input, textarea')) { if (e.key === 'Escape') closeSheets(); return; }
   if (openSheet) { if (e.key === 'Escape') { if (artVis && openSheet.id === 'statsSheet') lukkArt(); else closeSheets(); } return; }
   if (e.key === 'ArrowRight') { e.preventDefault(); stopRiffle(); go(1); }
@@ -2569,6 +2706,7 @@ function closeSheets(silent) {
   openSheet = null;
   if (!silent && lastFocus && lastFocus.focus) lastFocus.focus();
   froVentKjor(380);
+  if (festKo.length) setTimeout(planleggFest, 420);
 }
 scrim.addEventListener('click', () => closeSheets());
 
@@ -2682,9 +2820,11 @@ function renderSearch() {
 }
 resEl.addEventListener('click', e => {
   const b = e.target.closest('.res'); if (!b) return;
+  const sokt = !!qEl.value.trim();
   closeSheets(true);
   jump(+b.dataset.i);
   stage.focus && stage.focus();
+  if (sokt) oppdragGjort('sok');                           // «Finn en fugl med søket»
 });
 
 /* ---- help: the two explanation cards ---- */
@@ -2856,6 +2996,21 @@ function strekHtml(nt) {
   return `<div class="strek-tavle" role="img" aria-label="${dagerTekst(n)}, ${flertall(hele, 'merke', 'merker')}">${rader.join('')}</div>
     <p class="cap strek-neste">${n ? '' : 'Ingen observasjonsdager ennå. '}${igjen === 1 ? '1 dag' : `${igjen} dager`} igjen til neste merke · ${fmtFro(fro)} frø</p>`;
 }
+/* «Kom i gang» in Merker: at the top while there are tasks left, at the bottom when all are done. The tasks you
+   can go and do have a button there (search, the board, Frøbutikken) */
+const oppdragListe = () => { const ol = oppdragLogg(); return OPPDRAG.filter(o => !o.deling || deler() || ol[o.id]); };
+const oppdragFerdig = () => { const ol = oppdragLogg(); return oppdragListe().every(o => ol[o.id]); };
+function oppdragHtml() {
+  const ol = oppdragLogg(), liste = oppdragListe(), ferdig = liste.filter(o => ol[o.id]).length;
+  return `<div class="s-sec" id="oppdragSek"><h3>Kom i gang <span class="h3n">${ferdig} av ${liste.length}</span></h3>
+    <p class="cap" style="margin:0 0 10px">${ferdig === liste.length ? 'Alle oppdragene er fullført.' : 'Små oppdrag for de første dagene. Hvert oppdrag gir frø.'}${ferdig < liste.length && lsGet(OPPDRAG_SKJULT()) ? ' <button class="textbtn o-vis" data-oppdrag-vis>Vis neste oppdrag på forsiden</button>' : ''}</p>
+    <ul class="oppdrag">${liste.map(o => { const ok = !!ol[o.id], gaa = !ok && o.gaa && (o.gaa !== 'tavle' || deler());
+      return `<li class="${ok ? 'ok' : ''}"><span class="o-ring" aria-hidden="true">${ok ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5.5 12.5 4 4 9-9"/></svg>' : ''}</span>
+        <span class="o-t">${esc(o.tekst)}${ok ? '<span class="sr">, fullført</span>' : ''}</span>
+        ${gaa ? `<button class="btn o-gaa" data-oppdrag-gaa="${o.gaa}">${o.gaa === 'sok' ? 'Søk' : o.gaa === 'tavle' ? 'Tavlen' : 'Butikken'}</button>` : ''}
+        <span class="o-fro">${FROIKON}${fmtFro(oppdragFro(o))}</span></li>`; }).join('')}</ul>
+  </div>`;
+}
 /* the year list in Merker: this year's species and four badges, and a line for each year before */
 function arslisteHtml(nt) {
   if (!nt.startAar) return '';
@@ -2892,12 +3047,12 @@ function renderStats() {
   const regs = ids.reduce((a, id) => a + Store.data[id].dager.length, 0);
   const most = ids.map(id => ({ c: CARDS[BY_KEY[id]], ant: Store.data[id].dager.length })).sort((a, b) => b.ant - a.ant || a.c.nr - b.c.nr)[0];
   const fr = froRegnskap();
-  const navn = (BRUKER.navn || '').trim();
+  const kn = kallenavn(), navn = kn ? kn.navn : '';                   // the username (the same as on the board)
   const fT = froTotalt(), tk = tittelAv(fT), tt = TITLER[tk], tn = TITLER[tk + 1];
   const andel = tn ? Math.max(0, Math.min(1, (fT - tt.fra) / (tn.fra - tt.fra))) : 1;
   const profilHode = `<div class="profil">
     <button class="tittel-ikon" data-titler aria-expanded="${titlerApen}" aria-label="${tt.navn}, tittel ${tk + 1} av ${TITLER.length}. Vis alle titlene."><span class="ti" style="${tittelPos(tk)}"></span></button>
-    <span class="p-t"><input id="profilNavn" value="${esc(navn)}" placeholder="Skriv navnet ditt" maxlength="40" autocomplete="nickname" aria-label="Navnet ditt">
+    <span class="p-t"><button class="p-navn ${navn ? '' : 'tom'}" data-bytt-navn aria-label="${navn ? `Brukernavn: ${esc(navn)}. Bytt navn` : 'Velg brukernavn'}"><span>${esc(navn || 'Velg brukernavn')}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg></button>
     <b class="p-tittel">${tt.navn}<small>${tk + 1} av ${TITLER.length}</small></b></span></div>
     <div class="tittel-bar">
       <div class="tb-linje"><i class="bar" role="img" aria-label="${Math.round(andel * 100)} prosent til neste tittel"><i style="width:${(andel * 100).toFixed(1)}%"></i></i>${tn ? `<span class="ti" style="${tittelPos(tk + 1)}" aria-hidden="true"></span>` : ''}</div>
@@ -2925,6 +3080,7 @@ function renderStats() {
       <div class="row"><button class="btn pri" data-butikk>Åpne Frøbutikken</button></div>
       <ul class="fro-kilder">
         ${[['Registreringer', fr.reg], ['Dager med fugler', fr.dag], ['Første gang du så en art', fr.forste], ['Glinskant', fr.niva], ['Merker', fr.merker],
+          ...(fr.oppdrag ? [['Oppdrag', fr.oppdrag]] : []),
           ...(fr.mult || Object.keys(Kjop.data).some(k => k.startsWith('x-')) ? [['Multiplikatorer', fr.mult]] : [])]
           .map(([t, v]) => `<li><span>${t}</span><b>${fmtFro(v)}</b></li>`).join('')}
       </ul>
@@ -2994,6 +3150,7 @@ function renderStats() {
       ${APNE.size < NBON ? '<div class="row"><button class="btn" data-butikk="dyr">Til Frøbutikken</button></div>' : ''}
     </div>` : ''}`,
     merker: () => `
+    ${oppdragFerdig() ? '' : oppdragHtml()}
     <div class="s-sec"><h3>Merker <span class="h3n">${merkerOk} oppnådd</span></h3>
       <div class="merker">${[...MERKER.filter(m => m.id !== 'flokk'), tellekorps(aarIdag()), ...MERKER.filter(m => m.id === 'flokk')].map(m => merkeHtml(m, nt)).join('')}</div>
     </div>
@@ -3001,7 +3158,8 @@ function renderStats() {
       <p class="cap" style="margin:0 0 12px">En strek for hver dag du har registrert fugler, og et merke for hver 5. dag. De første 5 dagene gir ${fmtFro(FRO.dagMerkeForste)} frø, hvert merke etter det ${fmtFro(FRO.dagMerke)}.</p>
       ${strekHtml(nt)}
     </div>
-    ${arslisteHtml(nt)}`,
+    ${arslisteHtml(nt)}
+    ${oppdragFerdig() ? oppdragHtml() : ''}`,
     tavle: () => tavleHtml(),
   };
   paintFaner();
@@ -3012,16 +3170,16 @@ function renderStats() {
   const showTip = b => { const x = months[+b.dataset.k]; tip.textContent = `${MND[x.m - 1]}. ${x.y}: ${x.n} ${x.n === 1 ? 'art' : 'arter'}`; const r = b.getBoundingClientRect(), pr = mEl.getBoundingClientRect(); tip.style.left = (r.left - pr.left + r.width / 2) + 'px'; tip.style.top = Math.max(0, r.bottom - pr.top - (b.querySelector('i').offsetHeight) - 6) + 'px'; tip.classList.add('on'); };
   mEl.querySelectorAll('.mcol').forEach(b => { b.addEventListener('pointerenter', () => showTip(b)); b.addEventListener('focus', () => showTip(b)); b.addEventListener('click', () => showTip(b)); b.addEventListener('pointerleave', () => tip.classList.remove('on')); b.addEventListener('blur', () => tip.classList.remove('on')); });
 }
-sb.addEventListener('change', e => {
-  if (e.target.id !== 'profilNavn') return;
-  BRUKER.navn = e.target.value.trim().slice(0, 40); lagreBrukere();
-  si(BRUKER.navn ? `Navnet er lagret: ${BRUKER.navn}.` : 'Navnet er fjernet.');
-});
-sb.addEventListener('keydown', e => { if (e.target.id === 'profilNavn' && e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
 sb.addEventListener('click', async e => {
   if (e.target.closest('[data-bytt-navn]')) { byttNavn(); return; }
   if (e.target.closest('[data-slett-meg]')) { slettMegSporsmal(); return; }
-  if (e.target.closest('[data-del-pa]')) { startDeling(); return; }
+  if (e.target.closest('[data-del-pa]')) { visIntro('slaPa', () => openStats('tavle')); return; }
+  if (e.target.closest('[data-oppdrag-vis]')) { lsDel(OPPDRAG_SKJULT()); paintOppdrag(); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
+  const og = e.target.closest('[data-oppdrag-gaa]');
+  if (og) { const g = og.dataset.oppdragGaa; if (g === 'tavle') velgFane('tavle'); else if (g === 'butikk') openButikk(); else if (g === 'sok') { closeSheets(true); openSearch(); } return; }
+  const tr = e.target.closest('[data-tavle-rad]');
+  if (tr) { tavleRad(tr.dataset.tavleRad); return; }
+  if (e.target.closest('[data-lukk-melding]')) { lsDel(DK('navn-melding')); paintDeling(); return; }
   if (e.target.closest('[data-butikk]')) { openButikk(e.target.closest('[data-butikk]').dataset.butikk); return; }
   const kv = e.target.closest('[data-kalvalg]');
   if (kv) { const [k, v] = kv.dataset.kalvalg.split(':'); kalVis[k] = v; lsSet('fuglekort:kalender', JSON.stringify(kalVis)); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
@@ -3282,6 +3440,23 @@ const planleggFest = () => { if (!festAapen && !festPlanlagt) { festPlanlagt = t
 function feir(c, niva) { festKo.push({ type: 'niva', c, niva, fro: FRO.niva[niva - 1] || 0, ny: froHold > 0 }); planleggFest(); }
 function feirBonus(c) { festKo.push({ type: 'bonus', c, fro: 0 }); planleggFest(); }   // a bought card gives no seeds
 function feirMerke(m) { festKo.push({ type: 'merke', m, fro: merkeFro(m), ny: froHold > 0 }); planleggFest(); }
+function feirOppdrag(o) { festKo.push({ type: 'oppdrag', o, fro: oppdragFro(o), ny: froHold > 0 }); planleggFest(); }
+/* a task done outside a registration (search, the board, a purchase, or found at start): its seeds wait for its
+   celebration, and the celebration waits until no sheet is open. Several at once: one celebration for all */
+function feirOppdragNa(nye) {
+  if (!nye.length) return;
+  loggOppdrag(nye.map(o => o.id));
+  const fro = nye.reduce((a, o) => a + oppdragFro(o), 0);
+  festKo.push(nye.length === 1 ? { type: 'oppdrag', o: nye[0], fro, ventArk: true } : { type: 'oppdrag', samlet: nye, fro, ventArk: true });
+  planleggFest(); paintFro(); paintOppdrag(); planleggTittel();             // the seeds may give a new title
+  if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'merker') { const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; }
+}
+function oppdragGjort(id) { const o = OPPDRAG.find(x => x.id === id); if (o && !oppdragLogg()[id]) feirOppdragNa([o]); }
+/* the tasks the data has done that are not in the list yet: at start (also those done before there were tasks),
+   after a purchase, or after a backup is added */
+function sjekkOppdrag() { const t = nokkeltall(), ol = oppdragLogg(); feirOppdragNa(OPPDRAG.filter(o => !ol[o.id] && o.v && o.v(t))); }
+let sjekkOppdragT = null;
+const planleggOppdrag = () => { clearTimeout(sjekkOppdragT); sjekkOppdragT = setTimeout(sjekkOppdrag, 300); };
 /* seeds that wait for a celebration: the counter does not show them until they have streamed in */
 const froParkert = () => festKo.reduce((a, f) => a + (f.fro || 0), 0) + (aktivFest && aktivFest.fro ? aktivFest.fro : 0);
 /* the pen marks as on the card itself: tick, "× N" and the date of the first sighting */
@@ -3301,9 +3476,11 @@ function nesteFest() {
   if (!festKo.length) return;
   if (froVent.length) return;                               // the seeds of the registration first: their pills lead on (ferdigPluss)
   if (pillVent) { visNeste(); return; }                     // the seeds of the registration are showing: on with a tap
+  if (festKo[0].ventArk && (openSheet || dlgApen)) return;  // a task done in a sheet: when the sheet closes
   const f = festKo.shift();
   festAapen = true; festFokus = document.activeElement; aktivFest = f;
-  if (f.type === 'bonus') visBonus(f); else if (f.type === 'tittel') visTittel(f); else if (f.type === 'merke') visMerke(f); else visNiva(f);
+  if (f.type === 'bonus') visBonus(f); else if (f.type === 'tittel') visTittel(f); else if (f.type === 'merke') visMerke(f);
+  else if (f.type === 'oppdrag') visOppdrag(f); else visNiva(f);
 }
 function visTittel(f) {
   const t = TITLER[f.k];
@@ -3339,6 +3516,17 @@ function visMerke(f) {
   vis(festEl);
   haptic([18, 70, 28, 70, 40]);
   $('#live').textContent = `Nytt merke: ${m.navn}. ${m.tekst}.${f.fro ? ` ${fmtFro(f.fro)} frø.` : ''}`;
+}
+function visOppdrag(f) {
+  const n = f.samlet ? f.samlet.length : 1;
+  festEl.dataset.type = 'merke'; festEl.dataset.niva = '3';
+  $('#festMedalje').innerHTML = MIKON.oppdrag;
+  $('#festNavn').textContent = f.samlet ? `${n} oppdrag fullført!` : 'Oppdrag fullført!';
+  $('#festArt').textContent = f.samlet ? `Kom i gang${f.fro ? ` · ${fmtFro(f.fro)} frø` : ''}` : `${f.o.tekst}${f.fro ? ` · ${fmtFro(f.fro)} frø` : ''}`;
+  $('#festHint').textContent = f.fro ? 'Trykk for å samle frøene' : 'Trykk for å gå videre';
+  vis(festEl);
+  haptic([18, 70, 28, 70, 40]);
+  $('#live').textContent = `${f.samlet ? `${n} oppdrag fullført: ${f.samlet.map(o => o.tekst).join(', ')}.` : `Oppdrag fullført: ${f.o.tekst}.`}${f.fro ? ` ${fmtFro(f.fro)} frø.` : ''}`;
 }
 const BLADFARGER = ['#6fb35a', '#3f8f4e', '#9ccc65', '#e98a2d', '#f2c14e', '#a9461a'];
 function visBonus(f) {
@@ -3378,12 +3566,13 @@ function lukkFest() {
     f.strommet = true;
     froFrys(); f.fro = 0;                                   // the seeds leave the celebration
     const linjer = f.type === 'niva' ? [{ t: stor(kantNavn(f.niva)), r: f.c ? esc(f.c.navn) : '', v: belop }]
-      : f.type === 'merke' ? [{ t: `Merke: ${f.m.navn}`, v: belop }] : [];
+      : f.type === 'merke' ? [{ t: `Merke: ${f.m.navn}`, v: belop }]
+      : f.type === 'oppdrag' ? [{ t: f.samlet ? `${f.samlet.length} oppdrag` : 'Oppdrag', v: belop }] : [];
     const samlet = () => { f.strommer = false; el.classList.remove('strommer'); if (el === festEl) $('#festHint').textContent = 'Trykk for å gå videre'; };
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) { froSlipp(); visPluss(belop, linjer); ferdigPluss(); samlet(); }
     else {
       f.strommer = true; el.classList.add('strommer');
-      const kort = el.querySelector(f.type === 'tittel' ? '.fest-ikon' : f.type === 'merke' ? '.fest-medalje' : '.fest-kort, .bf-kort'), bank = $('#openFro');
+      const kort = el.querySelector(f.type === 'tittel' ? '.fest-ikon' : f.type === 'merke' || f.type === 'oppdrag' ? '.fest-medalje' : '.fest-kort, .bf-kort'), bank = $('#openFro');
       bank.classList.add('fram');
       haptic(10);
       froStrom(kort.getBoundingClientRect(), bank, belop, linjer, () => {
@@ -3649,10 +3838,11 @@ function lukkDlg(fn) {
   setTimeout(() => { if (!dlgApen) dlgEl.hidden = true; }, 200);   // not if a new question opened in the meantime
   if (fn) fn(); else if (dlgFor && dlgFor.focus) dlgFor.focus();
   froVentKjor(220);
+  if (festKo.length) setTimeout(planleggFest, 260);
 }
 dlgEl.addEventListener('click', e => {
   const b = e.target.closest('[data-k]');
-  if (b) { const k = dlgValg[+b.dataset.k]; lukkDlg(k && k.fn); return; }
+  if (b) { const k = dlgValg[+b.dataset.k]; if (k && k.sjekk && !k.sjekk(b)) return; lukkDlg(k && k.fn); return; }
   if (!e.target.closest('.dlg-kort')) lukkDlg();
 });
 
@@ -3992,7 +4182,7 @@ function froKilde(c) {
    their own celebration are not in it. Returns [] if the lines do not add up to the amount. */
 function regnestykke(c, d, f0, na, dt, holdt) {
   const L = [], dReg = na.reg - f0.reg, dF = na.forste - f0.forste, dM = na.mult - f0.mult, dD = na.dag - f0.dag;
-  const dN = (na.niva - f0.niva) - holdt.niva, dB = (na.merker - f0.merker) - holdt.merker;
+  const dN = (na.niva - f0.niva) - holdt.niva, dB = (na.merker - f0.merker) - holdt.merker, dO = (na.oppdrag - f0.oppdrag) - (holdt.oppdrag || 0);
   const s = c ? c.stjerner : 0, x = c && multAv(c.key), xf = x && d && d >= x.dato ? x.faktor : 1;
   const en = !!(c && d && dReg === FRO.registrering * s);          // one bird, one day
   const inn = en && dM === (xf - 1) * (dReg + dF);                // the multiplier belongs to these lines
@@ -4007,6 +4197,7 @@ function regnestykke(c, d, f0, na, dt, holdt) {
     L.push({ t: !del.length ? 'Glinskant' : del.length === 1 ? `${del[0]}kant` : `${del.slice(0, -1).map((x, k) => (k ? x.toLowerCase() : x) + '-').join(', ')} og ${del[del.length - 1].toLowerCase()}kant`, v: dN });
   }
   if (dB > 0) L.push({ t: 'Merker', v: dB });
+  if (dO > 0) L.push({ t: 'Oppdrag', v: dO });
   return L.reduce((a, l) => a + l.v, 0) === dt ? L : [];
 }
 /* after a registration: the seeds it gave fly to the counter */
@@ -4014,13 +4205,14 @@ function froEffekt(c, f0, d) {
   froNullstill();
   const na = froRegnskap();
   // the celebrations this action set off keep their own seeds (never more than the action gave)
-  let niva = Math.max(0, na.niva - f0.niva), merk = Math.max(0, na.merker - f0.merker);
-  const holdt = { niva: 0, merker: 0 };                     // what waits for the celebrations
+  let niva = Math.max(0, na.niva - f0.niva), merk = Math.max(0, na.merker - f0.merker), opp = Math.max(0, na.oppdrag - f0.oppdrag);
+  const holdt = { niva: 0, merker: 0, oppdrag: 0 };         // what waits for the celebrations
   festKo.forEach(f => {
     if (!f.ny) return;
     f.ny = false;
     if (f.type === 'niva') { f.fro = Math.min(f.fro, niva); niva -= f.fro; holdt.niva += f.fro; }
     else if (f.type === 'merke') { f.fro = Math.min(f.fro, merk); merk -= f.fro; holdt.merker += f.fro; }
+    else if (f.type === 'oppdrag') { f.fro = Math.min(f.fro, opp); opp -= f.fro; holdt.oppdrag += f.fro; }
   });
   const dt = na.tjent - f0.tjent - (froParkert() - f0.parkert);
   if (dt > 0) froVent.push({ c, belop: dt, mot: 'fro', hendelse: true, linjer: regnestykke(c, d, f0, na, dt, holdt) }); else froSlipp();
@@ -4192,6 +4384,7 @@ $('#nullstillAlt').addEventListener('click', () => sporsmal({
   knapper: [{ tekst: 'Nullstill alt', pri: true, fn: () => {
     [Store, Tell, Vist, Kjop].forEach(x => x.replaceAll({}));
     tittelFeiret = 0; lsSet(TITTEL_KEY(), '0');
+    lsDel(OPPDRAG_KEY()); lsDel(OPPDRAG_SKJULT()); froNullstill(); paintOppdrag();
     froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
     STROM.liste = []; festKo.forEach(f => { f.fro = 0; }); $('#openFro').classList.remove('mottar');
     clearTimeout(plussT); plussAktive = 0; pillVent = false; festVentEl.hidden = true; plussEl.classList.remove('vis', 'ut'); plussEl.innerHTML = '';
@@ -4223,6 +4416,7 @@ function lukkOverste() {
   if (menyApen()) { lukkMeny(true); return; }
   if (openSheet && openSheet.id === 'statsSheet' && artVis) { lukkArt(); return; }
   if (openSheet === butikkSheet && butikkVelg) { butikkVelg = null; renderButikk(); return; }
+  if (openSheet && openSheet.id === 'introSheet') { introEsc(); return; }   // the same as Esc there
   if (openSheet) closeSheets();
 }
 let tilbakeVakt = false, tilbakeEgen = false, tilbakeT = null, synkT = null;
@@ -4294,7 +4488,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '5660099771';
+const APPVERSJON = 'a7a3153cd0';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
 const lsJson = (k, v) => { try { const x = JSON.parse(lsGet(k) || 'null'); return x == null ? v : x; } catch (e) { return v; } };
@@ -4382,31 +4576,119 @@ lagSpeil(Store, 'sett', 'user_id,art', (id, v) => ({ art: id, dager: v.dager }))
 lagSpeil(Tell, 'tellinger', 'user_id,id', (id, v) => ({ id, start: isoTid(v.start), slutt: v.slutt ? isoTid(v.slutt) : null, omrade: v.omrade || null, arter: v.arter }));
 lagSpeil(Kjop, 'kjop', 'user_id,id', (id, v) => ({ id, pris: v.pris, dato: v.dato, faktor: v.faktor || null, kort: v.kort || null }));
 
-/* ---- the nickname: a word, a bird and a number («Rask Kjøttmeis 42»). The words are stored, so the order of
-   the list does not matter; a word that is taken out shows as «Fuglevenn». Only add words ---- */
+/* ---- the username: free text with rules, or a suggestion made of a word, a bird and a number («Rask Kjøttmeis 42»).
+   Stored as { navn, forslag }; forslag: an untouched suggestion, which may get another number by itself if it is
+   taken. The older form { ord, fugl, tall } is read as a suggestion. The same rules and word filter as in Supabase
+   (supabase/fuglekort.sql); the database has the last word ---- */
 const ORD = ['rask', 'kvikk', 'modig', 'glad', 'lur', 'sprek', 'blid', 'stille', 'nysgjerrig', 'tapper', 'flink', 'lun',
   'snill', 'klok', 'rolig', 'ivrig', 'kjapp', 'spretten', 'munter', 'lystig', 'våken', 'sterk', 'liten', 'stor', 'gylden',
   'fjærlett', 'vill', 'fri', 'tøff', 'smart', 'heldig', 'frisk', 'trofast', 'sindig', 'myk', 'livlig', 'travel', 'fornøyd',
   'staselig', 'eventyrlysten'];
 const tilfeldig = a => a[Math.floor(Math.random() * a.length)];
-const tilfeldigNavn = () => ({ ord: tilfeldig(ORD), fugl: tilfeldig(BIRDS).key, tall: 1 + Math.floor(Math.random() * 99) });
-const kallenavn = () => { const n = lsJson(DK('kallenavn'), null); return n && n.ord ? n : null; };
-const lagreKallenavn = n => lsSet(DK('kallenavn'), JSON.stringify({ ord: n.ord, fugl: n.fugl, tall: n.tall }));
+const NAVN_B = 'A-Za-zÆØÅæøåÄÖÜäöüÉÈÊéèêÁÀáàÓÒÔóòôÚúÍíÑñÇç';
+const NAVN_RE = new RegExp(`^[${NAVN_B}0-9](?:[${NAVN_B}0-9 .-]*[${NAVN_B}0-9.])?$`), BOKST_RE = new RegExp(`[${NAVN_B}]`, 'g');
+const rensNavn = t => String(t || '').replace(/\s+/g, ' ').trim();
+const oversett = (t, fra, til) => [...t].map(ch => { const i = fra.indexOf(ch); return i < 0 ? ch : til[i]; }).join('');
+const navnNokkel = t => oversett(t, 'ÆØÅÄÖÜÉÈÊÁÀÓÒÔÚÍÑÇ', 'æøåäöüéèêáàóòôúíñç').toLowerCase();     // = navn_nokkel
+const navnOrd = t => oversett(navnNokkel(t), '013457äöüéèêáàóòôúíñç', 'oieastæøueeeaaooouinc')        // = navn_ord
+  .replace(/[^a-zæøå]+/g, ' ').replace(/(.)\1+/g, '$1').trim();
+/* words that cannot be in a name (= only as a word of its own); the same list as stengte_ord in the SQL */
+const STENGTE = ['faen', 'fanden', 'satan', 'helvete', 'jævl', 'jævel', 'javl', 'jaevl', 'fitte', 'fitta', '=kuk', 'kuksug',
+  '=pikk', 'pikkhode', '=pule', 'puling', 'knull', '=hore', '=hora', 'horunge', 'horebukk', 'ludder', 'tispe', 'drittsekk',
+  'rasshøl', 'rasshol', 'rævhøl', 'rævhol', '=homse', '=mongo', 'neger', 'negre', 'nigger', 'nigga', 'nazi', 'hitler', 'siegheil',
+  '=pedo', 'pedofil', 'porno', 'porn', '=sex', 'fuck', '=fck', 'shit', 'cunt', 'bitch', 'whore', 'dick', 'penis', 'vagina',
+  '=fag', 'retard', 'rapist', '=kys'].map(x => ({ o: navnOrd(x.replace(/^=/, '')).replace(/ /g, ''), helt: x[0] === '=' }));
+function stengtNavn(t) {
+  const o = navnOrd(t), sq = o.replace(/ /g, ''), w = o.split(' ');
+  return STENGTE.some(x => x.o && (x.helt ? w.includes(x.o) : sq.includes(x.o)));
+}
+function navnFeil(t) {
+  t = rensNavn(t);
+  if (t.length < 3) return 'Navnet må ha minst 3 tegn.';
+  if (t.length > 30) return 'Navnet kan ha høyst 30 tegn.';
+  if (!NAVN_RE.test(t)) return 'Bruk bare bokstaver, tall, mellomrom, bindestrek og punktum.';
+  if ((t.match(BOKST_RE) || []).length < 2) return 'Navnet må ha minst to bokstaver.';
+  if (stengtNavn(t)) return 'Det navnet kan ikke brukes. Velg et annet.';
+  return null;
+}
+function tilfeldigNavn() {
+  for (let k = 0; k < 60; k++) {
+    const t = `${stor(tilfeldig(ORD))} ${tilfeldig(BIRDS).navn} ${1 + Math.floor(Math.random() * 99)}`;
+    if (!navnFeil(t)) return { navn: t, forslag: true };
+  }
+  return { navn: `Fuglevenn ${1 + Math.floor(Math.random() * 99)}`, forslag: true };
+}
+/* «Kjøttmeis» → «Kjøttmeis 2», «Kjøttmeis 2» → «Kjøttmeis 3»; or the number given */
+function medNummer(navn, tall) {
+  const m = /^(.*\S) (\d{1,3})$/.exec(navn), base = m ? m[1] : navn, nr = tall != null ? tall : m ? +m[2] + 1 : 2;
+  return `${base.slice(0, 30 - String(nr).length - 1).trim()} ${nr}`;
+}
+/* the older names on the board and on the device: word, bird and number */
 function navnTekst(n) {
   const i = n && BY_KEY[n.fugl];
   return n && ORD.includes(n.ord) && i != null && !CARDS[i].bonus ? `${stor(n.ord)} ${CARDS[i].navn} ${n.tall}` : `Fuglevenn${n && n.tall ? ' ' + n.tall : ''}`;
 }
+const lagreKallenavn = n => lsSet(DK('kallenavn'), JSON.stringify({ navn: n.navn, forslag: !!n.forslag }));
+function kallenavn() {
+  const n = lsJson(DK('kallenavn'), null);
+  if (!n) return null;
+  if (typeof n.navn === 'string' && n.navn) return n;
+  if (n.ord) { let m = { navn: navnTekst(n), forslag: true }; if (navnFeil(m.navn)) m = tilfeldigNavn(); lagreKallenavn(m); return m; }
+  return null;
+}
+const visNavn = x => x.navn || (x.ord ? navnTekst(x) : 'Fuglevenn');          // a row on the board
+const mittNavn = () => { const n = kallenavn(); return n ? n.navn : 'Fuglevenn'; };
+const navnStengt = () => { const n = kallenavn(), s = lsGet(DK('navn-stengt')); return !!(n && s && s === n.navn); };
+function settNavn(navn, forslag) {
+  lagreKallenavn({ navn, forslag }); lsDel(DK('navn-stengt')); lsDel(DK('navn-melding'));
+  planleggSending(200); si(`Brukernavnet ditt er ${navn}.`);
+  if (openSheet && openSheet.id === 'statsSheet') { const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; }
+  paintDeling();
+}
+/* is the name free? «ledig», «tatt» (by someone else) or «stengt»; null without a network */
+async function navnStatus(navn) {
+  if (!navigator.onLine) return null;
+  try {
+    const okt = lsGet(DK('okt')) ? await hentOkt(false).catch(() => null) : null;
+    const r = await supa('/rest/v1/rpc/navn_status', { metode: 'POST', data: { navn }, okt });
+    return r.ok ? await r.json() : null;
+  } catch (e) { return null; }
+}
 const oppsummering = () => { const t = froTotalt(); return { fro: Math.max(0, Math.min(1e8, Math.round(t))), arter: seenCount(), dager: Math.min(40000, nokkeltall().obsDager), tittel: tittelAv(t) }; };
 
-/* ---- what is sent besides the copy: the row on the board and the profile ---- */
+/* ---- what is sent besides the copy: the row on the board, the reports and the profile ---- */
+/* the row on the board. A taken name gets a number; a name that is not allowed (or reported by three) is sent
+   empty and the person is asked for a new one. Gives true when the row was sent now */
 async function sendTavlerad(okt) {
-  const rad = { ...kallenavn(), ...oppsummering() };
-  if (lsGet(DK('tavle-sendt')) === okt.uid + JSON.stringify(rad)) return;
-  for (let forsok = 0; forsok < 8; forsok++) {
+  let n = kallenavn(); if (!n) { n = tilfeldigNavn(); lagreKallenavn(n); }
+  const rad = { navn: navnStengt() ? null : n.navn, ord: null, fugl: null, tall: null, ...oppsummering() };
+  if (lsGet(DK('tavle-sendt')) === okt.uid + JSON.stringify(rad)) return false;
+  const forst = n.navn;
+  for (let forsok = 0; forsok < 10; forsok++) {
     const { r } = await supaSom('/rest/v1/ledertavle?on_conflict=user_id', { metode: 'POST', data: [{ user_id: okt.uid, ...rad }], hoder: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
-    if (r && r.ok) { lsSet(DK('tavle-sendt'), okt.uid + JSON.stringify(rad)); return; }
-    if (r && r.status === 409) { rad.tall = 1 + Math.floor(Math.random() * 99); lagreKallenavn(rad); continue; }   // the name is taken: another number
+    if (r && r.ok) { lsSet(DK('tavle-sendt'), okt.uid + JSON.stringify(rad)); return true; }
+    const feil = r && r.status === 400 ? await r.json().catch(() => ({})) : {};
+    if (r && r.status === 409 && rad.navn) {                 // the name is taken
+      n = n.forslag ? { navn: medNummer(n.navn, 1 + Math.floor(Math.random() * 99)), forslag: true } : { navn: medNummer(n.navn), forslag: false };
+      lagreKallenavn(n); rad.navn = n.navn;
+      if (!n.forslag) lsSet(DK('navn-melding'), JSON.stringify({ fra: forst, til: n.navn }));
+      continue;
+    }
+    if (feil.message === 'navn_stengt' && rad.navn) { lsSet(DK('navn-stengt'), rad.navn); rad.navn = null; continue; }
+    if (/navn_form/.test(feil.message || '') && rad.navn) { n = tilfeldigNavn(); lagreKallenavn(n); rad.navn = n.navn; continue; }
     throw new Error(`ledertavle ${r && r.status}`);
+  }
+  return false;
+}
+/* names reported on the board (hidden for the one who reported at once; three reports and the name is shut) */
+const skjulte = () => lsJson(DK('skjulte'), {});
+const lagreSkjulte = s => { if (Object.keys(s).length) lsSet(DK('skjulte'), JSON.stringify(s)); else lsDel(DK('skjulte')); };
+async function sendRapporter() {
+  for (const om of lsJson(DK('rapporter'), [])) {
+    const { r } = await supaSom('/rest/v1/rapporter', { metode: 'POST', data: [{ om }], hoder: { Prefer: 'return=minimal' } });
+    if (!r || (!r.ok && ![400, 403, 409].includes(r.status))) throw new Error('rapporter ' + (r && r.status));
+    const igjen = lsJson(DK('rapporter'), []).filter(x => x !== om);   // sent, or not possible (already reported, no name)
+    if (igjen.length) lsSet(DK('rapporter'), JSON.stringify(igjen)); else lsDel(DK('rapporter'));
   }
 }
 async function sendProfil(okt) {
@@ -4424,39 +4706,44 @@ async function sendAlt() {
   if (lsGet(DK('slett'))) { await slettPaServer(); if (lsGet(DK('slett'))) return; }
   if (!deler() || !navigator.onLine) return;
   sender = true;
+  let ny = false;
   try {
     const okt = await hentOkt();
     if (lsGet(DK('delt-id')) !== okt.uid) {           // a new anonymous user: everything on the device, once
       SPEIL.forEach(sp => sp.alt()); lsSet(DK('delt-id'), okt.uid); lsDel(DK('tavle-sendt')); lsDel(DK('profil-sendt'));
     }
-    await sendTavlerad(okt);
+    ny = await sendTavlerad(okt);
+    await sendRapporter();
     await sendProfil(okt);
     for (const sp of SPEIL) await sp.send(okt);
     lsSet(DK('sist-sendt'), String(Date.now()));
-    if (statsFane === 'tavle' && !lsGet(DK('tavle'))) hentTavle();
   } catch (e) { /* no network, or the tables are not made yet: tried again later */ }
-  finally { sender = false; paintDeling(); }
+  finally {
+    sender = false; paintDeling();
+    // the board open: fetched again when the row on it has changed (a new name, more seeds)
+    if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle' && (ny || !lsGet(DK('tavle')))) hentTavle();
+  }
 }
 /* turning sharing on and off. Off deletes the anonymous user in Supabase (and with it everything shared); without
    a network that waits, and nothing is sent meanwhile */
 function startDeling() {
   lsSet(DK('deling'), 'ja');
   if (!kallenavn()) lagreKallenavn(tilfeldigNavn());
-  planleggSending(300); paintDeling();
+  planleggSending(300); paintDeling(); paintOppdrag();
 }
 function stoppDeling() {
   lsSet(DK('deling'), 'nei');
   SPEIL.forEach(sp => sp.tom());
-  ['tavle-sendt', 'profil-sendt', 'tavle', 'delt-id', 'sist-sendt'].forEach(k => lsDel(DK(k)));
+  ['tavle-sendt', 'profil-sendt', 'tavle', 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding'].forEach(k => lsDel(DK(k)));
   if (lsGet(DK('okt'))) { lsSet(DK('slett'), '1'); slettPaServer(); }
-  paintDeling();
+  paintDeling(); paintOppdrag();
 }
 async function slettPaServer() {
   if (sletter) return; sletter = true;
   try {
     const { r } = await supaSom('/rest/v1/rpc/slett_meg', { metode: 'POST', data: {} }, false);
     if (r && !r.ok) throw new Error('slett_meg ' + r.status);
-    ['okt', 'slett', 'kallenavn'].forEach(k => lsDel(DK(k)));          // deleted (or there was nothing left to delete)
+    ['okt', 'slett'].forEach(k => lsDel(DK(k)));          // deleted (or there was nothing left to delete); the name is kept
     si('Det du har delt, er slettet fra ledertavlen og statistikken.');
   } catch (e) { /* tried again when there is a network */ }
   finally { sletter = false; paintDeling(); }
@@ -4478,7 +4765,7 @@ async function hentTavle() {
   henter = true; paintDeling();
   try {
     const okt = lsGet(DK('okt')) ? await hentOkt(false).catch(() => null) : null;
-    const r = await supa('/rest/v1/ledertavle?select=user_id,ord,fugl,tall,fro,arter,dager,tittel&order=fro.desc,oppdatert.asc&limit=50', { okt, hoder: { Prefer: 'count=exact' } });
+    const r = await supa('/rest/v1/ledertavle?select=user_id,navn,ord,fugl,tall,fro,arter,dager,tittel&order=fro.desc,oppdatert.asc&limit=50', { okt, hoder: { Prefer: 'count=exact' } });
     if (!r.ok) throw new Error('tavle ' + r.status);
     const rader = await r.json(), antall = tallFra(r.headers.get('content-range')) || rader.length;
     let plass = null;
@@ -4490,6 +4777,10 @@ async function hentTavle() {
     }
     lsSet(DK('tavle'), JSON.stringify({ rader, antall, plass, hentet: Date.now() }));
     tavleFeil = false;
+    // my row without a name: shut by reports since it was sent (or sent by an older version): sent again
+    const meg = i >= 0 ? rader[i] : null;
+    if (meg && !meg.navn && kallenavn() && !navnStengt() && lsGet(DK('tavle-sendt'))) { lsDel(DK('tavle-sendt')); planleggSending(800); }
+    if (plass && openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') oppdragGjort('tavle');   // «Se deg selv på ledertavlen»
   } catch (e) { tavleFeil = true; }
   finally { henter = false; paintDeling(); }
 }
@@ -4497,72 +4788,91 @@ setInterval(() => { if (openSheet && openSheet.id === 'statsSheet' && statsFane 
 function tavleHtml() {
   if (lsGet(DK('slett'))) return `<div class="s-sec"><h3>Ledertavle</h3><p class="cap">Det du har delt, slettes så snart du har nett. Imens vises ikke ledertavlen.</p></div>`;
   if (!deler()) return `<div class="s-sec tv-av"><h3>Ledertavle</h3>
-    <p class="cap">Du deler ikke, og ser derfor ikke ledertavlen. Når du deler, vises du med et kallenavn sammen med frø, arter, observasjonsdager og tittel, og observasjonene dine sendes anonymt til statistikk over hagefuglene.</p>
+    <p class="cap">Du deler ikke, og ser derfor ikke ledertavlen. Når du deler, vises du med brukernavnet ditt sammen med frø, arter, observasjonsdager og tittel, og observasjonene dine sendes anonymt til statistikk over hagefuglene.</p>
     <div class="row"><button class="btn pri" data-del-pa>Del og se ledertavlen</button></div></div>`;
-  const c = lsJson(DK('tavle'), null), uid = (lsJson(DK('okt'), null) || {}).uid, n = kallenavn(), o = oppsummering();
+  const c = lsJson(DK('tavle'), null), uid = (lsJson(DK('okt'), null) || {}).uid, o = oppsummering(), sk = skjulte();
   const status = henter && !c ? 'Henter tavlen …' : (tavleFeil || !navigator.onLine) ? (c ? `Uten nett – viser tavlen fra ${naarTekst(c.hentet)}` : 'Tavlen hentes når du har nett.') : c ? `Oppdatert ${naarTekst(c.hentet)}` : 'Henter tavlen …';
-  const rad = (x, nr, meg) => `<li class="${meg ? 'meg' : ''}"><span class="tv-nr">${nr}</span><span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>
-    <span class="tv-t"><b>${esc(navnTekst(x))}</b><small>${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span><span class="tv-fro">${fmtFro(x.fro)}</span></li>`;
+  const innhold = (x, nr, meg) => { const skjult = !meg && sk[x.user_id] != null, navn = meg ? (navnStengt() ? 'Fuglevenn' : mittNavn()) : skjult ? 'Skjult navn' : visNavn(x);
+    return `<span class="tv-nr">${nr}</span><span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>
+    <span class="tv-t ${skjult ? 'skjult' : ''}"><b>${esc(navn)}</b><small>${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span><span class="tv-fro">${fmtFro(x.fro)}</span>`; };
+  const rad = (x, nr, meg) => meg ? `<li class="meg"><div class="tv-rad">${innhold(x, nr, true)}</div></li>`
+    : `<li><button class="tv-rad" data-tavle-rad="${esc(x.user_id)}" aria-haspopup="dialog">${innhold(x, nr, false)}</button></li>`;
   const rader = c ? c.rader : [], erMeg = rader.some(x => x.user_id === uid);
+  const melding = lsJson(DK('navn-melding'), null);
+  const varsel = navnStengt() ? `<div class="tv-varsel" role="status">Navnet «${esc(mittNavn())}» kan ikke brukes på ledertavlen, fordi det er rapportert eller ikke tillatt. Til du velger et nytt, står du som «Fuglevenn».<button class="btn" data-bytt-navn>Velg nytt navn</button></div>`
+    : melding ? `<div class="tv-varsel" role="status">«${esc(melding.fra)}» var tatt, så nå heter du «${esc(melding.til)}». Du kan bytte navn når du vil.<button class="textbtn" data-lukk-melding>OK</button></div>` : '';
   return `<div class="s-sec">
     <div class="tv-meg"><span class="ti" style="${tittelPos(o.tittel)}" aria-hidden="true"></span>
-      <span class="tv-t"><b>${esc(navnTekst(n))}</b><small>${c && c.plass ? `Nr. ${c.plass} av ${c.antall}` : 'Plassen din kommer når tavlen er hentet'} · ${fmtFro(o.fro)} frø</small></span>
+      <span class="tv-t"><b>${esc(mittNavn())}</b><small>${c && c.plass ? `Nr. ${c.plass} av ${c.antall}` : 'Plassen din kommer når tavlen er hentet'} · ${fmtFro(o.fro)} frø</small></span>
       <button class="btn" data-bytt-navn>Bytt navn</button></div>
+    ${varsel}
     <h3 style="margin-top:22px">Ledertavle <span class="h3n">topp ${Math.min(50, rader.length || 50)}</span></h3>
-    ${rader.length ? `<ol class="tavle">${rader.map((x, i) => rad(x, i + 1, x.user_id === uid)).join('')}${!erMeg && c && c.plass ? `<li class="tv-mer" aria-hidden="true">…</li>${rad({ ...n, ...o }, c.plass, true)}` : ''}</ol>` : ''}
+    ${rader.length ? `<ol class="tavle">${rader.map((x, i) => rad(x, i + 1, x.user_id === uid)).join('')}${!erMeg && c && c.plass ? `<li class="tv-mer" aria-hidden="true">…</li>${rad({ ...o }, c.plass, true)}` : ''}</ol>` : ''}
     <p class="cap tv-status" role="status">${esc(status)}</p>
+    ${rader.length > 1 ? '<p class="cap">Trykk på et navn for å rapportere det.</p>' : ''}
     <div class="row"><button class="textbtn tv-slett" data-slett-meg>Slett meg fra ledertavlen</button></div>
   </div>`;
 }
-
-/* ---- the first time: what is shared, with an optional postcode. Closing it is the same as «Greit» ---- */
-function visDelingsinfo() {
-  const eks = kallenavn() || tilfeldigNavn(); lagreKallenavn(eks);
-  const pn = lsGet(DK('postnr')) || '';
-  const ok = () => { lagrePostnr($('#infoPostnr') ? $('#infoPostnr').value : pn); startDeling(); };
+/* a row on the board: the person's numbers, and reporting the name (or showing a name hidden by you) */
+function tavleRad(uid) {
+  const c = lsJson(DK('tavle'), null), i = c ? c.rader.findIndex(x => x.user_id === uid) : -1; if (i < 0) return;
+  const x = c.rader[i], skjult = skjulte()[uid] != null, navn = visNavn(x), t = TITLER[Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0))];
   sporsmal({
-    tittel: 'Ledertavle og statistikk',
-    tekst: `<p>Du kommer på en felles ledertavle som «${esc(navnTekst(eks))}», med frø, arter, observasjonsdager og tittel. Kallenavnet kan du bytte.</p>
-      <p>Observasjonene dine (art og dato), tellingene og kjøpene sendes også anonymt til en felles database, så vi kan lage statistikk over hagefuglene. Ingen navn, e-post eller posisjon.</p>
-      <label class="dlg-felt">Postnummer <small>valgfritt, bare til statistikk</small><input id="infoPostnr" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870" value="${esc(pn)}"></label>
-      <p class="cap">Du kan endre dette under Innstillinger.</p>`,
-    knapper: [{ tekst: 'Greit', pri: true, fn: ok }, { tekst: 'Ikke del', fn: () => sporsmal({
-      tittel: 'Ikke dele?',
-      tekst: 'Da får du ikke se ledertavlen. Du kan slå på delingen senere under Innstillinger.',
-      knapper: [{ tekst: 'Ikke del', pri: true, fn: () => { lsSet(DK('deling'), 'nei'); paintDeling(); si('Du deler ikke. Det kan du endre under Innstillinger.'); } },
-        { tekst: 'Tilbake', fn: visDelingsinfo }],
-      avbryt: visDelingsinfo,
-    }) }],
-    avbryt: ok,
+    tittel: skjult ? 'Skjult navn' : navn,
+    tekst: `<p>Nr. ${i + 1} · ${esc(t.navn)}<br>${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'observasjonsdag', 'observasjonsdager')} · ${fmtFro(x.fro)} frø</p>${skjult ? '<p>Du har rapportert og skjult navnet.</p>' : ''}`,
+    knapper: [{ tekst: 'Lukk', pri: true },
+      skjult ? { tekst: 'Vis navnet igjen', fn: () => { const s = skjulte(); delete s[uid]; lagreSkjulte(s); paintDeling(); } }
+        : { tekst: 'Rapporter navnet', fn: () => rapporterSporsmal(uid, navn) }],
   });
 }
-function sporOmDeling(forsok = 0) {
-  if (delingValg() != null) return;
-  const opptatt = dlgApen || festAapen || festKo.length || openSheet || !$('#festVent').hidden;
-  if (opptatt) { if (forsok < 120) setTimeout(() => sporOmDeling(forsok + 1), 1000); return; }
-  visDelingsinfo();
-}
-/* choosing the nickname: the word, the bird and the number, or one at random */
-function byttNavn() {
-  const n = kallenavn() || tilfeldigNavn();
-  const fugler = BIRDS.slice().sort((a, b) => a.navn.localeCompare(b.navn, 'nb'));
-  const valg = (id, liste, v) => `<select id="${id}">${liste.map(([k, t]) => `<option value="${esc(String(k))}" ${String(k) === String(v) ? 'selected' : ''}>${esc(t)}</option>`).join('')}</select>`;
+function rapporterSporsmal(uid, navn) {
   sporsmal({
-    tittel: 'Bytt kallenavn',
-    tekst: `<div class="nv-valg"><label>Ord${valg('nvOrd', ORD.map(o => [o, stor(o)]), n.ord)}</label>
-      <label>Fugl${valg('nvFugl', fugler.map(c => [c.key, c.navn]), n.fugl)}</label>
-      <label>Tall${valg('nvTall', Array.from({ length: 99 }, (_, i) => [i + 1, i + 1]), n.tall)}</label></div>
-      <button type="button" class="textbtn" id="nvTilf">Tilfeldig</button>`,
-    knapper: [{ tekst: 'Lagre', pri: true, fn: () => {
-      const ny = { ord: $('#nvOrd').value, fugl: $('#nvFugl').value, tall: +$('#nvTall').value };
-      lagreKallenavn(ny); planleggSending(200); si(`Kallenavnet ditt er ${navnTekst(ny)}.`); paintDeling();
+    tittel: 'Rapportere navnet?',
+    tekst: `<p>«${esc(navn)}» skjules for deg med en gang. Hvis flere rapporterer det samme navnet, fjernes det fra ledertavlen.</p>`,
+    knapper: [{ tekst: 'Rapporter', pri: true, fn: () => {
+      const s = skjulte(); s[uid] = navn; lagreSkjulte(s);
+      const ko = lsJson(DK('rapporter'), []); if (!ko.includes(uid)) { ko.push(uid); lsSet(DK('rapporter'), JSON.stringify(ko)); }
+      planleggSending(400); paintDeling(); si(`Takk. «${navn}» er rapportert og skjult for deg.`);
     } }, { tekst: 'Avbryt' }],
   });
 }
+
+/* ---- choosing the username: in the question box, with a new suggestion and the rules. Saved when it is free ---- */
+function byttNavn() {
+  const n = kallenavn() || tilfeldigNavn();
+  sporsmal({
+    tittel: 'Bytt brukernavn',
+    tekst: `${navnStengt() ? '<p class="navn-feil">Navnet ditt er rapportert eller ikke tillatt, og vises ikke på ledertavlen. Velg et nytt.</p>' : ''}
+      <div class="navn-rad"><input class="felt-inp navn-inp" id="nvNavn" value="${esc(n.navn)}" data-forslag="${n.forslag ? esc(n.navn) : ''}" maxlength="30" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Brukernavn" aria-describedby="nvFeil nvRegel"><button type="button" class="btn" id="nvTilf">Nytt forslag</button></div>
+      <p class="navn-feil" id="nvFeil" role="alert"></p>
+      <p class="cap navn-regel" id="nvRegel">Vises på ledertavlen${deler() ? '' : ' når du deler'}. Velg et vennlig navn, og ikke bruk ditt ekte navn. Støtende navn kan bli skjult.</p>`,
+    knapper: [{ tekst: 'Lagre', pri: true, sjekk: lagreNyttNavn }, { tekst: 'Avbryt' }],
+  });
+}
+/* «Lagre»: the rules here, then (when sharing) whether the name is free. False keeps the box open */
+function lagreNyttNavn(knapp) {
+  const inp = $('#nvNavn'), t = rensNavn(inp.value), feil = navnFeil(t), n = kallenavn(), forslag = t === inp.dataset.forslag;
+  const vis = m => { $('#nvFeil').textContent = m; inp.setAttribute('aria-invalid', 'true'); inp.focus(); };
+  if (feil) { vis(feil); return false; }
+  if (n && t === n.navn && !navnStengt()) return true;      // unchanged
+  if (!deler() || !navigator.onLine) { settNavn(t, forslag); return true; }
+  knapp.disabled = true; knapp.textContent = 'Sjekker …';
+  navnStatus(t).then(st => {
+    if (!dlgApen || $('#nvNavn') !== inp) return;
+    knapp.disabled = false; knapp.textContent = 'Lagre';
+    if (st === 'tatt') vis(`«${t}» er tatt. Prøv for eksempel «${medNummer(t)}».`);
+    else if (st === 'stengt') vis('Det navnet kan ikke brukes. Velg et annet.');
+    else { settNavn(t, forslag); lukkDlg(); }
+  });
+  return false;
+}
 dlgEl.addEventListener('click', e => {
   if (e.target.id !== 'nvTilf') return;
-  const t = tilfeldigNavn(); $('#nvOrd').value = t.ord; $('#nvFugl').value = t.fugl; $('#nvTall').value = String(t.tall);
+  const f = tilfeldigNavn(), inp = $('#nvNavn'); inp.value = f.navn; inp.dataset.forslag = f.navn;
+  inp.removeAttribute('aria-invalid'); $('#nvFeil').textContent = '';
 });
+dlgEl.addEventListener('input', e => { if (e.target.id === 'nvNavn') { e.target.removeAttribute('aria-invalid'); $('#nvFeil').textContent = ''; } });
+dlgEl.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'nvNavn') { e.preventDefault(); const b = dlgEl.querySelector('.btn.pri'); if (b && !b.disabled) b.click(); } });
 function slettMegSporsmal() {
   sporsmal({
     tittel: 'Slutte å dele?',
@@ -4571,7 +4881,133 @@ function slettMegSporsmal() {
   });
 }
 
-/* ---- Innstillinger: sharing on and off, the postcode, and what is waiting ---- */
+/* ---- the first time: a short introduction (four cards), then the username and the postcode, which also says
+   what is shared. Existing users who have not answered get the last step only; turning sharing on later shows it
+   too, so the name on the board is seen first. From the menu: the four cards again ---- */
+const introEl = $('#introSheet'), introSpor = $('#introSpor'), introPrikker = $('#introPrikker'), introBar = $('#introBar');
+let introModus = null, introTilbake = null, introRaf = 0;
+const introKort = key => CARDS[BY_KEY[key] != null ? BY_KEY[key] : BY_KEY[BIRDS[0].key]];
+const INTRO = [
+  { tittel: 'Velkommen til Fuglekort', tekst: 'Bla gjennom fuglekort for de mest kjente fuglene i Norge. Sveip mellom kortene, eller søk på navn eller kjennetegn.',
+    bilde: () => `<div class="intro-vifte">${['cyanistes-caeruleus', 'erithacus-rubecula', 'parus-major'].map((k, j) => `<img src="${esc(bildeAv(introKort(k)))}" alt="" style="--j:${j - 1}">`).join('')}</div>` },
+  { tittel: 'Så du en fugl?', tekst: 'Trykk «Sett» på kortet. Registrer hver dag og få belønninger.',
+    bilde: () => { const c = introKort('parus-major'), [bx, by, bw, bh] = c.sett.boks, P = v => (v * 100).toFixed(3) + '%';
+      return `<figure class="intro-kort"><img src="${esc(bildeAv(c))}" alt="">
+        <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
+        <span class="idag-merke" aria-hidden="true" style="left:${P(BILDEFELT.x + 0.022)};top:${P(BILDEFELT.y + BILDEFELT.h - 0.058)}">${CHECK}Sett i dag</span></figure>`; } },
+  { tittel: 'Frø og titler', tekst: 'Du får frø for hver registrering, mest for nye og sjeldne arter. Klarer du å oppnå tittelen Fuglekonge?',
+    bilde: () => `<span class="ti intro-konge" style="${tittelPos(TITLER.length - 1)}" role="img" aria-label="${TITLER[TITLER.length - 1].navn}"></span>` },
+  { tittel: 'Min fugleliste', tekst: 'Her finner du merkene dine, hagetellingen og ledertavlen.',
+    bilde: () => `<div class="intro-ikoner"><span class="intro-ik"><i>10</i><b>Merker</b></span><span class="intro-ik"><i>${MIKON.telling}</i><b>Hagetelling</b></span>
+      <span class="intro-ik"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20V9h6v11M3 20v-7h6M15 20v-4h6v4M2 20h20"/></svg></i><b>Ledertavle</b></span></div>` },
+];
+function navnSideHtml(modus) {
+  const n = kallenavn() || tilfeldigNavn(), pn = lsGet(DK('postnr')) || '', pa = modus === 'slaPa';
+  return `<section class="intro-side navn-side" data-s="navn" aria-labelledby="introTnavn"><div class="navn-inn">
+    <h2 id="introTnavn" tabindex="-1">Velg brukernavn</h2>
+    <label class="felt" for="inNavn">Brukernavn</label>
+    <div class="navn-rad"><input class="felt-inp navn-inp" id="inNavn" value="${esc(n.navn)}" data-forslag="${n.forslag ? esc(n.navn) : ''}" maxlength="30" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-describedby="inFeil inRegel"><button type="button" class="btn" id="inForslag">Nytt forslag</button></div>
+    <p class="navn-feil" id="inFeil" role="alert"></p>
+    <p class="cap navn-regel" id="inRegel">Vises på ledertavlen. Velg et vennlig navn, og ikke bruk ditt ekte navn. Støtende navn kan bli skjult.</p>
+    <label class="felt" for="inPostnr">Postnummer <small>valgfritt, bare til statistikk, vises ikke på tavlen</small></label>
+    <input class="felt-inp" id="inPostnr" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870" value="${esc(pn)}">
+    <p class="cap">Observasjonene dine (art og dato), tellingene og kjøpene sendes anonymt til en felles database, så vi kan lage statistikk over hagefuglene. Ingen e-post eller posisjon. ${pa ? '' : 'Du kan endre dette under Innstillinger.'}</p>
+    <div class="navn-knapper"><button class="btn pri" id="inStart">${pa ? 'Del og se ledertavlen' : 'Start'}</button><button class="textbtn" id="inIkke">${pa ? 'Avbryt' : 'Ikke del'}</button></div>
+  </div></section>`;
+}
+/* modus: 'forste' (the cards and the name), 'navn' (the name only), 'slaPa' (the name, to turn sharing on), 'vis' (the cards) */
+function visIntro(modus, tilbake = null) {
+  const sider = modus === 'forste' || modus === 'vis', navn = modus !== 'vis' || (delingValg() == null && !deler());
+  introModus = modus; introTilbake = tilbake;
+  introSpor.innerHTML = [...(sider ? INTRO.map((s, k) => `<section class="intro-side" data-s="${k}" aria-labelledby="introT${k}"><div class="intro-bilde">${s.bilde()}</div><h2 id="introT${k}" tabindex="-1">${s.tittel}</h2><p>${s.tekst}</p></section>`) : []),
+    ...(navn ? [navnSideHtml(modus)] : [])].join('');
+  introPrikker.innerHTML = introSpor.children.length > 1 ? [...introSpor.children].map(() => '<i></i>').join('') : '';
+  showSheet(introEl);
+  introSpor.scrollLeft = 0; paintIntro();
+  setTimeout(() => { const h = introSpor.querySelector('h2'); if (h) h.focus({ preventScroll: true }); }, 80);
+}
+const introIndeks = () => Math.round(introSpor.scrollLeft / Math.max(1, introSpor.clientWidth));
+function paintIntro() {
+  const k = introIndeks(), n = introSpor.children.length, side = introSpor.children[k], navnSide = !!side && side.dataset.s === 'navn';
+  [...introPrikker.children].forEach((p, j) => p.classList.toggle('na', j === k));
+  introEl.setAttribute('aria-label', side ? side.querySelector('h2').textContent : 'Slik virker appen');
+  $('#introHopp').classList.toggle('skjul', navnSide || k === n - 1);    // hidden, but keeping the dots in the middle
+  $('#introNeste').classList.toggle('skjul', navnSide);
+  $('#introHopp').tabIndex = $('#introHopp').classList.contains('skjul') ? -1 : 0; $('#introNeste').tabIndex = navnSide ? -1 : 0;
+  $('#introNeste').textContent = k === n - 1 ? 'Ferdig' : 'Neste';
+  introBar.classList.toggle('tom', navnSide && n === 1);
+  if (side && side.dataset.s === '1') side.querySelector('.intro-kort').classList.add('seen');   // the pen draws the tick
+}
+introSpor.addEventListener('scroll', () => { cancelAnimationFrame(introRaf); introRaf = requestAnimationFrame(paintIntro); }, { passive: true });
+function introTil(k) {
+  const s = introSpor.children[k]; if (!s) return;
+  introSpor.scrollTo({ left: s.offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  setTimeout(() => { const h = s.querySelector('h2'); if (h) h.focus({ preventScroll: true }); }, 380);
+}
+function lukkIntro() {
+  if (openSheet !== introEl) return;
+  const tilbake = introTilbake; introModus = null; introTilbake = null;
+  closeSheets(true);
+  if (tilbake) tilbake(); else menyBtn.focus();
+}
+$('#introNeste').addEventListener('click', () => { const k = introIndeks(); if (k >= introSpor.children.length - 1) lukkIntro(); else introTil(k + 1); });
+$('#introHopp').addEventListener('click', () => { if (introSpor.lastElementChild.dataset.s === 'navn') introTil(introSpor.children.length - 1); else lukkIntro(); });
+$('#openIntro').addEventListener('click', () => visIntro('vis'));
+function introFeil(m, sel = '#inNavn') { $('#inFeil').textContent = m; const f = $(sel); f.setAttribute('aria-invalid', 'true'); f.focus(); }
+/* «Start»: the name by the rules and free (when there is a network), the postcode, and sharing on */
+async function introStart() {
+  const inp = $('#inNavn'), t = rensNavn(inp.value), feil = navnFeil(t), forslag = t === inp.dataset.forslag;
+  if (feil) { introFeil(feil); return; }
+  const pn = $('#inPostnr').value.trim();
+  if (pn && !/^\d{4}$/.test(pn)) { introFeil('Postnummeret må ha fire sifre.', '#inPostnr'); return; }
+  const knapp = $('#inStart'), tekst = knapp.textContent;
+  knapp.disabled = true; knapp.textContent = 'Sjekker navnet …';
+  const st = await navnStatus(t);
+  if (openSheet !== introEl) return;
+  knapp.disabled = false; knapp.textContent = tekst;
+  if (st === 'tatt') { introFeil(`«${t}» er tatt. Prøv for eksempel «${medNummer(t)}».`); return; }
+  if (st === 'stengt') { introFeil('Det navnet kan ikke brukes. Velg et annet.'); return; }
+  lagreKallenavn({ navn: t, forslag }); lsDel(DK('navn-stengt')); lsDel(DK('navn-melding'));
+  if (pn) lsSet(DK('postnr'), pn); else lsDel(DK('postnr'));
+  startDeling(); si(`Velkommen, ${t}!`);
+  lukkIntro();
+}
+function introIkke() {
+  if (introModus === 'slaPa') { lukkIntro(); return; }
+  sporsmal({
+    tittel: 'Ikke dele?',
+    tekst: 'Da får du ikke se ledertavlen. Du kan slå på delingen senere under Innstillinger.',
+    knapper: [{ tekst: 'Ikke del', pri: true, fn: () => { lsSet(DK('deling'), 'nei'); paintDeling(); paintOppdrag(); lukkIntro(); si('Du deler ikke. Det kan du endre under Innstillinger.'); } },
+      { tekst: 'Tilbake' }],
+  });
+}
+/* Esc: from the cards to the name; on the name the same as «Start» (or «Avbryt» when turning sharing on) */
+function introEsc() {
+  const side = introSpor.children[introIndeks()];
+  if (side && side.dataset.s !== 'navn') { if (introSpor.lastElementChild.dataset.s === 'navn') introTil(introSpor.children.length - 1); else lukkIntro(); }
+  else if (introModus === 'slaPa') lukkIntro();
+  else introStart();
+}
+introEl.addEventListener('click', e => {
+  if (e.target.id === 'inForslag') { const f = tilfeldigNavn(), inp = $('#inNavn'); inp.value = f.navn; inp.dataset.forslag = f.navn; inp.removeAttribute('aria-invalid'); $('#inFeil').textContent = ''; }
+  else if (e.target.id === 'inStart') introStart();
+  else if (e.target.id === 'inIkke') introIkke();
+});
+introEl.addEventListener('input', e => { if (e.target.id === 'inNavn' || e.target.id === 'inPostnr') { e.target.removeAttribute('aria-invalid'); $('#inFeil').textContent = ''; } });
+introEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.target.id === 'inNavn' || e.target.id === 'inPostnr')) { e.preventDefault(); introStart(); }
+  else if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && !e.target.closest('input')) { e.preventDefault(); introTil(introIndeks() + (e.key === 'ArrowRight' ? 1 : -1)); }
+});
+/* at start: once nothing else is showing. New on this device: the cards and the name; otherwise the name only */
+function sporOmStart(forsok = 0) {
+  if (delingValg() != null) return;
+  const opptatt = dlgApen || festAapen || festKo.length || openSheet || !$('#festVent').hidden;
+  if (opptatt) { if (forsok < 120) setTimeout(() => sporOmStart(forsok + 1), 1000); return; }
+  const ny = !Object.keys(Store.data).length && !Object.keys(Tell.data).length && !Object.keys(Kjop.data).length;
+  visIntro(ny ? 'forste' : 'navn');
+}
+
+/* ---- Innstillinger: sharing on and off, the postcode, hidden names, and what is waiting ---- */
 function paintDeling() {
   if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') { const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; }
   const b = $('#delBtn'); if (!b) return;
@@ -4582,14 +5018,32 @@ function paintDeling() {
   const n = SPEIL.reduce((a, sp) => a + sp.usendt().size, 0), sist = +lsGet(DK('sist-sendt')) || 0;
   $('#delStatus').textContent = slett ? 'Slettingen fullføres når du har nett.'
     : !pa ? 'Du deler ikke, og ser derfor ikke ledertavlen.'
-    : `Kallenavn: ${navnTekst(kallenavn())}. ` + (n ? `${flertall(n, 'endring', 'endringer')} venter på nett.` : sist ? `Sist sendt ${naarTekst(sist)}.` : 'Sendes når du har nett.');
+    : `Brukernavn: ${mittNavn()}. ` + (n ? `${flertall(n, 'endring', 'endringer')} venter på nett.` : sist ? `Sist sendt ${naarTekst(sist)}.` : 'Sendes når du har nett.');
+  const ns = Object.keys(skjulte()).length;
+  $('#skjulteInfo').hidden = !ns; $('#skjulteTekst').textContent = ns ? `Du har skjult ${flertall(ns, 'navn', 'navn')} på ledertavlen.` : '';
 }
-$('#delBtn').addEventListener('click', () => { if (deler()) slettMegSporsmal(); else if (!lsGet(DK('slett'))) startDeling(); });
+$('#delBtn').addEventListener('click', () => { if (deler()) slettMegSporsmal(); else if (!lsGet(DK('slett'))) visIntro('slaPa', openSettings); });
 $('#slettMeg').addEventListener('click', slettMegSporsmal);
+$('#visSkjulte').addEventListener('click', () => { lagreSkjulte({}); paintDeling(); si('De skjulte navnene vises igjen.'); });
 $('#postnrFelt').addEventListener('change', e => { if (lagrePostnr(e.target.value)) si(e.target.value.trim() ? 'Postnummeret er lagret.' : 'Postnummeret er fjernet.'); paintDeling(); });
 [Store, Tell, Kjop].forEach(x => x.on(() => { if (deler()) planleggSending(4000); }));
 addEventListener('online', () => { planleggSending(500); if (statsFane === 'tavle') hentTavle(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) planleggSending(1500); });
+
+/* ---- the next task, in a strip under the top ---- */
+function paintOppdrag() {
+  const el = $('#oppdragStripe'), ol = oppdragLogg(), igjen = oppdragListe().filter(o => !ol[o.id]);
+  el.hidden = !igjen.length || !!lsGet(OPPDRAG_SKJULT());
+  if (el.hidden) return;
+  const o = igjen[0];
+  $('#osTekst').innerHTML = `<small>Neste oppdrag</small><b>${esc(o.tekst)}</b>`;
+  $('#osFro').innerHTML = `${FROIKON}${fmtFro(oppdragFro(o))}`;
+  $('#osApne').setAttribute('aria-label', `Neste oppdrag: ${o.tekst}, ${fmtFro(oppdragFro(o))} frø. Vis alle oppdragene`);
+}
+$('#oppdragStripe .os-ikon').innerHTML = MIKON.oppdrag;
+$('#osApne').addEventListener('click', () => openStats('merker'));
+$('#osLukk').addEventListener('click', () => { lsSet(OPPDRAG_SKJULT(), '1'); paintOppdrag(); si('Oppdragene vises ikke her lenger. De står fortsatt under Merker.'); });
+[Store, Tell, Kjop].forEach(x => x.on(planleggOppdrag));   // a purchase, a backup: the tasks it did
 
 let rz = 0;
 addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => sync({ instant: true })); });
@@ -4606,7 +5060,9 @@ Tell.connectRemote();
 Vist.connectRemote();
 Kjop.connectRemote();
 if (lsGet(DK('slett'))) planleggSending(1000);
-setTimeout(sporOmDeling, 1500);                           // the first time: what is shared (ledertavle og statistikk)
+setTimeout(sjekkOppdrag, 1100);                           // tasks the data has done (also from before there were tasks)
+paintOppdrag();
+setTimeout(sporOmStart, 1500);                            // the first time: the introduction, the username and what is shared
 setTimeout(sjekkBonus, 900);                              // dyrekort bought on another device: revealed now
 })();
 </script>
