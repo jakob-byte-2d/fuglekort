@@ -1198,9 +1198,9 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <p class="valg-merk" id="skjulteInfo" hidden><span id="skjulteTekst"></span> <button class="textbtn" id="visSkjulte">Vis dem igjen</button></p>
     <button class="btn" id="slettMeg">Slett meg fra ledertavlen</button>
   </div>
-  <div class="s-sec"><h3>Test</h3>
-    <button class="btn" id="nullstillAlt">Nullstill alt (test)</button>
-    <p class="valg-merk">Sletter observasjoner, tellinger, frø, kjøp og dyrekort, også i den delte lista. Valgene her beholdes.</p>
+  <div class="s-sec" id="nyttSek"><h3>Start på nytt</h3>
+    <button class="btn" id="startPaNytt">Start på nytt …</button>
+    <p class="valg-merk">Sletter observasjonene, tellingene, frøene og kjøpene, så du begynner fra kort 001 igjen. Du velger om brukernavnet og innstillingene skal beholdes.</p>
   </div>
 </section>
 
@@ -3233,7 +3233,7 @@ sb.addEventListener('click', async e => {
   if (e.target.id === 'openStart') { openStart(); return; }
   if (e.target.id === 'goTell') { closeSheets(); return; }
   if (e.target.id === 'copyBackup') {
-    const txt = JSON.stringify({ kortstokk: 'hagefugler', versjon: 8, sett: Store.data, tellinger: Tell.data, kjop: Kjop.data });
+    const txt = sikkerhetskopi();
     try { await navigator.clipboard.writeText(txt); kvittering(e.target, 'Kopiert!'); si('Sikkerhetskopien er kopiert.'); }
     catch (err) { $('#restoreBox').hidden = false; const t = $('#restoreTxt'); t.value = txt; t.select(); si('Kopier teksten i feltet manuelt.'); }
   }
@@ -4428,22 +4428,23 @@ function stromSteg(t) {
   if (STROM.liste.length) STROM.raf = requestAnimationFrame(stromSteg);
   else { STROM.raf = 0; ctx.clearRect(0, 0, W, H); }
 }
-/* ---- test: wipe everything, here and in the shared list ---- */
-$('#nullstillAlt').addEventListener('click', () => sporsmal({
-  tittel: 'Nullstille alt?',
-  tekst: 'Alle observasjoner, tellinger, frø, kjøp og dyrekort slettes, også i den delte lista. Det kan ikke angres.',
-  knapper: [{ tekst: 'Nullstill alt', pri: true, fn: () => {
-    [Store, Tell, Vist, Kjop].forEach(x => x.replaceAll({}));
-    tittelFeiret = 0; lsSet(TITTEL_KEY(), '0');
-    lsDel(OPPDRAG_KEY()); lsDel(OPPDRAG_SKJULT()); lsDel(PREMIE_KEY()); ['fro-gjenopprettet', 'arter-gjenopprettet'].forEach(k => lsDel(DK(k))); froNullstill(); paintOppdrag();
-    froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
-    STROM.liste = []; festKo.forEach(f => { f.fro = 0; }); $('#openFro').classList.remove('mottar');
-    clearTimeout(plussT); plussAktive = 0; pillVent = false; festVentEl.hidden = true; plussEl.classList.remove('vis', 'ut'); plussEl.innerHTML = '';
-    froVent.length = 0; froHold = 0; froFlyTil = 0; froVist = null; paintFro(); closeSheets(true); jump(DECK[0], 'instant');
-    si('Alt er nullstilt.');
-  } }, { tekst: 'Avbryt' }],
-}));
+/* ---- «Start på nytt» (see Innstillinger, by the sharing): the progress on this device back to the start. The
+   observations, counts, purchases and revealed animal cards, the titles celebrated, the tasks, the prizes won, the
+   seeds from a backup, the chosen back and the speed warning; the seeds follow from these. What was shared is dealt
+   with by startPaNytt before this, so nothing here is sent ---- */
+function nullstillFremgang() {
+  [Store, Tell, Kjop, Vist].forEach(x => x.replaceAll({}));   // the purchases before Vist, or a bought animal card is revealed again
+  tittelFeiret = 0; lsSet(TITTEL_KEY(), '0');
+  [OPPDRAG_KEY(), OPPDRAG_SKJULT(), PREMIE_KEY(), BAKSIDE_KEY(), brukerNokkel('fuglekort:nye-tider'), brukerNokkel('fuglekort:tempo-varslet')].forEach(k => lsDel(k)); malBaksider();
+  ['fro-gjenopprettet', 'arter-gjenopprettet'].forEach(k => lsDel(DK(k))); froNullstill(); paintOppdrag();
+  froAktive.forEach(a => a.cancel()); froAktive.clear(); $('#froLag').replaceChildren();
+  STROM.liste = []; festKo.forEach(f => { f.fro = 0; }); $('#openFro').classList.remove('mottar');
+  clearTimeout(plussT); plussAktive = 0; pillVent = false; festVentEl.hidden = true; plussEl.classList.remove('vis', 'ut'); plussEl.innerHTML = '';
+  froVent.length = 0; froHold = 0; froFlyTil = 0; froVist = null; paintFro(); closeSheets(true); jump(DECK[0], 'instant');
+}
 
+/* the backup: the sightings, counts and purchases as text (Profil → Lagring, and before «Start på nytt») */
+const sikkerhetskopi = () => JSON.stringify({ kortstokk: 'hagefugler', versjon: 8, sett: Store.data, tellinger: Tell.data, kjop: Kjop.data });
 /* a button says «Kopiert!» for a moment instead of a message bubble */
 function kvittering(knapp, tekst) {
   if (!knapp || knapp.dataset.tekst) return;
@@ -5174,6 +5175,53 @@ $('#delBtn').addEventListener('click', () => { if (deler()) slettMegSporsmal(); 
 $('#slettMeg').addEventListener('click', slettMegSporsmal);
 $('#visSkjulte').addEventListener('click', () => { lagreSkjulte({}); paintDeling(); si('De skjulte navnene vises igjen.'); });
 $('#postnrFelt').addEventListener('change', e => { if (lagrePostnr(e.target.value)) si(e.target.value.trim() ? 'Postnummeret er lagret.' : 'Postnummeret er fjernet.'); paintDeling(); });
+
+/* ---- «Start på nytt»: one question with what you have, and two choices.
+   Nullstill fremgangen: the progress (nullstillFremgang); the name, the postcode, sharing and the settings stay.
+   Slett alt: the same, and the name, the postcode, the sharing choice, the hidden names and the last count area
+   too, so the app is as new and the introduction comes again.
+   What was shared goes with the anonymous user in Supabase, as with «Slett meg» (without a network: when there is
+   one, and nothing is sent meanwhile). Sharing on and «Nullstill fremgangen»: then a new anonymous user with the
+   same name (free, as the old row is deleted first), on 0 on every board ---- */
+const ogListe = a => (a.length > 1 ? `${a.slice(0, -1).join(', ')} og ${a[a.length - 1]}` : a[0] || '');
+function startPaNytt(alt) {
+  const delt = !!lsGet(DK('okt')), videre = !alt && delingValg() === 'ja';
+  SPEIL.forEach(sp => sp.tom());
+  if (delt) lsSet(DK('slett'), '1');
+  ['tavle-sendt', 'profil-sendt', 'tavle', 'tavle:uke', 'tavle:mnd', 'tavle:aar', 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding', 'merket', 'avslutt'].forEach(k => lsDel(DK(k)));
+  if (alt) { ['deling', 'kallenavn', 'postnr', 'skjulte'].forEach(k => lsDel(DK(k))); lsDel('hagefugler:omrade'); }
+  nullstillFremgang();
+  SPEIL.forEach(sp => sp.tom());                          // nothing of the old is sent to the new user
+  paintDeling(); paintOppdrag();
+  if (delt || videre) planleggSending(300);
+  si(alt ? 'Alt er slettet. Appen er som ny.' : 'Fremgangen er nullstilt. Du begynner på nytt.');
+  if (alt) setTimeout(sporOmStart, 700);
+}
+function startPaNyttSporsmal() {
+  const arter = seenCount(), dager = nokkeltall().obsDager, tell = Object.keys(Tell.data).length, kjop = Object.keys(Kjop.data).length, fro = froTotalt();
+  const har = [arter && flertall(arter, 'art', 'arter'), dager && flertall(dager, 'observasjonsdag', 'observasjonsdager'),
+    tell && flertall(tell, 'telling', 'tellinger'), kjop && flertall(kjop, 'kjøp', 'kjøp'), fro && `${fmtFro(fro)} frø`].filter(Boolean);
+  const delt = deler() || !!lsGet(DK('okt'));
+  sporsmal({
+    tittel: 'Start på nytt?',
+    tekst: `<p>${har.length ? `Du har ${ogListe(har)}.` : 'Du har ikke registrert noe ennå.'} Det kan ikke angres.</p>
+      <p><b>Nullstill fremgangen:</b> observasjonene, tellingene, frøene, titlene, merkene, oppdragene og kjøpene slettes. Du beholder brukernavnet og innstillingene${deler() ? ', og begynner på 0 på ledertavlen' : ''}.</p>
+      <p><b>Slett alt:</b> det samme, og i tillegg brukernavnet, postnummeret og valget om å dele. Appen blir som ny.</p>
+      ${delt ? '<p>Det du har delt med ledertavlen og statistikken, slettes også.</p>' : ''}
+      ${har.length ? '<p>Vil du kunne hente noe tilbake med «Gjenopprett», kopierer du en sikkerhetskopi først.</p>' : ''}`,
+    knapper: [
+      ...(har.length ? [{ tekst: 'Kopier sikkerhetskopi først', sjekk: b => {
+        Promise.resolve().then(() => navigator.clipboard.writeText(sikkerhetskopi())).then(() => { kvittering(b, 'Kopiert!'); si('Sikkerhetskopien er kopiert.'); },
+          () => { kvittering(b, 'Kunne ikke kopiere'); si('Sikkerhetskopien kunne ikke kopieres. Bruk «Kopier sikkerhetskopi» i Min fugleliste, under Profil.'); });
+        return false;
+      } }] : []),
+      { tekst: 'Nullstill fremgangen', pri: true, fn: () => startPaNytt(false) },
+      { tekst: 'Slett alt', fn: () => startPaNytt(true) },
+      { tekst: 'Avbryt' },
+    ],
+  });
+}
+$('#startPaNytt').addEventListener('click', startPaNyttSporsmal);
 [Store, Tell, Kjop].forEach(x => x.on(() => { if (deler()) planleggSending(4000); }));
 addEventListener('online', () => { planleggSending(500); if (statsFane === 'tavle') hentTavle(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) planleggSending(1500); });

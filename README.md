@@ -156,7 +156,15 @@ De fleste leses av observasjonene og kjøpene, som merkene. Et oppdrag som er gj
 
 ## Testmodus
 
-Mens appen testes, tas ikke gamle data vare på. `TESTMERKE` i `src/app.html`: når det endres, sletter appen observasjoner, tellinger, bonusvist, kjøp og feiret tittel på hver enhet neste gang den åpnes. Den delte databasen i Claude tømmes når en ny versjon publiseres. Under Innstillinger finnes også «Nullstill alt (test)», som tømmer alt, også den delte lista.
+Mens appen testes, tas ikke gamle data vare på. `TESTMERKE` i `src/app.html`: når det endres, sletter appen observasjoner, tellinger, bonusvist, kjøp og feiret tittel på hver enhet neste gang den åpnes. Den delte databasen i Claude tømmes når en ny versjon publiseres. (Test-knappen «Nullstill alt (test)» er erstattet av «Start på nytt», se under.)
+
+## Start på nytt
+
+Nederst i Innstillinger: «Start på nytt …» åpner ett spørsmål som viser hva du har («Du har 3 arter, 4 observasjonsdager, 1 kjøp og 16 100 frø. Det kan ikke angres.») og har knappene **Kopier sikkerhetskopi først** (spørsmålet blir stående; kopien kan hentes tilbake med «Gjenopprett»), **Nullstill fremgangen**, **Slett alt** og **Avbryt**.
+
+- **Nullstill fremgangen** (`nullstillFremgang`): observasjoner, tellinger, kjøp (dyrekort, multiplikatorer og baksider; baksiden blir standard), avslørte dyrekort, feiret tittel, oppdragene, vunne premier, gjenopprettede frø og tempovarselet slettes. Frøene, titlene og merkene følger av dette. Brukernavn, postnummer, delingsvalget, bildevalget, glinsinnstillingen og skjulte navn beholdes. Du havner på kort 001 med 0 frø.
+- **Slett alt**: det samme, og i tillegg brukernavn, postnummer, delingsvalget, skjulte navn og sist brukte telleområde. Introduksjonen kommer igjen.
+- **Det som er delt** (`startPaNytt`): den anonyme brukeren slettes i Supabase som ved «Slett meg» (`slett_meg()`, on delete cascade). Uten nett skjer det når nettet kommer, og ingenting sendes imens. Med deling på og «Nullstill fremgangen» lages det deretter en ny anonym bruker med samme brukernavn (ledig, fordi den gamle raden slettes først), som starter på 0 på alle fire tavlene. Premier som er vunnet, blir stående i premielisten.
 
 ## Glinskort og merker
 
