@@ -357,7 +357,7 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .felt{display:block;margin:16px 0 6px;font-size:14px;font-weight:600}
 .felt small{display:block;margin-top:2px;font-weight:400;color:var(--muted);font-size:12.5px}
 .dlg-felt small{font-weight:400;color:var(--muted);font-size:12.5px;margin-top:-4px}
-.felt-inp,.dlg-felt input,.nv-valg select{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;background:var(--surface);color:var(--ink)}
+.felt-inp,.dlg-felt input,.dlg-felt select,.nv-valg select{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;background:var(--surface);color:var(--ink)}
 .felt-inp,.dlg-felt input{max-width:160px;letter-spacing:.08em;font-variant-numeric:tabular-nums}
 .felt-inp:disabled{opacity:.5}
 .dlg-felt{display:grid;gap:6px;margin:12px 0 8px;font-size:14px;font-weight:600;color:var(--ink)}
@@ -661,6 +661,54 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .step input::-webkit-inner-spin-button,.step input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .step input:focus{outline:none;border-color:var(--spruce-ink);box-shadow:0 0 0 3px color-mix(in srgb, var(--spruce-ink) 22%, transparent)}
 .step.sm .st-btn{width:40px;height:40px;font-size:21px}
+
+/* ---------- birds seen before the app ---------- */
+:root{--blyant:#7b827d}
+.for .tick path{stroke:var(--blyant);stroke-dashoffset:0;opacity:1;transition:none}
+.for .hand{clip-path:inset(-30% -10% -30% 0);color:var(--blyant);transition:none}
+.formodus .hint,.formodus .oppdrag-stripe{display:none}
+.fb-ikon{display:grid;place-items:center;width:22px;height:22px;color:var(--spruce-ink);flex-shrink:0}
+.fb-ikon svg{width:20px;height:20px}
+.forpanel{width:100%;max-width:560px;display:flex;align-items:center;gap:8px}
+.forpanel[hidden]{display:none}
+.forpanel .tl-n span.varsel{color:var(--rec);font-weight:600}
+.forpanel select{height:46px;max-width:112px;border-radius:12px;border:1px solid var(--line);background:var(--bg-hi);padding:0 6px;font:inherit;font-size:14.5px;color:var(--ink)}
+.fp-btn{height:46px;padding:0 13px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;font-weight:700;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0}
+.fp-btn svg{width:17px;height:17px;opacity:.3}
+.fp-btn[aria-pressed="true"]{background:var(--spruce);border-color:var(--spruce);color:var(--on-spruce)}
+.fp-btn[aria-pressed="true"] svg{opacity:1}
+.fp-btn:disabled,.forpanel select:disabled{opacity:.45}
+.dlg-felt select{max-width:200px}
+.lfor{display:flex;align-items:center;flex-wrap:wrap;gap:.4cqw 2.4cqw}
+.lh .lfor span{font-size:3.9cqw;color:#4c5c54}
+.lfor-btn{border:0;background:none;padding:.8cqw 0;font:inherit;font-size:3.9cqw;font-weight:700;color:var(--card-green);text-decoration:underline;text-underline-offset:.5cqw}
+.lfor-tom{margin:0;padding:4cqw 5cqw;font-size:4cqw;line-height:1.35;color:#4c5c54}
+.for-hake{display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:var(--blyant);color:#fff;box-shadow:0 0 0 2px var(--surface)}
+.for-hake svg{width:11px;height:11px}
+.alb.f .th{filter:none;opacity:1;box-shadow:0 3px 8px -3px rgba(var(--shadow),.5)}
+.alb.f .nr{display:none}
+.alb .for-hake{position:absolute;right:-5px;top:-5px}
+.cap.livs{margin:10px 0 0}
+#forSek .btn{margin-top:12px}
+.fl-lim{margin:2px 0 14px;border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--surface)}
+.fl-lim summary{cursor:pointer;font-weight:600;font-size:15px}
+.fl-lim textarea{width:100%;box-sizing:border-box;margin-top:10px;min-height:120px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:15px;background:var(--bg-hi);color:var(--ink);resize:vertical}
+.fl-res{font-size:14px;line-height:1.45}
+.fl-res p{margin:10px 0 0}
+.fl-res .fl-ikke{color:var(--muted)}
+.fl-sok{width:100%;max-width:none;letter-spacing:normal;font-variant-numeric:normal}
+.fl-liste{list-style:none;margin:6px 0 0;padding:0}
+.fl-liste li{display:flex;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--line)}
+.fl-liste li.fl-tom{color:var(--muted);font-size:14px;border:0}
+.fl-liste label{flex:1;min-width:0;display:flex;align-items:center;gap:10px;cursor:pointer}
+.fl-liste input[type=checkbox]{width:22px;height:22px;flex-shrink:0;margin:0;accent-color:var(--spruce)}
+.fl-liste .ph{width:38px;height:38px;border-radius:9px;flex-shrink:0}
+.fl-n{min-width:0;display:grid}
+.fl-n b{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fl-n small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fl-liste select{height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);padding:0 4px;font:inherit;font-size:14px;color:var(--ink);flex-shrink:0}
+.fest[data-type="livs"] .mkant{display:none}
 .step.sm input{width:50px;height:40px;font-size:18px}
 .hint.gone{opacity:0}
 
@@ -1095,6 +1143,13 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <button class="tb-btn pri" id="tSlutt">Avslutt</button>
   </div>
 
+  <div class="tellebar forbar" id="forbar" role="region" aria-label="Arter du har sett før" hidden>
+    <span class="fb-ikon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3.5 4.5V9H8"/><path d="M12 7.5V12l3 2"/></svg></span>
+    <div class="tb-t"><b id="fbAntall">0</b><span id="fbInfo">sett før</span></div>
+    <button class="tb-btn" id="fbListe">Liste</button>
+    <button class="tb-btn pri" id="fbFerdig">Ferdig</button>
+  </div>
+
   <div class="oppdrag-stripe" id="oppdragStripe" hidden>
     <button class="os-apne" id="osApne"><span class="os-ikon" aria-hidden="true"></span><span class="os-t" id="osTekst"></span><span class="os-fro" id="osFro"></span></button>
     <button class="os-lukk" id="osLukk" aria-label="Skjul oppdragene her. De står fortsatt under Merker."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
@@ -1119,6 +1174,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
         <button class="st-btn plus" data-d="1" aria-label="En til">+</button>
       </div>
     </div>
+    <div class="forpanel" id="forpanel" hidden>
+      <div class="tl-n"><b id="fpNavn"></b><span id="fpInfo"></span></div>
+      <select id="fpAar" aria-label="Året du så den første gang (valgfritt)"></select>
+      <button class="fp-btn" id="fpSett" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Sett før</button>
+    </div>
     <p class="hint" id="hint">Dra til kanten · sveip fort · trykk for å snu kortet</p>
   </footer>
 </div>
@@ -1129,6 +1189,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <div class="meny-bak" id="menyBak" hidden></div>
 <div class="meny" id="meny" role="menu" aria-label="Meny" hidden>
   <button role="menuitem" id="openSearch"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg></span><span class="mt">Søk etter fugl</span><kbd aria-hidden="true">/</kbd></button>
+  <button role="menuitem" id="openFor"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3.5 4.5V9H8"/><path d="M12 7.5V12l3 2"/></svg></span><span class="mt">Arter du har sett før</span></button>
   <button role="menuitem" id="openHelp"><span class="mi q" aria-hidden="true">?</span><span class="mt">Om kortene</span><kbd aria-hidden="true">?</kbd></button>
   <button role="menuitem" id="openIntro"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg></span><span class="mt">Slik virker appen</span></button>
   <button role="menuitem" id="openSettings"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span><span class="mt">Innstillinger</span></button>
@@ -1190,6 +1251,10 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <div class="s-sec" id="vippSek" hidden><h3>Glinskort</h3>
     <button class="bryter" id="vippBtn" role="switch" aria-checked="false"><span><b>Glinset følger telefonen</b><small>Lyset på glinskortene flytter seg når du vipper telefonen. Ellers følger det fingeren når du drar i kortet.</small></span><i aria-hidden="true"></i></button>
   </div>
+  <div class="s-sec" id="forSek"><h3>Arter du har sett før</h3>
+    <button class="bryter" id="sporForBtn" role="switch" aria-checked="true"><span><b>Spør om fuglen er sett før</b><small>Første gang du registrerer en fugl, spør appen om du har sett den før du begynte med Fuglekort.</small></span><i aria-hidden="true"></i></button>
+    <button class="btn" id="forFraInnst">Legg inn arter du har sett før</button>
+  </div>
   <div class="s-sec" id="delingSek"><h3>Ledertavle og statistikk</h3>
     <button class="bryter" id="delBtn" role="switch" aria-checked="false"><span><b>Del med ledertavlen og statistikken</b><small>Du vises på ledertavlen med brukernavnet ditt, frø, arter, observasjonsdager og tittel. Observasjonene, tellingene og kjøpene sendes anonymt til en felles database for statistikk over hagefuglene.</small></span><i aria-hidden="true"></i></button>
     <label class="felt" for="postnrFelt">Postnummer <small>valgfritt, bare til statistikk, vises ikke på tavlen</small></label>
@@ -1202,6 +1267,22 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <button class="btn" id="startPaNytt">Start på nytt …</button>
     <p class="valg-merk">Sletter observasjonene, tellingene, frøene og kjøpene, så du begynner fra kort 001 igjen. Du velger om brukernavnet og innstillingene skal beholdes.</p>
   </div>
+</section>
+
+<section class="sheet stats" id="forListeSheet" role="dialog" aria-modal="true" aria-labelledby="forListeTitle">
+  <div class="s-head">
+    <h2 id="forListeTitle">Arter du har sett før</h2>
+    <button class="textbtn" id="closeForListe">Lukk</button>
+  </div>
+  <p class="lead">Kryss av fuglene du har sett før du begynte med Fuglekort. Året er valgfritt. Det lagres med en gang.</p>
+  <details class="fl-lim" id="flLim"><summary>Lim inn en liste</summary>
+    <textarea id="flTekst" rows="6" aria-label="Liste med fugler, én per linje" placeholder="Én art per linje, gjerne med år:&#10;Kjøttmeis 2019&#10;Blåmeis&#10;Turdus merula, 2021"></textarea>
+    <div class="row"><button class="btn" id="flFinn">Finn artene</button></div>
+    <div class="fl-res" id="flRes" role="status"></div>
+  </details>
+  <input class="felt-inp fl-sok" id="flSok" type="search" placeholder="Søk i lista" aria-label="Søk i lista" autocomplete="off">
+  <p class="valg-merk" id="flAntall"></p>
+  <ul class="fl-liste" id="flListe"></ul>
 </section>
 
 <section class="sheet stats" id="butikkSheet" role="dialog" aria-modal="true" aria-labelledby="butikkTitle">
@@ -1524,7 +1605,7 @@ const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          
    device the next time the app opens (the shared database in Claude is emptied separately when publishing).
    Settings also has a button «Nullstill alt (test)». */
 const TESTMERKE = '2026-09-30-pluss';
-const DATANOKLER = ['hagefugler-oslo:sett:v1', 'hagefugler:tellinger:v1', 'hagefugler:bonusvist:v1', 'hagefugler:kjop:v1', 'fuglekort:tittel', 'fuglekort:tittel:v2'];
+const DATANOKLER = ['hagefugler-oslo:sett:v1', 'hagefugler:tellinger:v1', 'hagefugler:bonusvist:v1', 'hagefugler:kjop:v1', 'fuglekort:tittel', 'fuglekort:tittel:v2', 'fuglekort:forsett:v1'];
 if (lsGet('hagefugler:testmerke') !== TESTMERKE) {
   BRUKERE.forEach(b => DATANOKLER.forEach(k => { try { localStorage.removeItem(brukerNokkel(k, b)); } catch (e) {} }));
   lsSet('hagefugler:testmerke', TESTMERKE);
@@ -1678,6 +1759,53 @@ const Vist = Object.assign(samling({
   glem(k) { if (!this.data[k]) return; delete this.data[k]; this.saveLocal(); this.push(k); },
 });
 Vist.loadLocal();
+
+/* ================= Arter sett før appen =================
+   A life list beside the observation days: per bird { svar: 'for', aar } (seen before the app; the year if it is
+   remembered) or { svar: 'ny' } (the answer «Nei, første gang!» at the first registration). Only on this device,
+   never shared, and nothing here gives seeds, titles, badges, tasks, borders or a place on the board: they all
+   follow the observation days in Store. Entered in the walk-through (forModus), in the list (forListe), on the back
+   of a card, or answered when a bird is registered for the first time (forSporsmal) */
+const AAR_NA = new Date().getFullYear(), AAR_FRA = 1950;
+const gyldigAar = a => (/^\d{4}$/.test(String(a)) && +a >= AAR_FRA && +a <= AAR_NA ? +a : null);
+const forNorm = raw => Object.fromEntries(Object.entries(raw && typeof raw === 'object' ? raw : {})
+  .filter(([k, v]) => erFugl(k) && v && (v.svar === 'for' || v.svar === 'ny'))
+  .map(([k, v]) => [k, { svar: v.svar, aar: v.svar === 'for' ? gyldigAar(v.aar) : null, ts: +v.ts || 1 }]));
+const ForSett = Object.assign(samling({
+  col: 'forsett', key: 'fuglekort:forsett:v1', hva: 'Lista over arter sett før', norm: forNorm,
+  toDoc: (id, v) => ({ svar: v.svar, aar: v.aar, ts: v.ts }),
+}), {
+  svar(k) { return this.data[k] || null; },
+  erFor(k) { return !!this.data[k] && this.data[k].svar === 'for'; },
+  /* one bird: 'for' (with the year), 'ny', or null to forget the answer */
+  sett(k, svar, aar = null) {
+    if (svar) this.data[k] = { svar, aar: svar === 'for' ? gyldigAar(aar) : null, ts: Date.now() }; else delete this.data[k];
+    this.saveLocal(); this.emit();
+  },
+  /* several at once (a pasted list): seen before, with the earliest year given; an earlier year is kept */
+  leggTil(liste) {
+    let n = 0;
+    liste.forEach(({ key, aar }) => {
+      const v = this.data[key], a = gyldigAar(aar);
+      if (v && v.svar === 'for' && (!a || (v.aar && v.aar <= a))) return;
+      this.data[key] = { svar: 'for', aar: v && v.svar === 'for' && v.aar && (!a || v.aar < a) ? v.aar : a, ts: Date.now() }; n++;
+    });
+    if (n) { this.saveLocal(); this.emit(); }
+    return n;
+  },
+});
+ForSett.loadLocal();
+const erSett = k => Store.has(k) || ForSett.erFor(k);           // in the collection and the search
+const bareFor = k => !Store.has(k) && ForSett.erFor(k);         // seen before, not registered in the app yet
+const forAntall = () => BIRDS.filter(c => ForSett.erFor(c.key)).length;
+const livsliste = () => BIRDS.filter(c => erSett(c.key)).length;
+const forAarTekst = k => { const v = ForSett.svar(k); return v && v.aar ? String(v.aar) : 'før appen'; };
+const aarValg = (valgt, tom = 'Husker ikke') => `<option value="">${tom}</option>`
+  + Array.from({ length: AAR_NA - AAR_FRA + 1 }, (_, j) => AAR_NA - j).map(a => `<option value="${a}"${a === valgt ? ' selected' : ''}>${a}</option>`).join('');
+const SPOR_FOR = () => brukerNokkel('fuglekort:spor-forsett');
+const sporFor = () => lsGet(SPOR_FOR()) !== 'nei';
+const smaNavn = c => c.navn.charAt(0).toLowerCase() + c.navn.slice(1);
+let forModus = false, forVed = 0, forKo = [], forKoT = null;   // the walk-through is on; the questions waiting
 
 /* ================= Solsikkefrø =================
    Seeds are earned by registering birds (most of it: every day counts), first sightings, new border levels and
@@ -1974,16 +2102,18 @@ function paintCard(el) {
   const s = Store.get(c.key);
   const dager = s ? s.dager : [], t = todayISO();
   el.classList.toggle('seen', !!s);
+  const fo = !s && !c.bonus && ForSett.erFor(c.key);              // seen before the app only: a pencil tick and the year
+  el.classList.toggle('for', fo);
   const iDag = dager.includes(t), varIdag = el.classList.contains('idag');
   el.classList.toggle('idag', iDag);
   if (iDag && !varIdag && el.dataset.malt) { const m = el.querySelector('.idag-merke'); m.classList.remove('ny'); void m.offsetWidth; m.classList.add('ny'); }
   el.dataset.malt = '1';
   const b = el.querySelector('[data-act="toggle"]');
   b.setAttribute('aria-pressed', s ? 'true' : 'false');
-  b.setAttribute('aria-label', !s ? `Merk ${c.navn} som sett i dag`
+  b.setAttribute('aria-label', !s ? `Merk ${c.navn} som sett i dag${fo ? `. Sett før appen${ForSett.svar(c.key).aar ? `, ${ForSett.svar(c.key).aar}` : ''}` : ''}`
     : dager.includes(t) ? `${c.navn} er registrert i dag. Trykk for å se alle dagene`
     : `Registrer ${c.navn} som sett i dag. ${dagerTekst(dager.length)} så langt`);
-  el.querySelector('.hand').textContent = s ? fmtHand(s.date) : '';
+  el.querySelector('.hand').textContent = s ? fmtHand(s.date) : fo ? forAarTekst(c.key) : '';
   // "× 7" by the SETT box once a bird has been seen on more than one day
   const ant = el.querySelector('.antall'), before = ant.dataset.n == null ? null : +ant.dataset.n;
   ant.dataset.n = dager.length;
@@ -2147,18 +2277,26 @@ function lukkArt() {
   const b = sb.querySelector(`[data-art="${key}"]`); if (b) b.focus({ preventScroll: true });
 }
 function paintLogg(el, c, dager) {
-  const box = el.querySelector('.logg'), t = todayISO();
-  const sig = dager.join(',') + '|' + t;
+  const box = el.querySelector('.logg'), t = todayISO(), fv = c.bonus ? null : ForSett.svar(c.key);
+  const sig = dager.join(',') + '|' + t + '|' + (fv ? fv.svar + (fv.aar || '') : '');
   if (box.dataset.sig === sig) return;
   box.dataset.sig = sig;
-  box.hidden = !dager.length;
-  if (!dager.length) { box.innerHTML = ''; return; }
+  const fo = !!fv && fv.svar === 'for';
+  box.hidden = !dager.length && !fo;
+  if (box.hidden) { box.innerHTML = ''; return; }
+  // the first time seen: before the app (and the year), or new for you at the first registration
+  const forste = fo ? `Første gang sett: ${fv.aar ? `${fv.aar} (før appen)` : 'før appen'}` : fv && fv.svar === 'ny' ? 'Ny art for deg da du registrerte den' : '';
+  const forLinje = c.bonus ? '' : `<span class="lfor">${forste ? `<span>${forste}</span>` : ''}<button class="ctl lfor-btn" data-act="forsett">${fv ? 'Endre' : 'Sett før appen?'}</button></span>`;
+  if (!dager.length) {
+    box.innerHTML = `<div class="lh"><b>${esc(c.navn)}</b>${forLinje}</div><p class="lfor-tom">Ikke registrert i appen ennå. Trykk «Sett» på forsiden når du ser den.</p>`;
+    return;
+  }
   const rows = [...dager].reverse().map(d => `<li><span class="ld">${fmtHand(d)}</span>
     <span class="lw">${d === t ? 'i dag' : ukedag(d)}${d === dager[0] ? '<br><b>første gang</b>' : ''}</span>
     <button class="ctl ldel" data-act="delday" data-d="${d}" aria-label="Slett ${fmtLong(d)}">${XMARK}</button></li>`).join('');
   const niva = nivaAv(c), neste = nesteNiva(c);
   const nivaLinje = `${niva ? `<em class="nchip n${niva}">${NIVA[niva]}</em>` : ''}${neste ? `${neste.mangler} ${neste.mangler === 1 ? 'dag' : 'dager'} til ${NIVA[neste.niva]}` : 'Høyeste nivå'}`;
-  box.innerHTML = `<div class="lh"><b>${esc(c.navn)}</b><span>${dagerTekst(dager.length)}</span><span class="lniva">${nivaLinje}</span></div>
+  box.innerHTML = `<div class="lh"><b>${esc(c.navn)}</b><span>${dagerTekst(dager.length)}</span><span class="lniva">${nivaLinje}</span>${forLinje}</div>
     <ol class="b-body llist" aria-label="Dager du har sett ${esc(c.navn)}">${rows}</ol>`;
 }
 function setFlipped(el, on) {
@@ -2552,16 +2690,17 @@ if (vippValg()) {
 deckEl.addEventListener('click', e => {
   const bh = e.target.closest('[data-act="bilde"]');         // keyboard: the button over the picture
   if (bh) { const el = bh.closest('.card'); if (el && el.classList.contains('is-top')) { e.stopPropagation(); apneStorbilde(CARDS[+el.dataset.i]); } return; }
-  const b = e.target.closest('[data-act="toggle"], [data-act="delday"]'); if (!b) return;
+  const b = e.target.closest('[data-act="toggle"], [data-act="delday"], [data-act="forsett"]'); if (!b) return;
   const el = b.closest('.card'); if (!el || !el.classList.contains('is-top')) return;
   e.stopPropagation();
   const c = CARDS[+el.dataset.i];
-  if (b.dataset.act === 'toggle') trykkSett(c); else slettDag(c, b.dataset.d);
+  if (b.dataset.act === 'toggle') trykkSett(c); else if (b.dataset.act === 'forsett') forSporsmal(c, false); else slettDag(c, b.dataset.d);
 });
 
 /* Tapping SETT: the first time it ticks the box and writes the date; on a later day it adds that day.
    A second tap on the same day shows the list of days instead of removing anything. */
 function trykkSett(c) {
+  if (forModus) { forVarsel(); return; }                  // the walk-through: registering is off meanwhile
   const t = todayISO(), dager = Store.days(c.key);
   if (dager.includes(t)) { visLogg(c); si(`${c.navn} er allerede registrert i dag.`); return; }
   settIDag(c);
@@ -2590,6 +2729,7 @@ function registrer(c, d) {
     : `${c.navn} er sett for første gang. ${n} av ${NB} arter.`;
   si(msg + froTekst(f0) + nyheter(for_));
   froEffekt(c, f0, d);
+  if (!c.bonus) planleggForSporsmal(c.key);               // «Har du sett … før?», after the seeds and the celebrations
 }
 /* 15 new species within an hour (with SETT; not from a count): a warning that names with unusually many seeds in a
    short time are marked on the board. Once a day */
@@ -2680,7 +2820,7 @@ function paintChrome() {
   $('#sub').textContent = c.bonus ? `Dyrekort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
   paintFro();                                                // the ring around the title comes after the counter
   ticks.forEach((t, p) => { const i = DECK[p]; t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
-  paintTeller();
+  paintTeller(); paintForModus();
   scrub.setAttribute('aria-valuenow', POS[cur] + 1);
   scrub.setAttribute('aria-valuetext', `${c.bonus ? 'Dyrekort' : `Kort ${c.nr}`}: ${c.navn}`);
 }
@@ -2797,7 +2937,7 @@ function renderSearch() {
   const out = [];
   CARDS.forEach((c, i) => {
     if (!erApen(c)) return;
-    const seen = Store.has(c.key);
+    const seen = erSett(c.key);                              // registered, or seen before the app
     if (filter === 'sett' && !seen) return;
     if (filter === 'ikke' && seen) return;
     if (!terms.length) { out.push({ i, score: 0 }); return; }
@@ -2832,7 +2972,7 @@ function renderSearch() {
       <span class="t"><span class="n">${terms.length ? hl(c.navn, IDX[i].navn, terms) : esc(c.navn)}</span>
         <span class="l">${terms.length ? hl(c.latin, IDX[i].latin, terms) : esc(c.latin)}</span>
         ${hit ? `<span class="sn"><em>${label}:</em> ${snippet(c[hit], IDX[i][hit], terms)}</span>` : ''}</span>
-      <span class="r">${s ? `<span class="okdot ${s.dager.includes(todayISO()) ? 'idag' : ''}" title="Sett første gang ${fmtLong(s.date)}, ${dagerTekst(s.dager.length)}${s.dager.includes(todayISO()) ? ', også i dag' : ''}">${antDager(s.dager.length)}</span>` : `<span>${c.bonus ? 'Dyr' : c.id}</span>`}${stars(c.stjerner)}</span>
+      <span class="r">${s ? `<span class="okdot ${s.dager.includes(todayISO()) ? 'idag' : ''}" title="Sett første gang ${fmtLong(s.date)}, ${dagerTekst(s.dager.length)}${s.dager.includes(todayISO()) ? ', også i dag' : ''}">${antDager(s.dager.length)}</span>` : bareFor(c.key) ? `<i class="for-hake" title="Sett før appen${ForSett.svar(c.key).aar ? `, ${ForSett.svar(c.key).aar}` : ''}"><span class="sr">Sett før appen</span>${CHECK}</i>` : `<span>${c.bonus ? 'Dyr' : c.id}</span>`}${stars(c.stjerner)}</span>
     </button></li>`;
   }).join('');
 }
@@ -2920,7 +3060,14 @@ function paintSettings() {
   $('#tegneserieAntall').textContent = tegneserieTekst();
   setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg));
   $('#vippBtn').setAttribute('aria-checked', Vipp.aktiv ? 'true' : 'false');
+  $('#sporForBtn').setAttribute('aria-checked', sporFor() ? 'true' : 'false');
 }
+$('#sporForBtn').addEventListener('click', () => {
+  if (sporFor()) { lsSet(SPOR_FOR(), 'nei'); si('Appen spør ikke om fuglene er sett før.'); }
+  else { try { localStorage.removeItem(SPOR_FOR()); } catch (e) {} si('Appen spør om fuglen er sett før første gang du registrerer den.'); }
+  paintSettings();
+});
+$('#forFraInnst').addEventListener('click', () => startForModus());
 $('#vippBtn').addEventListener('click', async () => {
   if (Vipp.aktiv) { stoppVipp(); lsSet('hagefugler:vipp', 'av'); }
   else if (await slaPaVipp(true)) { lsSet('hagefugler:vipp', 'på'); si('Vipp telefonen for å se glinset på glinskortene.'); }
@@ -2992,8 +3139,8 @@ $('#closeStats').addEventListener('click', () => closeSheets());
 /* a small picture of the card */
 const miniatyr = (c, i, kl = '') => `<span class="ph ${kl}" style="background-position:${spritePos(i)}" aria-hidden="true"></span>`;
 function albumKort(c, i) {
-  const nv = nivaAv(c), nd = Store.days(c.key).length, iDag = nd && Store.days(c.key).includes(todayISO());
-  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${c.bonus ? 'Dyrekort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Dyr' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}${iDag ? `<i class="idag-hake">${CHECK}</i>` : ''}</span></button>`;
+  const nv = nivaAv(c), nd = Store.days(c.key).length, iDag = nd && Store.days(c.key).includes(todayISO()), fo = !nd && !c.bonus && ForSett.erFor(c.key);
+  return `<button class="alb ${Store.has(c.key) ? 's' : ''} ${fo ? 'f' : ''} ${iDag ? 'idag' : ''} ${nv ? 'g' + nv : ''}" data-i="${i}" aria-label="${c.bonus ? 'Dyrekort ' : ''}${esc(c.navn)}${nd ? `, sett ${dagerTekst(nd)}${iDag ? ', også i dag' : ''}` : fo ? `, sett før appen${ForSett.svar(c.key).aar ? ` ${ForSett.svar(c.key).aar}` : ''}` : ', ikke sett'}${nv ? `, ${kantNavn(nv)}` : ''}"><span class="th" style="background-position:${spritePos(i)}"></span><span class="nr">${c.bonus ? 'Dyr' : c.nr}</span><span class="okdot" aria-hidden="true">${antDager(nd)}${iDag ? `<i class="idag-hake">${CHECK}</i>` : ''}</span>${fo ? `<i class="for-hake" aria-hidden="true">${CHECK}</i>` : ''}</button>`;
 }
 function merkeHtml(m, nt) {
   const v = m.v(nt), ok = v >= m.mal;
@@ -3090,6 +3237,7 @@ function renderStats() {
     ${profilHode}
     <div class="hero"><span class="big">${n}</span><span class="of">av ${NB} fugler sett</span></div>
     <div class="bar" role="img" aria-label="${Math.round(n / NB * 100)} prosent av fuglekortene"><i style="width:${(n / NB * 100).toFixed(1)}%"></i></div>
+    ${BIRDS.some(c => bareFor(c.key)) ? `<p class="cap livs">Livsliste: ${flertall(livsliste(), 'art', 'arter')} – ${n} i appen og ${BIRDS.filter(c => bareFor(c.key)).length} sett før.</p>` : ''}
     <div class="kpis">
       <div class="kpi"><b>${obsDager}</b><span>${obsDager === 1 ? 'Observasjonsdag' : 'Observasjonsdager'}</span></div>
       <div class="kpi"><b>${merkerOk}</b><span>${merkerOk === 1 ? 'Merke' : 'Merker'} oppnådd</span></div>
@@ -3167,10 +3315,11 @@ function renderStats() {
     </div>`,
     kort: () => `
     <div class="s-sec"><h3>Samlingen</h3>
-      <div class="tegnf" role="note" aria-label="Tegnforklaring"><span><b class="okdot" aria-hidden="true">3</b>dager sett</span><span><i class="idag-hake" aria-hidden="true">${CHECK}</i>sett i dag</span></div>
+      <div class="tegnf" role="note" aria-label="Tegnforklaring"><span><b class="okdot" aria-hidden="true">3</b>dager sett</span><span><i class="idag-hake" aria-hidden="true">${CHECK}</i>sett i dag</span>${BIRDS.some(c => bareFor(c.key)) ? `<span><i class="for-hake" aria-hidden="true">${CHECK}</i>sett før appen</span>` : ''}</div>
       <div class="album">
       ${CARDS.map((c, i) => c.bonus ? '' : albumKort(c, i)).join('')}
-    </div></div>
+    </div>
+      <div class="row"><button class="btn" data-forstart>Legg inn arter du har sett før</button></div></div>
 
     ${NBON ? `<div class="s-sec"><h3>Dyrekort <span class="h3n">${APNE.size} av ${NBON}</span></h3>
       ${APNE.size ? `<div class="album">${DYR.filter(erApen).map(c => albumKort(c, BY_KEY[c.key])).join('')}</div>` : ''}
@@ -3226,6 +3375,7 @@ sb.addEventListener('click', async e => {
   const an = e.target.closest('[data-art]');
   if (an) { apneArt(an.dataset.art); return; }
   if (e.target.closest('[data-artlukk]')) { lukkArt(); return; }
+  if (e.target.closest('[data-forstart]')) { startForModus(); return; }
   const tl = e.target.closest('[data-tid]');
   if (tl) { openSum(tl.dataset.tid); return; }
   const j = e.target.closest('[data-i]');
@@ -3274,12 +3424,18 @@ sb.addEventListener('click', async e => {
         km[k] = { ...v, ts: v.ts || 1 }; kjopt++;
       });
       if (kjopt) Kjop.replaceAll(km);
+      // the birds seen before the app (version 9): those not answered here (an answer here is kept)
+      const fsrc = forNorm(obj.forsett), fm = { ...ForSett.data };
+      let forsett = 0;
+      Object.keys(fsrc).forEach(k => { if (fm[k]) return; fm[k] = fsrc[k]; if (fsrc[k].svar === 'for') forsett++; });
+      if (Object.keys(fm).length > Object.keys(ForSett.data).length) ForSett.replaceAll(fm);
       froNullstill(); const fraKopi = froRegnskap().tjent - tj0;
       if (fraKopi > 0 || arter) leggTilGjenopprettet(Math.max(0, fraKopi), arter);
       const deler = [];
       if (dager) deler.push(flertall(dager, 'dag', 'dager') + (arter ? ` (${flertall(arter, 'ny art', 'nye arter')})` : ''));
       if (telt) deler.push(flertall(telt, 'telling', 'tellinger'));
       if (kjopt) deler.push(flertall(kjopt, 'kjøp', 'kjøp'));
+      if (forsett) deler.push(flertall(forsett, 'art sett før', 'arter sett før'));
       const mld = deler.length ? `La til ${deler.join(' og ')}.` : 'Ingen nye dager, tellinger eller kjøp i sikkerhetskopien.';
       restoreMld(mld); si(mld);
     } catch (err) { restoreMld('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
@@ -3341,6 +3497,7 @@ tlAnt.addEventListener('keydown', e => { if (e.key === 'Enter') tlAnt.blur(); })
 
 function openStart() {
   if (Tell.aktiv()) { closeSheets(); return; }
+  if (forModus) avsluttForModus(false);
   $('#tOmrade').value = lsGet('hagefugler:omrade') || '';
   showSheet(startSheet);
   setTimeout(() => $('#tStart').focus(), 60);
@@ -3515,7 +3672,20 @@ function nesteFest() {
   const f = festKo.shift();
   festAapen = true; festFokus = document.activeElement; aktivFest = f;
   if (f.type === 'bonus') visBonus(f); else if (f.type === 'tittel') visTittel(f); else if (f.type === 'merke') visMerke(f);
-  else if (f.type === 'oppdrag') visOppdrag(f); else if (f.type === 'premie') visPremie(f); else visNiva(f);
+  else if (f.type === 'oppdrag') visOppdrag(f); else if (f.type === 'premie') visPremie(f); else if (f.type === 'livs') visLivs(f); else visNiva(f);
+}
+/* «Nei, første gang!»: the bird is new for you, not only in the app (no seeds) */
+function visLivs(f) {
+  festEl.dataset.type = 'livs'; festEl.dataset.niva = '3'; delete festEl.dataset.plass;
+  delete festEl.querySelector('.fest-kort').dataset.niva;
+  $('#festBilde').src = bildeAv(f.c);
+  $('#festMerker').innerHTML = pennMerker(f.c);
+  $('#festNavn').textContent = 'Ny art for deg!';
+  $('#festArt').textContent = `${f.c.navn} · første gang du ser den`;
+  $('#festHint').textContent = 'Trykk for å gå videre';
+  vis(festEl);
+  haptic([18, 70, 28, 70, 40]);
+  $('#live').textContent = `Ny art for deg: ${f.c.navn}.`;
 }
 function visTittel(f) {
   const t = TITLER[f.k];
@@ -3637,7 +3807,7 @@ function lukkFest() {
     // show the card in the deck: a new dyrekort or a card with a new border
     if (f && f.c && !openSheet && POS[BY_KEY[f.c.key]] != null) {
       jump(BY_KEY[f.c.key]);
-      if (f.type !== 'niva') setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
+      if (f.type !== 'niva' && f.type !== 'livs') setTimeout(() => { const kel = pool.get(BY_KEY[f.c.key]); if (kel) { kel.classList.remove('nybonus'); void kel.offsetWidth; kel.classList.add('nybonus'); } }, 450);
     }
     if (f && f.type === 'tittel') { const ri = $('#ringIkon'); ri.classList.remove('pop'); void ri.offsetWidth; ri.classList.add('pop'); }
     // this tap was the step on: the next event comes straight away
@@ -4433,7 +4603,8 @@ function stromSteg(t) {
    seeds from a backup, the chosen back and the speed warning; the seeds follow from these. What was shared is dealt
    with by startPaNytt before this, so nothing here is sent ---- */
 function nullstillFremgang() {
-  [Store, Tell, Kjop, Vist].forEach(x => x.replaceAll({}));   // the purchases before Vist, or a bought animal card is revealed again
+  [Store, Tell, Kjop, Vist, ForSett].forEach(x => x.replaceAll({}));   // the purchases before Vist, or a bought animal card is revealed again
+  forKo = []; avsluttForModus(false);
   tittelFeiret = 0; lsSet(TITTEL_KEY(), '0');
   [OPPDRAG_KEY(), OPPDRAG_SKJULT(), PREMIE_KEY(), BAKSIDE_KEY(), brukerNokkel('fuglekort:nye-tider'), brukerNokkel('fuglekort:tempo-varslet')].forEach(k => lsDel(k)); malBaksider();
   ['fro-gjenopprettet', 'arter-gjenopprettet'].forEach(k => lsDel(DK(k))); froNullstill(); paintOppdrag();
@@ -4444,7 +4615,7 @@ function nullstillFremgang() {
 }
 
 /* the backup: the sightings, counts and purchases as text (Profil → Lagring, and before «Start på nytt») */
-const sikkerhetskopi = () => JSON.stringify({ kortstokk: 'hagefugler', versjon: 8, sett: Store.data, tellinger: Tell.data, kjop: Kjop.data });
+const sikkerhetskopi = () => JSON.stringify({ kortstokk: 'hagefugler', versjon: 9, sett: Store.data, tellinger: Tell.data, kjop: Kjop.data, forsett: ForSett.data });
 /* a button says «Kopiert!» for a moment instead of a message bubble */
 function kvittering(knapp, tekst) {
   if (!knapp || knapp.dataset.tekst) return;
@@ -4513,6 +4684,196 @@ Store.on(() => {
   paintChrome();
   if (openSheet && openSheet.id === 'statsSheet') renderStats();
   if (openSheet && openSheet.id === 'searchSheet') renderSearch();
+});
+
+/* ================= Arter sett før: the question, the walk-through and the list ================= */
+ForSett.on(() => {
+  pool.forEach(paintCard);
+  paintChrome();
+  if (openSheet && openSheet.id === 'statsSheet') renderStats();
+  if (openSheet && openSheet.id === 'searchSheet') renderSearch();
+  if (openSheet && openSheet.id === 'forListeSheet') paintForListe();
+});
+
+/* ---- «Har du sett … før?»: the first time a bird is registered, when the seeds have landed and the celebrations
+   are over (one at a time, in order); not for a bird already answered, or when it is turned off in Innstillinger.
+   The same window from the back of a card ---- */
+function planleggForSporsmal(k) {
+  if (k) { if (!sporFor() || ForSett.svar(k) || forKo.includes(k)) return; forKo.push(k); }
+  clearTimeout(forKoT); forKoT = setTimeout(nesteForSporsmal, k ? 900 : 450);
+}
+function nesteForSporsmal() {
+  forKoT = null;
+  while (forKo.length && (!sporFor() || ForSett.svar(forKo[0]) || !Store.has(forKo[0]))) forKo.shift();
+  if (!forKo.length) return;
+  const opptatt = dlgApen || festAapen || festKo.length || froVent.length || pillVent || openSheet || forModus || Tell.aktiv()   // not during a count
+    || !festVentEl.hidden || plussEl.classList.contains('vis') || Date.now() < froFlyTil;
+  if (opptatt) { forKoT = setTimeout(nesteForSporsmal, 500); return; }
+  forSporsmal(CARDS[BY_KEY[forKo.shift()]], true);
+}
+function forSporsmal(c, vedReg) {
+  const v = ForSett.svar(c.key), iApp = Store.has(c.key), videre = () => { if (vedReg) planleggForSporsmal(); };
+  let aar = v && v.svar === 'for' ? v.aar : null;
+  sporsmal({
+    tittel: `Har du sett ${smaNavn(c)} før?`,
+    tekst: `<p>Før du begynte med Fuglekort.</p>
+      <label class="dlg-felt" for="fsAar">Hvis ja: hvilket år? <small>valgfritt</small><select id="fsAar">${aarValg(aar)}</select></label>`,
+    knapper: [
+      { tekst: 'Ja, sett før', pri: true, sjekk: () => { aar = gyldigAar($('#fsAar').value); return true; },
+        fn: () => { ForSett.sett(c.key, 'for', aar); si(`${c.navn} er lagt inn som sett før${aar ? `, ${aar}` : ''}.`); videre(); } },
+      { tekst: iApp ? 'Nei, første gang!' : 'Nei', fn: () => {
+        if (iApp) {
+          const ny = !v || v.svar !== 'ny';
+          ForSett.sett(c.key, 'ny');
+          if (vedReg && ny) { festKo.push({ type: 'livs', c, fro: 0 }); planleggFest(); }
+          si(`${c.navn} er en ny art for deg.`);
+        } else if (v) { ForSett.sett(c.key, null); si(`${c.navn} er ikke lenger lagt inn som sett før.`); }
+        videre();
+      } },
+      vedReg ? { tekst: 'Ikke spør meg igjen', fn: () => { lsSet(SPOR_FOR(), 'nei'); forKo = []; si('Appen spør ikke mer. Du kan slå det på igjen i Innstillinger.'); } }
+        : { tekst: 'Avbryt' },
+    ],
+    avbryt: videre,
+  });
+}
+
+/* ---- the walk-through: swipe and search through the deck as usual and mark the birds seen before the app.
+   A strip at the top (how many, the list, Ferdig) and a panel at the bottom for the card on top, as during a count.
+   Registering (SETT) is off meanwhile, so nothing is registered for today by mistake ---- */
+$('#fpAar').innerHTML = aarValg(null, 'År (valgfritt)');
+function startForModus() {
+  if (Tell.aktiv()) {
+    sporsmal({ tittel: 'Hagefugltelling pågår', tekst: 'Avslutt tellingen før du legger inn arter du har sett før.', knapper: [{ tekst: 'OK', pri: true }] });
+    return;
+  }
+  closeSheets(true);
+  forModus = true; forVed = forAntall();
+  document.body.classList.add('formodus'); $('#forbar').hidden = false; $('#forpanel').hidden = false;
+  pool.forEach(paintCard); paintForModus();
+  si('Bla gjennom kortene og trykk «Sett før» på fuglene du har sett før du begynte med Fuglekort. Trykk Ferdig når du er ferdig.');
+  setTimeout(() => $('#fpSett').focus(), 80);
+}
+function avsluttForModus(oppsummer = true) {
+  if (!forModus) return;
+  forModus = false;
+  document.body.classList.remove('formodus'); $('#forbar').hidden = true; $('#forpanel').hidden = true;
+  pool.forEach(paintCard); paintChrome();
+  if (!oppsummer) return;
+  const n = forAntall(), nye = n - forVed;
+  sporsmal({
+    tittel: 'Ferdig',
+    tekst: `<p>${n ? `Du har ${flertall(n, 'art', 'arter')} som sett før${nye > 0 ? `, ${nye} av dem lagt inn nå` : ''}.` : 'Du har ikke lagt inn noen arter som sett før.'} Livslista di er ${flertall(livsliste(), 'art', 'arter')}.</p>
+      <p>Registrer fuglene med «Sett» når du ser dem, så får du frø.</p>`,
+    knapper: [{ tekst: 'OK', pri: true }],
+    avbryt: () => planleggForSporsmal(),
+  });
+}
+function paintForModus() {
+  if (!forModus) return;
+  const c = CARDS[cur], fugl = !c.bonus, v = ForSett.svar(c.key), nd = Store.days(c.key).length, info = $('#fpInfo'), aarEl = $('#fpAar'), knapp = $('#fpSett');
+  const n = forAntall(); $('#fbAntall').textContent = n; $('#fbInfo').textContent = `${n === 1 ? 'art' : 'arter'} sett før`;
+  $('#fpNavn').textContent = c.navn;
+  info.textContent = !fugl ? 'Dyrekort legges ikke inn' : nd ? `${nd} ${nd === 1 ? 'dag' : 'dager'} i appen` : 'Ikke i appen ennå';
+  info.classList.remove('varsel');
+  knapp.disabled = !fugl; aarEl.disabled = !fugl;
+  knapp.setAttribute('aria-pressed', fugl && ForSett.erFor(c.key) ? 'true' : 'false');
+  knapp.setAttribute('aria-label', `Sett før appen: ${c.navn}`);
+  if (document.activeElement !== aarEl) aarEl.value = v && v.svar === 'for' && v.aar ? String(v.aar) : '';
+}
+$('#fpSett').addEventListener('click', () => {
+  const c = CARDS[cur]; if (c.bonus) return;
+  if (ForSett.erFor(c.key)) { ForSett.sett(c.key, null); si(`${c.navn} er ikke lenger lagt inn som sett før.`); }
+  else { const a = gyldigAar($('#fpAar').value); ForSett.sett(c.key, 'for', a); haptic(8); si(`${c.navn} er lagt inn som sett før${a ? `, ${a}` : ''}.`); }
+});
+$('#fpAar').addEventListener('change', e => {      // a year chosen: seen before, that year
+  const c = CARDS[cur]; if (c.bonus) return;
+  const a = gyldigAar(e.target.value); ForSett.sett(c.key, 'for', a);
+  si(`${c.navn} er lagt inn som sett før${a ? `, ${a}` : ''}.`);
+});
+function forVarsel() {
+  const info = $('#fpInfo'); info.textContent = 'Trykk Ferdig først for å registrere i dag.'; info.classList.add('varsel');
+  haptic(20); si('Du legger inn arter du har sett før. Trykk Ferdig først for å registrere i dag.');
+}
+$('#fbFerdig').addEventListener('click', () => avsluttForModus());
+$('#fbListe').addEventListener('click', () => visForListe());
+$('#openFor').addEventListener('click', () => startForModus());
+
+/* ---- the list: every bird alphabetically with a tick and the year, a search, and a list pasted in (one bird a
+   line, Norwegian or Latin names, any case, æøå or not, one letter wrong is fine; a year on the line is kept) ---- */
+const forListeSheet = $('#forListeSheet');
+function visForListe() { $('#flSok').value = ''; $('#flRes').innerHTML = ''; paintForListe(); showSheet(forListeSheet); setTimeout(() => $('#forListeTitle').focus && $('#flSok').focus(), 60); }
+function paintForListe() {
+  const q = norm($('#flSok').value.trim()).s, a = document.activeElement, fok = a && a.dataset ? (a.dataset.flk ? `[data-flk="${a.dataset.flk}"]` : a.dataset.fla ? `[data-fla="${a.dataset.fla}"]` : null) : null;
+  const rader = [...BIRDS].sort((x, y) => kol.compare(x.navn, y.navn))
+    .filter(c => !q || IDX[BY_KEY[c.key]].navn.s.includes(q) || IDX[BY_KEY[c.key]].latin.s.includes(q));
+  $('#flAntall').textContent = `${flertall(forAntall(), 'art', 'arter')} lagt inn som sett før · livslista er ${flertall(livsliste(), 'art', 'arter')}`;
+  const y = forListeSheet.scrollTop;
+  $('#flListe').innerHTML = rader.map(c => {
+    const i = BY_KEY[c.key], v = ForSett.svar(c.key), on = !!v && v.svar === 'for', nd = Store.days(c.key).length;
+    return `<li><label><input type="checkbox" data-flk="${c.key}"${on ? ' checked' : ''}>${miniatyr(c, i)}<span class="fl-n"><b>${esc(c.navn)}</b><small>${esc(c.latin)}${nd ? ` · ${dagerTekst(nd)} i appen` : ''}</small></span></label>${on ? `<select data-fla="${c.key}" aria-label="År du så ${esc(smaNavn(c))} første gang">${aarValg(v.aar)}</select>` : ''}</li>`;
+  }).join('') || '<li class="fl-tom">Ingen fugler passer søket.</li>';
+  forListeSheet.scrollTop = y;
+  if (fok) { const el = $('#flListe').querySelector(fok); if (el) el.focus({ preventScroll: true }); }
+}
+$('#flSok').addEventListener('input', paintForListe);
+$('#flListe').addEventListener('change', e => {
+  const cb = e.target.closest('[data-flk]');
+  if (cb) { const c = CARDS[BY_KEY[cb.dataset.flk]]; ForSett.sett(cb.dataset.flk, cb.checked ? 'for' : null); si(`${c.navn} ${cb.checked ? 'er lagt inn som sett før' : 'er ikke lenger lagt inn'}.`); return; }
+  const sel = e.target.closest('[data-fla]');
+  if (sel) ForSett.sett(sel.dataset.fla, 'for', gyldigAar(sel.value));
+});
+$('#closeForListe').addEventListener('click', () => closeSheets());
+/* the names: lower case, æøå as in the search, only letters */
+const navneform = t => norm(String(t)).s.replace(/[^a-z]/g, '');
+const NAVNEFORM = BIRDS.map(c => ({ c, f: [navneform(c.navn), navneform(c.latin)] }));
+function enFeil(a, b) {                                     // at most one letter added, missing or different
+  if (a === b) return true;
+  if (Math.abs(a.length - b.length) > 1) return false;
+  let i = 0, j = 0, feil = 0;
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) { i++; j++; continue; }
+    if (++feil > 1) return false;
+    if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++; }
+  }
+  return feil + (a.length - i) + (b.length - j) <= 1;
+}
+function finnArt(navn) {
+  const f = navneform(navn); if (f.length < 3) return null;
+  const lik = NAVNEFORM.find(x => x.f.includes(f)); if (lik) return lik.c;
+  if (f.length < 5) return null;
+  const naer = NAVNEFORM.filter(x => x.f.some(g => enFeil(f, g)));
+  return naer.length === 1 ? naer[0].c : null;
+}
+function tolkListe(tekst) {
+  const biter = [];
+  String(tekst).split(/[\n;,]+/).forEach(r => {
+    const m = /\b(1[89]\d\d|20\d\d)\b/.exec(r), aar = m ? gyldigAar(m[1]) : null;
+    const navn = r.replace(/\d{1,4}\s*[./-]\s*\d{1,2}\s*[./-]\s*\d{2,4}/g, ' ').replace(/\d+/g, ' ').replace(/[^\p{L}\s-]/gu, ' ').replace(/\s+/g, ' ').trim();
+    if (!navn) { if (aar && biter.length && !biter[biter.length - 1].aar) biter[biter.length - 1].aar = aar; return; }   // «Kjøttmeis, 2019»
+    biter.push({ tekst: r.trim(), navn, aar });
+  });
+  const funnet = new Map(), ikke = [];
+  biter.forEach(b => {
+    const c = finnArt(b.navn);
+    if (!c) { if (!ikke.includes(b.navn)) ikke.push(b.navn); return; }
+    const f = funnet.get(c.key);
+    if (!f) funnet.set(c.key, { c, aar: b.aar }); else if (b.aar && (!f.aar || b.aar < f.aar)) f.aar = b.aar;
+  });
+  return { funnet: [...funnet.values()], ikke };
+}
+let flFunnet = [];
+$('#flFinn').addEventListener('click', () => {
+  const { funnet, ikke } = tolkListe($('#flTekst').value);
+  flFunnet = funnet;
+  $('#flRes').innerHTML = (funnet.length ? `<p><b>Fant ${flertall(funnet.length, 'art', 'arter')}:</b> ${funnet.map(x => esc(x.c.navn) + (x.aar ? ` (${x.aar})` : '')).join(', ')}</p>` : '<p>Fant ingen fugler fra kortstokken.</p>')
+    + (ikke.length ? `<p class="fl-ikke"><b>Fant ikke:</b> ${ikke.map(t => `«${esc(t)}»`).join(', ')}</p>` : '')
+    + (funnet.length ? `<div class="row"><button class="btn pri" id="flLeggTil">Legg til ${flertall(funnet.length, 'art', 'arter')}</button></div>` : '');
+});
+forListeSheet.addEventListener('click', e => {
+  if (e.target.id !== 'flLeggTil' || !flFunnet.length) return;
+  const n = ForSett.leggTil(flFunnet.map(x => ({ key: x.c.key, aar: x.aar })));
+  const mld = n ? `La til ${flertall(n, 'art', 'arter')} som sett før.` : 'Alle artene var lagt inn fra før.';
+  flFunnet = []; $('#flTekst').value = ''; $('#flRes').innerHTML = `<p>${mld}</p>`; si(mld);
 });
 
 Kjop.on(() => {
@@ -5024,6 +5385,11 @@ const INTRO = [
         <span class="idag-merke" aria-hidden="true" style="left:${P(BILDEFELT.x + 0.022)};top:${P(BILDEFELT.y + BILDEFELT.h - 0.058)}">${CHECK}Sett i dag</span></figure>`; } },
   { tittel: 'Frø og titler', tekst: 'Du får frø for hver registrering, mest for nye og sjeldne arter. Klarer du å oppnå tittelen Fuglekonge?',
     bilde: () => `<span class="ti intro-konge" style="${tittelPos(TITLER.length - 1)}" role="img" aria-label="${TITLER[TITLER.length - 1].navn}"></span>` },
+  { tittel: 'Sett fugler før?', tekst: 'Merk fuglene du har sett før du begynte med Fuglekort, gjerne med år. Gå gjennom kortene fra menyen, eller svar når appen spør første gang du registrerer en fugl.',
+    bilde: () => { const c = introKort('pica-pica'), [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje, P = v => (v * 100).toFixed(3) + '%', dLeft = lx - 0.13, dW = lw + 0.15;
+      return `<figure class="intro-kort for"><img src="${esc(bildeAv(c))}" alt="">
+        <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
+        <span class="dato" aria-hidden="true" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}"><span class="hand" style="left:${P((lx - dLeft + 0.012) / dW)}">2019</span></span></figure>`; } },
 ];
 function navnSideHtml(modus) {
   const n = kallenavn() || tilfeldigNavn(), pn = lsGet(DK('postnr')) || '', pa = modus === 'slaPa';
@@ -5047,7 +5413,8 @@ function oppdragSideHtml() {
   return `<section class="intro-side" data-s="oppdrag" aria-labelledby="introToppdrag"><div class="intro-bilde"><div class="intro-oppdrag">
       <ul>${liste.slice(0, 3).map(o => `<li class="${ol[o.id] ? 'ok' : ''}"><span class="o-ring" aria-hidden="true">${ol[o.id] ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5.5 12.5 4 4 9-9"/></svg>' : ''}</span><span class="o-t">${esc(o.tekst)}${ol[o.id] ? '<span class="sr">, fullført</span>' : ''}</span><span class="o-fro">${FROIKON}${fmtFro(oppdragFro(o))}</span></li>`).join('')}</ul>
       <p><span>+ ${flertall(liste.length - 3, 'oppdrag', 'oppdrag')} til</span><b>${FROIKON}${fmtFro(sum)} frø i alt</b></p>
-    </div></div><h2 id="introToppdrag" tabindex="-1">Kom i gang</h2><p>${tekst}</p></section>`;
+    </div></div><h2 id="introToppdrag" tabindex="-1">Kom i gang</h2><p>${tekst}</p>
+    <button class="textbtn intro-for" id="introFor">Legg inn arter du har sett før</button></section>`;
 }
 /* the tasks after the name step: added when it is answered, and the name step can no longer be changed here */
 function introVidere() {
@@ -5100,6 +5467,7 @@ $('#introNeste').addEventListener('click', () => { const k = introIndeks(); if (
 const navnSideUbesvart = () => { const i = [...introSpor.children].findIndex(x => x.dataset.s === 'navn'); return i >= 0 && !introSvart ? i : -1; };
 $('#introHopp').addEventListener('click', () => { const i = navnSideUbesvart(); if (i >= 0) introTil(i); else lukkIntro(); });
 $('#openIntro').addEventListener('click', () => visIntro('vis'));
+introSpor.addEventListener('click', e => { if (e.target.closest('#introFor')) { lukkIntro(); setTimeout(startForModus, 320); } });
 function introFeil(m, sel = '#inNavn') { $('#inFeil').textContent = m; const f = $(sel); f.setAttribute('aria-invalid', 'true'); f.focus(); }
 /* «Start»: the name by the rules and free (when there is a network), the postcode, and sharing on */
 async function introStart() {
@@ -5189,7 +5557,7 @@ function startPaNytt(alt) {
   SPEIL.forEach(sp => sp.tom());
   if (delt) lsSet(DK('slett'), '1');
   ['tavle-sendt', 'profil-sendt', 'tavle', 'tavle:uke', 'tavle:mnd', 'tavle:aar', 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding', 'merket', 'avslutt'].forEach(k => lsDel(DK(k)));
-  if (alt) { ['deling', 'kallenavn', 'postnr', 'skjulte'].forEach(k => lsDel(DK(k))); lsDel('hagefugler:omrade'); }
+  if (alt) { ['deling', 'kallenavn', 'postnr', 'skjulte'].forEach(k => lsDel(DK(k))); lsDel('hagefugler:omrade'); lsDel(SPOR_FOR()); }
   nullstillFremgang();
   SPEIL.forEach(sp => sp.tom());                          // nothing of the old is sent to the new user
   paintDeling(); paintOppdrag();
@@ -5205,7 +5573,7 @@ function startPaNyttSporsmal() {
   sporsmal({
     tittel: 'Start på nytt?',
     tekst: `<p>${har.length ? `Du har ${ogListe(har)}.` : 'Du har ikke registrert noe ennå.'} Det kan ikke angres.</p>
-      <p><b>Nullstill fremgangen:</b> observasjonene, tellingene, frøene, titlene, merkene, oppdragene og kjøpene slettes. Du beholder brukernavnet og innstillingene${deler() ? ', og begynner på 0 på ledertavlen' : ''}.</p>
+      <p><b>Nullstill fremgangen:</b> observasjonene, tellingene, frøene, titlene, merkene, oppdragene, kjøpene og artene du har sett før, slettes. Du beholder brukernavnet og innstillingene${deler() ? ', og begynner på 0 på ledertavlen' : ''}.</p>
       <p><b>Slett alt:</b> det samme, og i tillegg brukernavnet, postnummeret og valget om å dele. Appen blir som ny.</p>
       ${delt ? '<p>Det du har delt med ledertavlen og statistikken, slettes også.</p>' : ''}
       ${har.length ? '<p>Vil du kunne hente noe tilbake med «Gjenopprett», kopierer du en sikkerhetskopi først.</p>' : ''}`,
