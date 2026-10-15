@@ -1242,8 +1242,8 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   </div>
   <div class="s-sec" id="bildeSek"><h3 id="bildevalgTitle">Bilder på kortene</h3>
     <div class="valg" role="radiogroup" aria-labelledby="bildevalgTitle">
-      <button role="radio" data-bilder="ki" aria-checked="true"><span class="rd"></span><b>KI-illustrasjoner</b><small>Tegnede fuglebilder laget til kortstokken. Samme bilder som på de trykte kortene.</small></button>
-      <button role="radio" data-bilder="foto" aria-checked="false"><span class="rd"></span><b>Fotografier</b><small id="fotoAntall"></small></button>
+      <button role="radio" data-bilder="ki" aria-checked="false"><span class="rd"></span><b>KI-illustrasjoner</b><small>Tegnede fuglebilder laget til kortstokken. Samme bilder som på de trykte kortene.</small></button>
+      <button role="radio" data-bilder="foto" aria-checked="true"><span class="rd"></span><b>Fotografier</b><small id="fotoAntall"></small></button>
       <button role="radio" data-bilder="tegneserie" aria-checked="false"><span class="rd"></span><b>Tegneseriefugler</b><small id="tegneserieAntall"></small></button>
     </div>
     <p class="valg-merk">Valget gjelder alle kortene på denne enheten. Avkrysningene dine påvirkes ikke. Trykk på bildet på et kort for å se det stort og bla mellom bildetypene.</p>
@@ -1420,13 +1420,14 @@ const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
 const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const fmtHand = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}.${m}.${y}`; };
 const fmtLong = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-').map(Number); return `${d}. ${MND[m-1]}. ${y}`; };
-/* Bildesett: KI-illustrasjoner (standard), fotografier fra Artsdatabanken eller tegneseriefugler, der de finnes.
+/* Bildesett: fotografier fra Artsdatabanken (standard), KI-illustrasjoner eller tegneseriefugler, der de finnes.
    Et kort uten bilde i det valgte settet viser KI-kortet. */
 const HAR_FOTO = Array.isArray(DATA.hjelpFoto) && CARDS.some(c => c.bildeFoto);
 const HAR_TEGNESERIE = !!DATA.tegneserie && CARDS.some(c => c.bildeTegneserie);
 const BILDESETT = { ki: true, foto: HAR_FOTO, tegneserie: HAR_TEGNESERIE };
-const finnesSett = v => BILDESETT[v] === true;            // a stored value the data does not have falls back to 'ki'
-let bildevalg = finnesSett(lsGet('hagefugler:bilder')) ? lsGet('hagefugler:bilder') : 'ki';
+const finnesSett = v => BILDESETT[v] === true;            // a stored value the data does not have falls back to the standard
+const STANDARD_BILDER = finnesSett('foto') ? 'foto' : 'ki';   // until a choice is made in Innstillinger: the photographs
+let bildevalg = finnesSett(lsGet('hagefugler:bilder')) ? lsGet('hagefugler:bilder') : STANDARD_BILDER;
 const foto = () => bildevalg === 'foto';
 const tegneserie = () => bildevalg === 'tegneserie';
 /* The choice in Innstillinger is the only one; it applies to every card. In full screen you can look at the
