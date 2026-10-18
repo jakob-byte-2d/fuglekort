@@ -925,6 +925,8 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .naa{display:flex;flex-wrap:wrap;gap:8px}
 .naa button{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg-hi);border-radius:99px;padding:4px 12px 4px 4px;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink)}
 .naa .ph{width:30px;height:30px;border-radius:50%}
+.profil-navn{margin:10px 0 0;font-size:22px;letter-spacing:-.01em;outline:none}
+.profil-antall{margin:6px 0 14px;font-size:17px;font-weight:700;color:var(--gold-ink)}
 .art-tilbake{margin:12px 0 0 -6px}
 .art-hode{display:flex;align-items:center;gap:14px;margin-top:8px}
 .art-hode .ph{width:64px;height:64px;border-radius:16px;flex-shrink:0}
@@ -1299,6 +1301,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   </div>
   <div class="s-sec" id="delingSek"><h3>Ledertavle og statistikk</h3>
     <button class="bryter" id="delBtn" role="switch" aria-checked="false"><span><b>Del med ledertavlen og statistikken</b><small>Du vises på ledertavlen med brukernavnet ditt, frø, arter, observasjonsdager og tittel. Observasjonene, tellingene og kjøpene sendes anonymt til en felles database for statistikk over hagefuglene.</small></span><i aria-hidden="true"></i></button>
+    <button class="bryter" id="visArterBtn" role="switch" aria-checked="true"><span><b>Vis artslista mi</b><small>Andre som deler, ser hvilke fugler du har registrert når de trykker på navnet ditt på tavla. Ingen datoer. Slått av ser de bare antallet.</small></span><i aria-hidden="true"></i></button>
     <label class="felt" for="postnrFelt">Postnummer <small>valgfritt, bare til statistikk, vises ikke på tavlen</small></label>
     <input class="felt-inp" id="postnrFelt" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870">
     <p class="valg-merk" id="delStatus" role="status"></p>
@@ -2824,7 +2827,7 @@ document.addEventListener('keydown', e => {
   if (festAapen) { if (e.key === 'Escape') { e.preventDefault(); lukkFest(); } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); festTrykk(); } return; }
   if (openSheet && openSheet.id === 'introSheet') { if (e.key === 'Escape') { e.preventDefault(); introEsc(); } return; }
   if (e.target.closest('input, textarea')) { if (e.key === 'Escape') closeSheets(); return; }
-  if (openSheet) { if (e.key === 'Escape') { if (artVis && openSheet.id === 'statsSheet') lukkArt(); else closeSheets(); } return; }
+  if (openSheet) { if (e.key === 'Escape') { if (artVis && openSheet.id === 'statsSheet') lukkArt(); else if (profilVis && openSheet.id === 'statsSheet') lukkProfil(); else closeSheets(); } return; }
   if (e.key === 'ArrowRight') { e.preventDefault(); stopRiffle(); go(1); }
   else if (e.key === 'ArrowLeft') { e.preventDefault(); stopRiffle(); go(-1); }
   else if (e.key === 'Escape') { stopRiffle(); }
@@ -3163,8 +3166,8 @@ function paintFaner() {
 }
 function velgFane(f, fokus) {
   if (!fanerNa().includes(f)) f = 'profil';
-  const ny = f !== statsFane || artVis;
-  statsFane = f; lsSet('fuglekort:fane', f); artVis = null;
+  const ny = f !== statsFane || artVis || profilVis;
+  statsFane = f; lsSet('fuglekort:fane', f); artVis = null; profilVis = null;
   renderStats();
   if (ny) $('#statsSheet').scrollTop = 0;
   if (f === 'tavle') hentTavle();
@@ -3179,7 +3182,7 @@ fanerEl.addEventListener('keydown', e => {
     : e.key === 'Home' ? F[0] : e.key === 'End' ? F[F.length - 1] : null;
   if (ny) { e.preventDefault(); velgFane(ny, true); }
 });
-function openStats(fane) { artVis = null; if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; if (statsFane === 'tavle') hentTavle(); setTimeout(() => $('#closeStats').focus(), 60); }
+function openStats(fane) { artVis = null; profilVis = null; if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; if (statsFane === 'tavle') hentTavle(); setTimeout(() => $('#closeStats').focus(), 60); }
 $('#openStats').addEventListener('click', () => openStats('profil'));
 $('#closeStats').addEventListener('click', () => closeSheets());
 /* a small picture of the card */
@@ -3392,7 +3395,7 @@ function renderStats() {
     tavle: () => tavleHtml(),
   };
   paintFaner();
-  sb.innerHTML = statsFane === 'statistikk' && artVis ? artHtml(artVis) : FANER_HTML[statsFane]();
+  sb.innerHTML = statsFane === 'statistikk' && artVis ? artHtml(artVis) : statsFane === 'tavle' && profilVis ? profilHtml() : FANER_HTML[statsFane]();
 
   const tip = $('#mtip'), mEl = $('#months');
   if (!mEl) return;
@@ -3408,6 +3411,9 @@ sb.addEventListener('click', async e => {
   if (og) { const g = og.dataset.oppdragGaa; if (g === 'tavle') velgFane('tavle'); else if (g === 'butikk') openButikk(); else if (g === 'sok') { closeSheets(true); openSearch(); } return; }
   const tr = e.target.closest('[data-tavle-rad]');
   if (tr) { tavleRad(tr.dataset.tavleRad); return; }
+  if (e.target.closest('[data-profillukk]')) { lukkProfil(); return; }
+  if (e.target.closest('[data-profil-rapporter]') && profilVis) { rapporterSporsmal(profilVis.uid, visNavn(profilVis.x)); return; }
+  if (e.target.closest('[data-profil-visnavn]') && profilVis) { const s = skjulte(); delete s[profilVis.uid]; lagreSkjulte(s); paintDeling(); return; }
   if (e.target.closest('[data-lukk-melding]')) { lsDel(DK('navn-melding')); paintDeling(); return; }
   const tv = e.target.closest('[data-tavlevis]');
   if (tv) { tavleVis = tv.dataset.tavlevis; lsSet('fuglekort:tavlevis', tavleVis); paintDeling(); hentTavle(); return; }
@@ -4699,6 +4705,7 @@ function lukkOverste() {
   if (festAapen) { lukkFest(); return; }
   if (menyApen()) { lukkMeny(true); return; }
   if (openSheet && openSheet.id === 'statsSheet' && artVis) { lukkArt(); return; }
+  if (openSheet && openSheet.id === 'statsSheet' && profilVis) { lukkProfil(); return; }
   if (openSheet === butikkSheet && butikkVelg) { butikkVelg = null; renderButikk(); return; }
   if (openSheet && openSheet.id === 'introSheet') { introEsc(); return; }   // the same as Esc there
   if (openSheet) closeSheets();
@@ -4934,8 +4941,9 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = 'aeefd1a89b';
+const APPVERSJON = '49c278586a';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
+const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
 const lsJson = (k, v) => { try { const x = JSON.parse(lsGet(k) || 'null'); return x == null ? v : x; } catch (e) { return v; } };
 const delingValg = () => lsGet(DK('deling'));             // 'ja', 'nei', or null: not asked yet
@@ -5109,7 +5117,7 @@ async function sendTavlerad(okt) {
   let n = kallenavn(); if (!n) { n = tilfeldigNavn(); lagreKallenavn(n); }
   const o = oppsummering(), ut = utenfor();
   const rad = { navn: navnStengt() ? null : n.navn, ord: null, fugl: null, tall: null, ...o,
-    fro_utenfor: Math.min(o.fro, ut.fro), arter_utenfor: Math.min(o.arter, ut.arter, 200) };
+    fro_utenfor: Math.min(o.fro, ut.fro), arter_utenfor: Math.min(o.arter, ut.arter, 200), vis_arter: visArter() };
   if (lsGet(DK('tavle-sendt')) === okt.uid + JSON.stringify(rad)) return false;
   const forst = n.navn;
   for (let forsok = 0; forsok < 10; forsok++) {
@@ -5316,8 +5324,8 @@ function tavleHtml() {
   const innhold = (x, nr, meg) => { const skjult = !meg && sk[x.user_id] != null, navn = meg ? (navnStengt() ? 'Fuglevenn' : mittNavn()) : skjult ? 'Skjult navn' : visNavn(x);
     return `<span class="tv-nr ${nr <= 3 ? 'topp' : ''}">${nr}</span><span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>
     <span class="tv-t ${skjult ? 'skjult' : ''}"><b>${esc(navn)}${x.merket ? merke : ''}</b><small>${enkel ? `${flertall(x.arter, 'art', 'arter')} i alt` : arter ? `${fmtFro(x.fro)} frø` : flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span>${arter ? `<span class="tv-fro tv-ant">${x.n || 0} <small>${x.n === 1 ? 'art' : 'arter'}</small></span>` : `<span class="tv-fro">${fmtFro(x.fro)}</span>`}`; };
-  const rad = (x, nr, meg) => meg ? `<li class="meg"><div class="tv-rad">${innhold(x, nr, true)}</div></li>`
-    : `<li><button class="tv-rad" data-tavle-rad="${esc(x.user_id)}" aria-haspopup="dialog">${innhold(x, nr, false)}</button></li>`;
+  const rad = (x, nr, meg) => meg ? `<li class="meg"><button class="tv-rad" data-tavle-rad="meg">${innhold(x, nr, true)}</button></li>`
+    : `<li><button class="tv-rad" data-tavle-rad="${esc(x.user_id)}">${innhold(x, nr, false)}</button></li>`;
   const rader = c && Array.isArray(c.rader) ? c.rader : [], erMeg = rader.some(x => x.user_id === uid);
   const megRad = arter ? { ...o, n: (c && c.meg) || (per ? 0 : o.arter), merket: !!lsGet(DK('merket')) }
     : per ? { ...o, fro: (c && c.meg) || 0, merket: !!lsGet(DK('merket')) } : { ...o, merket: !!lsGet(DK('merket')) };
@@ -5351,18 +5359,70 @@ function tavleHtml() {
   </div>`;
 }
 /* a row on the board: the person's numbers, and reporting the name (or showing a name hidden by you) */
+/* ---- the profile of someone on the board: «42 fugler observert i hagen» and the birds, as a list of chips (a tap
+   goes to the card). From Supabase (profil_arter: the species registered in the app, no dates, no dyrekort); my own
+   from this device. Someone who has turned off «Vis artslista mi» shows the number only. The last list fetched is
+   kept for the session, so it shows without a network too ---- */
+let profilVis = null, tavleRull = 0;
+const profilCache = new Map();
 function tavleRad(uid) {
-  const c = lsJson(tavleNokkel(tavleVis), null), i = c && Array.isArray(c.rader) ? c.rader.findIndex(x => x.user_id === uid) : -1; if (i < 0) return;
-  const x = c.rader[i], skjult = skjulte()[uid] != null, navn = visNavn(x), t = TITLER[Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0))];
-  sporsmal({
-    tittel: skjult ? 'Skjult navn' : navn,
-    tekst: `<p>Nr. ${tavleEtter() === 'arter' ? x.plass || i + 1 : i + 1} · ${esc(t.navn)}<br>${tavleEtter() === 'arter'
-      ? `${flertall(x.n || 0, 'art', 'arter')}${tavleVis !== 'tot' ? ` ${DENNE[tavleVis]}` : ''} · ${flertall(x.arter, 'art', 'arter')} i alt · ${flertall(x.dager, 'observasjonsdag', 'observasjonsdager')} · ${fmtFro(x.fro)} frø`
-      : `${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'observasjonsdag', 'observasjonsdager')} · ${fmtFro(x.fro)} frø${tavleVis !== 'tot' ? ` ${DENNE[tavleVis]}` : ''}`}</p>${x.merket ? '<p>Merket for uvanlig mange frø eller arter på kort tid.</p>' : ''}${skjult ? '<p>Du har rapportert og skjult navnet.</p>' : ''}`,
-    knapper: [{ tekst: 'Lukk', pri: true },
-      skjult ? { tekst: 'Vis navnet igjen', fn: () => { const s = skjulte(); delete s[uid]; lagreSkjulte(s); paintDeling(); } }
-        : { tekst: 'Rapporter navnet', fn: () => rapporterSporsmal(uid, navn) }],
-  });
+  const c = lsJson(tavleNokkel(tavleVis), null), meg = uid === 'meg';
+  const x = meg ? null : c && Array.isArray(c.rader) ? c.rader.find(r => r.user_id === uid) : null;
+  if (!meg && !x) return;
+  profilVis = { uid, x, meg, d: meg ? null : profilCache.get(uid) || null, status: meg ? 'ok' : 'henter' };
+  tavleRull = $('#statsSheet').scrollTop;
+  renderStats(); $('#statsSheet').scrollTop = 0;
+  setTimeout(() => { const h = $('#profilNavn'); h && h.focus({ preventScroll: true }); }, 30);
+  if (!meg) hentProfil(uid);
+}
+async function hentProfil(uid) {
+  if (!navigator.onLine) { settProfil(uid, 'feil'); return; }
+  try {
+    const okt = lsGet(DK('okt')) ? await hentOkt(false).catch(() => null) : null;
+    const r = await supa('/rest/v1/rpc/profil_arter', { metode: 'POST', data: { uid }, okt });
+    if (!r.ok) throw new Error('profil_arter ' + r.status);
+    const d = await r.json();
+    if (d) profilCache.set(uid, d);
+    settProfil(uid, d ? 'ok' : 'borte', d);
+  } catch (e) { settProfil(uid, 'feil'); }
+}
+function settProfil(uid, status, d) {
+  if (!profilVis || profilVis.uid !== uid) return;
+  profilVis.status = status; if (d) profilVis.d = d;
+  if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') {
+    const y = $('#statsSheet').scrollTop, fok = document.activeElement && document.activeElement.id === 'profilNavn';
+    renderStats(); $('#statsSheet').scrollTop = y;
+    if (fok) $('#profilNavn').focus({ preventScroll: true });
+  }
+}
+function lukkProfil() {
+  if (!profilVis) return;
+  const uid = profilVis.uid; profilVis = null;
+  renderStats(); $('#statsSheet').scrollTop = tavleRull;
+  const b = sb.querySelector(`[data-tavle-rad="${uid}"]`); if (b) b.focus({ preventScroll: true });
+}
+function profilHtml() {
+  const p = profilVis, skjult = !p.meg && skjulte()[p.uid] != null;
+  const navn = p.meg ? (navnStengt() ? 'Fuglevenn' : mittNavn()) : skjult ? 'Skjult navn' : visNavn(p.x);
+  let liste = null, antall = null, merk = '';
+  if (p.meg) {
+    liste = BIRDS.filter(c => Store.has(c.key)); antall = liste.length;
+    if (!visArter()) merk = 'Andre ser bare antallet. Det kan du endre under Innstillinger.';
+  } else if (p.d) {
+    const vis = p.d.vis !== false && Array.isArray(p.d.arter);
+    liste = vis ? p.d.arter.filter(k => BY_KEY[k] != null && erFugl(k)).map(k => CARDS[BY_KEY[k]]) : null;
+    antall = vis ? liste.length : Math.max(0, +p.d.antall || 0);
+    if (!vis) merk = 'Artslista er skjult.';
+  }
+  if (liste) liste.sort((a, b) => kol.compare(a.navn, b.navn));
+  const status = p.status === 'borte' ? 'Brukeren er ikke lenger på tavla.' : antall == null ? (p.status === 'feil' ? 'Lista hentes når du har nett.' : 'Henter …')
+    : p.status === 'feil' ? 'Uten nett – viser lista fra sist.' : '';
+  return `<button class="textbtn art-tilbake" data-profillukk>‹ Tilbake til tavla</button>
+    <h3 class="profil-navn" id="profilNavn" tabindex="-1">${esc(navn)}</h3>
+    ${antall != null && p.status !== 'borte' ? `<p class="profil-antall">${flertall(antall, 'fugl', 'fugler')} observert i hagen</p>` : ''}
+    ${status ? `<p class="cap" role="status">${status}</p>` : ''}${merk ? `<p class="cap">${merk}</p>` : ''}
+    ${liste && liste.length && p.status !== 'borte' ? `<div class="naa profil-arter">${liste.map(c => { const i = BY_KEY[c.key]; return `<button data-i="${i}">${miniatyr(c, i)}${esc(c.navn)}</button>`; }).join('')}</div>` : ''}
+    ${p.meg ? '' : `<div class="row" style="margin-top:22px">${skjult ? '<button class="btn" data-profil-visnavn>Vis navnet igjen</button>' : '<button class="btn" data-profil-rapporter>Rapporter navnet</button>'}</div>`}`;
 }
 function rapporterSporsmal(uid, navn) {
   sporsmal({
@@ -5591,6 +5651,7 @@ function paintDeling() {
   b.setAttribute('aria-checked', pa ? 'true' : 'false');
   const pf = $('#postnrFelt'); if (document.activeElement !== pf) pf.value = lsGet(DK('postnr')) || '';
   pf.disabled = !pa; $('#slettMeg').hidden = !pa;
+  const va = $('#visArterBtn'); va.hidden = !pa; va.setAttribute('aria-checked', visArter() ? 'true' : 'false');
   const n = SPEIL.reduce((a, sp) => a + sp.usendt().size, 0), sist = +lsGet(DK('sist-sendt')) || 0;
   $('#delStatus').textContent = slett ? 'Slettingen fullføres når du har nett.'
     : !pa ? 'Du deler ikke, og ser derfor ikke ledertavlen.'
@@ -5600,6 +5661,11 @@ function paintDeling() {
 }
 $('#delBtn').addEventListener('click', () => { if (deler()) slettMegSporsmal(); else if (!lsGet(DK('slett'))) visIntro('slaPa', openSettings); });
 $('#slettMeg').addEventListener('click', slettMegSporsmal);
+$('#visArterBtn').addEventListener('click', () => {
+  if (visArter()) { lsSet(DK('vis-arter'), 'nei'); si('Andre ser bare hvor mange fugler du har registrert.'); }
+  else { lsDel(DK('vis-arter')); si('Andre kan se hvilke fugler du har registrert.'); }
+  planleggSending(300); paintDeling();
+});
 $('#visSkjulte').addEventListener('click', () => { lagreSkjulte({}); paintDeling(); si('De skjulte navnene vises igjen.'); });
 $('#postnrFelt').addEventListener('change', e => { if (lagrePostnr(e.target.value)) si(e.target.value.trim() ? 'Postnummeret er lagret.' : 'Postnummeret er fjernet.'); paintDeling(); });
 
@@ -5616,7 +5682,7 @@ function startPaNytt(alt) {
   SPEIL.forEach(sp => sp.tom());
   if (delt) lsSet(DK('slett'), '1');
   ['tavle-sendt', 'profil-sendt', ...TAVLE_LAGRET, 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding', 'merket', 'avslutt'].forEach(k => lsDel(DK(k)));
-  if (alt) { ['deling', 'kallenavn', 'postnr', 'skjulte'].forEach(k => lsDel(DK(k))); lsDel('hagefugler:omrade'); lsDel(brukerNokkel('fuglekort:spor-forsett')); }
+  if (alt) { ['deling', 'kallenavn', 'postnr', 'skjulte', 'vis-arter'].forEach(k => lsDel(DK(k))); lsDel('hagefugler:omrade'); lsDel(brukerNokkel('fuglekort:spor-forsett')); }
   nullstillFremgang();
   SPEIL.forEach(sp => sp.tom());                          // nothing of the old is sent to the new user
   paintDeling(); paintOppdrag();
