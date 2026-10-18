@@ -116,6 +116,17 @@ I appen heter de dyrekort, og ordet «bonus» står ingen steder (bortsett fra p
 - De har KI-illustrasjoner og fotografier som fuglene: KI-kortene i `docs/cards/`, kortene med fotografi i `docs/cards-foto/` (med `bildeFoto`, `fotograf` og `lisens` i `cards.json`). Med fotografier står fotografen og lisensen også nederst på baksiden av kortet.
 - (Fram til oktober 2026 var de bonuskort man fikk ved 5, 10, 20, 40 og 60 registreringer, og hvert av dem ga 10 000 frø.)
 
+## Brukere på denne telefonen
+
+Øverst i Innstillinger: lista over brukerne på telefonen («I bruk», «Bytt», «Gi nytt navn», «Slett») og «Legg til bruker». Fint for hytta (eget postnummer) eller for barna.
+
+- **Hver bruker har sitt eget:** observasjoner, tellinger, frø og kjøp, titler, oppdrag, livslisten, brukernavn og postnummer på tavla, delingsvalget og innloggingen mot Supabase (hver bruker er sin egen anonyme bruker og har sin egen rad på tavla), enkel versjon, bildevalget, telleområdet og kortet man sto på. Resten av innstillingene (glinset, fanene) gjelder telefonen. Den første brukeren («meg») har nøklene appen alltid har brukt; de andre lagres med `@<id>` bak nøkkelen (`brukerNokkel`). Lista står i `fuglekort:brukere` og den aktive i `fuglekort:bruker`.
+- **Navnet på telefonen** («Hytta», «Emma», 1–20 tegn, ikke likt et annet) er noe annet enn brukernavnet på tavla, som må være unikt og byttes i profilen. Hovedbrukeren heter «Meg» til den får et navn.
+- **Ny bruker:** navn og type. *Vanlig:* appen bytter til brukeren og viser innføringen som første gang (brukernavn, postnummer, deling). *Barn:* tegneseriebilder, deler ikke (ingen navnesteg, ingen anonym bruker i Supabase; delingen kan slås på i Innstillinger), og innføringen vises én gang uten navnesteget.
+- **Bytte:** det som venter på å bli sendt, sendes først (høyst halvannet sekund), så lagres valget og appen lastes på nytt, så alt leses for riktig bruker. Med flere brukere står navnet først i toppen («Hytta · Kort 005 · 3 av 73 sett»), og Profil har «Bytt bruker».
+- **Slette** (ikke hovedbrukeren, og ikke den som er i bruk): alt brukeren har på telefonen slettes, og det den har delt, slettes i Supabase med dens egen økt (`slett_meg`). Uten nett venter økten i `fuglekort:slett-brukere`, og slettingen gjøres når nettet er tilbake, uansett hvem som bruker appen da.
+- Sikkerhetskopi og «Start på nytt» gjelder brukeren som er i bruk. Ingen ny SQL.
+
 ## Enkel versjon
 
 Øverst i Innstillinger: bryteren **Bare registrering** (`fuglekort:enkel` = `ja`, per bruker på enheten, beholdes ved «Start på nytt»). Da er appen bare kortstokken, registreringen, livslisten, tellingen og statistikken:

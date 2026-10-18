@@ -685,6 +685,23 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .enkel .card[data-niva] .mkant{display:none}
 .enkel .tavle .ti,.enkel .tv-meg .ti{display:none}
 .enkel .alb::before{content:none}
+/* ---------- brukere på denne telefonen ---------- */
+.brukere{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.brukere li{display:flex;align-items:center;gap:8px;padding:10px 2px;border-bottom:1px solid var(--line)}
+.brukere .bn{flex:1;min-width:0;display:grid}
+.brukere .bn b{font-size:15.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brukere .bn small{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brukere .bi{font-size:12.5px;font-weight:700;color:var(--ok);white-space:nowrap}
+.brukere .btn{padding:7px 12px}
+.nb-type{display:grid;gap:8px;margin-top:12px}
+.nb-type label{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;cursor:pointer}
+.nb-type input{margin:3px 0 0;accent-color:var(--spruce);width:18px;height:18px;flex-shrink:0}
+.nb-type span{display:grid;gap:2px}
+.nb-type small{color:var(--muted);font-size:13px}
+.dlg-felt .felt-inp{display:block;width:100%;box-sizing:border-box;margin-top:6px}
+.p-bruker{margin:18px 0 -10px;font-size:13.5px;color:var(--muted)}
+.p-bruker b{color:var(--ink)}
+.p-bruker .textbtn{padding:4px 6px}
 .fp-hjelp[hidden]{display:none}
 .fb-ikon{display:grid;place-items:center;width:22px;height:22px;color:var(--spruce-ink);flex-shrink:0}
 .fb-ikon svg{width:20px;height:20px}
@@ -1264,6 +1281,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <h2 id="settingsTitle">Innstillinger</h2>
     <button class="textbtn" id="closeSettings">Lukk</button>
   </div>
+  <div class="s-sec" id="brukerSek"><h3>Brukere på denne telefonen</h3>
+    <ul class="brukere" id="brukerListe"></ul>
+    <div class="row"><button class="btn" id="nyBruker">Legg til bruker</button></div>
+    <p class="valg-merk">Hver bruker har sin egen liste, sine frø og titler, sitt brukernavn og postnummer på tavla og sitt valg av bilder. Fint for hytta, eller for barna.</p>
+  </div>
   <div class="s-sec" id="enkelSek"><h3>Enkel versjon</h3>
     <button class="bryter" id="enkelBtn" role="switch" aria-checked="false"><span><b>Bare registrering</b><small>Ingen frø, titler, feiringer, oppdrag, merker, Frøbutikk eller glinskant. Tavla viser bare arter. Slår du det av igjen, er alt tilbake, også det du har samlet i mellomtiden.</small></span><i aria-hidden="true"></i></button>
   </div>
@@ -1447,6 +1469,24 @@ const PEN = '<path pathLength="1" d="M18 58 C 24 64, 31 73, 37 86 C 49 60, 65 33
 const MND = ['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
 const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+/* ================= Brukere =================
+   Several people (or places) can use the app on one device: «Brukere på denne telefonen» in Innstillinger. The first
+   user, «meg», keeps the keys and collections the app has always used; what belongs to the others (sightings, counts,
+   purchases, the life list, the name, the postcode, sharing and the Supabase session, the picture set, the count
+   area) is stored under keys from brukerNokkel/brukerSamling with «@<id>». Changing user saves the choice and loads
+   the app anew, so everything is read for the right person. Each user is its own anonymous user in Supabase.
+   { id, navn: the short name on this device («Hytta», «Emma»; '' for «meg» until it is named), type: 'vanlig'|'barn' } */
+const BRUKERE_KEY = 'fuglekort:brukere', AKTIV_BRUKER_KEY = 'fuglekort:bruker';
+const BRUKERE = (() => {
+  try { const a = JSON.parse(lsGet(BRUKERE_KEY) || 'null'); if (Array.isArray(a) && a.length && a.every(b => b && typeof b.id === 'string') && a[0].id === 'meg') return a; } catch (e) {}
+  return [{ id: 'meg', navn: '' }];
+})();
+let BRUKER = BRUKERE.find(b => b.id === lsGet(AKTIV_BRUKER_KEY)) || BRUKERE[0];
+const brukerNokkel = (k, b = BRUKER) => (b.id === 'meg' ? k : `${k}@${b.id}`);          // localStorage
+const brukerSamling = (col, b = BRUKER) => (b.id === 'meg' ? col : `${col}_${b.id}`);    // the shared database in Claude
+const lagreBrukere = () => { lsSet(BRUKERE_KEY, JSON.stringify(BRUKERE)); lsSet(AKTIV_BRUKER_KEY, BRUKER.id); };
+const brukerNavn = b => b.navn || (b.id === 'meg' ? 'Meg' : 'Bruker');
+const flereBrukere = () => BRUKERE.length > 1;
 const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const fmtHand = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}.${m}.${y}`; };
 const fmtLong = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-').map(Number); return `${d}. ${MND[m-1]}. ${y}`; };
@@ -1457,7 +1497,8 @@ const HAR_TEGNESERIE = !!DATA.tegneserie && CARDS.some(c => c.bildeTegneserie);
 const BILDESETT = { ki: true, foto: HAR_FOTO, tegneserie: HAR_TEGNESERIE };
 const finnesSett = v => BILDESETT[v] === true;            // a stored value the data does not have falls back to the standard
 const STANDARD_BILDER = finnesSett('foto') ? 'foto' : 'ki';   // until a choice is made in Innstillinger: the photographs
-let bildevalg = finnesSett(lsGet('hagefugler:bilder')) ? lsGet('hagefugler:bilder') : STANDARD_BILDER;
+const BILDER_KEY = () => brukerNokkel('hagefugler:bilder');   // per user: a child gets the cartoon birds
+let bildevalg = finnesSett(lsGet(BILDER_KEY())) ? lsGet(BILDER_KEY()) : STANDARD_BILDER;
 const foto = () => bildevalg === 'foto';
 const tegneserie = () => bildevalg === 'tegneserie';
 /* The choice in Innstillinger is the only one; it applies to every card. In full screen you can look at the
@@ -1502,19 +1543,6 @@ const hentDb = () => dbP || (dbP = (async () => {
   if (!c || typeof c.use !== 'function') return null;
   try { return await c.use('db'); } catch (e) { return null; }
 })());
-/* ================= Brukere =================
-   Today there is one person per device, «meg». What belongs to a person (sightings, counts, bonus cards shown,
-   purchases, name) is stored under keys from brukerNokkel/brukerSamling, so that more people can be added later
-   without moving anyone's data: the first user keeps the keys and collections the app has always used. */
-const BRUKERE_KEY = 'fuglekort:brukere', AKTIV_BRUKER_KEY = 'fuglekort:bruker';
-const BRUKERE = (() => {
-  try { const a = JSON.parse(lsGet(BRUKERE_KEY) || 'null'); if (Array.isArray(a) && a.length && a.every(b => b && typeof b.id === 'string')) return a; } catch (e) {}
-  return [{ id: 'meg', navn: '' }];
-})();
-let BRUKER = BRUKERE.find(b => b.id === lsGet(AKTIV_BRUKER_KEY)) || BRUKERE[0];
-const brukerNokkel = (k, b = BRUKER) => (b.id === 'meg' ? k : `${k}@${b.id}`);          // localStorage
-const brukerSamling = (col, b = BRUKER) => (b.id === 'meg' ? col : `${col}_${b.id}`);    // the shared database in Claude
-const lagreBrukere = () => { lsSet(BRUKERE_KEY, JSON.stringify(BRUKERE)); lsSet(AKTIV_BRUKER_KEY, BRUKER.id); };
 function samling({ col, key, norm, toDoc, migrate, hva }) {
   col = brukerSamling(col); key = brukerNokkel(key);
   return {
@@ -2087,7 +2115,7 @@ const IDX = CARDS.map(c => Object.fromEntries(FIELDS.map(([k]) => [k, norm(c[k])
 
 /* ================= Deck ================= */
 const stage = $('#stage'), deckEl = $('#deck');
-let cur = parseInt(lsGet('hagefugler-oslo:kort') || '0', 10) || 0;
+let cur = parseInt(lsGet(brukerNokkel('hagefugler-oslo:kort')) || '0', 10) || 0;
 if (POS[cur] == null) cur = DECK[0];
 const hashNr = /^#k?(\d{1,3})$/.exec(location.hash || '');
 if (hashNr) { const i = CARDS.findIndex(c => !c.bonus && c.nr === +hashNr[1]); if (i >= 0 && POS[i] != null) cur = i; }   // #k5: card 005, if it is in the deck
@@ -2403,7 +2431,7 @@ function sync(opts = {}) {
     apply(el, pose(s, m));
   });
   if (opts.instant) { void deckEl.offsetWidth; pool.forEach(el => el.classList.remove('no-anim')); }
-  lsSet('hagefugler-oslo:kort', String(cur));
+  lsSet(brukerNokkel('hagefugler-oslo:kort'), String(cur));
   paintChrome();
 }
 
@@ -2855,7 +2883,8 @@ scrub.addEventListener('keydown', e => {
 function paintChrome() {
   const c = CARDS[cur];
   const n = seenCount();
-  $('#sub').textContent = c.bonus ? `Dyrekort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} · ${n} av ${NB} sett`;   // the numbers on the cards have gaps
+  $('#sub').textContent = (flereBrukere() ? `${brukerNavn(BRUKER)} · ` : '')   // several users: whose list this is
+    + (c.bonus ? `Dyrekort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} · ${n} av ${NB} sett`);
   paintFro();                                                // the ring around the title comes after the counter
   ticks.forEach((t, p) => { const i = DECK[p]; t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
   paintTeller(); paintForModus();
@@ -3100,6 +3129,7 @@ function paintSettings() {
   setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg));
   $('#vippBtn').setAttribute('aria-checked', Vipp.aktiv ? 'true' : 'false');
   $('#enkelBtn').setAttribute('aria-checked', enkel ? 'true' : 'false');
+  paintBrukere();
 }
 $('#enkelBtn').addEventListener('click', () => settEnkel(!enkel));
 $('#forFraInnst').addEventListener('click', () => startForModus());
@@ -3111,7 +3141,7 @@ $('#vippBtn').addEventListener('click', async () => {
 function openSettings() { paintSettings(); paintDeling(); showSheet(setSheet); setTimeout(() => (HAR_FOTO || HAR_TEGNESERIE ? setSheet.querySelector('[data-bilder][aria-checked="true"]') : $('#vippBtn')).focus(), 60); }
 function settBilder(v) {
   if (v === bildevalg || !finnesSett(v)) return;
-  bildevalg = v; lsSet('hagefugler:bilder', v);
+  bildevalg = v; lsSet(BILDER_KEY(), v);
   settSprites();
   pool.forEach(oppdaterBilde);
   renderHelp(); paintSettings(); setTimeout(warm, 300);
@@ -3272,6 +3302,7 @@ function renderStats() {
 
   const FANER_HTML = {
     profil: () => `
+    ${flereBrukere() ? `<p class="p-bruker">Bruker på denne telefonen: <b>${esc(brukerNavn(BRUKER))}</b> <button class="textbtn" data-bytt-bruker>Bytt bruker</button></p>` : ''}
     ${profilHode}
     <div class="hero"><span class="big">${n}</span><span class="of">av ${NB} fugler sett</span></div>
     <div class="bar" role="img" aria-label="${Math.round(n / NB * 100)} prosent av fuglekortene"><i style="width:${(n / NB * 100).toFixed(1)}%"></i></div>
@@ -3391,6 +3422,7 @@ function renderStats() {
 }
 sb.addEventListener('click', async e => {
   if (e.target.closest('[data-bytt-navn]')) { byttNavn(); return; }
+  if (e.target.closest('[data-bytt-bruker]')) { byttBrukerSporsmal(); return; }
   if (e.target.closest('[data-slett-meg]')) { slettMegSporsmal(); return; }
   if (e.target.closest('[data-del-pa]')) { visIntro('slaPa', () => openStats('tavle')); return; }
   if (e.target.closest('[data-oppdrag-vis]')) { lsDel(OPPDRAG_SKJULT()); paintOppdrag(); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
@@ -3545,7 +3577,7 @@ tlAnt.addEventListener('keydown', e => { if (e.key === 'Enter') tlAnt.blur(); })
 function openStart() {
   if (Tell.aktiv()) { closeSheets(); return; }
   if (forModus) avsluttForModus(false);
-  $('#tOmrade').value = lsGet('hagefugler:omrade') || '';
+  $('#tOmrade').value = lsGet(brukerNokkel('hagefugler:omrade')) || '';
   showSheet(startSheet);
   setTimeout(() => $('#tStart').focus(), 60);
 }
@@ -3553,7 +3585,7 @@ $('#closeStart').addEventListener('click', () => closeSheets());
 $('#tStart').addEventListener('click', () => {
   if (Tell.aktiv()) { closeSheets(); return; }
   const omrade = $('#tOmrade').value.trim().slice(0, 80);
-  lsSet('hagefugler:omrade', omrade);
+  lsSet(brukerNokkel('hagefugler:omrade'), omrade);
   timeVarslet = false;
   Tell.start(omrade);
   closeSheets(true);
@@ -5656,6 +5688,148 @@ $('#visArterBtn').addEventListener('click', () => {
 $('#visSkjulte').addEventListener('click', () => { lagreSkjulte({}); paintDeling(); si('De skjulte navnene vises igjen.'); });
 $('#postnrFelt').addEventListener('change', e => { if (lagrePostnr(e.target.value)) si(e.target.value.trim() ? 'Postnummeret er lagret.' : 'Postnummeret er fjernet.'); paintDeling(); });
 
+/* ---- Brukere på denne telefonen (see «Brukere»): the list in Innstillinger, a new user, a new name, change, delete.
+   A child: the cartoon birds, and not sharing (no name step; it can be turned on in Innstillinger) ---- */
+function brukerInfo(b) {
+  const kn = lsJson(brukerNokkel('fuglekort:kallenavn', b), null), navn = kn && typeof kn === 'object' ? kn.navn : null;
+  const delt = lsGet(brukerNokkel('fuglekort:deling', b)) === 'ja';
+  return [b.type === 'barn' ? 'Barn' : '', delt && navn ? `«${navn}» på tavla` : delt ? 'deler' : 'deler ikke'].filter(Boolean).join(' · ');
+}
+function paintBrukere() {
+  const ul = $('#brukerListe'); if (!ul) return;
+  ul.innerHTML = BRUKERE.map(b => {
+    const aktiv = b.id === BRUKER.id;
+    return `<li class="${aktiv ? 'aktiv' : ''}"><span class="bn"><b>${esc(brukerNavn(b))}</b><small>${esc(brukerInfo(b))}</small></span>${aktiv
+      ? `<span class="bi">I bruk</span><button class="textbtn" data-bruker-navn="${b.id}">Gi nytt navn</button>`
+      : `<button class="btn" data-bruker-bytt="${b.id}">Bytt</button>${b.id !== 'meg' ? `<button class="textbtn" data-bruker-slett="${b.id}">Slett</button>` : ''}`}</li>`;
+  }).join('');
+}
+const renNavn = t => String(t || '').trim().replace(/\s+/g, ' ').slice(0, 20);
+const navnFinnes = (navn, utenom) => BRUKERE.some(b => b !== utenom && brukerNavn(b).toLowerCase() === navn.toLowerCase());
+function nyBrukerSporsmal() {
+  let navn = '', type = 'vanlig';
+  sporsmal({
+    tittel: 'Ny bruker',
+    tekst: `<label class="dlg-felt" for="nbNavn">Navn på denne telefonen<input class="felt-inp" id="nbNavn" maxlength="20" placeholder="f.eks. Hytta eller Emma" autocomplete="off"></label>
+      <p class="navn-feil" id="nbFeil" role="alert"></p>
+      <div class="nb-type" role="radiogroup" aria-label="Type bruker">
+        <label><input type="radio" name="nbType" value="vanlig" checked><span><b>Vanlig</b><small>Egen liste, egne frø og titler, og eget brukernavn og postnummer på tavla.</small></span></label>
+        <label><input type="radio" name="nbType" value="barn"><span><b>Barn</b><small>Tegneseriebilder, og deler ikke med tavla. Det kan endres i Innstillinger.</small></span></label>
+      </div>`,
+    knapper: [
+      { tekst: 'Legg til og bytt', pri: true, sjekk: () => {
+        navn = renNavn($('#nbNavn').value);
+        const feil = !navn ? 'Skriv et navn.' : navnFinnes(navn) ? 'Det navnet finnes alt på telefonen.' : '';
+        if (feil) { $('#nbFeil').textContent = feil; $('#nbNavn').focus(); return false; }
+        const v = document.querySelector('input[name="nbType"]:checked');
+        type = v && v.value === 'barn' ? 'barn' : 'vanlig';
+        return true;
+      }, fn: () => leggTilBruker(navn, type) },
+      { tekst: 'Avbryt' },
+    ],
+  });
+  setTimeout(() => { const f = $('#nbNavn'); if (f) f.focus(); }, 80);
+}
+function leggTilBruker(navn, type) {
+  const b = { id: 'b' + Date.now().toString(36), navn, type };
+  BRUKERE.push(b); lagreBrukere();
+  if (type === 'barn') {
+    if (HAR_TEGNESERIE) lsSet(brukerNokkel('hagefugler:bilder', b), 'tegneserie');
+    lsSet(brukerNokkel('fuglekort:deling', b), 'nei');
+    lsSet(brukerNokkel('fuglekort:intro', b), 'barn');
+  }
+  byttBruker(b.id);
+}
+function nyttBrukernavnSporsmal(b) {
+  let navn = '';
+  sporsmal({
+    tittel: 'Gi nytt navn',
+    tekst: `<label class="dlg-felt" for="nbNavn">Navn på denne telefonen<input class="felt-inp" id="nbNavn" maxlength="20" value="${esc(b.navn || '')}" placeholder="${esc(brukerNavn(b))}" autocomplete="off"></label>
+      <p class="navn-feil" id="nbFeil" role="alert"></p><p class="cap">Brukernavnet på tavla bytter du i profilen.</p>`,
+    knapper: [
+      { tekst: 'Lagre', pri: true, sjekk: () => {
+        navn = renNavn($('#nbNavn').value);
+        const feil = !navn ? 'Skriv et navn.' : navnFinnes(navn, b) ? 'Det navnet finnes alt på telefonen.' : '';
+        if (feil) { $('#nbFeil').textContent = feil; $('#nbNavn').focus(); return false; }
+        return true;
+      }, fn: () => { b.navn = navn; lagreBrukere(); paintBrukere(); paintChrome(); si(`Brukeren heter nå ${navn}.`); } },
+      { tekst: 'Avbryt' },
+    ],
+  });
+  setTimeout(() => { const f = $('#nbNavn'); if (f) { f.focus(); f.select(); } }, 80);
+}
+function byttBrukerSporsmal() {
+  const andre = BRUKERE.filter(b => b.id !== BRUKER.id);
+  if (!andre.length) return;
+  sporsmal({
+    tittel: 'Bytt bruker',
+    tekst: `<p>Nå: <b>${esc(brukerNavn(BRUKER))}</b>. Hver bruker har sin egen liste.</p>`,
+    knapper: [...andre.map((b, k) => ({ tekst: brukerNavn(b), pri: k === 0, fn: () => byttBruker(b.id) })), { tekst: 'Avbryt' }],
+  });
+}
+/* change user: what waits is sent first (a moment at most), then the app loads anew as that user */
+async function byttBruker(id) {
+  const b = BRUKERE.find(x => x.id === id); if (!b) return;
+  if (b.id !== BRUKER.id && deler() && navigator.onLine) await Promise.race([sendAlt().catch(() => {}), new Promise(r => setTimeout(r, 1500))]);
+  BRUKER = b; lagreBrukere();
+  location.reload();
+}
+function slettBrukerSporsmal(b) {
+  const delt = !!lsGet(brukerNokkel('fuglekort:okt', b));
+  sporsmal({
+    tittel: `Slette ${brukerNavn(b)}?`,
+    tekst: `<p>Lista, tellingene, frøene og alt annet ${esc(brukerNavn(b))} har på denne telefonen, slettes${delt ? ', og det som er delt med ledertavlen og statistikken' : ''}. Det kan ikke angres.</p>
+      <p>Vil du ta vare på noe, bytter du til brukeren og kopierer en sikkerhetskopi først (Min fugleliste → Profil).</p>`,
+    knapper: [{ tekst: 'Slett brukeren', pri: true, fn: () => slettBruker(b) }, { tekst: 'Avbryt' }],
+  });
+}
+/* what a deleted user shared is deleted in Supabase with its own session (slett_meg); without a network the session
+   waits on the device (SLETT_VENT) and the deletion is done when there is one, whoever uses the app then */
+const SLETT_VENT = 'fuglekort:slett-brukere';
+function slettBruker(b) {
+  if (b.id === 'meg' || b.id === BRUKER.id) return;
+  const okt = lsJson(brukerNokkel('fuglekort:okt', b), null);
+  if (okt && okt.refresh) { const v = lsJson(SLETT_VENT, []); v.push({ refresh: okt.refresh, uid: okt.uid }); lsSet(SLETT_VENT, JSON.stringify(v)); }
+  const hale = '@' + b.id;
+  try { Object.keys(localStorage).filter(k => k.endsWith(hale)).forEach(lsDel); } catch (e) {}
+  BRUKERE.splice(BRUKERE.indexOf(b), 1); lagreBrukere();
+  paintBrukere(); paintChrome();
+  si(`${brukerNavn(b)} er slettet.`);
+  slettVentende();
+}
+let sletterVent = false;
+async function slettVentende() {
+  if (sletterVent || !navigator.onLine) return;
+  const vent = lsJson(SLETT_VENT, []); if (!Array.isArray(vent) || !vent.length) return;
+  sletterVent = true;
+  const igjen = [];
+  for (const o of vent) {
+    try {
+      const r = await supa('/auth/v1/token?grant_type=refresh_token', { metode: 'POST', data: { refresh_token: o.refresh } });
+      if (r.status >= 400 && r.status < 500) continue;              // the anonymous user is gone already
+      if (!r.ok) throw new Error('auth ' + r.status);
+      const j = await r.json();
+      const s = await supa('/rest/v1/rpc/slett_meg', { metode: 'POST', data: {}, okt: { access: j.access_token } });
+      if (!s.ok && !(s.status >= 400 && s.status < 500)) throw new Error('slett_meg ' + s.status);
+    } catch (e) { igjen.push(o); }
+  }
+  if (igjen.length) lsSet(SLETT_VENT, JSON.stringify(igjen)); else lsDel(SLETT_VENT);
+  sletterVent = false;
+}
+/* a new child: the introduction once, when nothing else is showing (no name step, as it does not share) */
+function introBarn(forsok = 0) {
+  const opptatt = dlgApen || festAapen || festKo.length || openSheet || !$('#festVent').hidden;
+  if (opptatt) { if (forsok < 60) setTimeout(() => introBarn(forsok + 1), 1000); return; }
+  visIntro('vis');
+}
+setSheet.addEventListener('click', e => {
+  const t = e.target;
+  if (t.id === 'nyBruker') { nyBrukerSporsmal(); return; }
+  const by = t.closest('[data-bruker-bytt]'); if (by) { byttBruker(by.dataset.brukerBytt); return; }
+  const nv = t.closest('[data-bruker-navn]'); if (nv) { const b = BRUKERE.find(x => x.id === nv.dataset.brukerNavn); if (b) nyttBrukernavnSporsmal(b); return; }
+  const sl = t.closest('[data-bruker-slett]'); if (sl) { const b = BRUKERE.find(x => x.id === sl.dataset.brukerSlett); if (b) slettBrukerSporsmal(b); }
+});
+
 /* ---- «Start på nytt»: one question with what you have, and two choices.
    Nullstill fremgangen: the progress (nullstillFremgang); the name, the postcode, sharing and the settings stay.
    Slett alt: the same, and the name, the postcode, the sharing choice, the hidden names and the last count area
@@ -5669,7 +5843,7 @@ function startPaNytt(alt) {
   SPEIL.forEach(sp => sp.tom());
   if (delt) lsSet(DK('slett'), '1');
   ['tavle-sendt', 'profil-sendt', ...TAVLE_LAGRET, 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding', 'merket', 'avslutt'].forEach(k => lsDel(DK(k)));
-  if (alt) { ['deling', 'kallenavn', 'postnr', 'skjulte', 'vis-arter'].forEach(k => lsDel(DK(k))); lsDel('hagefugler:omrade'); lsDel(brukerNokkel('fuglekort:spor-forsett')); }
+  if (alt) { ['deling', 'kallenavn', 'postnr', 'skjulte', 'vis-arter'].forEach(k => lsDel(DK(k))); lsDel(brukerNokkel('hagefugler:omrade')); lsDel(brukerNokkel('fuglekort:spor-forsett')); }
   nullstillFremgang();
   SPEIL.forEach(sp => sp.tom());                          // nothing of the old is sent to the new user
   paintDeling(); paintOppdrag();
@@ -5703,7 +5877,7 @@ function startPaNyttSporsmal() {
 }
 $('#startPaNytt').addEventListener('click', startPaNyttSporsmal);
 [Store, Tell, Kjop].forEach(x => x.on(() => { if (deler()) planleggSending(4000); }));
-addEventListener('online', () => { planleggSending(500); if (statsFane === 'tavle') hentTavle(); });
+addEventListener('online', () => { planleggSending(500); if (statsFane === 'tavle') hentTavle(); setTimeout(slettVentende, 1500); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) planleggSending(1500); });
 
 /* ---- the next task, in a strip under the top ---- */
@@ -5739,6 +5913,8 @@ if (lsGet(DK('slett'))) planleggSending(1000);
 setTimeout(sjekkOppdrag, 1100);                           // tasks the data has done (also from before there were tasks)
 paintOppdrag();
 setTimeout(sporOmStart, 1500);                            // the first time: the introduction, the username and what is shared
+if (lsGet(brukerNokkel('fuglekort:intro')) === 'barn') { lsDel(brukerNokkel('fuglekort:intro')); setTimeout(introBarn, 1500); }   // a new child: the cards, no name
+setTimeout(slettVentende, 2500);                          // users deleted without a network: what they shared
 setTimeout(sjekkBonus, 900);                              // dyrekort bought on another device: revealed now
 })();
 </script>
