@@ -700,6 +700,7 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .ring .enkel-ikon svg{position:static;width:20px;height:20px;margin:0;transform:none}
 .enkel .frobtn,.enkel #froPluss,.enkel .oppdrag-stripe,.enkel #fane-merker,.enkel .xmerke,.enkel .lniva,.enkel #vippSek,.enkel .tv-etter{display:none!important}
 .enkel .card[data-niva] .mkant{display:none}
+.enkel .tavle .ti,.enkel .tv-meg .ti{display:none}
 .enkel .alb::before{content:none}
 .fp-hjelp[hidden]{display:none}
 .fb-ikon{display:grid;place-items:center;width:22px;height:22px;color:var(--spruce-ink);flex-shrink:0}
@@ -4933,7 +4934,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '25f20a521e';
+const APPVERSJON = 'aeefd1a89b';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
 const lsJson = (k, v) => { try { const x = JSON.parse(lsGet(k) || 'null'); return x == null ? v : x; } catch (e) { return v; } };
@@ -5314,7 +5315,7 @@ function tavleHtml() {
   const merke = '<span class="tv-merket" role="img" aria-label="merket for uvanlig mange frø eller arter på kort tid" title="Merket for uvanlig mange frø eller arter på kort tid">!</span>';
   const innhold = (x, nr, meg) => { const skjult = !meg && sk[x.user_id] != null, navn = meg ? (navnStengt() ? 'Fuglevenn' : mittNavn()) : skjult ? 'Skjult navn' : visNavn(x);
     return `<span class="tv-nr ${nr <= 3 ? 'topp' : ''}">${nr}</span><span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>
-    <span class="tv-t ${skjult ? 'skjult' : ''}"><b>${esc(navn)}${x.merket ? merke : ''}</b><small>${arter ? `${fmtFro(x.fro)} frø` : flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span>${arter ? `<span class="tv-fro tv-ant">${x.n || 0} <small>${x.n === 1 ? 'art' : 'arter'}</small></span>` : `<span class="tv-fro">${fmtFro(x.fro)}</span>`}`; };
+    <span class="tv-t ${skjult ? 'skjult' : ''}"><b>${esc(navn)}${x.merket ? merke : ''}</b><small>${enkel ? `${flertall(x.arter, 'art', 'arter')} i alt` : arter ? `${fmtFro(x.fro)} frø` : flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span>${arter ? `<span class="tv-fro tv-ant">${x.n || 0} <small>${x.n === 1 ? 'art' : 'arter'}</small></span>` : `<span class="tv-fro">${fmtFro(x.fro)}</span>`}`; };
   const rad = (x, nr, meg) => meg ? `<li class="meg"><div class="tv-rad">${innhold(x, nr, true)}</div></li>`
     : `<li><button class="tv-rad" data-tavle-rad="${esc(x.user_id)}" aria-haspopup="dialog">${innhold(x, nr, false)}</button></li>`;
   const rader = c && Array.isArray(c.rader) ? c.rader : [], erMeg = rader.some(x => x.user_id === uid);
