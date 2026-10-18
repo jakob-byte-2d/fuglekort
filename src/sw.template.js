@@ -4,7 +4,8 @@ const CACHE = 'hagefugler-v1';
 const ASSETS = __ASSETS__;
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // { cache: 'reload' }: straight from the network, not the browser's own cache, so a new version never keeps an old card picture
+  event.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {

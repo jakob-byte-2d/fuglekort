@@ -315,6 +315,10 @@ Kortstokken har de 73 fuglene det er lettest å se i en hage i boligstrøk, ette
 2. Her: `python3 importer_fuglekort.py sti/til/app`
 3. Commit og push. GitHub Pages oppdaterer appen, og telefonene henter de nye kortene selv.
 
+Artefakten «app» kan ikke lastes ned fra Claude sin arbeidsflate (GitHub sender nedlastingen til en adresse som er sperret der). Da bygges «app» fra den samme commiten i en egen kopi av Fuglekort-builder (`git clone`, `git checkout <commit>`, `python3 bygg.py --uten-pdf`), så selve repoet ikke røres. Sist: commit f095c26 (byggekjøring 39159184355), 18. oktober 2026: foto til 063 og 065–072, tegneseriefugler til 061–073 og ny 064, og alle kortbildene 6 px opp (SETT-ruta følger med).
+
+Telefonene får de nye bildene fordi navnet på hurtigbufferen i service workeren regnes av innholdet (`build.py`). Ved installering henter den alle filene med `cache: 'reload'`, rett fra nettet og ikke fra nettleserens egen hurtigbuffer, så en ny versjon ikke får med et gammelt kortbilde.
+
 Skriptet kopierer kortene, de to forklaringskortene, baksiden (Hagefugler-baksiden i `data/bakside.webp`; Fuglekort-builder har «Fuglekort» på sin), fotosettet og tegneseriesettet (se over), finner SETT-ruta og datolinja, lager `data/cards.json`, miniatyrene og app-ikonene, og kjører `build.py`. Avkrysningene lagres på artens latinske navn (f.eks. `parus-major`), ikke på kortnummeret, så de følger fuglen når kortene får ny rekkefølge. Avkrysninger fra før dette (lagret på kortnummer) flyttes over automatisk ved hjelp av `data/tidligere_nummer.json`.
 
 Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort. Appen regner ut antall rader selv.

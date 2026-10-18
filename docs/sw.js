@@ -1,6 +1,6 @@
 // Hagefugler – offline-støtte for den frittstående appen.
 // build.py setter versjonen ut fra innholdet, så telefonene henter alt på nytt etter hver endring.
-const CACHE = 'hagefugler-8161732990';
+const CACHE = 'hagefugler-85ac6e8725';
 const ASSETS = [
   "./",
   "index.html",
@@ -180,7 +180,16 @@ const ASSETS = [
   "cards-foto/060.webp",
   "cards-foto/061.webp",
   "cards-foto/062.webp",
+  "cards-foto/063.webp",
   "cards-foto/064.webp",
+  "cards-foto/065.webp",
+  "cards-foto/066.webp",
+  "cards-foto/067.webp",
+  "cards-foto/068.webp",
+  "cards-foto/069.webp",
+  "cards-foto/070.webp",
+  "cards-foto/071.webp",
+  "cards-foto/072.webp",
   "cards-foto/073.webp",
   "cards-foto/b01.webp",
   "cards-foto/b02.webp",
@@ -249,7 +258,19 @@ const ASSETS = [
   "cards-tegneserie/058.webp",
   "cards-tegneserie/059.webp",
   "cards-tegneserie/060.webp",
+  "cards-tegneserie/061.webp",
+  "cards-tegneserie/062.webp",
+  "cards-tegneserie/063.webp",
   "cards-tegneserie/064.webp",
+  "cards-tegneserie/065.webp",
+  "cards-tegneserie/066.webp",
+  "cards-tegneserie/067.webp",
+  "cards-tegneserie/068.webp",
+  "cards-tegneserie/069.webp",
+  "cards-tegneserie/070.webp",
+  "cards-tegneserie/071.webp",
+  "cards-tegneserie/072.webp",
+  "cards-tegneserie/073.webp",
   "cards-tegneserie/b01.webp",
   "cards-tegneserie/b02.webp",
   "cards-tegneserie/b03.webp",
@@ -449,22 +470,43 @@ const ASSETS = [
   "pictures-tegneserie/060.webp",
   "pictures/061.webp",
   "pictures-foto/061.webp",
+  "pictures-tegneserie/061.webp",
   "pictures/062.webp",
   "pictures-foto/062.webp",
+  "pictures-tegneserie/062.webp",
   "pictures/063.webp",
+  "pictures-foto/063.webp",
+  "pictures-tegneserie/063.webp",
   "pictures/064.webp",
   "pictures-foto/064.webp",
   "pictures-tegneserie/064.webp",
   "pictures/065.webp",
+  "pictures-foto/065.webp",
+  "pictures-tegneserie/065.webp",
   "pictures/066.webp",
+  "pictures-foto/066.webp",
+  "pictures-tegneserie/066.webp",
   "pictures/067.webp",
+  "pictures-foto/067.webp",
+  "pictures-tegneserie/067.webp",
   "pictures/068.webp",
+  "pictures-foto/068.webp",
+  "pictures-tegneserie/068.webp",
   "pictures/069.webp",
+  "pictures-foto/069.webp",
+  "pictures-tegneserie/069.webp",
   "pictures/070.webp",
+  "pictures-foto/070.webp",
+  "pictures-tegneserie/070.webp",
   "pictures/071.webp",
+  "pictures-foto/071.webp",
+  "pictures-tegneserie/071.webp",
   "pictures/072.webp",
+  "pictures-foto/072.webp",
+  "pictures-tegneserie/072.webp",
   "pictures/073.webp",
   "pictures-foto/073.webp",
+  "pictures-tegneserie/073.webp",
   "pictures/b01.webp",
   "pictures-foto/b01.webp",
   "pictures-tegneserie/b01.webp",
@@ -507,7 +549,8 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // { cache: 'reload' }: straight from the network, not the browser's own cache, so a new version never keeps an old card picture
+  event.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
