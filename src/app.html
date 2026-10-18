@@ -349,8 +349,11 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .tavle li.meg{background:color-mix(in srgb, var(--gold) 16%, transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--gold) 55%, transparent)}
 .tavle .ti{width:30px;height:30px;flex-shrink:0}
 .tv-nr{width:26px;flex-shrink:0;text-align:right;font-weight:700;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
-.tavle li:nth-child(-n+3) .tv-nr{color:var(--gold-ink)}
+.tavle li:nth-child(-n+3) .tv-nr,.tavle .tv-nr.topp{color:var(--gold-ink)}
 .tv-fro{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.tv-ant{display:grid;justify-items:end;line-height:1.05}
+.tv-ant small{font-size:11px;font-weight:500;color:var(--muted)}
+.tv-etter{margin-bottom:6px}
 .tavle li.tv-mer{display:flex;justify-content:center;color:var(--muted);padding:0 8px}
 .tv-status{margin:12px 0 0}
 .tv-slett{color:var(--rec);padding-left:0}
@@ -3360,6 +3363,8 @@ sb.addEventListener('click', async e => {
   if (e.target.closest('[data-lukk-melding]')) { lsDel(DK('navn-melding')); paintDeling(); return; }
   const tv = e.target.closest('[data-tavlevis]');
   if (tv) { tavleVis = tv.dataset.tavlevis; lsSet('fuglekort:tavlevis', tavleVis); paintDeling(); hentTavle(); return; }
+  const te = e.target.closest('[data-tavleetter]');
+  if (te) { tavleEtter = te.dataset.tavleetter; lsSet('fuglekort:tavleetter', tavleEtter); paintDeling(); hentTavle(); return; }
   if (e.target.closest('[data-butikk]')) { openButikk(e.target.closest('[data-butikk]').dataset.butikk); return; }
   const mv = e.target.closest('[data-mndvalg]');
   if (mv) { lsSet('fuglekort:mndvis', mv.dataset.mndvalg); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
@@ -5181,7 +5186,7 @@ function startDeling() {
 function stoppDeling() {
   lsSet(DK('deling'), 'nei');
   SPEIL.forEach(sp => sp.tom());
-  ['tavle-sendt', 'profil-sendt', 'tavle', 'tavle:uke', 'tavle:mnd', 'tavle:aar', 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding', 'merket'].forEach(k => lsDel(DK(k)));
+  ['tavle-sendt', 'profil-sendt', ...TAVLE_LAGRET, 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding', 'merket'].forEach(k => lsDel(DK(k)));
   if (lsGet(DK('okt'))) { lsSet(DK('slett'), '1'); slettPaServer(); }
   paintDeling(); paintOppdrag();
 }
@@ -5208,7 +5213,11 @@ const lagrePostnr = v => {
 const TAVLER = ['uke', 'mnd', 'aar', 'tot'], TAVLENAVN = { uke: 'Uke', mnd: 'Måned', aar: 'År', tot: 'Totalt' };
 const DENNE = { uke: 'denne uka', mnd: 'denne måneden', aar: 'i år' }, FORRIGE = { uke: 'Forrige uke', mnd: 'Forrige måned', aar: 'I fjor' };
 let tavleVis = TAVLER.includes(lsGet('fuglekort:tavlevis')) ? lsGet('fuglekort:tavlevis') : 'uke';
-const tavleNokkel = hva => DK(hva === 'tot' ? 'tavle' : 'tavle:' + hva);
+/* the board for seeds (frø) or for bird species (arter): for the species, how many were registered in the period
+   (Totalt: in the app), counted by Supabase from the observation days (tavle_arter); a shared place when equal */
+let tavleEtter = lsGet('fuglekort:tavleetter') === 'arter' ? 'arter' : 'fro';
+const tavleNokkel = (hva, etter = tavleEtter) => DK(etter === 'arter' ? 'tavle-arter:' + hva : hva === 'tot' ? 'tavle' : 'tavle:' + hva);
+const TAVLE_LAGRET = ['tavle', 'tavle:uke', 'tavle:mnd', 'tavle:aar', 'tavle-arter:uke', 'tavle-arter:mnd', 'tavle-arter:aar', 'tavle-arter:tot'];
 const periodeTekst = pid => { const t = premieNavn(pid); return t.charAt(0).toUpperCase() + t.slice(1); };
 function ukeSpenn(fra, til) {
   const a = new Date(fra), b = new Date(new Date(til).getTime() - 1);
@@ -5224,12 +5233,19 @@ const tallFra = cr => { const m = /\/(\d+)$/.exec(cr || ''); return m ? +m[1] : 
 async function hentTavle() {
   if (!deler() || henter) return;
   if (!navigator.onLine) { tavleFeil = true; paintDeling(); return; }
-  const hva = tavleVis;
+  const hva = tavleVis, etter = tavleEtter;
   henter = true; paintDeling();
   try {
     const okt = lsGet(DK('okt')) ? await hentOkt(false).catch(() => null) : null;
     let plass = null;
-    if (hva === 'tot') {
+    if (etter === 'arter') {
+      const r = await supa('/rest/v1/rpc/tavle_arter', { metode: 'POST', data: { hva }, okt });
+      if (!r.ok) throw new Error('tavle_arter ' + r.status);
+      const j = await r.json();
+      if (!j || !Array.isArray(j.rader)) throw new Error('tavle_arter');
+      plass = j.plass || null;
+      lsSet(tavleNokkel(hva, 'arter'), JSON.stringify({ ...j, hentet: Date.now() }));
+    } else if (hva === 'tot') {
       const r = await supa('/rest/v1/ledertavle?select=user_id,navn,ord,fugl,tall,fro,arter,dager,tittel,merket&order=fro.desc,oppdatert.asc&limit=50', { okt, hoder: { Prefer: 'count=exact' } });
       if (!r.ok) throw new Error('tavle ' + r.status);
       const rader = await r.json(), antall = tallFra(r.headers.get('content-range')) || rader.length;
@@ -5239,7 +5255,7 @@ async function hentTavle() {
         const r2 = await supa(`/rest/v1/ledertavle?select=user_id&fro=gt.${oppsummering().fro}&limit=1`, { okt, hoder: { Prefer: 'count=exact' } });
         if (r2.ok) plass = (tallFra(r2.headers.get('content-range')) || 0) + 1;
       }
-      lsSet(tavleNokkel('tot'), JSON.stringify({ rader, antall, plass, hentet: Date.now() }));
+      lsSet(tavleNokkel('tot', 'fro'), JSON.stringify({ rader, antall, plass, hentet: Date.now() }));
       // my row without a name: shut by reports since it was sent (or sent by an older version): sent again
       const meg = i >= 0 ? rader[i] : null;
       if (meg) { if (meg.merket) lsSet(DK('merket'), '1'); else lsDel(DK('merket')); }
@@ -5250,14 +5266,14 @@ async function hentTavle() {
       const j = await r.json();
       if (!j || !Array.isArray(j.rader)) throw new Error('tavle');
       plass = j.plass || null;
-      lsSet(tavleNokkel(hva), JSON.stringify({ ...j, hentet: Date.now() }));
+      lsSet(tavleNokkel(hva, 'fro'), JSON.stringify({ ...j, hentet: Date.now() }));
     }
     tavleFeil = false;
     if (plass && openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') oppdragGjort('tavle');   // «Se deg selv på ledertavlen»
   } catch (e) { tavleFeil = true; }
   finally {
     henter = false; paintDeling();
-    if (tavleVis !== hva && openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') hentTavle();   // another board chosen meanwhile
+    if ((tavleVis !== hva || tavleEtter !== etter) && openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') hentTavle();   // another board chosen meanwhile
   }
 }
 setInterval(() => { if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle' && !document.hidden) hentTavle(); }, 60000);
@@ -5266,24 +5282,27 @@ function tavleHtml() {
   if (!deler()) return `<div class="s-sec tv-av"><h3>Ledertavle</h3>
     <p class="cap">Du deler ikke, og ser derfor ikke ledertavlen. Når du deler, vises du med brukernavnet ditt sammen med frø, arter, observasjonsdager og tittel, og observasjonene dine sendes anonymt til statistikk over hagefuglene.</p>
     <div class="row"><button class="btn pri" data-del-pa>Del og se ledertavlen</button></div></div>`;
-  const hva = tavleVis, per = hva !== 'tot', c = lsJson(tavleNokkel(hva), null), uid = (lsJson(DK('okt'), null) || {}).uid, o = oppsummering(), sk = skjulte();
+  const hva = tavleVis, per = hva !== 'tot', arter = tavleEtter === 'arter', c = lsJson(tavleNokkel(hva), null), uid = (lsJson(DK('okt'), null) || {}).uid, o = oppsummering(), sk = skjulte();
   const status = henter && !c ? 'Henter tavlen …' : (tavleFeil || !navigator.onLine) ? (c ? `Uten nett – viser tavlen fra ${naarTekst(c.hentet)}` : 'Tavlen hentes når du har nett.') : c ? `Oppdatert ${naarTekst(c.hentet)}` : 'Henter tavlen …';
-  const merke = '<span class="tv-merket" role="img" aria-label="merket for uvanlig mange frø på kort tid" title="Merket for uvanlig mange frø på kort tid">!</span>';
+  const merke = '<span class="tv-merket" role="img" aria-label="merket for uvanlig mange frø eller arter på kort tid" title="Merket for uvanlig mange frø eller arter på kort tid">!</span>';
   const innhold = (x, nr, meg) => { const skjult = !meg && sk[x.user_id] != null, navn = meg ? (navnStengt() ? 'Fuglevenn' : mittNavn()) : skjult ? 'Skjult navn' : visNavn(x);
-    return `<span class="tv-nr">${nr}</span><span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>
-    <span class="tv-t ${skjult ? 'skjult' : ''}"><b>${esc(navn)}${x.merket ? merke : ''}</b><small>${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span><span class="tv-fro">${fmtFro(x.fro)}</span>`; };
+    return `<span class="tv-nr ${nr <= 3 ? 'topp' : ''}">${nr}</span><span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>
+    <span class="tv-t ${skjult ? 'skjult' : ''}"><b>${esc(navn)}${x.merket ? merke : ''}</b><small>${arter ? `${fmtFro(x.fro)} frø` : flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span>${arter ? `<span class="tv-fro tv-ant">${x.n || 0} <small>${x.n === 1 ? 'art' : 'arter'}</small></span>` : `<span class="tv-fro">${fmtFro(x.fro)}</span>`}`; };
   const rad = (x, nr, meg) => meg ? `<li class="meg"><div class="tv-rad">${innhold(x, nr, true)}</div></li>`
     : `<li><button class="tv-rad" data-tavle-rad="${esc(x.user_id)}" aria-haspopup="dialog">${innhold(x, nr, false)}</button></li>`;
   const rader = c && Array.isArray(c.rader) ? c.rader : [], erMeg = rader.some(x => x.user_id === uid);
-  const megRad = per ? { ...o, fro: (c && c.meg) || 0, merket: !!lsGet(DK('merket')) } : { ...o, merket: !!lsGet(DK('merket')) };
+  const megRad = arter ? { ...o, n: (c && c.meg) || (per ? 0 : o.arter), merket: !!lsGet(DK('merket')) }
+    : per ? { ...o, fro: (c && c.meg) || 0, merket: !!lsGet(DK('merket')) } : { ...o, merket: !!lsGet(DK('merket')) };
   const melding = lsJson(DK('navn-melding'), null);
-  const varsel = [lsGet(DK('merket')) ? '<div class="tv-varsel" role="status">Du er merket på ledertavlen fordi du har fått uvanlig mange frø på kort tid. Merket blir stående til det er sjekket, og imens kan du ikke vinne premier.</div>' : '',
+  const varsel = [lsGet(DK('merket')) ? '<div class="tv-varsel" role="status">Du er merket på ledertavlen fordi du har fått uvanlig mange frø eller registrert uvanlig mange arter på kort tid. Merket blir stående til det er sjekket, og imens kan du ikke vinne premier.</div>' : '',
     navnStengt() ? `<div class="tv-varsel" role="status">Navnet «${esc(mittNavn())}» kan ikke brukes på ledertavlen, fordi det er rapportert eller ikke tillatt. Til du velger et nytt, står du som «Fuglevenn».<button class="btn" data-bytt-navn>Velg nytt navn</button></div>`
     : melding ? `<div class="tv-varsel" role="status">«${esc(melding.fra)}» var tatt, så nå heter du «${esc(melding.til)}». Du kan bytte navn når du vil.<button class="textbtn" data-lukk-melding>OK</button></div>` : ''].join('');
   const plassTekst = !c ? 'Plassen din kommer når tavlen er hentet'
+    : arter ? (per ? (c.plass ? `Nr. ${c.plass} av ${c.antall} · ${flertall(c.meg || 0, 'art', 'arter')} ${DENNE[hva]}` : `Ingen arter registrert ${DENNE[hva]} ennå`)
+      : `${c.plass ? `Nr. ${c.plass} av ${c.antall}` : 'Plassen din kommer når tavlen er hentet'} · ${flertall(o.arter, 'art', 'arter')}`)
     : per ? (c.plass ? `Nr. ${c.plass} av ${c.antall} · ${fmtFro(c.meg || 0)} frø ${DENNE[hva]}` : `Ingen frø ${DENNE[hva]} ennå`)
     : `${c.plass ? `Nr. ${c.plass} av ${c.antall}` : 'Plassen din kommer når tavlen er hentet'} · ${fmtFro(o.fro)} frø`;
-  const forrige = per && c && Array.isArray(c.forrige) && c.forrige.length ? `<div class="tv-forrige"><h4>${FORRIGE[hva]}</h4><ol>${c.forrige.map(p =>
+  const forrige = per && !arter && c && Array.isArray(c.forrige) && c.forrige.length ? `<div class="tv-forrige"><h4>${FORRIGE[hva]}</h4><ol>${c.forrige.map(p =>
     `<li class="${p.user_id && p.user_id === uid ? 'meg' : ''}"><span class="tv-med m${p.plass}" aria-label="${p.plass}. plass">${p.plass}</span><b>${esc(p.navn || 'Fuglevenn')}</b><small>${fmtFro(p.poeng)} frø · premie ${fmtFro(p.fro)}</small></li>`).join('')}</ol></div>` : '';
   return `<div class="s-sec">
     <div class="tv-meg"><span class="ti" style="${tittelPos(o.tittel)}" aria-hidden="true"></span>
@@ -5291,10 +5310,12 @@ function tavleHtml() {
       <button class="btn" data-bytt-navn>Bytt navn</button></div>
     ${varsel}
     <h3 style="margin-top:22px">Ledertavle <span class="h3n">topp ${Math.min(50, rader.length || 50)}</span></h3>
+    <div class="kal-valg tv-valg tv-etter" role="group" aria-label="Ledertavle etter">${[['fro', 'Frø'], ['arter', 'Arter']].map(([k, t]) => `<button class="chip" data-tavleetter="${k}" aria-pressed="${k === tavleEtter}">${t}</button>`).join('')}</div>
     <div class="kal-valg tv-valg" role="group" aria-label="Ledertavle for">${TAVLER.map(h => `<button class="chip" data-tavlevis="${h}" aria-pressed="${h === hva}">${TAVLENAVN[h]}</button>`).join('')}</div>
-    ${per && c && c.periode ? `<p class="cap tv-periode"><b>${esc(periodeTekst(c.periode))}</b>${hva === 'uke' ? ` · ${ukeSpenn(c.fra, c.til)}` : ''} · ${igjenTekst(c.til)}<br>Premie til de tre beste: ${premieTekst(c.premier)} frø.</p>` : ''}
-    ${rader.length ? `<ol class="tavle">${rader.map((x, i) => rad(x, i + 1, x.user_id === uid)).join('')}${!erMeg && c && c.plass ? `<li class="tv-mer" aria-hidden="true">…</li>${rad(megRad, c.plass, true)}` : ''}</ol>`
-      : per && c ? `<p class="cap">Ingen har fått frø ${DENNE[hva]} ennå.</p>` : ''}
+    ${per && c && c.periode ? `<p class="cap tv-periode"><b>${esc(periodeTekst(c.periode))}</b>${hva === 'uke' ? ` · ${ukeSpenn(c.fra, c.til)}` : ''} · ${igjenTekst(c.til)}<br>${arter ? 'Flest fuglearter registrert i perioden. Likt antall gir delt plass.' : `Premie til de tre beste: ${premieTekst(c.premier)} frø.`}</p>` : ''}
+    ${arter && !per && c ? '<p class="cap tv-periode">Flest fuglearter registrert i appen. Likt antall gir delt plass.</p>' : ''}
+    ${rader.length ? `<ol class="tavle">${rader.map((x, i) => rad(x, arter ? x.plass || i + 1 : i + 1, x.user_id === uid)).join('')}${!erMeg && c && c.plass ? `<li class="tv-mer" aria-hidden="true">…</li>${rad(megRad, c.plass, true)}` : ''}</ol>`
+      : c && arter ? `<p class="cap">Ingen har registrert arter${per ? ` ${DENNE[hva]}` : ''} ennå.</p>` : per && c ? `<p class="cap">Ingen har fått frø ${DENNE[hva]} ennå.</p>` : ''}
     <p class="cap tv-status" role="status">${esc(status)}</p>
     ${forrige}
     ${rader.length > 1 ? '<p class="cap">Trykk på et navn for å se mer eller rapportere det.</p>' : ''}
@@ -5307,7 +5328,9 @@ function tavleRad(uid) {
   const x = c.rader[i], skjult = skjulte()[uid] != null, navn = visNavn(x), t = TITLER[Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0))];
   sporsmal({
     tittel: skjult ? 'Skjult navn' : navn,
-    tekst: `<p>Nr. ${i + 1} · ${esc(t.navn)}<br>${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'observasjonsdag', 'observasjonsdager')} · ${fmtFro(x.fro)} frø${tavleVis !== 'tot' ? ` ${DENNE[tavleVis]}` : ''}</p>${x.merket ? '<p>Merket for uvanlig mange frø på kort tid.</p>' : ''}${skjult ? '<p>Du har rapportert og skjult navnet.</p>' : ''}`,
+    tekst: `<p>Nr. ${tavleEtter === 'arter' ? x.plass || i + 1 : i + 1} · ${esc(t.navn)}<br>${tavleEtter === 'arter'
+      ? `${flertall(x.n || 0, 'art', 'arter')}${tavleVis !== 'tot' ? ` ${DENNE[tavleVis]}` : ''} · ${flertall(x.arter, 'art', 'arter')} i alt · ${flertall(x.dager, 'observasjonsdag', 'observasjonsdager')} · ${fmtFro(x.fro)} frø`
+      : `${flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'observasjonsdag', 'observasjonsdager')} · ${fmtFro(x.fro)} frø${tavleVis !== 'tot' ? ` ${DENNE[tavleVis]}` : ''}`}</p>${x.merket ? '<p>Merket for uvanlig mange frø eller arter på kort tid.</p>' : ''}${skjult ? '<p>Du har rapportert og skjult navnet.</p>' : ''}`,
     knapper: [{ tekst: 'Lukk', pri: true },
       skjult ? { tekst: 'Vis navnet igjen', fn: () => { const s = skjulte(); delete s[uid]; lagreSkjulte(s); paintDeling(); } }
         : { tekst: 'Rapporter navnet', fn: () => rapporterSporsmal(uid, navn) }],
@@ -5557,7 +5580,7 @@ function startPaNytt(alt) {
   const delt = !!lsGet(DK('okt')), videre = !alt && delingValg() === 'ja';
   SPEIL.forEach(sp => sp.tom());
   if (delt) lsSet(DK('slett'), '1');
-  ['tavle-sendt', 'profil-sendt', 'tavle', 'tavle:uke', 'tavle:mnd', 'tavle:aar', 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding', 'merket', 'avslutt'].forEach(k => lsDel(DK(k)));
+  ['tavle-sendt', 'profil-sendt', ...TAVLE_LAGRET, 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding', 'merket', 'avslutt'].forEach(k => lsDel(DK(k)));
   if (alt) { ['deling', 'kallenavn', 'postnr', 'skjulte'].forEach(k => lsDel(DK(k))); lsDel('hagefugler:omrade'); lsDel(SPOR_FOR()); }
   nullstillFremgang();
   SPEIL.forEach(sp => sp.tom());                          // nothing of the old is sent to the new user

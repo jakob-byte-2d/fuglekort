@@ -13,6 +13,7 @@
 --   fro_logg     frøene hver time (til ukes-, måneds- og årstavla)   bare du
 --   premier      de tre beste i hver uke, måned og år       alle kan lese
 --   merket       brukere med uvanlig mange frø på kort tid  bare du (godkjenn i SQL Editor)
+--   dyrearter    dyrekortene, som ikke teller på artstavla  bare du (Table Editor)
 -- Du som eier prosjektet, ser alt i SQL Editor (der gjelder ikke RLS), f.eks. via visningen observasjoner.
 -- «Slett meg» sletter den anonyme brukeren, og alle radene forsvinner med den (on delete cascade).
 
@@ -366,6 +367,7 @@ end $$;
 -- ---------- Merking: uvanlig mange frø på kort tid ----------
 -- Siste døgn mer enn 25 nye arter eller mer enn 300 000 frø (uten premier og gjenopprettede frø): brukeren merkes
 -- på tavla og kan ikke vinne premier før du godkjenner: select public.godkjenn('<user_id>');
+-- (Mer enn 40 arter registrert på én dag merkes også; se Artstavla under.)
 create table if not exists public.merket (
   user_id   uuid primary key references auth.users (id) on delete cascade,
   tid       timestamptz not null default now(),     -- da brukeren ble merket
@@ -430,6 +432,79 @@ begin
   end if;
 end $$;
 
+-- ---------- Artstavla: flest fuglearter i uka, måneden, året og totalt ----------
+-- Uke, måned og år: fuglearter med minst én observasjonsdag i perioden (norsk tid), fra tabellen sett. Totalt:
+-- fuglearter registrert i appen (arter på tavla). Dyrekortene teller ikke (tabellen dyrearter; legg nye dyrekort
+-- inn der). Bare den som står på tavla, er med. Likt antall gir delt plass; flest frø står først. Ingen premier.
+-- «Sett før appen» ligger bare på telefonen og teller ikke. Appen henter bare plass, antall og navn, aldri datoer.
+create table if not exists public.dyrearter (art text primary key check (art ~ '^[a-z]+(-[a-z]+){1,3}$'));
+alter table public.dyrearter enable row level security;
+insert into public.dyrearter (art) values
+  ('sciurus-vulgaris'), ('capreolus-capreolus'), ('lepus-timidus'), ('alces-alces'), ('vulpes-vulpes'),
+  ('aglais-urticae'), ('coccinella-septempunctata'), ('bombus-terrestris'), ('cepaea-hortensis'), ('rana-temporaria'),
+  ('apodemus-sylvaticus'), ('erinaceus-europaeus'), ('sorex-araneus'), ('bufo-bufo'), ('meles-meles'),
+  ('anguis-fragilis'), ('vipera-berus')
+on conflict (art) do nothing;
+
+create or replace function public.tavle_arter(hva text) returns jsonb
+language plpgsql stable security definer set search_path = '' as $$
+declare s timestamptz; e timestamptz; fra date; til date; meg uuid := (select auth.uid()); ut jsonb;
+begin
+  if hva is null or hva not in ('uke', 'mnd', 'aar', 'tot') then raise exception 'ukjent periode'; end if;
+  if hva <> 'tot' then
+    s := public.periode_start(hva); e := public.periode_slutt(hva, s);
+    fra := (s at time zone 'Europe/Oslo')::date; til := (e at time zone 'Europe/Oslo')::date;
+  end if;
+  with tall as (
+    select l.user_id,
+      case when hva = 'tot' then l.arter::bigint else (
+        select count(*) from public.sett st
+        where st.user_id = l.user_id and not exists (select 1 from public.dyrearter da where da.art = st.art)
+          and exists (select 1 from unnest(st.dager) d where d >= fra and d < til)) end as n
+    from public.ledertavle l
+  ), r as (
+    select t.user_id, t.n, l.navn, l.ord, l.fugl, l.tall, l.tittel, l.arter, l.dager, l.fro, l.merket,
+           rank() over (order by t.n desc) as plass,
+           row_number() over (order by t.n desc, l.fro desc, l.user_id) as rekke
+    from tall t join public.ledertavle l on l.user_id = t.user_id
+    where t.n > 0
+  )
+  select jsonb_build_object(
+    'periode', case when hva = 'tot' then null else public.periode_navn(hva, s) end, 'fra', s, 'til', e,
+    'antall', (select count(*) from r),
+    'plass', (select r.plass from r where r.user_id = meg),
+    'meg', (select r.n from r where r.user_id = meg),
+    'rader', coalesce((select jsonb_agg(jsonb_build_object('user_id', r.user_id, 'navn', r.navn, 'ord', r.ord, 'fugl', r.fugl, 'tall', r.tall,
+                         'tittel', r.tittel, 'n', r.n, 'arter', r.arter, 'dager', r.dager, 'fro', r.fro, 'merket', r.merket, 'plass', r.plass) order by r.rekke)
+                       from r where r.rekke <= 50), '[]'::jsonb)
+  ) into ut;
+  return ut;
+end $$;
+grant execute on function public.tavle_arter(text) to anon, authenticated;
+
+-- Merking: mer enn 40 fuglearter registrert på samme dag (norsk tid). Som for frøene: merket på tavla, ingen premier
+-- før du godkjenner (select public.godkjenn('<user_id>');), og ikke merket igjen samme dag etter en godkjenning.
+create or replace function public.sjekk_arter_dag() returns trigger
+language plpgsql security definer set search_path = '' as $$
+declare idag date := (now() at time zone 'Europe/Oslo')::date; n integer; g timestamptz;
+begin
+  if not (idag = any(new.dager)) then return null; end if;
+  if exists (select 1 from public.ledertavle l where l.user_id = new.user_id and l.merket) then return null; end if;
+  select m.godkjent into g from public.merket m where m.user_id = new.user_id;
+  if g is not null and (g at time zone 'Europe/Oslo')::date = idag then return null; end if;
+  select count(*) into n from public.sett st
+  where st.user_id = new.user_id and idag = any(st.dager) and not exists (select 1 from public.dyrearter da where da.art = st.art);
+  if n > 40 then
+    insert into public.merket (user_id, tid, grunn, fro_dogn, arter_dogn) values (new.user_id, now(), 'mer enn 40 arter på én dag', null, n)
+      on conflict (user_id) do update set tid = excluded.tid, grunn = excluded.grunn, fro_dogn = excluded.fro_dogn, arter_dogn = excluded.arter_dogn;
+    update public.ledertavle set merket = true where user_id = new.user_id;
+  end if;
+  return null;
+end $$;
+drop trigger if exists sett_arter_dag on public.sett;
+create trigger sett_arter_dag after insert or update of dager on public.sett for each row execute function public.sjekk_arter_dag();
+revoke execute on function public.sjekk_arter_dag() from public, anon, authenticated;
+
 -- ---------- «Slett meg»: den anonyme brukeren og alt som hører til ----------
 create or replace function public.slett_meg() returns void
 language sql security definer set search_path = '' as $$
@@ -458,6 +533,8 @@ grant execute on function public.slett_meg() to authenticated;
 --   delete from public.stengte_navn where navn = lower('Navnet');
 -- Ukestavla akkurat nå (som i appen):
 --   select public.tavle('uke');
+-- Artstavla akkurat nå (uke, mnd, aar eller tot):
+--   select public.tavle_arter('uke');
 -- Premiene som er delt ut:
 --   select * from public.premier order by tid desc;
 -- Merkede brukere, og godkjenne en (fjerner merket; det som kom før, teller ikke igjen):
