@@ -1,6 +1,6 @@
 # Hagefugler
 
-Kortstokk med 60 hagefugler i Norge: fuglene som er registrert ved fôringsplasser i hager (se «Kortstokken»). Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen, samle glinskort og merker og se statistikk. Menyen øverst til høyre har søk, forklaringskortene og innstillingene.
+Kortstokk med 73 hagefugler i Norge: fuglene det er lettest å se i en hage, vinter og sommer (se «Kortstokken»). Du kan sveipe for å bla, snu kortene, søke på navn eller kjennetegn, registrere hvilke dager du har sett hver fugl, telle fugler til Hagefugltellingen, samle glinskort og merker og se statistikk. Menyen øverst til høyre har søk, forklaringskortene og innstillingene.
 
 Kortene lages i repoet **Fuglekort-builder** (kortfabrikken, tidligere Fuglekort-builder). Dette repoet, **fuglekort**, er appen som viser dem.
 
@@ -20,7 +20,7 @@ fuglekort/
 ├── build.py                 Bygger docs/index.html fra src + data
 ├── importer_fuglekort.py    Henter kort, forklaringskort og bakside fra Fuglekort-builder
 ├── importer_baksider.py     Henter baksidene som kan kjøpes i Frøbutikken
-├── velg_kortstokk.py        Velger de 60 fuglene i kortstokken (data/kortstokk.json) fra regnearket i Fuglekort-builder
+├── velg_kortstokk.py        Velger de 73 fuglene i kortstokken (data/kortstokk.json) fra regnearket i Fuglekort-builder
 ├── data/bakside.webp        Hagefugler-baksiden (standardbaksiden og app-ikonene)
 ├── supabase/fuglekort.sql   Tabellene til ledertavlen og statistikken (limes inn i Supabase SQL Editor)
 └── docs/                    Ferdig app – det er denne mappen GitHub Pages viser
@@ -277,13 +277,15 @@ Trykker man på et navn på tavla (også sitt eget), viser fanen Tavle profilen:
 - SQL-en må kjøres før denne appversjonen publiseres, siden tavleraden sendes med `vis_arter`.
 - Artene du registrerer, blir altså synlige for andre som deler. Det må stå i personvernerklæringen.
 
-## Kortstokken: 60 hagefugler
+## Kortstokken: 73 hagefugler
 
-Kortstokken har fuglene som i snitt er sett på minst 0,1 % av fôringsplassene i Hagefugltellingen 2024–2026 (BirdLife Norge/Fuglevennen). Tallene står i arket «Sjeldenhetsvurdering» i regnearket til Fuglekort-builder. `python3 velg_kortstokk.py STI/TIL/Fuglekort-builder/data/fuglekort_data.xlsx` leser dem (regnearket endres ikke) og skriver `data/kortstokk.json`: de 60 fuglene, og de 40 som er ute. Hagefugltellingen er om vinteren, så de fleste sommerfuglene (Linerle, Løvsanger, svalene …) er ute.
+Kortstokken har de 73 fuglene det er lettest å se i en hage i boligstrøk, etter det samme målet som stjernene og kortnumrene i Fuglekort-builder: det høyeste av (1) andelen fôringsplasser som så arten i Hagefugltellingen 2024–2026 (BirdLife Norge/Fuglevennen) × hagetilknytning og (2) sommeranslaget fra Artsobservasjoner × hagetilknytning² × «lander i hagen». Det er kort 001–073, fra Kjøttmeis til Fossekall, uten hull i numrene. Både vinterfuglene ved fôringsbrettet og sommerfuglene (Linerle, Løvsanger, svalene …) er med. Tallene står i arket «Sjeldenhetsvurdering» i regnearket til Fuglekort-builder. `python3 velg_kortstokk.py STI/TIL/Fuglekort-builder/data/fuglekort_data.xlsx [ANTALL]` regner dem ut (regnearket endres ikke) og skriver `data/kortstokk.json`: de 73 fuglene og de 27 som er ute (074–100), med tallet for hver («hage»).
 
-- `build.py` merker fuglekortene som ikke står i lista, med `ute`. De står fortsatt i dataene, men er ikke i kortstokken, søket, albumet, statistikken, tellelista, livslisten eller profilen på tavla, og teller ikke i «av 60» eller på tavla (`arter`). Kortene og bildene deres lastes ikke ned.
+(Fra 18. oktober 2026 til samme kveld hadde kortstokken 60 fugler valgt bare etter Hagefugltellingen. Den regelen tok ut sommerfuglene, så den ble byttet.)
+
+- `build.py` merker fuglekortene som ikke står i lista, med `ute`. De står fortsatt i dataene, men er ikke i kortstokken, søket, albumet, statistikken, tellelista, livslisten eller profilen på tavla, og teller ikke i «av 73» eller på tavla (`arter`). Kortene og bildene deres lastes ikke ned.
 - Det som alt er registrert av en fugl som er ute, slettes ikke, og frøene for det beholdes (registreringer, første gang, glinskant, dager og merker for antall arter), så ingen mister en tittel. Fuglen kan ikke registreres igjen.
-- Kortnumrene er trykt på kortene i Fuglekort-builder og har hull (001, 002, 003, 005 …). Toppen viser «Kort 005 · 3 av 60 sett».
+- Toppen viser «Kort 005 · 3 av 73 sett».
 - Dyrekortene er med som før.
 
 ## Hente nye kort fra Fuglekort-builder
