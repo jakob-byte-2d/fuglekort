@@ -114,6 +114,15 @@ I appen heter de dyrekort, og ordet «bonus» står ingen steder (bortsett fra p
 - De har KI-illustrasjoner og fotografier som fuglene: KI-kortene i `docs/cards/`, kortene med fotografi i `docs/cards-foto/` (med `bildeFoto`, `fotograf` og `lisens` i `cards.json`). Med fotografier står fotografen og lisensen også nederst på baksiden av kortet.
 - (Fram til oktober 2026 var de bonuskort man fikk ved 5, 10, 20, 40 og 60 registreringer, og hvert av dem ga 10 000 frø.)
 
+## Enkel versjon
+
+Øverst i Innstillinger: bryteren **Bare registrering** (`fuglekort:enkel` = `ja`, per bruker på enheten, beholdes ved «Start på nytt»). Da er appen bare kortstokken, registreringen, livslisten, tellingen og statistikken:
+
+- Borte: frøtelleren og Frøbutikken, tittelringen (Min fugleliste-knappen får et vanlig ikon), alle feiringer (glinskant, merker, titler, oppdrag, premier og dyrekort), frøene som flyr og frøpillene, oppdragsstripen, Merker-fanen, multiplikatoren på kortene, glinskanten (på kortene, i albumet og nivålinja på baksiden) og innstillingen for glinskort.
+- Profil viser navnet, antall fugler, observasjonsdager og registreringer (ikke tittel, frø eller glinskort). Kort-fanen viser kjøpte dyrekort uten butikken. Tavla viser bare **Arter** (valget Frø · Arter er skjult).
+- Introduksjonen hopper over «Frø og titler» og oppdragskortet; kort 2 sier «Trykk «Sett» på kortet hver dag du ser fuglen». Første gang appen åpnes, går den rett fra navnet til livslisten.
+- Alt regnes som før (frø, titler, merker, oppdrag, og frøene sendes til tavla). Det som ville blitt feiret, slippes stille (`stilleFester`); titler, oppdrag og premier merkes som feiret. Slår man av bryteren, er alt tilbake med det man har samlet i mellomtiden, uten feiringer i ettertid.
+
 ## Solsikkefrø
 
 Frøene tjenes ved å registrere fugler og samles i to tall: **frø samlet** (alt du har tjent) gir titlene, og **å bruke** (frø samlet minus det du har kjøpt for) er det du handler for i Frøbutikken. Å handle trekker aldri fra titlene. Alle tallene står samlet i `FRO` øverst i frødelen av `src/app.html`.
