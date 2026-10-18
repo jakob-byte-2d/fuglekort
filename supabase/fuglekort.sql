@@ -14,6 +14,7 @@
 --   premier      de tre beste i hver uke, måned og år       alle kan lese
 --   merket       brukere med uvanlig mange frø på kort tid  bare du (godkjenn i SQL Editor)
 --   dyrearter    dyrekortene, som ikke teller på artstavla  bare du (Table Editor)
+-- Profilen på tavla (profil_arter): fugleartene en bruker har registrert, for andre på tavla (kan skjules med vis_arter).
 -- Du som eier prosjektet, ser alt i SQL Editor (der gjelder ikke RLS), f.eks. via visningen observasjoner.
 -- «Slett meg» sletter den anonyme brukeren, og alle radene forsvinner med den (on delete cascade).
 
@@ -247,10 +248,11 @@ on conflict (ord) do nothing;
 alter table public.ledertavle add column if not exists fro_utenfor bigint not null default 0 check (fro_utenfor between 0 and 100000000);
 alter table public.ledertavle add column if not exists arter_utenfor smallint not null default 0 check (arter_utenfor between 0 and 200);  -- arter fra en sikkerhetskopi
 alter table public.ledertavle add column if not exists merket boolean not null default false;   -- settes bare av databasen
+alter table public.ledertavle add column if not exists vis_arter boolean not null default true;   -- artslista på profilen (se profil_arter)
 -- appen kan skrive sine egne kolonner, men aldri «merket»
 revoke insert, update on public.ledertavle from authenticated;
-grant insert (user_id, navn, ord, fugl, tall, fro, arter, dager, tittel, fro_utenfor, arter_utenfor),
-      update (user_id, navn, ord, fugl, tall, fro, arter, dager, tittel, fro_utenfor, arter_utenfor) on public.ledertavle to authenticated;
+grant insert (user_id, navn, ord, fugl, tall, fro, arter, dager, tittel, fro_utenfor, arter_utenfor, vis_arter),
+      update (user_id, navn, ord, fugl, tall, fro, arter, dager, tittel, fro_utenfor, arter_utenfor, vis_arter) on public.ledertavle to authenticated;
 
 create table if not exists public.fro_logg (
   user_id uuid not null references auth.users (id) on delete cascade,
@@ -505,6 +507,25 @@ drop trigger if exists sett_arter_dag on public.sett;
 create trigger sett_arter_dag after insert or update of dager on public.sett for each row execute function public.sjekk_arter_dag();
 revoke execute on function public.sjekk_arter_dag() from public, anon, authenticated;
 
+-- ---------- Profilen på tavla: fugleartene en bruker har registrert ----------
+-- Trykker man på et navn på tavla, viser appen «42 fugler observert i hagen» og fuglene: artene fra tabellen sett, uten
+-- datoer og antall dager, uten dyrekort (dyrearter) og uten «sett før appen» (som bare ligger på telefonen). Bare for
+-- brukere på tavla. Den som har slått av «Vis artslista mi» i appen (vis_arter = false), viser bare antallet; en selv
+-- ser alltid sin egen liste.
+create or replace function public.profil_arter(uid uuid) returns jsonb
+language plpgsql stable security definer set search_path = '' as $$
+declare l public.ledertavle; arter jsonb; vis boolean;
+begin
+  select * into l from public.ledertavle where user_id = uid;
+  if not found then return null; end if;
+  select coalesce(jsonb_agg(st.art order by st.art), '[]'::jsonb) into arter
+  from public.sett st where st.user_id = uid and not exists (select 1 from public.dyrearter da where da.art = st.art);
+  vis := l.vis_arter or uid = (select auth.uid());
+  return jsonb_build_object('user_id', uid, 'navn', l.navn, 'antall', jsonb_array_length(arter), 'vis', vis,
+                            'arter', case when vis then arter end);
+end $$;
+grant execute on function public.profil_arter(uuid) to anon, authenticated;
+
 -- ---------- «Slett meg»: den anonyme brukeren og alt som hører til ----------
 create or replace function public.slett_meg() returns void
 language sql security definer set search_path = '' as $$
@@ -535,6 +556,8 @@ grant execute on function public.slett_meg() to authenticated;
 --   select public.tavle('uke');
 -- Artstavla akkurat nå (uke, mnd, aar eller tot):
 --   select public.tavle_arter('uke');
+-- Profilen til en bruker, slik appen ser den:
+--   select public.profil_arter('<user_id>');
 -- Premiene som er delt ut:
 --   select * from public.premier order by tid desc;
 -- Merkede brukere, og godkjenne en (fjerner merket; det som kom før, teller ikke igjen):
