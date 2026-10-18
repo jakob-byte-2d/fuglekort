@@ -1,4 +1,4 @@
-<title>Fuglekort</title>
+<title>Hagefugler</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Familjen+Grotesk:wght@400;500;600;700&display=swap">
@@ -1145,7 +1145,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <div class="app" id="app">
   <header class="top">
     <div class="brand">
-      <h1>Fuglekort</h1>
+      <h1>Hagefugler</h1>
       <p id="sub">Kort 001 av 060</p>
     </div>
     <button class="frobtn" id="openFro" aria-label="Solsikkefrø. Åpne Frøbutikken" title="Frøbutikken"><span id="froIkon"></span><b id="froTall">0</b></button>
@@ -1429,7 +1429,9 @@ const DATA = JSON.parse(document.getElementById('kortdata').textContent);
 const CARDS = DATA.kort;
 const N = CARDS.length;
 /* Bonuskortene (andre dyr, b01–b05) ligger etter fuglekortene i kortstokken, men teller ikke med i fuglelista */
-const BIRDS = CARDS.filter(c => !c.bonus), BONUS = CARDS.filter(c => c.bonus);
+// the deck: the bird cards not marked «ute» (build.py: data/kortstokk.json) and the dyrekort; a card «ute» stays in
+// the data so the seeds already earned for it stay, but it is not in the deck, the search, the lists or the counts
+const BIRDS = CARDS.filter(c => !c.bonus && !c.ute), BONUS = CARDS.filter(c => c.bonus);
 const NB = BIRDS.length, NBON = BONUS.length;
 const RAR = DATA.sjeldenhet;
 const $ = (s, r = document) => r.querySelector(s);
@@ -1627,8 +1629,9 @@ function migrateKeys(obj) {
   });
   return moved.filter(([, key]) => key);
 }
-const erFugl = k => BY_KEY[k] != null && !CARDS[BY_KEY[k]].bonus;
-const seenCount = () => Object.keys(Store.data).filter(erFugl).length;          // fuglekortene
+const erFugl = k => BY_KEY[k] != null && !CARDS[BY_KEY[k]].bonus;               // a bird card, also one «ute»
+const erKort = k => erFugl(k) && !CARDS[BY_KEY[k]].ute;                         // a bird card in the deck
+const seenCount = () => Object.keys(Store.data).filter(erKort).length;          // fuglekortene i kortstokken
 /* ================= Testmodus =================
    While the app is being tested, old data is not kept. Change TESTMERKE to wipe everything stored on each
    device the next time the app opens (the shared database in Claude is emptied separately when publishing).
@@ -1757,13 +1760,13 @@ const baksideBilde = () => (BAKSIDER.find(b => b.id === baksideValgt()) || BAKSI
    every device. */
 const apneDyr = () => new Set(DYR.filter(c => Kjop.data['dyr-' + c.key]).map(c => c.key));
 let APNE = apneDyr();
-const erApen = c => !c.bonus || APNE.has(c.key);
+const erApen = c => (!c.bonus && !c.ute) || APNE.has(c.key);   // in the deck: a bird card, or a dyrekort bought
 const erApenK = k => BY_KEY[k] != null && erApen(CARDS[BY_KEY[k]]);
 const hashTall = s => { let h = 5381; for (const ch of s) h = (h * 33 + ch.charCodeAt(0)) >>> 0; return h; };
 function byggStokk() {
   const foran = new Map(), etter = new Map();
   const legg = (m, i, j) => { if (!m.has(i)) m.set(i, []); m.get(i).push(j); };
-  const fugler = CARDS.map((c, i) => i).filter(i => !CARDS[i].bonus);
+  const fugler = CARDS.map((c, i) => i).filter(i => !CARDS[i].bonus && !CARDS[i].ute);
   DYR.filter(c => APNE.has(c.key)).forEach(c => {
     const j = BY_KEY[c.key];
     const blokk = fugler.filter(i => CARDS[i].stjerner === c.stjerner);
@@ -1980,7 +1983,8 @@ function nokkeltall() {
   Object.keys(Store.data).filter(erFugl).forEach(k => new Set(Store.data[k].dager.map(aar)).forEach(y => { iAar[y] = (iAar[y] || 0) + 1; }));
   const startAar = alle.length ? aar(alle[0]) + 1 : null, naa = aar(todayISO());
   return {
-    arter: seenCount(), obsDager: alle.length, rekke, arstider, iAar, startAar,
+    // arter: every bird species seen, also those now «ute» (the badges and tasks); arterStokk: those in the deck
+    arter: Object.keys(Store.data).filter(erFugl).length, arterStokk: seenCount(), obsDager: alle.length, rekke, arstider, iAar, startAar,
     aarene: startAar ? Array.from({ length: Math.max(0, naa - startAar + 1) }, (_, k) => startAar + k) : [],
     langeTellinger: ferdige.filter(v => v.slutt - v.start >= 3600000).length,
     tellAar: ferdige.filter(v => v.slutt - v.start >= 3600000).reduce((a, v) => { const y = new Date(v.start).getFullYear(); a[y] = (a[y] || 0) + 1; return a; }, {}),
@@ -1996,7 +2000,7 @@ const MIKON = {
 };
 const MERKER = [
   ...[10, 15, 20, 25, 30, 50].map(n => ({ id: 'a' + n, navn: `${n} arter`, tekst: `Sett ${n} ulike arter`, mal: n, v: t => t.arter, ikon: String(n) })),
-  { id: 'aalle', navn: 'Hele kortstokken', tekst: `Sett alle ${NB} fuglene`, mal: NB, v: t => t.arter, ikon: String(NB) },
+  { id: 'aalle', navn: 'Hele kortstokken', tekst: `Sett alle ${NB} fuglene`, mal: NB, v: t => t.arterStokk, ikon: String(NB) },
   { id: 'rekke', navn: 'Sju på rad', tekst: 'Observasjoner sju dager på rad', mal: 7, v: t => t.rekke, ikon: MIKON.rekke },
   { id: 'arstider', navn: 'Fire årstider', tekst: 'Observasjoner vår, sommer, høst og vinter', mal: 4, v: t => t.arstider, ikon: MIKON.arstider },
   { id: 'flokk', navn: 'Flokk', tekst: 'Minst 20 av én art i en telling', mal: 20, v: t => t.flokk, ikon: MIKON.flokk },
@@ -2086,7 +2090,7 @@ const stage = $('#stage'), deckEl = $('#deck');
 let cur = parseInt(lsGet('hagefugler-oslo:kort') || '0', 10) || 0;
 if (POS[cur] == null) cur = DECK[0];
 const hashNr = /^#k?(\d{1,3})$/.exec(location.hash || '');
-if (hashNr && +hashNr[1] >= 1 && +hashNr[1] <= NB) cur = +hashNr[1] - 1;
+if (hashNr) { const i = CARDS.findIndex(c => !c.bonus && c.nr === +hashNr[1]); if (i >= 0 && POS[i] != null) cur = i; }   // #k5: card 005, if it is in the deck
 const hashBonus = /^#(b\d{2})$/i.exec(location.hash || '');
 if (hashBonus) { const i = CARDS.findIndex(c => c.id === hashBonus[1].toLowerCase()); if (i >= 0 && erApen(CARDS[i])) cur = i; }
 const pool = new Map();
@@ -2419,7 +2423,7 @@ function flip() {
   setFlipped(el, !el.classList.contains('flipped'));
   nudgeHint();
 }
-function announce() { const c = CARDS[cur]; $('#live').textContent = `${c.bonus ? 'Dyrekort' : `Kort ${c.nr} av ${NB}`}: ${c.navn}${Store.has(c.key) ? ', sett' : ''}`; }
+function announce() { const c = CARDS[cur]; $('#live').textContent = `${c.bonus ? 'Dyrekort' : `Kort ${c.nr}`}: ${c.navn}${Store.has(c.key) ? ', sett' : ''}`; }
 const haptic = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
 
 /* ---- momentum: a fast swipe riffles through many cards, slowing down; a tap stops it ---- */
@@ -2851,7 +2855,7 @@ scrub.addEventListener('keydown', e => {
 function paintChrome() {
   const c = CARDS[cur];
   const n = seenCount();
-  $('#sub').textContent = c.bonus ? `Dyrekort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} av ${pad3(NB)} · ${n} sett`;
+  $('#sub').textContent = c.bonus ? `Dyrekort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} · ${n} av ${NB} sett`;   // the numbers on the cards have gaps
   paintFro();                                                // the ring around the title comes after the counter
   ticks.forEach((t, p) => { const i = DECK[p]; t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
   paintTeller(); paintForModus();
@@ -3352,7 +3356,7 @@ function renderStats() {
     <div class="s-sec"><h3>Samlingen</h3>
       <div class="tegnf" role="note" aria-label="Tegnforklaring"><span><b class="okdot" aria-hidden="true">3</b>dager sett</span><span><i class="idag-hake" aria-hidden="true">${CHECK}</i>sett i dag</span>${BIRDS.some(c => bareFor(c.key)) ? `<span><i class="for-hake" aria-hidden="true">${CHECK}</i>sett før appen</span>` : ''}</div>
       <div class="album">
-      ${CARDS.map((c, i) => c.bonus ? '' : albumKort(c, i)).join('')}
+      ${CARDS.map((c, i) => c.bonus || c.ute ? '' : albumKort(c, i)).join('')}
     </div>
       <div class="row"><button class="btn" data-forstart>Fyll ut livslisten</button></div></div>
 
@@ -3566,7 +3570,7 @@ function renderListe() {
   // the count is for birds; of the other animals only ekorn is on Fuglevennen's form, so it is always on top
   // (as a plain row until its dyrekort is bought). Other dyrekort are not in the list, bought or not.
   const rader = [...kort.filter(r => forst(CARDS[r.i])).map(r => erApen(CARDS[r.i]) ? r : { ...r, i: null }), ...EKSTRA.map(e => ({ key: e.key, navn: e.navn, i: null })),
-    ...kort.filter(r => !CARDS[r.i].bonus)]
+    ...kort.filter(r => !CARDS[r.i].bonus && !CARDS[r.i].ute)]
     .filter(r => !q || norm(r.navn).s.includes(q));
   if (!rader.length) { tlisteEl.innerHTML = `<li class="empty">Ingen art passer til «${esc(lq.value)}».</li>`; return; }
   tlisteEl.innerHTML = rader.map(r => {
@@ -5393,7 +5397,7 @@ function profilHtml() {
     if (!visArter()) merk = 'Andre ser bare antallet. Det kan du endre under Innstillinger.';
   } else if (p.d) {
     const vis = p.d.vis !== false && Array.isArray(p.d.arter);
-    liste = vis ? p.d.arter.filter(k => BY_KEY[k] != null && erFugl(k)).map(k => CARDS[BY_KEY[k]]) : null;
+    liste = vis ? p.d.arter.filter(erKort).map(k => CARDS[BY_KEY[k]]) : null;
     antall = vis ? liste.length : Math.max(0, +p.d.antall || 0);
     if (!vis) merk = 'Artslista er skjult.';
   }
@@ -5471,7 +5475,7 @@ const introEl = $('#introSheet'), introSpor = $('#introSpor'), introPrikker = $(
 let introModus = null, introTilbake = null, introRaf = 0, introOppdrag = false, introSvart = false;
 const introKort = key => CARDS[BY_KEY[key] != null ? BY_KEY[key] : BY_KEY[BIRDS[0].key]];
 const INTRO = [
-  { tittel: 'Velkommen til Fuglekort', tekst: 'Bla gjennom fuglekort for de mest kjente fuglene i Norge. Sveip mellom kortene, eller søk på navn eller kjennetegn.',
+  { tittel: 'Velkommen til Hagefugler', tekst: 'Bla gjennom fuglekort for de mest kjente fuglene i Norge. Sveip mellom kortene, eller søk på navn eller kjennetegn.',
     bilde: () => `<div class="intro-vifte">${['cyanistes-caeruleus', 'erithacus-rubecula', 'parus-major'].map((k, j) => `<img src="${esc(bildeAv(introKort(k)))}" alt="" style="--j:${j - 1}">`).join('')}</div>` },
   { tittel: 'Registrer fugler når du ser dem', tekst: 'Trykk «Sett» på kortet. Registrer hver dag og få belønninger.', tekstEnkel: 'Trykk «Sett» på kortet hver dag du ser fuglen.',
     bilde: () => { const c = introKort('parus-major'), [bx, by, bw, bh] = c.sett.boks, P = v => (v * 100).toFixed(3) + '%';

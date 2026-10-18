@@ -5,7 +5,8 @@ Bruk:
     python3 importer_baksider.py STI/TIL/baksider.zip      (eller en mappe med PNG/JPG/WebP)
 
 Skriptet
-  1. leser bildene (filnavn som «Fuglekort_04_Botanisk_744x1039_300dpi.png»: nummer og navn tas fra navnet)
+  1. leser bildene (filnavn som «Hagefugler_04_Botanisk_744x1039_300dpi.png» eller «Fuglekort_04_…»: nummer og navn
+     tas fra navnet; et ord foran nummeret hoppes over)
   2. hopper over bilder som er den baksiden kortstokken har fra før (docs/cards/bakside.webp), så den ikke kan kjøpes
   3. lagrer resten som docs/cards/bakside-<id>.webp i kortstørrelse (750 × 1050)
   4. skriver data/baksider.json med navn og pris (prisene står i PRISER under; en bakside som alt står i fila,
@@ -35,9 +36,9 @@ def slug(tekst):
 
 
 def navn_av(fil):
-    """«Fuglekort_04_Botanisk_744x1039_300dpi.png» → (4, «Botanisk»)"""
+    """«Hagefugler_04_Botanisk_744x1039_300dpi.png» → (4, «Botanisk»)"""
     stamme = Path(fil).stem
-    m = re.match(r"(?:Fuglekort_)?(\d+)_(.+?)(?:_\d+x\d+.*)?$", stamme)
+    m = re.match(r"(?:[^\W\d_]+_)?(\d+)_(.+?)(?:_\d+x\d+.*)?$", stamme)
     nr, navn = (int(m.group(1)), m.group(2)) if m else (999, stamme)
     navn = navn.replace("_", " ").strip()
     return nr, navn[:1].upper() + navn[1:]

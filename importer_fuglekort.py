@@ -10,7 +10,7 @@ der STI/TIL/app er mappen `ut/app` fra `python bygg.py` i Fuglekort-builder, ell
 
 Skriptet
   1. kopierer kortbildene (001–NNN), bonuskortene (b01–b17, andre dyr: dyrekortene i appen), de to forklaringskortene (000a, 000b)
-     og baksiden til docs/cards/, og kortene med fotografi (også bonuskortene og bildekrediteringen deres, b00)
+     og baksiden (data/bakside.webp, Hagefugler-baksiden, når den finnes) til docs/cards/, og kortene med fotografi (også bonuskortene og bildekrediteringen deres, b00)
      til docs/cards-foto/, og kortene med tegneseriebilde til docs/cards-tegneserie/ (bonuskortene i
      tegneseriestil fra kort.json, eller fra kilder/bonus_tegneserie/ (lag_bonus_tegneserie.py) når kort.json ikke har dem)
   2. finner SETT-ruta og datolinja på kortene, så avkrysningen havner riktig
@@ -56,7 +56,7 @@ def ikon(bakside, storrelse, maskable=False):
     im = Image.open(bakside).convert("RGBA")
     bak = Image.new("RGBA", im.size, im.getpixel((W // 2, 8))[:3] + (255,))
     bak.alpha_composite(im)
-    # under ordet øverst («Fuglekort», tidligere «Hagefugler»), ned til bunnen: finn nederste mørke rad i ordet
+    # under ordet øverst («Hagefugler»), ned til bunnen: finn nederste mørke rad i ordet
     mork = (np.asarray(bak.convert("RGB")).astype(int).sum(2) < 250).any(1)
     topp = max(y for y in range(200, 430) if mork[y]) + 9
     side = H - topp
@@ -147,7 +147,11 @@ def main(app):
     for f in (bonus.get("fotosett") or {}).get("forklaringskort", []):
         shutil.copy(app / f["kortbilde"], DOCS / "cards-foto" / f"{f['id']}.webp")
         hjelp_bonus_foto.append({"id": f["id"], "navn": f.get("navn") or f.get("tittel"), "bilde": f"cards-foto/{f['id']}.webp"})
-    bakside = app / (kilde.get("bakside") or "bakside.webp")
+    # baksiden: Hagefugler-baksiden i data/bakside.webp når den finnes (Fuglekort-builder har «Fuglekort» på sin),
+    # ellers den fra Fuglekort-builder. App-ikonene lages av den samme
+    bakside = ROT / "data" / "bakside.webp"
+    if not bakside.is_file():
+        bakside = app / (kilde.get("bakside") or "bakside.webp")
     shutil.copy(bakside, DOCS / "cards" / "bakside.webp")
     # fotosettet: bare kort som faktisk har fotografi kopieres; resten er like KI-kortene og gjenbrukes
     hjelp_foto = []
@@ -210,7 +214,7 @@ def main(app):
     } for k in bonus_inn]
     hjelp += hjelp_bonus
     hjelp_foto += hjelp_bonus + hjelp_bonus_foto
-    data = {"tittel": "Fuglekort", "antall": len(kort_inn), "bonus": len(bonus_inn), "bakside": "cards/bakside.webp", "hjelp": hjelp,
+    data = {"tittel": "Hagefugler", "antall": len(kort_inn), "bonus": len(bonus_inn), "bakside": "cards/bakside.webp", "hjelp": hjelp,
             "sjeldenhet": {"1": "Vanlig", "2": "Regelmessig", "3": "Uvanlig", "4": "Sjelden", "5": "Svært sjelden"},
             "kort": kort}
     if fotosett:

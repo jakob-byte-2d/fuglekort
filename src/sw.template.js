@@ -1,6 +1,6 @@
-// Fuglekort – offline-støtte for den frittstående appen.
+// Hagefugler – offline-støtte for den frittstående appen.
 // build.py setter versjonen ut fra innholdet, så telefonene henter alt på nytt etter hver endring.
-const CACHE = 'fuglekort-v1';
+const CACHE = 'hagefugler-v1';
 const ASSETS = __ASSETS__;
 
 self.addEventListener('install', event => {

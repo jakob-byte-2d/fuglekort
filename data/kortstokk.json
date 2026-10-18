@@ -1,0 +1,609 @@
+{
+ "tittel": "Hagefugler",
+ "regel": "Fugler som i snitt er sett på minst 0,1 % av fôringsplassene i Hagefugltellingen 2024–2026 (BirdLife Norge/Fuglevennen), fra arket Sjeldenhetsvurdering i Fuglekort-builder.",
+ "antall": 60,
+ "arter": [
+  {
+   "id": "001",
+   "key": "parus-major",
+   "navn": "Kjøttmeis",
+   "andel": 0.94308
+  },
+  {
+   "id": "002",
+   "key": "cyanistes-caeruleus",
+   "navn": "Blåmeis",
+   "andel": 0.8341
+  },
+  {
+   "id": "003",
+   "key": "turdus-merula",
+   "navn": "Svarttrost",
+   "andel": 0.47567
+  },
+  {
+   "id": "005",
+   "key": "pica-pica",
+   "navn": "Skjære",
+   "andel": 0.72103
+  },
+  {
+   "id": "006",
+   "key": "chloris-chloris",
+   "navn": "Grønnfink",
+   "andel": 0.40566
+  },
+  {
+   "id": "007",
+   "key": "fringilla-coelebs",
+   "navn": "Bokfink",
+   "andel": 0.09229
+  },
+  {
+   "id": "008",
+   "key": "corvus-cornix",
+   "navn": "Kråke",
+   "andel": 0.26693
+  },
+  {
+   "id": "009",
+   "key": "turdus-pilaris",
+   "navn": "Gråtrost",
+   "andel": 0.02886
+  },
+  {
+   "id": "010",
+   "key": "sitta-europaea",
+   "navn": "Spettmeis",
+   "andel": 0.48362
+  },
+  {
+   "id": "011",
+   "key": "passer-domesticus",
+   "navn": "Gråspurv",
+   "andel": 0.37044
+  },
+  {
+   "id": "013",
+   "key": "pyrrhula-pyrrhula",
+   "navn": "Dompap",
+   "andel": 0.53367
+  },
+  {
+   "id": "014",
+   "key": "sturnus-vulgaris",
+   "navn": "Stær",
+   "andel": 0.02861
+  },
+  {
+   "id": "015",
+   "key": "erithacus-rubecula",
+   "navn": "Rødstrupe",
+   "andel": 0.34912
+  },
+  {
+   "id": "016",
+   "key": "passer-montanus",
+   "navn": "Pilfink",
+   "andel": 0.36261
+  },
+  {
+   "id": "018",
+   "key": "dendrocopos-major",
+   "navn": "Flaggspett",
+   "andel": 0.36505
+  },
+  {
+   "id": "019",
+   "key": "columba-palumbus",
+   "navn": "Ringdue",
+   "andel": 0.05083
+  },
+  {
+   "id": "020",
+   "key": "sylvia-atricapilla",
+   "navn": "Munk",
+   "andel": 0.00909
+  },
+  {
+   "id": "021",
+   "key": "turdus-iliacus",
+   "navn": "Rødvingetrost",
+   "andel": 0.00264
+  },
+  {
+   "id": "023",
+   "key": "spinus-spinus",
+   "navn": "Grønnsisik",
+   "andel": 0.15129
+  },
+  {
+   "id": "024",
+   "key": "poecile-montanus",
+   "navn": "Granmeis",
+   "andel": 0.2951
+  },
+  {
+   "id": "025",
+   "key": "emberiza-citrinella",
+   "navn": "Gulspurv",
+   "andel": 0.24627
+  },
+  {
+   "id": "026",
+   "key": "periparus-ater",
+   "navn": "Svartmeis",
+   "andel": 0.23352
+  },
+  {
+   "id": "027",
+   "key": "carduelis-carduelis",
+   "navn": "Stillits",
+   "andel": 0.11761
+  },
+  {
+   "id": "029",
+   "key": "acanthis-flammea",
+   "navn": "Gråsisik",
+   "andel": 0.14582
+  },
+  {
+   "id": "033",
+   "key": "prunella-modularis",
+   "navn": "Jernspurv",
+   "andel": 0.00246
+  },
+  {
+   "id": "034",
+   "key": "troglodytes-troglodytes",
+   "navn": "Gjerdesmett",
+   "andel": 0.0381
+  },
+  {
+   "id": "035",
+   "key": "garrulus-glandarius",
+   "navn": "Nøtteskrike",
+   "andel": 0.16145
+  },
+  {
+   "id": "037",
+   "key": "fringilla-montifringilla",
+   "navn": "Bjørkefink",
+   "andel": 0.12103
+  },
+  {
+   "id": "038",
+   "key": "larus-canus",
+   "navn": "Fiskemåke",
+   "andel": 0.00862
+  },
+  {
+   "id": "040",
+   "key": "streptopelia-decaocto",
+   "navn": "Tyrkerdue",
+   "andel": 0.02704
+  },
+  {
+   "id": "041",
+   "key": "coccothraustes-coccothraustes",
+   "navn": "Kjernebiter",
+   "andel": 0.06728
+  },
+  {
+   "id": "042",
+   "key": "coloeus-monedula",
+   "navn": "Kaie",
+   "andel": 0.0448
+  },
+  {
+   "id": "045",
+   "key": "larus-argentatus",
+   "navn": "Gråmåke",
+   "andel": 0.02785
+  },
+  {
+   "id": "046",
+   "key": "accipiter-nisus",
+   "navn": "Spurvehauk",
+   "andel": 0.07111
+  },
+  {
+   "id": "047",
+   "key": "poecile-palustris",
+   "navn": "Løvmeis",
+   "andel": 0.05136
+  },
+  {
+   "id": "048",
+   "key": "picus-viridis",
+   "navn": "Grønnspett",
+   "andel": 0.009
+  },
+  {
+   "id": "050",
+   "key": "regulus-regulus",
+   "navn": "Fuglekonge",
+   "andel": 0.00614
+  },
+  {
+   "id": "051",
+   "key": "certhia-familiaris",
+   "navn": "Trekryper",
+   "andel": 0.03818
+  },
+  {
+   "id": "052",
+   "key": "lophophanes-cristatus",
+   "navn": "Toppmeis",
+   "andel": 0.03815
+  },
+  {
+   "id": "054",
+   "key": "corvus-corax",
+   "navn": "Ravn",
+   "andel": 0.02238
+  },
+  {
+   "id": "056",
+   "key": "bombycilla-garrulus",
+   "navn": "Sidensvans",
+   "andel": 0.02011
+  },
+  {
+   "id": "057",
+   "key": "aegithalos-caudatus",
+   "navn": "Stjertmeis",
+   "andel": 0.02649
+  },
+  {
+   "id": "059",
+   "key": "strix-aluco",
+   "navn": "Kattugle",
+   "andel": 0.00704
+  },
+  {
+   "id": "064",
+   "key": "dryobates-minor",
+   "navn": "Dvergspett",
+   "andel": 0.00269
+  },
+  {
+   "id": "066",
+   "key": "dryocopus-martius",
+   "navn": "Svartspett",
+   "andel": 0.00207
+  },
+  {
+   "id": "067",
+   "key": "picus-canus",
+   "navn": "Gråspett",
+   "andel": 0.01302
+  },
+  {
+   "id": "068",
+   "key": "loxia-curvirostra",
+   "navn": "Grankorsnebb",
+   "andel": 0.00275
+  },
+  {
+   "id": "070",
+   "key": "nucifraga-caryocatactes",
+   "navn": "Nøttekråke",
+   "andel": 0.00418
+  },
+  {
+   "id": "071",
+   "key": "anas-platyrhynchos",
+   "navn": "Stokkand",
+   "andel": 0.00896
+  },
+  {
+   "id": "072",
+   "key": "astur-gentilis",
+   "navn": "Hønsehauk",
+   "andel": 0.01086
+  },
+  {
+   "id": "073",
+   "key": "cinclus-cinclus",
+   "navn": "Fossekall",
+   "andel": 0.00174
+  },
+  {
+   "id": "074",
+   "key": "buteo-buteo",
+   "navn": "Musvåk",
+   "andel": 0.00206
+  },
+  {
+   "id": "075",
+   "key": "ardea-cinerea",
+   "navn": "Gråhegre",
+   "andel": 0.0082
+  },
+  {
+   "id": "076",
+   "key": "scolopax-rusticola",
+   "navn": "Rugde",
+   "andel": 0.00148
+  },
+  {
+   "id": "079",
+   "key": "lyrurus-tetrix",
+   "navn": "Orrfugl",
+   "andel": 0.00336
+  },
+  {
+   "id": "080",
+   "key": "pinicola-enucleator",
+   "navn": "Konglebit",
+   "andel": 0.00113
+  },
+  {
+   "id": "081",
+   "key": "glaucidium-passerinum",
+   "navn": "Spurveugle",
+   "andel": 0.00246
+  },
+  {
+   "id": "083",
+   "key": "bucephala-clangula",
+   "navn": "Kvinand",
+   "andel": 0.00157
+  },
+  {
+   "id": "084",
+   "key": "lanius-excubitor",
+   "navn": "Varsler",
+   "andel": 0.00129
+  },
+  {
+   "id": "092",
+   "key": "aegolius-funereus",
+   "navn": "Perleugle",
+   "andel": 0.00102
+  }
+ ],
+ "ute": [
+  {
+   "id": "004",
+   "key": "motacilla-alba",
+   "navn": "Linerle",
+   "andel": 0.0
+  },
+  {
+   "id": "012",
+   "key": "phylloscopus-trochilus",
+   "navn": "Løvsanger",
+   "andel": 0.0
+  },
+  {
+   "id": "017",
+   "key": "ficedula-hypoleuca",
+   "navn": "Svarthvit fluesnapper",
+   "andel": 0.0
+  },
+  {
+   "id": "022",
+   "key": "turdus-philomelos",
+   "navn": "Måltrost",
+   "andel": 0.00034
+  },
+  {
+   "id": "028",
+   "key": "phylloscopus-collybita",
+   "navn": "Gransanger",
+   "andel": 0.0
+  },
+  {
+   "id": "030",
+   "key": "muscicapa-striata",
+   "navn": "Gråfluesnapper",
+   "andel": 0.0
+  },
+  {
+   "id": "031",
+   "key": "curruca-curruca",
+   "navn": "Møller",
+   "andel": 0.0
+  },
+  {
+   "id": "032",
+   "key": "sylvia-borin",
+   "navn": "Hagesanger",
+   "andel": 0.0
+  },
+  {
+   "id": "036",
+   "key": "delichon-urbicum",
+   "navn": "Taksvale",
+   "andel": 0.0
+  },
+  {
+   "id": "039",
+   "key": "phoenicurus-phoenicurus",
+   "navn": "Rødstjert",
+   "andel": 0.0
+  },
+  {
+   "id": "043",
+   "key": "hirundo-rustica",
+   "navn": "Låvesvale",
+   "andel": 0.0
+  },
+  {
+   "id": "044",
+   "key": "hippolais-icterina",
+   "navn": "Gulsanger",
+   "andel": 0.0
+  },
+  {
+   "id": "049",
+   "key": "apus-apus",
+   "navn": "Tårnseiler",
+   "andel": 0.0
+  },
+  {
+   "id": "053",
+   "key": "cuculus-canorus",
+   "navn": "Gjøk",
+   "andel": 0.0
+  },
+  {
+   "id": "055",
+   "key": "carpodacus-erythrinus",
+   "navn": "Rosenfink",
+   "andel": 0.0
+  },
+  {
+   "id": "058",
+   "key": "jynx-torquilla",
+   "navn": "Vendehals",
+   "andel": 0.0
+  },
+  {
+   "id": "060",
+   "key": "anthus-trivialis",
+   "navn": "Trepiplerke",
+   "andel": 0.0
+  },
+  {
+   "id": "061",
+   "key": "motacilla-cinerea",
+   "navn": "Vintererle",
+   "andel": 2e-05
+  },
+  {
+   "id": "062",
+   "key": "turdus-viscivorus",
+   "navn": "Duetrost",
+   "andel": 0.0001
+  },
+  {
+   "id": "063",
+   "key": "columba-oenas",
+   "navn": "Skogdue",
+   "andel": 0.0006
+  },
+  {
+   "id": "065",
+   "key": "phylloscopus-sibilatrix",
+   "navn": "Bøksanger",
+   "andel": 0.0
+  },
+  {
+   "id": "069",
+   "key": "falco-tinnunculus",
+   "navn": "Tårnfalk",
+   "andel": 0.00027
+  },
+  {
+   "id": "077",
+   "key": "gallinago-gallinago",
+   "navn": "Enkeltbekkasin",
+   "andel": 0.00016
+  },
+  {
+   "id": "078",
+   "key": "loxia-pytyopsittacus",
+   "navn": "Furukorsnebb",
+   "andel": 0.0008
+  },
+  {
+   "id": "082",
+   "key": "picoides-tridactylus",
+   "navn": "Tretåspett",
+   "andel": 0.00052
+  },
+  {
+   "id": "085",
+   "key": "tringa-ochropus",
+   "navn": "Skogsnipe",
+   "andel": 0.0
+  },
+  {
+   "id": "086",
+   "key": "surnia-ulula",
+   "navn": "Haukugle",
+   "andel": 0.00076
+  },
+  {
+   "id": "087",
+   "key": "loxia-leucoptera",
+   "navn": "Båndkorsnebb",
+   "andel": 0.00022
+  },
+  {
+   "id": "088",
+   "key": "falco-peregrinus",
+   "navn": "Vandrefalk",
+   "andel": 0.00039
+  },
+  {
+   "id": "089",
+   "key": "grus-grus",
+   "navn": "Trane",
+   "andel": 0.0
+  },
+  {
+   "id": "090",
+   "key": "tetrao-urogallus",
+   "navn": "Storfugl",
+   "andel": 0.00032
+  },
+  {
+   "id": "091",
+   "key": "pernis-apivorus",
+   "navn": "Vepsevåk",
+   "andel": 0.0
+  },
+  {
+   "id": "093",
+   "key": "upupa-epops",
+   "navn": "Hærfugl",
+   "andel": 0.0
+  },
+  {
+   "id": "094",
+   "key": "regulus-ignicapilla",
+   "navn": "Rødtoppfuglekonge",
+   "andel": 0.0
+  },
+  {
+   "id": "095",
+   "key": "tetrastes-bonasia",
+   "navn": "Jerpe",
+   "andel": 0.00015
+  },
+  {
+   "id": "096",
+   "key": "pandion-haliaetus",
+   "navn": "Fiskeørn",
+   "andel": 0.0
+  },
+  {
+   "id": "097",
+   "key": "gavia-arctica",
+   "navn": "Storlom",
+   "andel": 2e-05
+  },
+  {
+   "id": "098",
+   "key": "alcedo-atthis",
+   "navn": "Isfugl",
+   "andel": 0.0
+  },
+  {
+   "id": "099",
+   "key": "phylloscopus-inornatus",
+   "navn": "Gulbrynsanger",
+   "andel": 0.0
+  },
+  {
+   "id": "100",
+   "key": "strix-nebulosa",
+   "navn": "Lappugle",
+   "andel": 3e-05
+  }
+ ]
+}

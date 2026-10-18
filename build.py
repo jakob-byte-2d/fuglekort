@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bygger Fuglekort fra src/app.html + data/cards.json.
+"""Bygger Hagefugler fra src/app.html + data/cards.json (og data/kortstokk.json: fuglene i kortstokken).
 
 Lager docs/index.html: den frittstående appen (PWA) med manifest og offline-støtte, publisert med GitHub Pages.
 (Claude-versjonen, artifact.html, bygges ikke lenger fra oktober 2026; den som ligger i Claude, står som den er.)
@@ -15,6 +15,18 @@ data = json.loads((ROOT / "data" / "cards.json").read_text(encoding="utf-8"))
 bak = ROOT / "data" / "baksider.json"
 if bak.is_file():
     data["baksider"] = json.loads(bak.read_text(encoding="utf-8"))
+# the deck: the birds registered in gardens (data/kortstokk.json, from velg_kortstokk.py). The other bird cards stay
+# in the data, marked «ute»: out of the deck, the search and the counts, but the seeds already earned for them stay
+stokk = ROOT / "data" / "kortstokk.json"
+if stokk.is_file():
+    ks = json.loads(stokk.read_text(encoding="utf-8"))
+    inne = {a["key"] for a in ks["arter"]}
+    for c in data["kort"]:
+        if not c.get("bonus") and c["key"] not in inne:
+            c["ute"] = True
+    data["tittel"] = ks.get("tittel") or data.get("tittel")
+i_stokken = [c for c in data["kort"] if not c.get("ute")]
+NB = sum(1 for c in i_stokken if not c.get("bonus"))
 
 # Inline the card data (</ is escaped so the JSON can never close the <script> tag)
 payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
@@ -25,7 +37,7 @@ fragment = fragment.replace("__VERSJON__", hashlib.sha1((src + payload).encode("
 
 # The standalone app: full document, title moved into <head>, manifest + service worker
 title_m = re.search(r"<title>.*?</title>\s*", fragment, re.S)
-title = title_m.group(0).strip() if title_m else "<title>Fuglekort</title>"
+title = title_m.group(0).strip() if title_m else "<title>Hagefugler</title>"
 body = fragment.replace(title_m.group(0), "", 1) if title_m else fragment
 head = f"""<!doctype html>
 <html lang="nb">
@@ -33,11 +45,11 @@ head = f"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 {title}
-<meta name="description" content="100 fuglekort med hagefugler i Norge som en kortstokk. Bla, søk og kryss av fuglene du har sett.">
+<meta name="description" content="{NB} hagefugler i Norge som en kortstokk. Bla, søk og kryss av fuglene du har sett.">
 <meta name="theme-color" content="#0f4a36">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Fuglekort">
+<meta name="apple-mobile-web-app-title" content="Hagefugler">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
@@ -60,19 +72,19 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
 # Service worker precache list follows the card data, so new cards are cached automatically
 assets = ["./", "index.html", "manifest.webmanifest", "sprites/photos.webp", "sprites/cards.webp", "sprites/titler.webp",
           "icons/icon-192.png", "icons/icon-512.png", "icons/icon-512-maskable.png", "icons/apple-touch-icon.png"]
-assets += [data.get("bakside", "cards/bakside.webp")] + [h["bilde"] for h in data.get("hjelp", [])] + [c["bilde"] for c in data["kort"]]
+assets += [data.get("bakside", "cards/bakside.webp")] + [h["bilde"] for h in data.get("hjelp", [])] + [c["bilde"] for c in i_stokken]
 assets += [b["bilde"] for b in data.get("baksider", []) if b.get("bilde") and b["bilde"] not in assets]
 # alle bildesettene lagres på telefonen, så man kan bytte i innstillingene også uten nett
 if data.get("hjelpFoto"):
     assets += ["sprites/cards-foto.webp", "sprites/photos-foto.webp"]
     assets += [h["bilde"] for h in data["hjelpFoto"] if h["bilde"] not in assets]
-    assets += [c["bildeFoto"] for c in data["kort"] if c.get("bildeFoto")]
+    assets += [c["bildeFoto"] for c in i_stokken if c.get("bildeFoto")]
 if data.get("tegneserie"):
     assets += ["sprites/cards-tegneserie.webp", "sprites/photos-tegneserie.webp"]
-    assets += [c["bildeTegneserie"] for c in data["kort"] if c.get("bildeTegneserie")]
+    assets += [c["bildeTegneserie"] for c in i_stokken if c.get("bildeTegneserie")]
 # de store fuglebildene til fullskjermvisningen (alle tre bildesettene) lastes ned sammen med appen
 if data.get("storeBilder"):
-    for c in data["kort"]:
+    for c in i_stokken:
         assets.append(f"pictures/{c['id']}.webp")
         if c.get("bildeFoto"):
             assets.append(f"pictures-foto/{c['id']}.webp")
@@ -86,7 +98,7 @@ for f in assets:
     if fp.is_file():
         h.update(fp.read_bytes())
 sw = (ROOT / "src" / "sw.template.js").read_text(encoding="utf-8").replace("__ASSETS__", json.dumps(assets, indent=2))
-sw = re.sub(r"const CACHE = '[^']*';", f"const CACHE = 'fuglekort-{h.hexdigest()[:10]}';", sw)
+sw = re.sub(r"const CACHE = '[^']*';", f"const CACHE = 'hagefugler-{h.hexdigest()[:10]}';", sw)
 (ROOT / "docs" / "sw.js").write_text(sw, encoding="utf-8")
 
-print(f"Bygget {len(data['kort'])} kort → docs/index.html")
+print(f"Bygget {NB} fuglekort i kortstokken ({len(data['kort'])} kort i alt) → docs/index.html")
