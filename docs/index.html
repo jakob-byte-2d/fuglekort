@@ -250,7 +250,13 @@ button{cursor:pointer;touch-action:manipulation}
 .meny .mt{flex:1}
 .meny kbd{font:inherit;font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px}
 @media (hover:none){.meny kbd{display:none}}
-.brand h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand h1{display:flex;min-width:0}
+.brand h1 .tn{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand h1.lang{font-size:14px;line-height:1.15}
+.brand h1.lang .tn{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow-wrap:anywhere}
+.tittel-bytt{display:inline-flex;align-items:center;gap:4px;min-width:0;max-width:100%;margin:0 0 0 -4px;padding:0 4px;border:0;border-radius:8px;background:none;text-align:left;font-weight:inherit;line-height:inherit}
+.tittel-bytt:hover{background:var(--surface-2)}
+.tittel-bytt .pil{flex-shrink:0;font-size:.72em;color:var(--muted);line-height:1}
 @media (max-width:400px){.top{gap:5px}.iconbtn{width:38px;height:38px}.frobtn{height:38px;padding:0 9px 0 7px;gap:4px;font-size:13px}.frobtn .froikon{width:16px;height:16px}.brand h1{font-size:16px}}
 @media (max-width:370px){.iconbtn{width:36px;height:36px}.frobtn{height:36px}.brand h1{font-size:15px}}
 .fro-saldo{display:flex;align-items:center;gap:10px;margin-top:14px}
@@ -1179,8 +1185,8 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <div class="app" id="app">
   <header class="top">
     <div class="brand">
-      <h1>Hagefugler</h1>
-      <p id="sub">Kort 001 av 060</p>
+      <h1 id="tittel"><span class="tn">Hagefugler</span></h1>
+      <p id="sub">Kort 001 av 73</p>
     </div>
     <button class="frobtn" id="openFro" aria-label="Solsikkefrø. Åpne Frøbutikken" title="Frøbutikken"><span id="froIkon"></span><b id="froTall">0</b></button>
     <button class="iconbtn ring" id="openStats" aria-label="Min fugleliste" title="Min fugleliste">
@@ -2897,11 +2903,42 @@ scrub.addEventListener('keydown', e => {
 });
 
 /* ---- header, ring, scrubber paint ---- */
+/* the name at the top: the one who earns the seeds. The name on the board (also when sharing is off later), else
+   the name on this phone (a child, or someone who did not share), else the app's name. A name stopped after a
+   report is not shown until a new one is chosen. With several users the name is a button to change user. */
+function tittelNavn() {
+  const n = kallenavn();
+  if (n && n.navn && !navnStengt()) return n.navn;
+  if (BRUKER.navn) return BRUKER.navn;
+  return flereBrukere() ? brukerNavn(BRUKER) : 'Hagefugler';
+}
+let tittelVist = '';
+function paintTittel() {
+  const h = $('#tittel'); if (!h) return;
+  const navn = tittelNavn(), bytt = flereBrukere(), nokkel = `${navn}|${bytt}|${h.clientWidth}`;
+  if (nokkel === tittelVist) return;
+  tittelVist = nokkel;
+  paintSub();
+  h.innerHTML = bytt
+    ? `<button type="button" class="tittel-bytt" data-tittel-bytt aria-haspopup="dialog" aria-label="${esc(navn)}. Bytt bruker" title="${esc(navn)} · Bytt bruker"><span class="tn">${esc(navn)}</span><span class="pil" aria-hidden="true">▾</span></button>`
+    : `<span class="tn" title="${esc(navn)}">${esc(navn)}</span>`;
+  h.classList.remove('lang');                                // a long name: two lines in slightly smaller type
+  const tn = h.querySelector('.tn');
+  if (tn.scrollWidth > tn.clientWidth + 1) h.classList.add('lang');
+}
+const paintTittelSnart = () => queueMicrotask(paintTittel);   // after a new name is saved, also while it is sent
+$('#tittel').addEventListener('click', e => { if (e.target.closest('[data-tittel-bytt]')) byttBrukerSporsmal(); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { tittelVist = ''; paintTittel(); });   // measured again in the web font
+/* the line under it: the card and the count, with the name on this phone first when several users share it, unless
+   that is the name at the top */
+function paintSub() {
+  const c = CARDS[cur], n = seenCount(), tlf = flereBrukere() ? brukerNavn(BRUKER) : '';
+  $('#sub').textContent = (tlf && tlf.toLowerCase() !== tittelNavn().toLowerCase() ? `${tlf} · ` : '')
+    + (c.bonus ? `Dyrekort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} · ${n} av ${NB} sett`);
+}
 function paintChrome() {
   const c = CARDS[cur];
-  const n = seenCount();
-  $('#sub').textContent = (flereBrukere() ? `${brukerNavn(BRUKER)} · ` : '')   // several users: whose list this is
-    + (c.bonus ? `Dyrekort · ${n} ${n === 1 ? 'fugl' : 'fugler'} sett` : `Kort ${c.id} · ${n} av ${NB} sett`);
+  paintSub(); paintTittel();
   paintFro();                                                // the ring around the title comes after the counter
   ticks.forEach((t, p) => { const i = DECK[p]; t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
   paintTeller(); paintForModus();
@@ -4977,7 +5014,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '78e09d2b82';
+const APPVERSJON = '7e153d06f1';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
@@ -5118,7 +5155,7 @@ function navnTekst(n) {
   const i = n && BY_KEY[n.fugl];
   return n && ORD.includes(n.ord) && i != null && !CARDS[i].bonus ? `${stor(n.ord)} ${CARDS[i].navn} ${n.tall}` : `Fuglevenn${n && n.tall ? ' ' + n.tall : ''}`;
 }
-const lagreKallenavn = n => lsSet(DK('kallenavn'), JSON.stringify({ navn: n.navn, forslag: !!n.forslag }));
+const lagreKallenavn = n => { lsSet(DK('kallenavn'), JSON.stringify({ navn: n.navn, forslag: !!n.forslag })); paintTittelSnart(); };
 function kallenavn() {
   const n = lsJson(DK('kallenavn'), null);
   if (!n) return null;
@@ -5166,7 +5203,7 @@ async function sendTavlerad(okt) {
       if (!n.forslag) lsSet(DK('navn-melding'), JSON.stringify({ fra: forst, til: n.navn }));
       continue;
     }
-    if (feil.message === 'navn_stengt' && rad.navn) { lsSet(DK('navn-stengt'), rad.navn); rad.navn = null; continue; }
+    if (feil.message === 'navn_stengt' && rad.navn) { lsSet(DK('navn-stengt'), rad.navn); rad.navn = null; paintTittelSnart(); continue; }
     if (/navn_form/.test(feil.message || '') && rad.navn) { n = tilfeldigNavn(); lagreKallenavn(n); rad.navn = n.navn; continue; }
     throw new Error(`ledertavle ${r && r.status}`);
   }
@@ -5681,6 +5718,7 @@ function sporOmStart(forsok = 0) {
 
 /* ---- Innstillinger: sharing on and off, the postcode, hidden names, and what is waiting ---- */
 function paintDeling() {
+  paintTittel();
   if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') { const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; }
   const b = $('#delBtn'); if (!b) return;
   const pa = deler(), slett = !!lsGet(DK('slett'));

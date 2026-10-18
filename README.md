@@ -123,9 +123,19 @@ I appen heter de dyrekort, og ordet «bonus» står ingen steder (bortsett fra p
 - **Hver bruker har sitt eget:** observasjoner, tellinger, frø og kjøp, titler, oppdrag, livslisten, brukernavn og postnummer på tavla, delingsvalget og innloggingen mot Supabase (hver bruker er sin egen anonyme bruker og har sin egen rad på tavla), enkel versjon, bildevalget, telleområdet og kortet man sto på. Resten av innstillingene (glinset, fanene) gjelder telefonen. Den første brukeren («meg») har nøklene appen alltid har brukt; de andre lagres med `@<id>` bak nøkkelen (`brukerNokkel`). Lista står i `fuglekort:brukere` og den aktive i `fuglekort:bruker`.
 - **Navnet på telefonen** («Hytta», «Emma», 1–20 tegn, ikke likt et annet) er noe annet enn brukernavnet på tavla, som må være unikt og byttes i profilen. Hovedbrukeren heter «Meg» til den får et navn.
 - **Ny bruker:** navn og type. *Vanlig:* appen bytter til brukeren og viser innføringen som første gang (brukernavn, postnummer, deling). *Barn:* tegneseriebilder, deler ikke (ingen navnesteg, ingen anonym bruker i Supabase; delingen kan slås på i Innstillinger), og innføringen vises én gang uten navnesteget.
-- **Bytte:** det som venter på å bli sendt, sendes først (høyst halvannet sekund), så lagres valget og appen lastes på nytt, så alt leses for riktig bruker. Med flere brukere står navnet først i toppen («Hytta · Kort 005 · 3 av 73 sett»), og Profil har «Bytt bruker».
+- **Bytte:** det som venter på å bli sendt, sendes først (høyst halvannet sekund), så lagres valget og appen lastes på nytt, så alt leses for riktig bruker. Med flere brukere er navnet øverst en knapp (med ▾) som åpner «Bytt bruker», navnet på telefonen står først i linja under («Hytta · Kort 005 · 3 av 73 sett», ikke når det er det samme som navnet øverst), og Profil har «Bytt bruker».
 - **Slette** (ikke hovedbrukeren, og ikke den som er i bruk): alt brukeren har på telefonen slettes, og det den har delt, slettes i Supabase med dens egen økt (`slett_meg`). Uten nett venter økten i `fuglekort:slett-brukere`, og slettingen gjøres når nettet er tilbake, uansett hvem som bruker appen da.
 - Sikkerhetskopi og «Start på nytt» gjelder brukeren som er i bruk. Ingen ny SQL.
+
+### Navnet øverst på hovedskjermen
+
+Øverst på hovedskjermen står navnet til den som får frøene, i stedet for «Hagefugler» (`tittelNavn`, `paintTittel`):
+
+1. brukernavnet på tavla («Modig Blåmeis 7»), også når delingen er slått av senere (navnet står lagret i `fuglekort:kallenavn`);
+2. ellers navnet på telefonen («Emma»: et barn, eller en som valgte «Ikke del»);
+3. ellers «Hagefugler» (én bruker uten navn).
+
+Et navn som er stengt etter rapporter (`fuglekort:navn-stengt`), vises ikke før et nytt er valgt. Toppen følger med med en gang når brukernavnet lagres (`lagreKallenavn`, også når tavla gir det et nummer fordi det var tatt), når delingen slås av eller på, og når brukeren får nytt navn på telefonen. Et langt navn (som «Nysgjerrig Svarthvit fluesnapper 99») får to linjer i 14 px i stedet for å kuttes. Fanen i nettleseren og navnet på hjemskjermen er fortsatt «Hagefugler». Enkel versjon viser navnet på samme måte.
 
 ## Enkel versjon
 
