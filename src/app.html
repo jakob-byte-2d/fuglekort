@@ -700,6 +700,13 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .brukere .bi{font-size:12.5px;font-weight:700;color:var(--ok);white-space:nowrap}
 .brukere .btn{padding:7px 12px}
 .nb-type{display:grid;gap:8px;margin-top:12px}
+/* ---------- grupper og favoritter ---------- */
+.tv-hvem .chip.ny{border-style:dashed;color:var(--muted)}
+.tv-gruppe{margin:-4px 0 12px;display:flex;flex-wrap:wrap;align-items:center;gap:2px 12px;font-size:13px;color:var(--muted)}
+.tv-gruppe b{color:var(--ink);letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.gr-kode,.dlg-kort p.gr-kode{font-size:26px;font-weight:800;letter-spacing:.14em;text-align:center;margin:12px 0 6px;color:var(--ink);font-variant-numeric:tabular-nums;user-select:all;-webkit-user-select:all}
+.profil-knapper{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:22px}
+#gruppeListe .bn small{white-space:normal}
 .nb-type label{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;cursor:pointer}
 .nb-type input{margin:3px 0 0;accent-color:var(--spruce);width:18px;height:18px;flex-shrink:0}
 .nb-type span{display:grid;gap:2px}
@@ -1311,13 +1318,18 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <button class="btn" id="forFraInnst">Fyll ut livslisten</button>
   </div>
   <div class="s-sec" id="delingSek"><h3>Ledertavle og statistikk</h3>
-    <button class="bryter" id="delBtn" role="switch" aria-checked="false"><span><b>Del med ledertavlen og statistikken</b><small>Du vises på ledertavlen med brukernavnet ditt, frø, arter, observasjonsdager og tittel. Observasjonene, tellingene og kjøpene sendes anonymt til en felles database for statistikk over hagefuglene.</small></span><i aria-hidden="true"></i></button>
+    <button class="bryter" id="delBtn" role="switch" aria-checked="false"><span><b>Del med ledertavlen og statistikken</b><small>Du vises på ledertavlen med brukernavnet ditt, frø, arter, observasjonsdager og tittel. Andre som deler, kan se hvilke fugler du har registrert (uten datoer) og legge deg til som favoritt, og i grupper du er med i, ser medlemmene det samme. Observasjonene, tellingene og kjøpene sendes anonymt til en felles database for statistikk over hagefuglene.</small></span><i aria-hidden="true"></i></button>
     <button class="bryter" id="visArterBtn" role="switch" aria-checked="true"><span><b>Vis artslista mi</b><small>Andre som deler, ser hvilke fugler du har registrert når de trykker på navnet ditt på tavla. Ingen datoer. Slått av ser de bare antallet.</small></span><i aria-hidden="true"></i></button>
     <label class="felt" for="postnrFelt">Postnummer <small>valgfritt, bare til statistikk, vises ikke på tavlen</small></label>
     <input class="felt-inp" id="postnrFelt" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870">
     <p class="valg-merk" id="delStatus" role="status"></p>
     <p class="valg-merk" id="skjulteInfo" hidden><span id="skjulteTekst"></span> <button class="textbtn" id="visSkjulte">Vis dem igjen</button></p>
     <button class="btn" id="slettMeg">Slett meg fra ledertavlen</button>
+  </div>
+  <div class="s-sec" id="gruppeSek"><h3>Grupper og favoritter</h3>
+    <p class="valg-merk" id="gruppeInfo"></p>
+    <ul class="brukere" id="gruppeListe"></ul>
+    <div class="row" id="gruppeKnapper"><button class="btn" id="lagGruppe">Lag gruppe</button><button class="btn" id="bliMedGruppe">Bli med i en gruppe</button></div>
   </div>
   <div class="s-sec" id="nyttSek"><h3>Start på nytt</h3>
     <button class="btn" id="startPaNytt">Start på nytt …</button>
@@ -3175,7 +3187,7 @@ $('#vippBtn').addEventListener('click', async () => {
   else if (await slaPaVipp(true)) { lsSet('hagefugler:vipp', 'på'); si('Vipp telefonen for å se glinset på glinskortene.'); }
   paintSettings();
 });
-function openSettings() { paintSettings(); paintDeling(); showSheet(setSheet); setTimeout(() => (HAR_FOTO || HAR_TEGNESERIE ? setSheet.querySelector('[data-bilder][aria-checked="true"]') : $('#vippBtn')).focus(), 60); }
+function openSettings() { paintSettings(); paintDeling(); hentGrupper(); showSheet(setSheet); setTimeout(() => (HAR_FOTO || HAR_TEGNESERIE ? setSheet.querySelector('[data-bilder][aria-checked="true"]') : $('#vippBtn')).focus(), 60); }
 function settBilder(v) {
   if (v === bildevalg || !finnesSett(v)) return;
   bildevalg = v; lsSet(BILDER_KEY(), v);
@@ -3469,6 +3481,15 @@ sb.addEventListener('click', async e => {
   if (tr) { tavleRad(tr.dataset.tavleRad); return; }
   if (e.target.closest('[data-profillukk]')) { lukkProfil(); return; }
   if (e.target.closest('[data-profil-rapporter]') && profilVis) { rapporterSporsmal(profilVis.uid, visNavn(profilVis.x)); return; }
+  if (e.target.closest('[data-profil-fav]') && profilVis) {
+    byttFavoritt(profilVis.uid, skjulte()[profilVis.uid] != null ? 'Navnet' : visNavn(profilVis.x)); paintDeling();
+    const f = sb.querySelector('[data-profil-fav]'); if (f) f.focus({ preventScroll: true }); return;
+  }
+  if (e.target.closest('[data-profil-fjern]') && profilVis) { const g = gruppeAv(tavleHvem()); if (g) fjernMedlemSporsmal(g, profilVis.uid, visNavn(profilVis.x)); return; }
+  const th = e.target.closest('[data-tavlehvem]');
+  if (th) { settHvem(th.dataset.tavlehvem); paintDeling(); hentTavle(); return; }
+  if (e.target.closest('[data-gruppe-ny]')) { nyGruppeValg(); return; }
+  if (gruppeKlikk(e.target)) return;
   if (e.target.closest('[data-profil-visnavn]') && profilVis) { const s = skjulte(); delete s[profilVis.uid]; lagreSkjulte(s); paintDeling(); return; }
   if (e.target.closest('[data-lukk-melding]')) { lsDel(DK('navn-melding')); paintDeling(); return; }
   const tv = e.target.closest('[data-tavlevis]');
@@ -5260,6 +5281,7 @@ async function sendAlt() {
     await sendProfil(okt);
     for (const sp of SPEIL) await sp.send(okt);
     lsSet(DK('sist-sendt'), String(Date.now()));
+    await bliMedVentende();                                // groups waiting for the row on the board
   } catch (e) { /* no network, or the tables are not made yet: tried again later */ }
   finally {
     sender = false; paintDeling();
@@ -5284,9 +5306,14 @@ function stoppDeling() {
 async function slettPaServer() {
   if (sletter) return; sletter = true;
   try {
+    if (lsGet(DK('bli-igjen'))) {                        // «Nullstill fremgangen»: the groups as they are now (a code may be new)
+      const { r: rg } = await supaSom('/rest/v1/rpc/mine_grupper', { metode: 'POST', data: {} }, false);
+      const a = rg && rg.ok ? await rg.json().catch(() => null) : null;
+      if (Array.isArray(a)) { lsSet(BLI_KEY(), JSON.stringify(a.map(g => ({ kode: g.kode, vis: false })))); lsDel(DK('bli-igjen')); }
+    }
     const { r } = await supaSom('/rest/v1/rpc/slett_meg', { metode: 'POST', data: {} }, false);
     if (r && !r.ok) throw new Error('slett_meg ' + r.status);
-    ['okt', 'slett'].forEach(k => lsDel(DK(k)));          // deleted (or there was nothing left to delete); the name is kept
+    ['okt', 'slett', 'bli-igjen'].forEach(k => lsDel(DK(k)));   // deleted (or there was nothing left to delete); the name is kept
     si('Det du har delt, er slettet fra ledertavlen og statistikken.');
   } catch (e) { /* tried again when there is a network */ }
   finally { sletter = false; paintDeling(); }
@@ -5309,7 +5336,8 @@ let tavleVis = TAVLER.includes(lsGet('fuglekort:tavlevis')) ? lsGet('fuglekort:t
 let tavleValgt = lsGet('fuglekort:tavleetter') === 'arter' ? 'arter' : 'fro';
 const tavleEtter = () => (enkel ? 'arter' : tavleValgt);   // enkel versjon: by species only
 const tavleNokkel = (hva, etter = tavleEtter()) => DK(etter === 'arter' ? 'tavle-arter:' + hva : hva === 'tot' ? 'tavle' : 'tavle:' + hva);
-const TAVLE_LAGRET = ['tavle', 'tavle:uke', 'tavle:mnd', 'tavle:aar', 'tavle-arter:uke', 'tavle-arter:mnd', 'tavle-arter:aar', 'tavle-arter:tot'];
+const TAVLE_LAGRET = ['tavle', 'tavle:uke', 'tavle:mnd', 'tavle:aar', 'tavle-arter:uke', 'tavle-arter:mnd', 'tavle-arter:aar', 'tavle-arter:tot',
+  'tavle-utvalg', 'grupper', 'tavlehvem', 'bli-koder', 'bli-igjen'];   // the groups go with what is shared (the favourites stay)
 const periodeTekst = pid => { const t = premieNavn(pid); return t.charAt(0).toUpperCase() + t.slice(1); };
 function ukeSpenn(fra, til) {
   const a = new Date(fra), b = new Date(new Date(til).getTime() - 1);
@@ -5325,12 +5353,33 @@ const tallFra = cr => { const m = /\/(\d+)$/.exec(cr || ''); return m ? +m[1] : 
 async function hentTavle() {
   if (!deler() || henter) return;
   if (!navigator.onLine) { tavleFeil = true; paintDeling(); return; }
-  const hva = tavleVis, etter = tavleEtter();
+  const hva = tavleVis, etter = tavleEtter(), hvem = tavleHvem();
   henter = true; paintDeling();
   try {
     const okt = lsGet(DK('okt')) ? await hentOkt(false).catch(() => null) : null;
     let plass = null;
-    if (etter === 'arter') {
+    hentGrupper();                                         // the list of groups, now and then
+    if (hvem !== 'alle') {                                 // a group, or the favourites and me
+      const favs = hvem === 'fav' ? favoritter() : null;
+      if (!favs || favs.length) {
+        const r = await supa('/rest/v1/rpc/' + (favs ? 'favoritt_tavle' : 'gruppetavle'), { metode: 'POST', okt,
+          data: favs ? { ider: favs, hva, etter } : { gruppe: hvem.slice(2), hva, etter } });
+        if (!r.ok) {
+          const f = r.status === 400 ? await r.json().catch(() => ({})) : {};
+          if (f.message === 'ikke_medlem') { const g = gruppeAv(hvem); utAvGruppe(hvem.slice(2)); if (g) si(`Du er ikke lenger med i «${g.navn}».`); }
+          throw new Error('utvalg ' + r.status);
+        }
+        const j = await r.json();
+        if (!j || !Array.isArray(j.rader)) throw new Error('utvalg');
+        plass = j.plass || null;
+        if (j.gruppe) oppdaterGruppe(j.gruppe);
+        if (favs) {                                        // gone from the board (deleted): no longer a favourite
+          const med = new Set(j.rader.map(x => x.user_id)), igjen = favs.filter(u => med.has(u));
+          if (igjen.length < favs.length) { if (igjen.length) lsSet(FAV_KEY(), JSON.stringify(igjen)); else lsDel(FAV_KEY()); }
+        }
+        lagreUtvalg(hvem, etter, hva, j);
+      }
+    } else if (etter === 'arter') {
       const r = await supa('/rest/v1/rpc/tavle_arter', { metode: 'POST', data: { hva }, okt });
       if (!r.ok) throw new Error('tavle_arter ' + r.status);
       const j = await r.json();
@@ -5365,7 +5414,7 @@ async function hentTavle() {
   } catch (e) { tavleFeil = true; }
   finally {
     henter = false; paintDeling();
-    if ((tavleVis !== hva || tavleEtter() !== etter) && openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') hentTavle();   // another board chosen meanwhile
+    if ((tavleVis !== hva || tavleEtter() !== etter || tavleHvem() !== hvem) && openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') hentTavle();   // another board chosen meanwhile
   }
 }
 setInterval(() => { if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle' && !document.hidden) hentTavle(); }, 60000);
@@ -5374,8 +5423,9 @@ function tavleHtml() {
   if (!deler()) return `<div class="s-sec tv-av"><h3>Ledertavle</h3>
     <p class="cap">Du deler ikke, og ser derfor ikke ledertavlen. Når du deler, vises du med brukernavnet ditt sammen med frø, arter, observasjonsdager og tittel, og observasjonene dine sendes anonymt til statistikk over hagefuglene.</p>
     <div class="row"><button class="btn pri" data-del-pa>Del og se ledertavlen</button></div></div>`;
-  const hva = tavleVis, per = hva !== 'tot', arter = tavleEtter() === 'arter', c = lsJson(tavleNokkel(hva), null), uid = (lsJson(DK('okt'), null) || {}).uid, o = oppsummering(), sk = skjulte();
-  const status = henter && !c ? 'Henter tavlen …' : (tavleFeil || !navigator.onLine) ? (c ? `Uten nett – viser tavlen fra ${naarTekst(c.hentet)}` : 'Tavlen hentes når du har nett.') : c ? `Oppdatert ${naarTekst(c.hentet)}` : 'Henter tavlen …';
+  const hvem = tavleHvem(), utvalg = hvem !== 'alle', g = gruppeAv(hvem), favTom = hvem === 'fav' && !favoritter().length;
+  const hva = tavleVis, per = hva !== 'tot', arter = tavleEtter() === 'arter', c = favTom ? null : lesTavle(hva), uid = (lsJson(DK('okt'), null) || {}).uid, o = oppsummering(), sk = skjulte();
+  const status = favTom ? '' : henter && !c ? 'Henter tavlen …' : (tavleFeil || !navigator.onLine) ? (c ? `Uten nett – viser tavlen fra ${naarTekst(c.hentet)}` : 'Tavlen hentes når du har nett.') : c ? `Oppdatert ${naarTekst(c.hentet)}` : 'Henter tavlen …';
   const merke = '<span class="tv-merket" role="img" aria-label="merket for uvanlig mange frø eller arter på kort tid" title="Merket for uvanlig mange frø eller arter på kort tid">!</span>';
   const innhold = (x, nr, meg) => { const skjult = !meg && sk[x.user_id] != null, navn = meg ? (navnStengt() ? 'Fuglevenn' : mittNavn()) : skjult ? 'Skjult navn' : visNavn(x);
     return `<span class="tv-nr ${nr <= 3 ? 'topp' : ''}">${nr}</span><span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>
@@ -5389,24 +5439,30 @@ function tavleHtml() {
   const varsel = [lsGet(DK('merket')) ? '<div class="tv-varsel" role="status">Du er merket på ledertavlen fordi du har fått uvanlig mange frø eller registrert uvanlig mange arter på kort tid. Merket blir stående til det er sjekket, og imens kan du ikke vinne premier.</div>' : '',
     navnStengt() ? `<div class="tv-varsel" role="status">Navnet «${esc(mittNavn())}» kan ikke brukes på ledertavlen, fordi det er rapportert eller ikke tillatt. Til du velger et nytt, står du som «Fuglevenn».<button class="btn" data-bytt-navn>Velg nytt navn</button></div>`
     : melding ? `<div class="tv-varsel" role="status">«${esc(melding.fra)}» var tatt, så nå heter du «${esc(melding.til)}». Du kan bytte navn når du vil.<button class="textbtn" data-lukk-melding>OK</button></div>` : ''].join('');
-  const plassTekst = !c ? 'Plassen din kommer når tavlen er hentet'
+  const mine = arter ? (per ? `${flertall((c && c.meg) || 0, 'art', 'arter')} ${DENNE[hva]}` : flertall(o.arter, 'art', 'arter'))
+    : per ? `${fmtFro((c && c.meg) || 0)} frø ${DENNE[hva]}` : `${fmtFro(o.fro)} frø`;
+  const plassTekst = favTom ? mine : utvalg ? (c ? `${c.plass ? `Nr. ${c.plass} av ${c.antall} ${g ? `i «${g.navn}»` : 'blant favorittene'} · ` : ''}${mine}` : 'Plassen din kommer når tavlen er hentet')
+    : !c ? 'Plassen din kommer når tavlen er hentet'
     : arter ? (per ? (c.plass ? `Nr. ${c.plass} av ${c.antall} · ${flertall(c.meg || 0, 'art', 'arter')} ${DENNE[hva]}` : `Ingen arter registrert ${DENNE[hva]} ennå`)
       : `${c.plass ? `Nr. ${c.plass} av ${c.antall}` : 'Plassen din kommer når tavlen er hentet'} · ${flertall(o.arter, 'art', 'arter')}`)
     : per ? (c.plass ? `Nr. ${c.plass} av ${c.antall} · ${fmtFro(c.meg || 0)} frø ${DENNE[hva]}` : `Ingen frø ${DENNE[hva]} ennå`)
     : `${c.plass ? `Nr. ${c.plass} av ${c.antall}` : 'Plassen din kommer når tavlen er hentet'} · ${fmtFro(o.fro)} frø`;
-  const forrige = per && !arter && c && Array.isArray(c.forrige) && c.forrige.length ? `<div class="tv-forrige"><h4>${FORRIGE[hva]}</h4><ol>${c.forrige.map(p =>
+  const forrige = per && !arter && !utvalg && c && Array.isArray(c.forrige) && c.forrige.length ? `<div class="tv-forrige"><h4>${FORRIGE[hva]}</h4><ol>${c.forrige.map(p =>
     `<li class="${p.user_id && p.user_id === uid ? 'meg' : ''}"><span class="tv-med m${p.plass}" aria-label="${p.plass}. plass">${p.plass}</span><b>${esc(p.navn || 'Fuglevenn')}</b><small>${fmtFro(p.poeng)} frø · premie ${fmtFro(p.fro)}</small></li>`).join('')}</ol></div>` : '';
   return `<div class="s-sec">
     <div class="tv-meg"><span class="ti" style="${tittelPos(o.tittel)}" aria-hidden="true"></span>
       <span class="tv-t"><b>${esc(mittNavn())}</b><small>${plassTekst}</small></span>
       <button class="btn" data-bytt-navn>Bytt navn</button></div>
     ${varsel}
-    <h3 style="margin-top:22px">Ledertavle <span class="h3n">topp ${Math.min(50, rader.length || 50)}</span></h3>
+    <h3 style="margin-top:22px">${g ? esc(g.navn) : hvem === 'fav' ? 'Favoritter' : 'Ledertavle'} <span class="h3n">${g ? flertall(g.antall || rader.length || 1, 'medlem', 'medlemmer') : hvem === 'fav' ? (favTom ? '' : flertall(favoritter().length, 'favoritt', 'favoritter')) : `topp ${Math.min(50, rader.length || 50)}`}</span></h3>
+    <div class="kal-valg tv-valg tv-hvem" role="group" aria-label="Hvem på tavla">${[['alle', 'Alle'], ['fav', '★ Favoritter'], ...mineGrupper().map(x => ['g:' + x.id, x.navn])].map(([k, t]) => `<button class="chip" data-tavlehvem="${esc(k)}" aria-pressed="${k === hvem}">${esc(t)}</button>`).join('')}<button class="chip ny" data-gruppe-ny aria-haspopup="dialog">+ Gruppe</button></div>
+    ${g ? `<p class="tv-gruppe"><span>Kode <b>${esc(visKode(g.kode))}</b></span><button class="textbtn" data-gruppe-inviter="${esc(g.id)}">Inviter</button><button class="textbtn" data-gruppe-mer="${esc(g.id)}">Mer …</button></p>` : ''}
     <div class="kal-valg tv-valg tv-etter" role="group" aria-label="Ledertavle etter">${[['fro', 'Frø'], ['arter', 'Arter']].map(([k, t]) => `<button class="chip" data-tavleetter="${k}" aria-pressed="${k === tavleEtter()}">${t}</button>`).join('')}</div>
     <div class="kal-valg tv-valg" role="group" aria-label="Ledertavle for">${TAVLER.map(h => `<button class="chip" data-tavlevis="${h}" aria-pressed="${h === hva}">${TAVLENAVN[h]}</button>`).join('')}</div>
-    ${per && c && c.periode ? `<p class="cap tv-periode"><b>${esc(periodeTekst(c.periode))}</b>${hva === 'uke' ? ` · ${ukeSpenn(c.fra, c.til)}` : ''} · ${igjenTekst(c.til)}<br>${arter ? 'Flest fuglearter registrert i perioden. Likt antall gir delt plass.' : `Premie til de tre beste: ${premieTekst(c.premier)} frø.`}</p>` : ''}
+    ${per && c && c.periode ? `<p class="cap tv-periode"><b>${esc(periodeTekst(c.periode))}</b>${hva === 'uke' ? ` · ${ukeSpenn(c.fra, c.til)}` : ''} · ${igjenTekst(c.til)}<br>${arter ? 'Flest fuglearter registrert i perioden. Likt antall gir delt plass.' : utvalg ? 'Flest frø i perioden. Likt antall gir delt plass. Premiene gjelder bare den store tavla.' : `Premie til de tre beste: ${premieTekst(c.premier)} frø.`}</p>` : ''}
     ${arter && !per && c ? '<p class="cap tv-periode">Flest fuglearter registrert i appen. Likt antall gir delt plass.</p>' : ''}
-    ${rader.length ? `<ol class="tavle">${rader.map((x, i) => rad(x, arter ? x.plass || i + 1 : i + 1, x.user_id === uid)).join('')}${!erMeg && c && c.plass ? `<li class="tv-mer" aria-hidden="true">…</li>${rad(megRad, c.plass, true)}` : ''}</ol>`
+    ${favTom ? '<p class="cap">Ingen favoritter ennå. Trykk på et navn på tavla og velg «Legg til i favoritter», så står de her sammen med deg.</p>'
+      : rader.length ? `<ol class="tavle">${rader.map((x, i) => rad(x, arter || utvalg ? x.plass || i + 1 : i + 1, x.user_id === uid)).join('')}${!erMeg && !utvalg && c && c.plass ? `<li class="tv-mer" aria-hidden="true">…</li>${rad(megRad, c.plass, true)}` : ''}</ol>`
       : c && arter ? `<p class="cap">Ingen har registrert arter${per ? ` ${DENNE[hva]}` : ''} ennå.</p>` : per && c ? `<p class="cap">Ingen har fått frø ${DENNE[hva]} ennå.</p>` : ''}
     <p class="cap tv-status" role="status">${esc(status)}</p>
     ${forrige}
@@ -5422,7 +5478,7 @@ function tavleHtml() {
 let profilVis = null, tavleRull = 0;
 const profilCache = new Map();
 function tavleRad(uid) {
-  const c = lsJson(tavleNokkel(tavleVis), null), meg = uid === 'meg';
+  const c = lesTavle(tavleVis), meg = uid === 'meg';
   const x = meg ? null : c && Array.isArray(c.rader) ? c.rader.find(r => r.user_id === uid) : null;
   if (!meg && !x) return;
   profilVis = { uid, x, meg, d: meg ? null : profilCache.get(uid) || null, status: meg ? 'ok' : 'henter' };
@@ -5458,7 +5514,7 @@ function lukkProfil() {
   const b = sb.querySelector(`[data-tavle-rad="${uid}"]`); if (b) b.focus({ preventScroll: true });
 }
 function profilHtml() {
-  const p = profilVis, skjult = !p.meg && skjulte()[p.uid] != null;
+  const p = profilVis, skjult = !p.meg && skjulte()[p.uid] != null, g = gruppeAv(tavleHvem());
   const navn = p.meg ? (navnStengt() ? 'Fuglevenn' : mittNavn()) : skjult ? 'Skjult navn' : visNavn(p.x);
   let liste = null, antall = null, merk = '';
   if (p.meg) {
@@ -5478,7 +5534,7 @@ function profilHtml() {
     ${antall != null && p.status !== 'borte' ? `<p class="profil-antall">${flertall(antall, 'fugl', 'fugler')} observert i hagen</p>` : ''}
     ${status ? `<p class="cap" role="status">${status}</p>` : ''}${merk ? `<p class="cap">${merk}</p>` : ''}
     ${liste && liste.length && p.status !== 'borte' ? `<div class="naa profil-arter">${liste.map(c => { const i = BY_KEY[c.key]; return `<button data-i="${i}">${miniatyr(c, i)}${esc(c.navn)}</button>`; }).join('')}</div>` : ''}
-    ${p.meg ? '' : `<div class="row" style="margin-top:22px">${skjult ? '<button class="btn" data-profil-visnavn>Vis navnet igjen</button>' : '<button class="btn" data-profil-rapporter>Rapporter navnet</button>'}</div>`}`;
+    ${p.meg ? '' : `<div class="profil-knapper"><button class="btn" data-profil-fav aria-pressed="${erFavoritt(p.uid)}">${erFavoritt(p.uid) ? '★ Favoritt' : '☆ Legg til i favoritter'}</button>${skjult ? '<button class="btn" data-profil-visnavn>Vis navnet igjen</button>' : '<button class="btn" data-profil-rapporter>Rapporter navnet</button>'}${g && g.eier ? `<button class="textbtn" data-profil-fjern>Fjern fra «${esc(g.navn)}»</button>` : ''}</div>`}`;
 }
 function rapporterSporsmal(uid, navn) {
   sporsmal({
@@ -5491,6 +5547,332 @@ function rapporterSporsmal(uid, navn) {
     } }, { tekst: 'Avbryt' }],
   });
 }
+
+/* ---- Grupper og favoritter: own small boards. A group («Familien») has a name and a code of 8 characters; the
+   members see a board with only the group (gruppetavle in Supabase). The favourites are kept on this device only (per
+   user); their board is them and me (favoritt_tavle). Both: the same periods and seeds or species as the big board,
+   everyone in it (also with 0), the place within it and no prizes. On the board: «Alle · ★ Favoritter · the groups ·
+   + Gruppe». An invitation is a link with the code (…/#bli=KODE). Whoever made a group can rename it, make a new code
+   and remove members (from the profile). At most 5 groups per user, 50 members per group and 50 favourites. The list
+   of groups is kept on the device too (grupper), so the board shows them without a network ---- */
+const GRUPPER_KEY = () => DK('grupper'), FAV_KEY = () => DK('favoritter'), UTVALG_KEY = () => DK('tavle-utvalg'), HVEM_KEY = () => DK('tavlehvem'), BLI_KEY = () => DK('bli-koder');
+const MAKS_GRUPPER = 5, MAKS_FAV = 50;
+const mineGrupper = () => { const a = lsJson(GRUPPER_KEY(), []); return Array.isArray(a) ? a.filter(g => g && typeof g.id === 'string' && typeof g.navn === 'string') : []; };
+const lagreGrupper = a => lsSet(GRUPPER_KEY(), JSON.stringify(a));
+const favoritter = () => { const a = lsJson(FAV_KEY(), []); return Array.isArray(a) ? a.filter(x => typeof x === 'string').slice(0, MAKS_FAV) : []; };
+const erFavoritt = uid => favoritter().includes(uid);
+const gruppeAv = h => (h && h.startsWith('g:') ? mineGrupper().find(g => g.id === h.slice(2)) || null : null);
+const tavleHvem = () => { const h = lsGet(HVEM_KEY()) || 'alle'; return h === 'fav' || gruppeAv(h) ? h : 'alle'; };
+const settHvem = h => (h === 'alle' ? lsDel(HVEM_KEY()) : lsSet(HVEM_KEY(), h));
+const visKode = k => (k && k.length === 8 ? `${k.slice(0, 4)} ${k.slice(4)}` : k || '');
+function oppdaterGruppe(g) {
+  if (!g || !g.id) return;
+  const a = mineGrupper(), i = a.findIndex(x => x.id === g.id), ny = { id: g.id, navn: g.navn, kode: g.kode, eier: !!g.eier, antall: +g.antall || 0 };
+  if (i >= 0) a[i] = ny; else a.push(ny);
+  lagreGrupper(a);
+}
+function utAvGruppe(id) {
+  if (lsGet(HVEM_KEY()) === 'g:' + id) settHvem('alle');
+  lagreGrupper(mineGrupper().filter(g => g.id !== id));
+}
+/* the boards of the groups and the favourites, kept in one place: «g:<id>|fro|uke» → the answer */
+const utvalgNokkel = (hvem, etter, hva) => `${hvem}|${etter}|${hva}`;
+function lesTavle(hva = tavleVis, etter = tavleEtter(), hvem = tavleHvem()) {
+  if (hvem === 'alle') return lsJson(tavleNokkel(hva, etter), null);
+  const m = lsJson(UTVALG_KEY(), null);
+  return (m && m[utvalgNokkel(hvem, etter, hva)]) || null;
+}
+function lagreUtvalg(hvem, etter, hva, j) {
+  const m = lsJson(UTVALG_KEY(), null) || {}, gyldig = new Set(['fav', ...mineGrupper().map(g => 'g:' + g.id)]);
+  Object.keys(m).forEach(k => { if (!gyldig.has(k.split('|')[0])) delete m[k]; });
+  m[utvalgNokkel(hvem, etter, hva)] = { ...j, hentet: Date.now() };
+  lsSet(UTVALG_KEY(), JSON.stringify(m));
+}
+/* a function in Supabase with the session: { ok: true, j } or { ok: false, feil: «ukjent_kode», «nett» … } */
+async function rpc(fn, data = {}) {
+  if (!navigator.onLine) return { ok: false, feil: 'nett' };
+  try {
+    const okt = lsGet(DK('okt')) ? await hentOkt(false).catch(() => null) : null;
+    const r = await supa('/rest/v1/rpc/' + fn, { metode: 'POST', data, okt });
+    if (r.ok) { const t = await r.text(); return { ok: true, j: t ? JSON.parse(t) : null }; }
+    const f = await r.json().catch(() => ({}));
+    return { ok: false, feil: (f && f.message) || `feil ${r.status}` };
+  } catch (e) { return { ok: false, feil: 'nett' }; }
+}
+let grupperHentet = 0;
+async function hentGrupper(tving) {
+  if (!deler() || lsGet(DK('slett')) || (!tving && Date.now() - grupperHentet < 60000)) return;
+  grupperHentet = Date.now();
+  const r = await rpc('mine_grupper');
+  if (!r.ok || !Array.isArray(r.j)) { if (r.feil === 'nett') grupperHentet = 0; return; }
+  const for_ = JSON.stringify(mineGrupper());
+  lagreGrupper([]); r.j.forEach(oppdaterGruppe);
+  if (JSON.stringify(mineGrupper()) !== for_) paintDeling();
+}
+function byttFavoritt(uid, navn) {
+  const a = favoritter(), i = a.indexOf(uid);
+  if (i >= 0) { a.splice(i, 1); si(`«${navn}» er fjernet fra favorittene.`); }
+  else if (a.length >= MAKS_FAV) { si(`Du kan ha høyst ${MAKS_FAV} favoritter.`); return; }
+  else { a.push(uid); si(`«${navn}» er lagt til i favorittene.`); }
+  if (a.length) lsSet(FAV_KEY(), JSON.stringify(a)); else lsDel(FAV_KEY());
+}
+/* the answers from Supabase in words */
+const GRUPPE_FEIL = {
+  navn_form: 'Navnet kan ha 2–30 tegn: bokstaver, tall, mellomrom, punktum, bindestrek og &.',
+  navn_stengt: 'Det navnet kan ikke brukes. Velg et annet.',
+  for_mange_grupper: `Du er med i ${MAKS_GRUPPER} grupper, som er det meste. Gå ut av en først.`,
+  deler_ikke: 'Du må dele med ledertavlen for å være med i grupper.',
+  ukjent_kode: 'Fant ingen gruppe med den koden. Sjekk at den er riktig, eller be om en ny.',
+  gruppa_er_full: 'Gruppa er full (50 medlemmer).',
+  ikke_eier: 'Bare den som laget gruppa, kan gjøre det.',
+  nett: 'Fikk ikke kontakt. Prøv igjen når du har nett.',
+};
+const gruppeFeil = f => GRUPPE_FEIL[f] || 'Noe gikk galt. Prøv igjen litt senere.';
+const GN = 'A-Za-z0-9ÆØÅæøåÄÖÜäöüÉÈÊéèêÁÀáàÓÒÔóòôÚúÍíÑñÇç', GRUPPENAVN = new RegExp(`^[${GN}]([${GN} .&-]*[${GN}.])?$`);
+const rensGruppenavn = t => String(t || '').trim().replace(/\s+/g, ' ');
+const gruppenavnFeil = t => (t.length < 2 || t.length > 30 || !GRUPPENAVN.test(t) || !/[A-Za-zÆØÅæøåÄÖÜäöüÉÈÊéèêÁÀáàÓÒÔóòôÚúÍíÑñÇç]/.test(t) ? 'navn_form' : null);
+/* a question with one field. lagre(value) does the work and closes the box; it gives an error text to show instead */
+function feltSporsmal({ tittel, tekst = '', etikett, verdi = '', maks = 30, knapp, attr = '', lagre }) {
+  sporsmal({
+    tittel,
+    tekst: `${tekst}<label class="felt" for="dlgFelt">${esc(etikett)}</label><input class="felt-inp" id="dlgFelt" value="${esc(verdi)}" maxlength="${maks}" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-describedby="dlgFeil" ${attr}><p class="navn-feil" id="dlgFeil" role="alert"></p>`,
+    knapper: [nettKnapp(knapp, () => lagre($('#dlgFelt').value)), { tekst: 'Avbryt' }],
+  });
+  setTimeout(() => { const f = $('#dlgFelt'); if (f) { f.focus(); f.select(); } }, 80);
+}
+/* a button in a question that asks Supabase first: gjor() closes the box itself, or gives an error text, and the
+   box stays open with it */
+const nettKnapp = (tekst, gjor, pri = true) => ({ tekst, pri, sjekk: b => {
+  const t0 = b.textContent; b.disabled = true; b.textContent = 'Et øyeblikk …';
+  Promise.resolve(gjor()).then(feil => {
+    if (!dlgApen || !b.isConnected) return;
+    b.disabled = false; b.textContent = t0;
+    if (!feil) return;
+    let p = $('#dlgFeil'); if (!p) { p = document.createElement('p'); p.className = 'navn-feil'; p.id = 'dlgFeil'; p.setAttribute('role', 'alert'); $('#dlgTekst').appendChild(p); }
+    p.textContent = feil;
+    const f = $('#dlgFelt'); if (f) { f.setAttribute('aria-invalid', 'true'); f.focus(); }
+  });
+  return false;
+} });
+dlgEl.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'dlgFelt') { e.preventDefault(); const b = dlgEl.querySelector('.btn.pri'); if (b && !b.disabled) b.click(); } });
+dlgEl.addEventListener('input', e => { if (e.target.id === 'dlgFelt') { e.target.removeAttribute('aria-invalid'); const p = $('#dlgFeil'); if (p) p.textContent = ''; } });
+/* the board for a group after making it or joining it */
+function visGruppeTavle(g) {
+  settHvem('g:' + g.id);
+  if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') { profilVis = null; renderStats(); hentTavle(); }
+  else openStats('tavle');
+}
+function trengerDeling() {
+  sporsmal({
+    tittel: 'Grupper og favoritter',
+    tekst: '<p>Grupper og favoritter er en del av ledertavlen. For å være med må du dele.</p>',
+    knapper: [{ tekst: 'Del og se ledertavlen', pri: true, fn: () => visIntro('slaPa', () => openStats('tavle')) }, { tekst: 'Avbryt' }],
+  });
+}
+function nyGruppeValg() {
+  if (!deler()) { trengerDeling(); return; }
+  sporsmal({
+    tittel: 'Grupper',
+    tekst: '<p>En gruppe har sin egen tavle med bare medlemmene, for eksempel familien eller naboene. Lag en ny, eller bli med i en du har fått kode til.</p>',
+    knapper: [{ tekst: 'Lag gruppe', pri: true, fn: lagGruppeSporsmal }, { tekst: 'Bli med i en gruppe', fn: bliMedSporsmal }, { tekst: 'Avbryt' }],
+  });
+}
+function lagGruppeSporsmal() {
+  if (!deler()) { trengerDeling(); return; }
+  if (mineGrupper().length >= MAKS_GRUPPER) { sporsmal({ tittel: 'Lag gruppe', tekst: `<p>${gruppeFeil('for_mange_grupper')}</p>`, knapper: [{ tekst: 'OK', pri: true }] }); return; }
+  feltSporsmal({
+    tittel: 'Lag gruppe', etikett: 'Navn på gruppa', knapp: 'Lag gruppe', attr: 'autocapitalize="sentences" placeholder="f.eks. Familien"',
+    tekst: '<p>Gruppa får sin egen tavle med bare medlemmene. Etterpå får du en kode å dele med dem som skal være med.</p>',
+    lagre: async v => {
+      const t = rensGruppenavn(v), f = gruppenavnFeil(t);
+      if (f) return gruppeFeil(f);
+      const r = await rpc('lag_gruppe', { navn: t });
+      if (!r.ok) return gruppeFeil(r.feil);
+      oppdaterGruppe(r.j); paintDeling();
+      lukkDlg(() => kodeSporsmal(r.j, true));
+      return null;
+    },
+  });
+}
+/* the code to share, after making a group or a new code */
+function kodeSporsmal(g, ny) {
+  sporsmal({
+    tittel: ny ? `«${g.navn}» er laget` : `Ny kode til «${g.navn}»`,
+    tekst: `<p>${ny ? '' : 'Den gamle koden virker ikke lenger. '}Del koden med dem som skal være med. De åpner lenken, eller skriver koden inn under «Bli med i en gruppe».</p><p class="gr-kode">${esc(visKode(g.kode))}</p>`,
+    knapper: [{ tekst: 'Inviter', pri: true, fn: () => { visGruppeTavle(g); inviter(g); } }, { tekst: 'Ferdig', fn: () => visGruppeTavle(g) }],
+  });
+}
+async function inviter(g) {
+  const url = `${location.origin}${location.pathname}#bli=${g.kode}`;
+  const tekst = `Bli med i «${g.navn}» i Hagefugler, så ser vi hvem som ser flest fugler. Koden er ${visKode(g.kode)}.`;
+  if (navigator.share) {
+    try { await navigator.share({ title: `«${g.navn}» i Hagefugler`, text: tekst, url }); return; }
+    catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  sporsmal({
+    tittel: `Inviter til «${g.navn}»`,
+    tekst: `<p>Send lenken eller koden til dem som skal være med.</p><p class="gr-kode">${esc(visKode(g.kode))}</p><p class="cap" style="word-break:break-all;text-align:center">${esc(url)}</p>`,
+    knapper: [{ tekst: 'Kopier lenken', pri: true, sjekk: b => { kopierTekst(`${tekst}\n${url}`).then(ok => { kvittering(b, ok ? 'Kopiert!' : 'Fikk ikke kopiert'); if (ok) si('Lenken er kopiert.'); }); return false; } }, { tekst: 'Lukk' }],
+  });
+}
+function bliMedSporsmal() {
+  if (!deler()) { trengerDeling(); return; }
+  feltSporsmal({
+    tittel: 'Bli med i en gruppe', etikett: 'Kode', maks: 12, knapp: 'Bli med', attr: 'autocapitalize="characters" placeholder="f.eks. MEIS 4821"',
+    tekst: '<p>Skriv inn koden du har fått (8 tegn).</p>',
+    lagre: async v => {
+      const k = String(v).toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (k.length !== 8) return 'Koden har 8 tegn.';
+      const r = await rpc('bli_med', { kode: k });
+      if (!r.ok) return gruppeFeil(r.feil);
+      oppdaterGruppe(r.j); lukkDlg(); si(`Du er med i «${r.j.navn}».`); visGruppeTavle(r.j);
+      return null;
+    },
+  });
+}
+function gruppeMeny(g) {
+  sporsmal({
+    tittel: g.navn,
+    tekst: `<p>${flertall(g.antall || 1, 'medlem', 'medlemmer')} · kode ${esc(visKode(g.kode))}${g.eier ? ' · du laget gruppa' : ''}</p>${g.eier ? '<p class="cap">Et medlem fjerner du ved å trykke på navnet på gruppas tavle.</p>' : ''}`,
+    knapper: [{ tekst: 'Inviter', pri: true, fn: () => inviter(g) },
+      ...(g.eier ? [{ tekst: 'Gi nytt navn', fn: () => nyttGruppenavn(g) }, { tekst: 'Ny kode', fn: () => nyKodeSporsmal(g) }] : []),
+      { tekst: 'Forlat gruppa', fn: () => forlatSporsmal(g) }, { tekst: 'Lukk' }],
+  });
+}
+function nyttGruppenavn(g) {
+  feltSporsmal({
+    tittel: 'Nytt navn på gruppa', etikett: 'Navn', verdi: g.navn, knapp: 'Lagre', attr: 'autocapitalize="sentences"',
+    lagre: async v => {
+      const t = rensGruppenavn(v), f = gruppenavnFeil(t);
+      if (f) return gruppeFeil(f);
+      if (t !== g.navn) {
+        const r = await rpc('endre_gruppe', { gruppe: g.id, navn: t });
+        if (!r.ok) return gruppeFeil(r.feil);
+        oppdaterGruppe(r.j); si(`Gruppa heter nå «${r.j.navn}».`);
+      }
+      lukkDlg(); paintDeling();
+      return null;
+    },
+  });
+}
+function nyKodeSporsmal(g) {
+  sporsmal({
+    tittel: 'Lage ny kode?',
+    tekst: `<p>Den gamle koden til «${esc(g.navn)}» slutter å virke, også i lenker du har sendt. De som er med, blir med.</p>`,
+    knapper: [nettKnapp('Lag ny kode', async () => {
+      const r = await rpc('endre_gruppe', { gruppe: g.id, ny_kode: true });
+      if (!r.ok) return gruppeFeil(r.feil);
+      oppdaterGruppe(r.j); paintDeling(); lukkDlg(() => kodeSporsmal(r.j, false));
+      return null;
+    }), { tekst: 'Avbryt' }],
+  });
+}
+function forlatSporsmal(g) {
+  const n = g.antall || 1;
+  sporsmal({
+    tittel: `Forlate «${g.navn}»?`,
+    tekst: `<p>${n <= 1 ? 'Du er den siste, så gruppa slettes.' : g.eier ? 'Den som har vært med lengst, tar over gruppa. Du kan bli med igjen med koden.' : 'Du kan bli med igjen med koden.'}</p>`,
+    knapper: [nettKnapp('Forlat gruppa', async () => {
+      const r = await rpc('forlat_gruppe', { gruppe: g.id });
+      if (!r.ok) return gruppeFeil(r.feil);
+      utAvGruppe(g.id); lukkDlg(); si(`Du har forlatt «${g.navn}».`);
+      profilVis = null; paintDeling(); if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') hentTavle();
+      return null;
+    }), { tekst: 'Avbryt' }],
+  });
+}
+function fjernMedlemSporsmal(g, uid, navn) {
+  sporsmal({
+    tittel: `Fjerne «${navn}»?`,
+    tekst: `<p>«${esc(navn)}» fjernes fra «${esc(g.navn)}». Har de koden, kan de bli med igjen. Lag en ny kode hvis det ikke skal gå (Mer … på tavla).</p>`,
+    knapper: [nettKnapp('Fjern', async () => {
+      const r = await rpc('fjern_medlem', { gruppe: g.id, uid });
+      if (!r.ok) return gruppeFeil(r.feil);
+      lukkDlg(); si(`«${navn}» er fjernet fra «${g.navn}».`);
+      profilVis = null; renderStats(); hentTavle();
+      return null;
+    }), { tekst: 'Avbryt' }],
+  });
+}
+/* Inviter / Mer on the board and in Innstillinger */
+function gruppeKlikk(t) {
+  const gi = t.closest('[data-gruppe-inviter]'), gm = t.closest('[data-gruppe-mer]'), b = gi || gm;
+  if (!b) return false;
+  const g = mineGrupper().find(x => x.id === (gi ? gi.dataset.gruppeInviter : gm.dataset.gruppeMer));
+  if (g) { if (gi) inviter(g); else gruppeMeny(g); }
+  return true;
+}
+function paintGrupper() {
+  const ul = $('#gruppeListe'); if (!ul) return;
+  const pa = deler() && !lsGet(DK('slett')), a = pa ? mineGrupper() : [];
+  $('#gruppeKnapper').hidden = !pa; ul.hidden = !a.length;
+  $('#gruppeInfo').textContent = pa
+    ? `En gruppe har sin egen tavle med bare medlemmene, for eksempel familien eller naboene. Del koden med dem som skal være med. Favoritter legger du til ved å trykke på et navn på tavla${favoritter().length ? ` (nå ${favoritter().length})` : ''}.`
+    : 'Grupper og favoritter er en del av ledertavlen, og krever at du deler.';
+  ul.innerHTML = a.map(g => `<li><span class="bn"><b>${esc(g.navn)}</b><small>${flertall(g.antall || 1, 'medlem', 'medlemmer')} · kode ${esc(visKode(g.kode))}${g.eier ? ' · laget av deg' : ''}</small></span><button class="btn" data-gruppe-inviter="${esc(g.id)}">Inviter</button><button class="textbtn" data-gruppe-mer="${esc(g.id)}">Mer</button></li>`).join('');
+}
+/* joins that wait: after «Start på nytt» (a new anonymous user joins the same groups) or an invitation accepted
+   before the row on the board was sent. Done after sending; vis: the board for it afterwards */
+function leggTilVentende(kode, vis) {
+  const a = lsJson(BLI_KEY(), []), v = Array.isArray(a) ? a : [];
+  if (!v.some(x => x.kode === kode)) v.push({ kode, vis: !!vis });
+  lsSet(BLI_KEY(), JSON.stringify(v));
+}
+async function bliMedVentende() {
+  const v = lsJson(BLI_KEY(), null);
+  if (!Array.isArray(v) || !v.length) return;
+  const igjen = []; let vis = null;
+  for (const x of v) {
+    const r = await rpc('bli_med', { kode: x.kode });
+    if (r.ok) { oppdaterGruppe(r.j); if (x.vis) vis = r.j; }
+    else if (r.feil === 'nett' || /^feil 5/.test(r.feil)) igjen.push(x);
+    else if (x.vis) si(`Fikk ikke blitt med i gruppa. ${gruppeFeil(r.feil)}`);   // an unknown code, a full group …
+  }
+  if (igjen.length) lsSet(BLI_KEY(), JSON.stringify(igjen)); else lsDel(BLI_KEY());
+  if (vis) { settHvem('g:' + vis.id); si(`Du er med i «${vis.navn}».`); }
+  paintDeling();
+}
+/* an invitation: …/#bli=KODE. Asked when the app is ready (not over the introduction or another question); without
+   sharing, sharing first and the group afterwards */
+const BLI_HASH = /^#bli=([A-Za-z0-9-]{6,14})$/;
+let bliKode = (BLI_HASH.exec(location.hash || '') || [])[1] || null;
+function fjernBliHash() { if (BLI_HASH.test(location.hash || '')) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} } }
+async function handterInvitasjon() {
+  if (!bliKode) return;
+  if (openSheet === introEl || dlgApen) { setTimeout(handterInvitasjon, 1500); return; }
+  const kode = bliKode.toUpperCase().replace(/[^A-Z0-9]/g, ''); bliKode = null;
+  const melding = tekst => { fjernBliHash(); sporsmal({ tittel: 'Invitasjon til en gruppe', tekst: `<p>${tekst}</p>`, knapper: [{ tekst: 'OK', pri: true }] }); };
+  if (!deler()) {
+    sporsmal({
+      tittel: 'Invitasjon til en gruppe',
+      tekst: '<p>Du er invitert til en gruppe med egen tavle. Grupper er en del av ledertavlen, så for å være med må du dele.</p>',
+      knapper: [{ tekst: 'Del og bli med', pri: true, fn: () => { fjernBliHash(); leggTilVentende(kode, true); visIntro('slaPa', () => openStats('tavle')); } }, { tekst: 'Avbryt', fn: fjernBliHash }],
+      avbryt: fjernBliHash,
+    });
+    return;
+  }
+  const r = await rpc('gruppe_fra_kode', { kode });
+  if (!r.ok) { melding(r.feil === 'nett' ? 'Invitasjonen kan åpnes når du har nett. Åpne lenken igjen da.' : 'Fikk ikke sjekket invitasjonen. Prøv igjen litt senere.'); return; }
+  if (!r.j) { melding('Fant ikke gruppa. Koden kan være byttet ut. Be om en ny invitasjon.'); return; }
+  if (r.j.medlem) { fjernBliHash(); await hentGrupper(true); if (gruppeAv('g:' + r.j.id)) visGruppeTavle(gruppeAv('g:' + r.j.id)); return; }
+  sporsmal({
+    tittel: `Bli med i «${r.j.navn}»?`,
+    tekst: `<p>${flertall(+r.j.antall || 0, 'medlem', 'medlemmer')}. Gruppa har sin egen tavle, der medlemmene ser brukernavnet ditt, frøene og artene dine.</p>
+      <p>Du blir med som <b>${esc(mittNavn())}</b>.${flereBrukere() ? ' Skal en annen bruker på telefonen være med, bytter du bruker først (trykk på navnet øverst) og åpner lenken igjen.' : ''}</p>`,
+    knapper: [nettKnapp('Bli med', async () => {
+      const b = await rpc('bli_med', { kode });
+      if (!b.ok && b.feil === 'deler_ikke') {                 // sharing, but the row is not sent yet
+        fjernBliHash(); leggTilVentende(kode, true); planleggSending(300); lukkDlg(); si('Du blir med i gruppa så snart du står på tavla.');
+        return null;
+      }
+      if (!b.ok) return gruppeFeil(b.feil);
+      fjernBliHash(); oppdaterGruppe(b.j); lukkDlg(); si(`Du er med i «${b.j.navn}».`); visGruppeTavle(b.j);
+      return null;
+    }), { tekst: 'Avbryt', fn: fjernBliHash }],
+    avbryt: fjernBliHash,
+  });
+}
+addEventListener('hashchange', () => { const m = BLI_HASH.exec(location.hash || ''); if (m) { bliKode = m[1]; handterInvitasjon(); } });
 
 /* ---- choosing the username: in the question box, with a new suggestion and the rules. Saved when it is free ---- */
 function byttNavn() {
@@ -5531,7 +5913,7 @@ dlgEl.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id ==
 function slettMegSporsmal() {
   sporsmal({
     tittel: 'Slutte å dele?',
-    tekst: 'Det du har delt, slettes fra ledertavlen og statistikken, og du får ikke se ledertavlen. Observasjonene dine på telefonen beholdes.',
+    tekst: `Det du har delt, slettes fra ledertavlen og statistikken, og du får ikke se ledertavlen.${mineGrupper().length ? ' Du går også ut av gruppene dine.' : ''} Observasjonene dine på telefonen beholdes.`,
     knapper: [{ tekst: 'Slett meg', pri: true, fn: () => { stoppDeling(); si('Du deler ikke lenger.'); } }, { tekst: 'Avbryt' }],
   });
 }
@@ -5569,7 +5951,7 @@ function navnSideHtml(modus) {
     <p class="cap navn-regel" id="inRegel">Vises på ledertavlen. Velg et vennlig navn, og ikke bruk ditt ekte navn. Støtende navn kan bli skjult.</p>
     <label class="felt" for="inPostnr">Postnummer <small>valgfritt, bare til statistikk, vises ikke på tavlen</small></label>
     <input class="felt-inp" id="inPostnr" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870" value="${esc(pn)}">
-    <p class="cap">Observasjonene dine (art og dato), tellingene og kjøpene sendes anonymt til en felles database, så vi kan lage statistikk over hagefuglene. Ingen e-post eller posisjon. ${pa ? '' : 'Du kan endre dette under Innstillinger.'}</p>
+    <p class="cap">Andre som deler, ser brukernavnet ditt, frøene, artene og hvilke fugler du har registrert (uten datoer), på tavla og i grupper du blir med i. Observasjonene dine (art og dato), tellingene og kjøpene sendes anonymt til en felles database, så vi kan lage statistikk over hagefuglene. Ingen e-post eller posisjon. ${pa ? '' : 'Du kan endre dette under Innstillinger.'}</p>
     <div class="navn-knapper"><button class="btn pri" id="inStart">${pa ? 'Del og se ledertavlen' : introOppdrag ? 'Neste' : 'Start'}</button><button class="textbtn" id="inIkke">${pa ? 'Avbryt' : 'Ikke del'}</button></div>
   </div></section>`;
 }
@@ -5701,7 +6083,7 @@ function sporOmStart(forsok = 0) {
 
 /* ---- Innstillinger: sharing on and off, the postcode, hidden names, and what is waiting ---- */
 function paintDeling() {
-  paintTittel();
+  paintTittel(); paintGrupper();
   if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') { const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; }
   const b = $('#delBtn'); if (!b) return;
   const pa = deler(), slett = !!lsGet(DK('slett'));
@@ -5862,6 +6244,9 @@ function introBarn(forsok = 0) {
 }
 setSheet.addEventListener('click', e => {
   const t = e.target;
+  if (t.id === 'lagGruppe') { lagGruppeSporsmal(); return; }
+  if (t.id === 'bliMedGruppe') { bliMedSporsmal(); return; }
+  if (gruppeKlikk(t)) return;
   if (t.id === 'nyBruker') { nyBrukerSporsmal(); return; }
   const by = t.closest('[data-bruker-bytt]'); if (by) { byttBruker(by.dataset.brukerBytt); return; }
   const nv = t.closest('[data-bruker-navn]'); if (nv) { const b = BRUKERE.find(x => x.id === nv.dataset.brukerNavn); if (b) nyttBrukernavnSporsmal(b); return; }
@@ -5878,10 +6263,13 @@ setSheet.addEventListener('click', e => {
 const ogListe = a => (a.length > 1 ? `${a.slice(0, -1).join(', ')} og ${a[a.length - 1]}` : a[0] || '');
 function startPaNytt(alt) {
   const delt = !!lsGet(DK('okt')), videre = !alt && delingValg() === 'ja';
+  const igjen = videre ? mineGrupper().map(g => ({ kode: g.kode, vis: false })) : [];   // a new anonymous user joins the groups again
   SPEIL.forEach(sp => sp.tom());
   if (delt) lsSet(DK('slett'), '1');
   ['tavle-sendt', 'profil-sendt', ...TAVLE_LAGRET, 'delt-id', 'sist-sendt', 'rapporter', 'navn-stengt', 'navn-melding', 'merket', 'avslutt'].forEach(k => lsDel(DK(k)));
-  if (alt) { ['deling', 'kallenavn', 'postnr', 'skjulte', 'vis-arter'].forEach(k => lsDel(DK(k))); lsDel(brukerNokkel('hagefugler:omrade')); lsDel(brukerNokkel('fuglekort:spor-forsett')); }
+  if (alt) { ['deling', 'kallenavn', 'postnr', 'skjulte', 'vis-arter', 'favoritter'].forEach(k => lsDel(DK(k))); lsDel(brukerNokkel('hagefugler:omrade')); lsDel(brukerNokkel('fuglekort:spor-forsett')); }
+  if (igjen.length) lsSet(BLI_KEY(), JSON.stringify(igjen));   // and the fresh list from Supabase before the old user goes
+  if (videre && delt) lsSet(DK('bli-igjen'), '1');
   nullstillFremgang();
   SPEIL.forEach(sp => sp.tom());                          // nothing of the old is sent to the new user
   paintDeling(); paintOppdrag();
@@ -5953,6 +6341,7 @@ paintOppdrag();
 setTimeout(sporOmStart, 1500);                            // the first time: the introduction, the username and what is shared
 if (lsGet(brukerNokkel('fuglekort:intro')) === 'barn') { lsDel(brukerNokkel('fuglekort:intro')); setTimeout(introBarn, 1500); }   // a new child: the cards, no name
 setTimeout(slettVentende, 2500);                          // users deleted without a network: what they shared
+setTimeout(handterInvitasjon, 2600);                      // …/#bli=KODE: an invitation to a group
 setTimeout(sjekkBonus, 900);                              // dyrekort bought on another device: revealed now
 })();
 </script>

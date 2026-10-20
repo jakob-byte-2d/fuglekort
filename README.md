@@ -296,7 +296,21 @@ Trykker man på et navn på tavla (også sitt eget), viser fanen Tavle profilen:
 - **Vis artslista mi** (Innstillinger → Ledertavle og statistikk, på fra start): slått av lagres `fuglekort:vis-arter` = `nei`, og tavleraden sendes med `vis_arter = false`. Andre ser da bare antallet («Artslista er skjult.»); man ser alltid sin egen. «Slett alt» fjerner valget.
 - Lista som er hentet, huskes mens appen er åpen, så den vises uten nett («Uten nett – viser lista fra sist.»). Ellers står det «Lista hentes når du har nett.»
 - SQL-en må kjøres før denne appversjonen publiseres, siden tavleraden sendes med `vis_arter`.
-- Artene du registrerer, blir altså synlige for andre som deler. Det må stå i personvernerklæringen.
+- Artene du registrerer, blir altså synlige for andre som deler. Det står nå i teksten om deling (Innstillinger og innføringen), og det må stå i personvernerklæringen.
+
+### Grupper og favoritter
+
+Øverst på tavla velger man hvem den gjelder: «Alle · ★ Favoritter · gruppene · + Gruppe». Periodene (Uke, Måned, År, Totalt) og Frø/Arter virker som før.
+
+- **Favoritter:** «☆ Legg til i favoritter» i profilen (trykk på et navn på tavla). Favorittene ligger bare på telefonen, per bruker (`fuglekort:favoritter`, høyst 50), og tavla deres er dem og deg (`favoritt_tavle`). En favoritt som har slettet seg, faller bort. «Slett alt» fjerner dem; «Slett meg» lar dem ligge.
+- **Grupper:** en gruppe har et navn (2–30 tegn, samme ordfilter som brukernavnene) og en kode på 8 tegn uten 0/O og 1/I. Tavla viser alle medlemmene, også med 0, og plassen innenfor gruppa (likt gir delt plass). Det er ingen premier i gruppene; premiene gjelder bare den store tavla. Under valget står koden, «Inviter» og «Mer …».
+- **Lage og bli med:** «+ Gruppe» på tavla eller Innstillinger → Grupper og favoritter. Man må dele. Høyst 5 grupper per bruker og 50 medlemmer per gruppe (Supabase sier fra).
+- **Invitasjon:** «Inviter» deler en lenke (`…/fuglekort/#bli=KODE`) med Del-knappen på telefonen, ellers kopieres den. Åpnes lenken, spør appen «Bli med i «Familien»?» med antall medlemmer og navnet man blir med som. Uten deling: «Del og bli med», og man blir med når raden er sendt. Med flere brukere på telefonen blir man med som den som er i bruk.
+- **Eieren** (den som laget gruppa) kan gi den nytt navn, lage ny kode (den gamle slutter å virke) og fjerne medlemmer fra profilen («Fjern fra «Familien»»). Går eieren ut, overtar den som har vært med lengst; en tom gruppe slettes. Den som er fjernet, får beskjed neste gang gruppas tavle hentes.
+- **Lagret på telefonen:** lista over gruppene (`fuglekort:grupper`, hentes på nytt med `mine_grupper` når tavla eller Innstillinger åpnes, høyst hvert minutt), valget (`fuglekort:tavlehvem`) og tavlene (`fuglekort:tavle-utvalg`), så de vises uten nett.
+- **«Slett meg»** tar medlemskapene med seg (Supabase). **«Nullstill fremgangen»** med deling gir en ny anonym bruker: appen henter gruppene rett før den gamle slettes, og den nye blir med i dem igjen (`fuglekort:bli-koder`).
+- **SQL:** tabellene `grupper` og `gruppemedlem` kan ikke leses direkte. Alt går gjennom `mine_grupper`, `gruppe_fra_kode`, `lag_gruppe`, `bli_med`, `forlat_gruppe`, `endre_gruppe`, `fjern_medlem`, `gruppetavle` og `favoritt_tavle`, som sjekker at man deler, er medlem eller er eier. SQL-en må kjøres før appversjonen publiseres.
+- Senere: et valg for å bare vises i gruppene, ikke på den åpne tavla (fint for barna).
 
 ## Kortstokken: 73 hagefugler
 
