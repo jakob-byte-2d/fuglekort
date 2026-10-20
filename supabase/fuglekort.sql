@@ -14,7 +14,10 @@
 --   premier      de tre beste i hver uke, måned og år       alle kan lese
 --   merket       brukere med uvanlig mange frø på kort tid  bare du (godkjenn i SQL Editor)
 --   dyrearter    dyrekortene, som ikke teller på artstavla  bare du (Table Editor)
+--   grupper      grupper med egen tavle (navn, kode, eier)  bare via funksjonene under (medlemmene)
+--   gruppemedlem hvem som er med i hvilken gruppe          bare via funksjonene under
 -- Profilen på tavla (profil_arter): fugleartene en bruker har registrert, for andre på tavla (kan skjules med vis_arter).
+-- Grupper og favoritter (gruppetavle, favoritt_tavle): egne små tavler med bare medlemmene, eller favorittene og deg.
 -- Du som eier prosjektet, ser alt i SQL Editor (der gjelder ikke RLS), f.eks. via visningen observasjoner.
 -- «Slett meg» sletter den anonyme brukeren, og alle radene forsvinner med den (on delete cascade).
 
@@ -526,6 +529,222 @@ begin
 end $$;
 grant execute on function public.profil_arter(uuid) to anon, authenticated;
 
+-- ---------- Grupper og favoritter: egne små ledertavler ----------
+-- En gruppe («Familien», «Naboene») har et navn og en kode på 8 tegn (uten 0/O og 1/I) som deles med dem som skal
+-- bli med, i appen som en lenke (…/#bli=KODE). Medlemmene ser en egen tavle med bare gruppa (gruppetavle): de samme
+-- periodene og frø eller arter som den store tavla, alle medlemmene (også med 0), plass innenfor gruppa og ingen
+-- premier. Bare den som står på tavla (deler), kan være med. Høyst 5 grupper per bruker og 50 medlemmer per gruppe.
+-- Den som laget gruppa (eier), kan gi den nytt navn, lage ny kode (den gamle slutter å virke) og fjerne medlemmer.
+-- Går eieren ut, overtar den som har vært med lengst; en tom gruppe slettes. «Slett meg» tar medlemskapene med seg.
+-- Tabellene kan ikke leses direkte, bare gjennom funksjonene, som sjekker at du er medlem.
+-- Favorittene ligger bare på telefonen; favoritt_tavle gir tavla for dem (høyst 50) og deg, på samme måte.
+create table if not exists public.grupper (
+  id    uuid primary key default gen_random_uuid(),
+  navn  text not null check (char_length(navn) between 2 and 30),
+  kode  text not null unique check (kode ~ '^[A-HJ-NP-Z2-9]{8}$'),
+  eier  uuid references auth.users (id) on delete set null,
+  laget timestamptz not null default now()
+);
+create table if not exists public.gruppemedlem (
+  gruppe  uuid not null references public.grupper (id) on delete cascade,
+  user_id uuid not null references auth.users (id) on delete cascade,
+  inn     timestamptz not null default now(),
+  primary key (gruppe, user_id)
+);
+create index if not exists gruppemedlem_bruker on public.gruppemedlem (user_id);
+alter table public.grupper enable row level security;
+alter table public.gruppemedlem enable row level security;
+revoke all on public.grupper, public.gruppemedlem from anon, authenticated;
+
+-- koden slik den skrives inn: store bokstaver, uten mellomrom og bindestrek
+create or replace function public.gruppekode_vask(k text) returns text
+language sql immutable set search_path = '' as $$
+  select upper(regexp_replace(coalesce(k, ''), '[^A-Za-z0-9]', '', 'g'))
+$$;
+-- en ny, ledig kode: 8 tilfeldige tegn av 32 (uten 0, O, 1 og I)
+create or replace function public.ny_gruppekode() returns text
+language plpgsql volatile security definer set search_path = '' as $$
+declare a text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; k text;
+begin
+  loop
+    select string_agg(substr(a, 1 + get_byte(x.b, p) % 32, 1), '' order by p) into k
+    from (select uuid_send(gen_random_uuid()) as b) x, unnest(array[0, 1, 2, 3, 4, 5, 10, 11]) p;
+    exit when not exists (select 1 from public.grupper g where g.kode = k);
+  end loop;
+  return k;
+end $$;
+-- gruppenavnet: 2–30 tegn, bokstaver, tall, mellomrom, punktum, bindestrek og &, minst én bokstav, og ikke stengt
+-- (samme filter som brukernavnene). null når det er i orden, ellers «navn_form» eller «navn_stengt»
+create or replace function public.gruppe_navn_feil(t text) returns text
+language plpgsql stable security definer set search_path = '' as $$
+declare b text := 'A-Za-z0-9ÆØÅæøåÄÖÜäöüÉÈÊéèêÁÀáàÓÒÔóòôÚúÍíÑñÇç';
+begin
+  if t is null or char_length(t) not between 2 and 30 or t ~ '  '
+     or t !~ ('^[' || b || ']([' || b || ' .&-]*[' || b || '.])?$')
+     or t !~ '[A-Za-zÆØÅæøåÄÖÜäöüÉÈÊéèêÁÀáàÓÒÔóòôÚúÍíÑñÇç]' then return 'navn_form'; end if;
+  if public.navn_sperret(t) then return 'navn_stengt'; end if;
+  return null;
+end $$;
+create or replace function public.gruppe_json(g public.grupper, meg uuid) returns jsonb
+language sql stable security definer set search_path = '' as $$
+  select jsonb_build_object('id', g.id, 'navn', g.navn, 'kode', g.kode, 'eier', coalesce(g.eier = meg, false),
+                            'antall', (select count(*) from public.gruppemedlem m where m.gruppe = g.id))
+$$;
+
+-- gruppene dine, i den rekkefølgen du ble med
+create or replace function public.mine_grupper() returns jsonb
+language sql stable security definer set search_path = '' as $$
+  select coalesce(jsonb_agg(public.gruppe_json(g, m.user_id) order by m.inn, g.id), '[]'::jsonb)
+  from public.gruppemedlem m join public.grupper g on g.id = m.gruppe
+  where m.user_id = (select auth.uid())
+$$;
+-- før man blir med («Bli med i Familien?»): navnet og antall medlemmer for en kode, og om du alt er med. null: ukjent kode
+create or replace function public.gruppe_fra_kode(kode text) returns jsonb
+language sql stable security definer set search_path = '' as $$
+  select jsonb_build_object('id', g.id, 'navn', g.navn, 'antall', (select count(*) from public.gruppemedlem m where m.gruppe = g.id),
+                            'medlem', exists (select 1 from public.gruppemedlem m where m.gruppe = g.id and m.user_id = (select auth.uid())))
+  from public.grupper g where g.kode = public.gruppekode_vask(gruppe_fra_kode.kode)
+$$;
+create or replace function public.lag_gruppe(navn text) returns jsonb
+language plpgsql volatile security definer set search_path = '' as $$
+declare meg uuid := (select auth.uid()); n text := btrim(regexp_replace(coalesce(lag_gruppe.navn, ''), '\s+', ' ', 'g')); f text; g public.grupper;
+begin
+  if meg is null or not exists (select 1 from public.ledertavle l where l.user_id = meg) then raise exception 'deler_ikke'; end if;
+  f := public.gruppe_navn_feil(n);
+  if f is not null then raise exception '%', f; end if;
+  perform pg_advisory_xact_lock(hashtext('fuglekort-grupper:' || meg::text));
+  if (select count(*) from public.gruppemedlem m where m.user_id = meg) >= 5 then raise exception 'for_mange_grupper'; end if;
+  insert into public.grupper (navn, kode, eier) values (n, public.ny_gruppekode(), meg) returning * into g;
+  insert into public.gruppemedlem (gruppe, user_id) values (g.id, meg);
+  return public.gruppe_json(g, meg);
+end $$;
+create or replace function public.bli_med(kode text) returns jsonb
+language plpgsql volatile security definer set search_path = '' as $$
+declare meg uuid := (select auth.uid()); g public.grupper;
+begin
+  if meg is null or not exists (select 1 from public.ledertavle l where l.user_id = meg) then raise exception 'deler_ikke'; end if;
+  select * into g from public.grupper x where x.kode = public.gruppekode_vask(bli_med.kode);
+  if not found then raise exception 'ukjent_kode'; end if;
+  perform pg_advisory_xact_lock(hashtext('fuglekort-grupper:' || meg::text));
+  perform pg_advisory_xact_lock(hashtext('fuglekort-gruppe:' || g.id::text));
+  if not exists (select 1 from public.gruppemedlem m where m.gruppe = g.id and m.user_id = meg) then
+    if (select count(*) from public.gruppemedlem m where m.user_id = meg) >= 5 then raise exception 'for_mange_grupper'; end if;
+    if (select count(*) from public.gruppemedlem m where m.gruppe = g.id) >= 50 then raise exception 'gruppa_er_full'; end if;
+    insert into public.gruppemedlem (gruppe, user_id) values (g.id, meg);
+  end if;
+  return public.gruppe_json(g, meg);
+end $$;
+create or replace function public.forlat_gruppe(gruppe uuid) returns void
+language sql volatile security definer set search_path = '' as $$
+  delete from public.gruppemedlem m where m.gruppe = forlat_gruppe.gruppe and m.user_id = (select auth.uid());
+$$;
+-- eieren: nytt navn og/eller ny kode
+create or replace function public.endre_gruppe(gruppe uuid, navn text default null, ny_kode boolean default false) returns jsonb
+language plpgsql volatile security definer set search_path = '' as $$
+declare meg uuid := (select auth.uid()); n text := btrim(regexp_replace(coalesce(endre_gruppe.navn, ''), '\s+', ' ', 'g')); f text; g public.grupper;
+begin
+  if not exists (select 1 from public.grupper x where x.id = endre_gruppe.gruppe and x.eier = meg) then raise exception 'ikke_eier'; end if;
+  if endre_gruppe.navn is not null then
+    f := public.gruppe_navn_feil(n);
+    if f is not null then raise exception '%', f; end if;
+    update public.grupper x set navn = n where x.id = endre_gruppe.gruppe;
+  end if;
+  if ny_kode then update public.grupper x set kode = public.ny_gruppekode() where x.id = endre_gruppe.gruppe; end if;
+  select * into g from public.grupper x where x.id = endre_gruppe.gruppe;
+  return public.gruppe_json(g, meg);
+end $$;
+-- eieren: fjerne et medlem (ikke seg selv; da forlater man gruppa)
+create or replace function public.fjern_medlem(gruppe uuid, uid uuid) returns void
+language plpgsql volatile security definer set search_path = '' as $$
+declare meg uuid := (select auth.uid());
+begin
+  if not exists (select 1 from public.grupper x where x.id = fjern_medlem.gruppe and x.eier = meg) then raise exception 'ikke_eier'; end if;
+  if uid = meg then raise exception 'ikke_deg_selv'; end if;
+  delete from public.gruppemedlem m where m.gruppe = fjern_medlem.gruppe and m.user_id = uid;
+end $$;
+-- når noen går ut (selv, fjernet eller slettet): en tom gruppe slettes, og går eieren, overtar den som har vært med lengst
+create or replace function public.gruppe_etter_utmelding() returns trigger
+language plpgsql security definer set search_path = '' as $$
+begin
+  if not exists (select 1 from public.gruppemedlem m where m.gruppe = old.gruppe) then
+    delete from public.grupper g where g.id = old.gruppe;
+  else
+    update public.grupper g set eier = (select m.user_id from public.gruppemedlem m where m.gruppe = old.gruppe order by m.inn, m.user_id limit 1)
+    where g.id = old.gruppe and (g.eier is null or g.eier = old.user_id);
+  end if;
+  return null;
+end $$;
+drop trigger if exists gruppemedlem_ut on public.gruppemedlem;
+create trigger gruppemedlem_ut after delete on public.gruppemedlem for each row execute function public.gruppe_etter_utmelding();
+
+-- tavla for et utvalg på tavla (en gruppe, eller favorittene og deg): samme svar som tavle og tavle_arter, men alle i
+-- utvalget er med (også med 0), «plass» er innenfor utvalget (likt gir delt plass), og det er ingen premier.
+-- etter: «fro» (frøene i perioden; Totalt: tjente frø) eller «arter» (som tavle_arter). «fro» i radene er frøene på tavla.
+create or replace function public.tavle_utvalg(ider uuid[], hva text, etter text) returns jsonb
+language plpgsql stable security definer set search_path = '' as $$
+declare s timestamptz; e timestamptz; fra date; til date; meg uuid := (select auth.uid()); ut jsonb;
+begin
+  if hva is null or hva not in ('uke', 'mnd', 'aar', 'tot') then raise exception 'ukjent periode'; end if;
+  if etter is null or etter not in ('fro', 'arter') then raise exception 'ukjent tavle'; end if;
+  if hva <> 'tot' then
+    s := public.periode_start(hva); e := public.periode_slutt(hva, s);
+    fra := (s at time zone 'Europe/Oslo')::date; til := (e at time zone 'Europe/Oslo')::date;
+  end if;
+  with u as (
+    select l.* from public.ledertavle l where l.user_id = any(ider)
+  ), pp as (
+    select p.user_id, p.poeng, p.sist from public.periode_poeng(s, e) p where hva <> 'tot' and etter = 'fro' and p.user_id = any(ider)
+  ), tall as (
+    select u.user_id, pp.sist,
+      case when etter = 'fro' then (case when hva = 'tot' then u.fro else coalesce(pp.poeng, 0) end)
+           when hva = 'tot' then u.arter::bigint
+           else (select count(*) from public.sett st
+                 where st.user_id = u.user_id and not exists (select 1 from public.dyrearter da where da.art = st.art)
+                   and exists (select 1 from unnest(st.dager) d where d >= fra and d < til)) end as n
+    from u left join pp on pp.user_id = u.user_id
+  ), r as (
+    select t.user_id, t.n, u.navn, u.ord, u.fugl, u.tall, u.tittel, u.arter, u.dager, u.fro, u.merket,
+           rank() over (order by t.n desc) as plass,
+           row_number() over (order by t.n desc, t.sist asc nulls last, u.fro desc, u.user_id) as rekke
+    from tall t join u on u.user_id = t.user_id
+  )
+  select jsonb_build_object(
+    'periode', case when hva = 'tot' then null else public.periode_navn(hva, s) end, 'fra', s, 'til', e,
+    'antall', (select count(*) from r),
+    'plass', (select r.plass from r where r.user_id = meg),
+    'meg', (select r.n from r where r.user_id = meg),
+    'rader', coalesce((select jsonb_agg(jsonb_build_object('user_id', r.user_id, 'navn', r.navn, 'ord', r.ord, 'fugl', r.fugl, 'tall', r.tall,
+                         'tittel', r.tittel, 'n', r.n, 'fro', case when etter = 'fro' then r.n else r.fro end, 'arter', r.arter,
+                         'dager', r.dager, 'merket', r.merket, 'plass', r.plass) order by r.rekke) from r), '[]'::jsonb)
+  ) into ut;
+  return ut;
+end $$;
+create or replace function public.gruppetavle(gruppe uuid, hva text, etter text) returns jsonb
+language plpgsql stable security definer set search_path = '' as $$
+declare meg uuid := (select auth.uid()); g public.grupper;
+begin
+  select * into g from public.grupper x where x.id = gruppetavle.gruppe;
+  if not found or not exists (select 1 from public.gruppemedlem m where m.gruppe = g.id and m.user_id = meg) then raise exception 'ikke_medlem'; end if;
+  return public.tavle_utvalg(array(select m.user_id from public.gruppemedlem m where m.gruppe = g.id), hva, etter)
+         || jsonb_build_object('gruppe', public.gruppe_json(g, meg));
+end $$;
+create or replace function public.favoritt_tavle(ider uuid[], hva text, etter text) returns jsonb
+language plpgsql stable security definer set search_path = '' as $$
+declare meg uuid := (select auth.uid());
+begin
+  if coalesce(cardinality(ider), 0) > 50 then raise exception 'for_mange_favoritter'; end if;
+  return public.tavle_utvalg(array_append(coalesce(ider, '{}'::uuid[]), meg), hva, etter);
+end $$;
+revoke execute on function public.ny_gruppekode(), public.gruppe_navn_feil(text), public.gruppe_json(public.grupper, uuid),
+  public.gruppe_etter_utmelding(), public.tavle_utvalg(uuid[], text, text) from public, anon, authenticated;
+revoke execute on function public.mine_grupper(), public.gruppe_fra_kode(text), public.lag_gruppe(text), public.bli_med(text),
+  public.forlat_gruppe(uuid), public.endre_gruppe(uuid, text, boolean), public.fjern_medlem(uuid, uuid),
+  public.gruppetavle(uuid, text, text), public.favoritt_tavle(uuid[], text, text) from public, anon;
+grant execute on function public.gruppekode_vask(text) to anon, authenticated;
+grant execute on function public.mine_grupper(), public.gruppe_fra_kode(text), public.lag_gruppe(text), public.bli_med(text),
+  public.forlat_gruppe(uuid), public.endre_gruppe(uuid, text, boolean), public.fjern_medlem(uuid, uuid),
+  public.gruppetavle(uuid, text, text), public.favoritt_tavle(uuid[], text, text) to authenticated;
+
 -- ---------- «Slett meg»: den anonyme brukeren og alt som hører til ----------
 create or replace function public.slett_meg() returns void
 language sql security definer set search_path = '' as $$
@@ -558,6 +777,10 @@ grant execute on function public.slett_meg() to authenticated;
 --   select public.tavle_arter('uke');
 -- Profilen til en bruker, slik appen ser den:
 --   select public.profil_arter('<user_id>');
+-- Gruppene, med antall medlemmer og navnet til eieren:
+--   select g.navn, g.kode, count(m.user_id) as medlemmer, l.navn as eier, g.laget
+--   from public.grupper g left join public.gruppemedlem m on m.gruppe = g.id left join public.ledertavle l on l.user_id = g.eier
+--   group by g.id, l.navn order by g.laget desc;
 -- Premiene som er delt ut:
 --   select * from public.premier order by tid desc;
 -- Merkede brukere, og godkjenne en (fjerner merket; det som kom før, teller ikke igjen):
