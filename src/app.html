@@ -1,7 +1,4 @@
 <title>Hagefugler</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Familjen+Grotesk:wght@400;500;600;700&display=swap">
 <style>
 :root{
   --bg:#e1e8e0; --bg-hi:#f3f6f0; --ink:#15251e; --muted:#586a61; --line:#c6d2c8;
@@ -700,6 +697,7 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .brukere .bi{font-size:12.5px;font-weight:700;color:var(--ok);white-space:nowrap}
 .brukere .btn{padding:7px 12px}
 .nb-type{display:grid;gap:8px;margin-top:12px}
+.valg-merk a,.navn-side .cap a{color:var(--spruce-ink);font-weight:600;text-underline-offset:2px}
 /* ---------- grupper og favoritter ---------- */
 .tv-hvem .chip.ny{border-style:dashed;color:var(--muted)}
 .tv-gruppe{margin:-4px 0 12px;display:flex;flex-wrap:wrap;align-items:center;gap:2px 12px;font-size:13px;color:var(--muted)}
@@ -1318,13 +1316,14 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <button class="btn" id="forFraInnst">Fyll ut livslisten</button>
   </div>
   <div class="s-sec" id="delingSek"><h3>Ledertavle og statistikk</h3>
-    <button class="bryter" id="delBtn" role="switch" aria-checked="false"><span><b>Del med ledertavlen og statistikken</b><small>Du vises på ledertavlen med brukernavnet ditt, frø, arter, observasjonsdager og tittel. Andre som deler, kan se hvilke fugler du har registrert (uten datoer) og legge deg til som favoritt, og i grupper du er med i, ser medlemmene det samme. Observasjonene, tellingene og kjøpene sendes anonymt til en felles database for statistikk over hagefuglene.</small></span><i aria-hidden="true"></i></button>
-    <button class="bryter" id="visArterBtn" role="switch" aria-checked="true"><span><b>Vis artslista mi</b><small>Andre som deler, ser hvilke fugler du har registrert når de trykker på navnet ditt på tavla. Ingen datoer. Slått av ser de bare antallet.</small></span><i aria-hidden="true"></i></button>
+    <button class="bryter" id="delBtn" role="switch" aria-checked="false"><span><b>Del med ledertavlen og statistikken</b><small>Du vises på ledertavlen, som er åpen, med brukernavnet ditt, frø, arter, observasjonsdager og tittel. Andre kan se hvilke fugler du har registrert (uten datoer) og legge deg til som favoritt, og i grupper du er med i, ser medlemmene det samme. Observasjonene, tellingene og kjøpene sendes til en felles database for statistikk over hagefuglene, uten navn og e-post, men knyttet til en tilfeldig ID.</small></span><i aria-hidden="true"></i></button>
+    <button class="bryter" id="visArterBtn" role="switch" aria-checked="true"><span><b>Vis artslista mi</b><small>Andre ser hvilke fugler du har registrert når de trykker på navnet ditt på tavla. Ingen datoer. Slått av ser de bare antallet.</small></span><i aria-hidden="true"></i></button>
     <label class="felt" for="postnrFelt">Postnummer <small>valgfritt, bare til statistikk, vises ikke på tavlen</small></label>
     <input class="felt-inp" id="postnrFelt" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870">
     <p class="valg-merk" id="delStatus" role="status"></p>
     <p class="valg-merk" id="skjulteInfo" hidden><span id="skjulteTekst"></span> <button class="textbtn" id="visSkjulte">Vis dem igjen</button></p>
     <button class="btn" id="slettMeg">Slett meg fra ledertavlen</button>
+    <p class="valg-merk"><a href="https://fuglekort.no/personvern/" target="_blank" rel="noopener">Personvernerklæring</a>: hva som lagres, hvem som ser det, og hvordan du sletter det.</p>
   </div>
   <div class="s-sec" id="gruppeSek"><h3>Grupper og favoritter</h3>
     <p class="valg-merk" id="gruppeInfo"></p>
@@ -5421,7 +5420,7 @@ setInterval(() => { if (openSheet && openSheet.id === 'statsSheet' && statsFane 
 function tavleHtml() {
   if (lsGet(DK('slett'))) return `<div class="s-sec"><h3>Ledertavle</h3><p class="cap">Det du har delt, slettes så snart du har nett. Imens vises ikke ledertavlen.</p></div>`;
   if (!deler()) return `<div class="s-sec tv-av"><h3>Ledertavle</h3>
-    <p class="cap">Du deler ikke, og ser derfor ikke ledertavlen. Når du deler, vises du med brukernavnet ditt sammen med frø, arter, observasjonsdager og tittel, og observasjonene dine sendes anonymt til statistikk over hagefuglene.</p>
+    <p class="cap">Du deler ikke, og ser derfor ikke ledertavlen. Når du deler, vises du med brukernavnet ditt sammen med frø, arter, observasjonsdager og tittel, og observasjonene dine sendes til statistikk over hagefuglene, uten navn og e-post, men knyttet til en tilfeldig ID.</p>
     <div class="row"><button class="btn pri" data-del-pa>Del og se ledertavlen</button></div></div>`;
   const hvem = tavleHvem(), utvalg = hvem !== 'alle', g = gruppeAv(hvem), favTom = hvem === 'fav' && !favoritter().length;
   const hva = tavleVis, per = hva !== 'tot', arter = tavleEtter() === 'arter', c = favTom ? null : lesTavle(hva), uid = (lsJson(DK('okt'), null) || {}).uid, o = oppsummering(), sk = skjulte();
@@ -5448,7 +5447,7 @@ function tavleHtml() {
     : per ? (c.plass ? `Nr. ${c.plass} av ${c.antall} · ${fmtFro(c.meg || 0)} frø ${DENNE[hva]}` : `Ingen frø ${DENNE[hva]} ennå`)
     : `${c.plass ? `Nr. ${c.plass} av ${c.antall}` : 'Plassen din kommer når tavlen er hentet'} · ${fmtFro(o.fro)} frø`;
   const forrige = per && !arter && !utvalg && c && Array.isArray(c.forrige) && c.forrige.length ? `<div class="tv-forrige"><h4>${FORRIGE[hva]}</h4><ol>${c.forrige.map(p =>
-    `<li class="${p.user_id && p.user_id === uid ? 'meg' : ''}"><span class="tv-med m${p.plass}" aria-label="${p.plass}. plass">${p.plass}</span><b>${esc(p.navn || 'Fuglevenn')}</b><small>${fmtFro(p.poeng)} frø · premie ${fmtFro(p.fro)}</small></li>`).join('')}</ol></div>` : '';
+    `<li class="${p.user_id && p.user_id === uid ? 'meg' : ''}"><span class="tv-med m${p.plass}" aria-label="${p.plass}. plass">${p.plass}</span><b>${esc(p.navn || 'Slettet bruker')}</b><small>${fmtFro(p.poeng)} frø · premie ${fmtFro(p.fro)}</small></li>`).join('')}</ol></div>` : '';
   return `<div class="s-sec">
     <div class="tv-meg"><span class="ti" style="${tittelPos(o.tittel)}" aria-hidden="true"></span>
       <span class="tv-t"><b>${esc(mittNavn())}</b><small>${plassTekst}</small></span>
@@ -5951,7 +5950,7 @@ function navnSideHtml(modus) {
     <p class="cap navn-regel" id="inRegel">Vises på ledertavlen. Velg et vennlig navn, og ikke bruk ditt ekte navn. Støtende navn kan bli skjult.</p>
     <label class="felt" for="inPostnr">Postnummer <small>valgfritt, bare til statistikk, vises ikke på tavlen</small></label>
     <input class="felt-inp" id="inPostnr" inputmode="numeric" maxlength="4" autocomplete="postal-code" placeholder="f.eks. 0870" value="${esc(pn)}">
-    <p class="cap">Andre som deler, ser brukernavnet ditt, frøene, artene og hvilke fugler du har registrert (uten datoer), på tavla og i grupper du blir med i. Observasjonene dine (art og dato), tellingene og kjøpene sendes anonymt til en felles database, så vi kan lage statistikk over hagefuglene. Ingen e-post eller posisjon. ${pa ? '' : 'Du kan endre dette under Innstillinger.'}</p>
+    <p class="cap">Tavla er åpen: andre ser brukernavnet ditt, frøene, artene og hvilke fugler du har registrert (uten datoer), også i grupper du blir med i. Observasjonene dine (art og dato), tellingene og kjøpene sendes til en felles database, så vi kan lage statistikk over hagefuglene, uten navn og e-post, men knyttet til en tilfeldig ID. ${pa ? '' : 'Du kan endre dette under Innstillinger.'} <a href="https://fuglekort.no/personvern/" target="_blank" rel="noopener">Personvernerklæring</a></p>
     <div class="navn-knapper"><button class="btn pri" id="inStart">${pa ? 'Del og se ledertavlen' : introOppdrag ? 'Neste' : 'Start'}</button><button class="textbtn" id="inIkke">${pa ? 'Avbryt' : 'Ikke del'}</button></div>
   </div></section>`;
 }

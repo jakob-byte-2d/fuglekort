@@ -1,6 +1,6 @@
 // Hagefugler – offline-støtte for den frittstående appen.
 // build.py setter versjonen ut fra innholdet, så telefonene henter alt på nytt etter hver endring.
-const CACHE = 'hagefugler-e1b21ef3ca';
+const CACHE = 'hagefugler-f529851e27';
 const ASSETS = [
   "./",
   "index.html",
@@ -12,6 +12,18 @@ const ASSETS = [
   "icons/icon-512.png",
   "icons/icon-512-maskable.png",
   "icons/apple-touch-icon.png",
+  "fonts/caveat-latin-500-normal.woff2",
+  "fonts/caveat-latin-600-normal.woff2",
+  "fonts/caveat-latin-ext-500-normal.woff2",
+  "fonts/caveat-latin-ext-600-normal.woff2",
+  "fonts/familjen-grotesk-latin-400-normal.woff2",
+  "fonts/familjen-grotesk-latin-500-normal.woff2",
+  "fonts/familjen-grotesk-latin-600-normal.woff2",
+  "fonts/familjen-grotesk-latin-700-normal.woff2",
+  "fonts/familjen-grotesk-latin-ext-400-normal.woff2",
+  "fonts/familjen-grotesk-latin-ext-500-normal.woff2",
+  "fonts/familjen-grotesk-latin-ext-600-normal.woff2",
+  "fonts/familjen-grotesk-latin-ext-700-normal.woff2",
   "cards/bakside.webp",
   "cards/000a.webp",
   "cards/000b.webp",
@@ -561,18 +573,17 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Kortbilder og app-filer: fra cache først. Google Fonts: cache, og oppdater i bakgrunnen.
+// Kortbilder, fonter og app-filer: fra cache først, og oppdatert i bakgrunnen. Bare samme nettsted (Supabase går utenom).
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  const isFont = /fonts\.(googleapis|gstatic)\.com$/.test(url.hostname);
-  if (url.origin !== location.origin && !isFont) return;
+  if (url.origin !== location.origin) return;
   event.respondWith(
     caches.open(CACHE).then(async cache => {
-      const hit = await cache.match(req, { ignoreSearch: !isFont });
+      const hit = await cache.match(req, { ignoreSearch: true });
       const net = fetch(req).then(res => {
-        if (res && (res.ok || res.type === 'opaque')) cache.put(req, res.clone());
+        if (res && res.ok) cache.put(req, res.clone());
         return res;
       }).catch(() => hit);
       return hit || net;

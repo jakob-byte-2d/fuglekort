@@ -746,10 +746,14 @@ grant execute on function public.mine_grupper(), public.gruppe_fra_kode(text), p
   public.gruppetavle(uuid, text, text), public.favoritt_tavle(uuid[], text, text) to authenticated;
 
 -- ---------- «Slett meg»: den anonyme brukeren og alt som hører til ----------
+-- Premiene blir stående i lista over vinnere, men uten navn («Slettet bruker» i appen) og uten bruker.
 create or replace function public.slett_meg() returns void
 language sql security definer set search_path = '' as $$
+  update public.premier set navn = null where user_id = (select auth.uid());
   delete from auth.users where id = (select auth.uid());
 $$;
+-- vinnere som slettet seg før dette: navnet fjernes også for dem (user_id er null bare etter en sletting)
+update public.premier set navn = null where user_id is null and navn is not null;
 revoke execute on function public.slett_meg() from public, anon;
 grant execute on function public.slett_meg() to authenticated;
 
