@@ -54,15 +54,25 @@ python3 -m http.server 8000
 
 Da starter den i fullskjerm med eget ikon, og kortene virker uten nett. Etter endringer: kjør `python3 build.py` og push. Telefonen henter de nye filene neste gang appen åpnes med nett.
 
-**I App Store og Google Play.** Pakk `docs/` med [Capacitor](https://capacitorjs.com):
+**På Google Play (TWA).** Play-versjonen ligger på **https://fuglekort.no/app/** og pakkes med PWABuilder som en Trusted Web Activity med pakkenavnet `no.fuglekort.hagefugler`. Den lages fra samme `src/` som nettversjonen:
 
 ```
-npm init -y
-npm i @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android
-npx cap init "Fuglekort" no.fuglekort.app --web-dir docs
-npx cap add ios && npx cap add android
-npx cap open ios        # eller: npx cap open android
+python3 build.py                                   # docs/ (nettversjonen på github.io) først
+python3 build.py --play ../fuglekort_nettside/app  # Play-versjonen
+python3 tests/play_test.py ../fuglekort_nettside   # ingen kall utenom eget nettsted og Supabase
+python3 tests/nettside_test.py ../fuglekort_nettside
 ```
+
+og så commit og push i repoet fuglekort_nettside, som serverer fuglekort.no (forsiden, `personvern/`, `.well-known/assetlinks.json` og `app/`; se README der).
+
+- Play-versjonen har eget manifest (`id`, `start_url` og `scope` = `/app/`), egen service worker (hurtigbufferen `hagefugler-play-…`, scope `/app/`) og sender appversjonen `play-<versjon>-<hash>` i `profil.appversjon`. Versjonen står i `data/play.json`. Den tar bare med bildene appen bruker (fuglene i kortstokken, dyrekortene, forklaringskortene og baksidene), ca. 54 MB.
+- Play-appen er en egen adresse, så den har egne data på telefonen. Den som bytter fra nettversjonen, tar med seg dataene med sikkerhetskopien (Profil → Lagring), og blir en ny anonym bruker på tavla.
+- Invitasjonslenker fra Play-appen blir `fuglekort.no/app/#bli=…` og åpnes i appen på Android.
+- Ingen eksterne kall utenom Supabase: fontene ligger lokalt (under).
+
+**Fontene.** Caveat (500, 600) og Familjen Grotesk (400–700) ligger i `fonts/` som woff2 (latin og latin-ext, fra Fontsource 5.3.0, altså Google Fonts-filene), med lisensen (SIL Open Font License 1.1) i `OFL-Caveat.txt` og `OFL-FamiljenGrotesk.txt`. `build.py` legger `fonts/fonter.css` inn i siden og kopierer filene til `docs/fonts/` og Play-versjonen. Ingen av versjonene henter noe fra Google Fonts.
+
+**Personvern.** Erklæringen ligger på https://fuglekort.no/personvern/ (repoet fuglekort_nettside) og er lenket fra Innstillinger → Ledertavle og statistikk og fra delingssiden i innføringen. Den beskriver det `supabase/fuglekort.sql` lagrer; endres SQL-en, må erklæringen endres også.
 
 ## KI-illustrasjoner, fotografier eller tegneseriefugler
 
