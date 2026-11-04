@@ -1,6 +1,6 @@
 // Hagefugler – offline-støtte for den frittstående appen.
 // build.py setter versjonen ut fra innholdet, så telefonene henter alt på nytt etter hver endring.
-const CACHE = 'hagefugler-f529851e27';
+const CACHE = 'hagefugler-cd7aa3647b';
 const ASSETS = [
   "./",
   "index.html",
@@ -12,6 +12,7 @@ const ASSETS = [
   "icons/icon-512.png",
   "icons/icon-512-maskable.png",
   "icons/apple-touch-icon.png",
+  "fonts/barlow-semi-condensed-700-sett.woff",
   "fonts/caveat-latin-500-normal.woff2",
   "fonts/caveat-latin-600-normal.woff2",
   "fonts/caveat-latin-ext-500-normal.woff2",

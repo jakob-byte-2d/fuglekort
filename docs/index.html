@@ -16,6 +16,9 @@
 <style>
 /* Fontene lokalt (ingen kall til Google Fonts): Caveat og Familjen Grotesk, latin og latin-ext, woff2.
    Fra Fontsource 5.3.0 (Google Fonts-filene). SIL Open Font License 1.1: se OFL-Caveat.txt og OFL-FamiljenGrotesk.txt. */
+/* «SETT (FØR)» i registreringsmodusen for livslisten: Barlow Semi Condensed Bold, samme fil som Fuglekort-builder setter
+   SETT med på kortene (versjon 1.408), bare tegnene i «SETT (FØR)» (fonttools subset, woff). OFL 1.1: se OFL-Barlow.txt. */
+@font-face{font-family:'Barlow SC Sett';font-style:normal;font-display:block;font-weight:700;src:url(fonts/barlow-semi-condensed-700-sett.woff) format('woff')}
 @font-face{font-family:'Caveat';font-style:normal;font-display:swap;font-weight:500;src:url(fonts/caveat-latin-ext-500-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @font-face{font-family:'Caveat';font-style:normal;font-display:swap;font-weight:500;src:url(fonts/caveat-latin-500-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 @font-face{font-family:'Caveat';font-style:normal;font-display:swap;font-weight:600;src:url(fonts/caveat-latin-ext-600-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
@@ -36,7 +39,7 @@
 :root{
   --bg:#e1e8e0; --bg-hi:#f3f6f0; --ink:#15251e; --muted:#586a61; --line:#c6d2c8;
   --surface:#f7f9f4; --surface-2:#e9efe8; --spruce:#0f4a36; --spruce-ink:#0f4a36; --on-spruce:#f3f8f2;
-  --gold:#eea914; --gold-ink:#8a5a00; --track:#cfdacf; --shadow:22,44,33; --scrim:rgba(12,26,20,.36); --rec:#d6452f; --ok:#2f9a5f; --warn-bg:#fdf1d6; --warn-ink:#6b4700;
+  --gold:#eea914; --gold-ink:#8a5a00; --track:#cfdacf; --shadow:22,44,33; --scrim:rgba(12,26,20,.36); --rec:#d6452f; --ok:#2f9a5f; --warn-bg:#fdf1d6; --warn-ink:#6b4700; --modus:#b84a25;
   --card-cream:#fdfcf3; --card-ink:#14231d; --card-teal:#d5eeee; --card-gold:#f4b41a; --card-green:#0f4a36; --pen:#1c3aa0; --strek:#1c3aa0;
   --font:"Familjen Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --hand:"Caveat", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
@@ -46,14 +49,14 @@
   :root:not([data-theme="light"]){
     --bg:#0c1712; --bg-hi:#18291f; --ink:#e3ebe5; --muted:#8fa298; --line:#26392f;
     --surface:#122019; --surface-2:#1a2b22; --spruce:#1d6a4d; --spruce-ink:#8bd0aa; --on-spruce:#f3f8f2;
-    --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a; --strek:#a9bbff;
+    --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a; --strek:#a9bbff; --modus:#f08a5d;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0c1712; --bg-hi:#18291f; --ink:#e3ebe5; --muted:#8fa298; --line:#26392f;
   --surface:#122019; --surface-2:#1a2b22; --spruce:#1d6a4d; --spruce-ink:#8bd0aa; --on-spruce:#f3f8f2;
-  --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a; --strek:#a9bbff;
+  --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a; --strek:#a9bbff; --modus:#f08a5d;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -710,6 +713,21 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .for .tick path{stroke:var(--blyant);stroke-dashoffset:0;opacity:1;transition:none}
 .for .hand{clip-path:inset(-30% -10% -30% 0);color:var(--blyant);transition:none}
 .formodus .hint,.formodus .oppdrag-stripe{display:none}
+/* the walk-through is a temporary mode, in orange: the strip, the panel and «(FØR)» after SETT on the bird cards.
+   «SETT (FØR)» is one line of SVG text in the card's own units (1500 x 2100) in the font of the printed SETT
+   (Barlow Semi Condensed Bold, from Fuglekort-builder); «SETT» is transparent and lies exactly on the printed one,
+   so «(FØR)» follows on the same baseline with the font's own word space. Measured on the card images: the text
+   starts at x 254.5, the baseline is at 1910, the size is 72.9 (tests/forsett_test.py checks it) */
+.forord{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .3s}
+.forord text{font-family:'Barlow SC Sett';font-weight:700;font-size:72.9px;white-space:pre}
+.forord .fo-sett{fill:transparent}
+.forord .fo-for{fill:#b84a25}
+.formodus .forord{opacity:1}
+.formodus .antall,.formodus .idag-merke{display:none}
+.formodus .for.ny-for .tick path{stroke-dashoffset:0;opacity:1;transition:stroke-dashoffset .38s cubic-bezier(.5,0,.3,1),opacity 0s}
+.formodus .forbar{border:2px solid var(--modus);padding:5px 5px 5px 11px}
+.formodus .forbar .fb-ikon{color:var(--modus)}
+.formodus .forpanel{border:2px solid var(--modus);border-radius:14px;padding:6px 6px 6px 12px;background:var(--surface)}
 .fp-hjelp{margin:0;font-size:12.5px;color:var(--muted);text-align:center}
 /* ---------- enkel versjon: only registering (see «Enkel versjon» in the script) ---------- */
 .ring .enkel-ikon{display:none}
@@ -751,7 +769,6 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .fb-ikon svg{width:20px;height:20px}
 .forpanel{width:100%;max-width:560px;display:flex;align-items:center;gap:8px}
 .forpanel[hidden]{display:none}
-.forpanel .tl-n span.varsel{color:var(--rec);font-weight:600}
 .forpanel select{height:46px;max-width:112px;border-radius:12px;border:1px solid var(--line);background:var(--bg-hi);padding:0 6px;font:inherit;font-size:14.5px;color:var(--ink)}
 .fp-btn{height:46px;padding:0 13px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;font-weight:700;
   display:inline-flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0}
@@ -1264,7 +1281,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
       <button class="fp-btn" id="fpSett" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Sett før</button>
     </div>
     <p class="hint" id="hint">Dra til kanten · sveip fort · trykk for å snu kortet</p>
-    <p class="fp-hjelp" id="fpHjelp" hidden>«Sett før» går til neste fugl · sveip for å hoppe over</p>
+    <p class="fp-hjelp" id="fpHjelp" hidden>Kryss av i ruta eller trykk «Sett før» · sveip for å hoppe over</p>
   </footer>
 </div>
 
@@ -2198,6 +2215,7 @@ function makeCard(i) {
       <span class="idag-merke" aria-hidden="true" style="left:${P(BILDEFELT.x + 0.022)};top:${P(BILDEFELT.y + BILDEFELT.h - 0.058)}">${CHECK}Sett i dag</span>
       <span class="tall" aria-hidden="true"></span>
       <span class="antall" aria-hidden="true" style="left:${P(bx + bw + 0.14)};top:${P(by - 0.006)};height:${P(bh + 0.012)}"></span>
+      ${c.bonus ? '' : '<svg class="forord" viewBox="0 0 1500 2100" aria-hidden="true"><text x="254.5" y="1910"><tspan class="fo-sett">SETT</tspan><tspan class="fo-for"> (FØR)</tspan></text></svg>'}
       <span class="dato" aria-hidden="true" style="left:${P(dLeft)};top:${P(ly - 0.052)};width:${P(dW)};height:${P(0.07)}">
         <span class="hand" style="left:${P((lx - dLeft + 0.012) / dW)}"></span>
       </span>
@@ -2219,19 +2237,21 @@ function paintCard(el) {
   const c = CARDS[+el.dataset.i];
   const s = Store.get(c.key);
   const dager = s ? s.dager : [], t = todayISO();
-  el.classList.toggle('seen', !!s);
-  const fo = !s && !c.bonus && ForSett.erFor(c.key);              // seen before the app only: a pencil tick and the year
+  const fm = forModus && !c.bonus;                                // the walk-through: the box shows «seen before» only
+  el.classList.toggle('seen', !!s && !fm);
+  const fo = !c.bonus && ForSett.erFor(c.key) && (fm || !s);      // seen before (the app only, or in the walk-through): a pencil tick
   el.classList.toggle('for', fo);
   const iDag = dager.includes(t), varIdag = el.classList.contains('idag');
   el.classList.toggle('idag', iDag);
   if (iDag && !varIdag && el.dataset.malt) { const m = el.querySelector('.idag-merke'); m.classList.remove('ny'); void m.offsetWidth; m.classList.add('ny'); }
   el.dataset.malt = '1';
   const b = el.querySelector('[data-act="toggle"]');
-  b.setAttribute('aria-pressed', s ? 'true' : 'false');
-  b.setAttribute('aria-label', !s ? `Merk ${c.navn} som sett i dag${fo ? `. Sett før appen${ForSett.svar(c.key).aar ? `, ${ForSett.svar(c.key).aar}` : ''}` : ''}`
+  b.setAttribute('aria-pressed', (fm ? fo : s) ? 'true' : 'false');
+  b.setAttribute('aria-label', fm ? `Sett før appen: ${c.navn}` : !s ? `Merk ${c.navn} som sett i dag${fo ? `. Sett før appen${ForSett.svar(c.key).aar ? `, ${ForSett.svar(c.key).aar}` : ''}` : ''}`
     : dager.includes(t) ? `${c.navn} er registrert i dag. Trykk for å se alle dagene`
     : `Registrer ${c.navn} som sett i dag. ${dagerTekst(dager.length)} så langt`);
-  el.querySelector('.hand').textContent = s ? fmtHand(s.date) : fo ? forAarTekst(c.key) : '';
+  // the date line: the date, or the year seen before («før appen» without one; in the walk-through, where «(FØR)» stands by SETT, only the year)
+  el.querySelector('.hand').textContent = fm ? (fo && ForSett.svar(c.key).aar ? String(ForSett.svar(c.key).aar) : '') : s ? fmtHand(s.date) : fo ? forAarTekst(c.key) : '';
   // "× 7" by the SETT box once a bird has been seen on more than one day
   const ant = el.querySelector('.antall'), before = ant.dataset.n == null ? null : +ant.dataset.n;
   ant.dataset.n = dager.length;
@@ -2817,7 +2837,7 @@ deckEl.addEventListener('click', e => {
 /* Tapping SETT: the first time it ticks the box and writes the date; on a later day it adds that day.
    A second tap on the same day shows the list of days instead of removing anything. */
 function trykkSett(c) {
-  if (forModus) { forVarsel(); return; }                  // the walk-through: registering is off meanwhile
+  if (forModus) { trykkFor(c); return; }                 // the walk-through: the box ticks «seen before»; registering is off meanwhile
   const t = todayISO(), dager = Store.days(c.key);
   if (dager.includes(t)) { visLogg(c); si(`${c.navn} er allerede registrert i dag.`); return; }
   settIDag(c);
@@ -4876,7 +4896,9 @@ ForSett.on(() => {
    A strip at the top (how many, the list, Ferdig) and a panel at the bottom for the card on top, as during a count.
    «Sett før» marks the bird and moves on to the next bird card (the dyrekort are skipped; after the last one comes
    the first). The year is chosen first; a year alone marks nothing, but changes the year of a bird already marked.
-   Registering (SETT) is off meanwhile, so nothing is registered for today by mistake ---- */
+   The bird cards say «SETT (FØR)», and the SETT box shows and ticks «seen before» only (a pencil tick, the year on
+   the line); the days in the app, «× n» and «Sett i dag» are back after Ferdig. Registering for today is off
+   meanwhile, so nothing is registered by mistake ---- */
 $('#fpAar').innerHTML = aarValg(null, 'År (valgfritt)');
 function startForModus() {
   if (Tell.aktiv()) {
@@ -4888,7 +4910,7 @@ function startForModus() {
   forModus = true; forVed = forAntall();
   document.body.classList.add('formodus'); $('#forbar').hidden = false; $('#forpanel').hidden = false; $('#fpHjelp').hidden = false;
   pool.forEach(paintCard); paintForModus();
-  si('Livslisten: velg år hvis du husker det, og trykk «Sett før» på fuglene du har sett før du begynte med appen. Da kommer neste fugl. Sveip for å hoppe over en fugl. Trykk Ferdig når du er ferdig.');
+  si('Livslisten: velg år hvis du husker det, og kryss av i SETT-ruta eller trykk «Sett før» på fuglene du har sett før du begynte med appen. Da kommer neste fugl. Sveip for å hoppe over en fugl. Trykk Ferdig når du er ferdig.');
   setTimeout(() => $('#fpSett').focus(), 80);
 }
 function avsluttForModus(oppsummer = true) {
@@ -4918,7 +4940,6 @@ function paintForModus() {
   const n = forAntall(); $('#fbAntall').textContent = n; $('#fbInfo').textContent = `${n === 1 ? 'art' : 'arter'} sett før`;
   $('#fpNavn').textContent = c.navn;
   info.textContent = !fugl ? 'Dyrekort er ikke med i livslisten' : nd ? `${nd} ${nd === 1 ? 'dag' : 'dager'} i appen` : 'Ikke i appen ennå';
-  info.classList.remove('varsel');
   knapp.disabled = !fugl; aarEl.disabled = !fugl;
   knapp.setAttribute('aria-pressed', fugl && ForSett.erFor(c.key) ? 'true' : 'false');
   knapp.setAttribute('aria-label', `Sett før appen: ${c.navn}`);
@@ -4926,23 +4947,24 @@ function paintForModus() {
   if (aarEl.dataset.k !== c.key) { aarEl.value = v && v.aar ? String(v.aar) : ''; aarEl.dataset.k = c.key; }
   else if (v && document.activeElement !== aarEl) aarEl.value = v.aar ? String(v.aar) : '';
 }
-$('#fpSett').addEventListener('click', () => {
-  const c = CARDS[cur]; if (c.bonus) return;
+/* «Sett før» and the SETT box on the card do the same: mark the bird (with the year chosen) and draw the tick in pencil,
+   then the next bird after a moment; on a bird already marked, take it off the list (it stays on the card) */
+function trykkFor(c) {
+  if (c.bonus) return;
   clearTimeout(forNesteT);
-  if (ForSett.erFor(c.key)) { ForSett.sett(c.key, null); si(`${c.navn} er tatt ut av livslisten.`); return; }   // stays on the card
+  if (ForSett.erFor(c.key)) { ForSett.sett(c.key, null); si(`${c.navn} er tatt ut av livslisten.`); return; }
+  const el = pool.get(BY_KEY[c.key]);
+  if (el) { el.classList.add('ny-for'); clearTimeout(el._nyForT); el._nyForT = setTimeout(() => el.classList.remove('ny-for'), 900); }
   const a = gyldigAar($('#fpAar').value); ForSett.sett(c.key, 'for', a); haptic(8);
   si(`${c.navn} er lagt inn som sett før${a ? `, ${a}` : ''}.`);
-  forNesteT = setTimeout(() => { if (forModus && CARDS[cur].key === c.key && ForSett.erFor(c.key)) gaTilNesteFugl(); }, 380);
-});
+  forNesteT = setTimeout(() => { if (forModus && CARDS[cur].key === c.key && ForSett.erFor(c.key)) gaTilNesteFugl(); }, 750);
+}
+$('#fpSett').addEventListener('click', () => trykkFor(CARDS[cur]));
 $('#fpAar').addEventListener('change', e => {      // a year for a bird already marked; otherwise kept for «Sett før»
   const c = CARDS[cur]; if (c.bonus || !ForSett.erFor(c.key)) return;
   const a = gyldigAar(e.target.value); ForSett.sett(c.key, 'for', a);
   si(`${c.navn}: ${a ? `sett første gang ${a}` : 'året er fjernet'}.`);
 });
-function forVarsel() {
-  const info = $('#fpInfo'); info.textContent = 'Trykk Ferdig først for å registrere i dag.'; info.classList.add('varsel');
-  haptic(20); si('Du fyller ut livslisten. Trykk Ferdig først for å registrere i dag.');
-}
 $('#fbFerdig').addEventListener('click', () => avsluttForModus());
 $('#fbListe').addEventListener('click', () => visForListe());
 $('#openFor').addEventListener('click', () => startForModus());
@@ -5050,7 +5072,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '5dd8475c83';
+const APPVERSJON = '118059f3b0';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };

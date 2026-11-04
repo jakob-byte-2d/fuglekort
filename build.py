@@ -57,7 +57,7 @@ if PLAY:
 fragment = fragment.replace("__VERSJON__", VERSJON)
 # the fonts on the same server (no calls to Google Fonts): fonts/fonter.css inline, the woff2 files next to the app
 FONTER = (ROOT / "fonts" / "fonter.css").read_text(encoding="utf-8").strip()
-FONTFILER = sorted(p.name for p in (ROOT / "fonts").iterdir() if p.suffix in (".woff2", ".txt"))
+FONTFILER = sorted(p.name for p in (ROOT / "fonts").iterdir() if p.suffix in (".woff2", ".woff", ".txt"))
 
 # The standalone app: full document, title moved into <head>, manifest + service worker
 title_m = re.search(r"<title>.*?</title>\s*", fragment, re.S)
@@ -102,7 +102,7 @@ for f in FONTFILER:
 # Service worker precache list follows the card data, so new cards are cached automatically
 assets = ["./", "index.html", "manifest.webmanifest", "sprites/photos.webp", "sprites/cards.webp", "sprites/titler.webp",
           "icons/icon-192.png", "icons/icon-512.png", "icons/icon-512-maskable.png", "icons/apple-touch-icon.png"]
-assets += [f"fonts/{f}" for f in FONTFILER if f.endswith(".woff2")]
+assets += [f"fonts/{f}" for f in FONTFILER if f.endswith((".woff2", ".woff"))]
 assets += [data.get("bakside", "cards/bakside.webp")] + [h["bilde"] for h in data.get("hjelp", [])] + [c["bilde"] for c in i_stokken]
 assets += [b["bilde"] for b in data.get("baksider", []) if b.get("bilde") and b["bilde"] not in assets]
 # alle bildesettene lagres på telefonen, så man kan bytte i innstillingene også uten nett
