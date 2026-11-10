@@ -39,7 +39,7 @@
 :root{
   --bg:#e1e8e0; --bg-hi:#f3f6f0; --ink:#15251e; --muted:#586a61; --line:#c6d2c8;
   --surface:#f7f9f4; --surface-2:#e9efe8; --spruce:#0f4a36; --spruce-ink:#0f4a36; --on-spruce:#f3f8f2;
-  --gold:#eea914; --gold-ink:#8a5a00; --track:#cfdacf; --shadow:22,44,33; --scrim:rgba(12,26,20,.36); --rec:#d6452f; --ok:#2f9a5f; --warn-bg:#fdf1d6; --warn-ink:#6b4700; --modus:#b84a25;
+  --gold:#eea914; --gold-ink:#8a5a00; --track:#cfdacf; --shadow:22,44,33; --scrim:rgba(12,26,20,.36); --rec:#d6452f; --ok:#2f9a5f; --warn-bg:#fdf1d6; --warn-ink:#6b4700; --modus:#b84a25; --modus-bg:#fbede6;
   --card-cream:#fdfcf3; --card-ink:#14231d; --card-teal:#d5eeee; --card-gold:#f4b41a; --card-green:#0f4a36; --pen:#1c3aa0; --strek:#1c3aa0;
   --font:"Familjen Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --hand:"Caveat", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
@@ -49,14 +49,14 @@
   :root:not([data-theme="light"]){
     --bg:#0c1712; --bg-hi:#18291f; --ink:#e3ebe5; --muted:#8fa298; --line:#26392f;
     --surface:#122019; --surface-2:#1a2b22; --spruce:#1d6a4d; --spruce-ink:#8bd0aa; --on-spruce:#f3f8f2;
-    --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a; --strek:#a9bbff; --modus:#f08a5d;
+    --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a; --strek:#a9bbff; --modus:#f08a5d; --modus-bg:#3a241b;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0c1712; --bg-hi:#18291f; --ink:#e3ebe5; --muted:#8fa298; --line:#26392f;
   --surface:#122019; --surface-2:#1a2b22; --spruce:#1d6a4d; --spruce-ink:#8bd0aa; --on-spruce:#f3f8f2;
-  --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a; --strek:#a9bbff; --modus:#f08a5d;
+  --gold:#f2b421; --gold-ink:#f2c24f; --track:#26382e; --shadow:0,0,0; --scrim:rgba(0,0,0,.56); --rec:#ef6a52; --ok:#5cc58a; --warn-bg:#3a2e12; --warn-ink:#f2d08a; --strek:#a9bbff; --modus:#f08a5d; --modus-bg:#3a241b;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -725,7 +725,13 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .formodus .forord{opacity:1}
 .formodus .antall,.formodus .idag-merke{display:none}
 .formodus .for.ny-for .tick path{stroke-dashoffset:0;opacity:1;transition:stroke-dashoffset .38s cubic-bezier(.5,0,.3,1),opacity 0s}
-.formodus .forbar{border:2px solid var(--modus);padding:5px 5px 5px 11px}
+.formodus .forbar{border:2px solid var(--modus);padding:5px 5px 5px 11px;background:var(--modus-bg)}
+.fb-t{flex-direction:column;align-items:flex-start;gap:0;line-height:1.2}
+.fb-t .fb-navn{font-size:14px;font-weight:700;color:var(--modus);letter-spacing:.01em}
+.fb-t .fb-sub,.fb-t .fb-sub span{font-size:12px;color:var(--muted);display:inline}
+.fb-t .fb-sub b{font-size:12px;font-weight:700;color:var(--ink);letter-spacing:0}
+body::after{content:'';position:fixed;inset:0;border:3px solid var(--modus);pointer-events:none;z-index:52;opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+body.formodus::after{opacity:1;visibility:visible;transition:opacity .3s}
 .formodus .forbar .fb-ikon{color:var(--modus)}
 .formodus .forpanel{border:2px solid var(--modus);border-radius:14px;padding:6px 6px 6px 12px;background:var(--surface)}
 .fp-hjelp{margin:0;font-size:12.5px;color:var(--muted);text-align:center}
@@ -1246,7 +1252,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 
   <div class="tellebar forbar" id="forbar" role="region" aria-label="Livslisten" hidden>
     <span class="fb-ikon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3.5 4.5V9H8"/><path d="M12 7.5V12l3 2"/></svg></span>
-    <div class="tb-t"><b id="fbAntall">0</b><span id="fbInfo">sett før</span></div>
+    <div class="tb-t fb-t"><b class="fb-navn">Livslisten</b><span class="fb-sub"><b id="fbAntall">0</b> <span id="fbInfo">sett før</span><span class="fb-avs"> · Ferdig avslutter</span></span></div>
     <button class="tb-btn" id="fbListe">Liste</button>
     <button class="tb-btn pri" id="fbFerdig">Ferdig</button>
   </div>
@@ -3233,7 +3239,7 @@ function paintSettings() {
   paintBrukere();
 }
 $('#enkelBtn').addEventListener('click', () => settEnkel(!enkel));
-$('#forFraInnst').addEventListener('click', () => startForModus());
+$('#forFraInnst').addEventListener('click', () => tilbyForModus());
 $('#vippBtn').addEventListener('click', async () => {
   if (Vipp.aktiv) { stoppVipp(); lsSet('hagefugler:vipp', 'av'); }
   else if (await slaPaVipp(true)) { lsSet('hagefugler:vipp', 'på'); si('Vipp telefonen for å se glinset på glinskortene.'); }
@@ -3564,7 +3570,7 @@ sb.addEventListener('click', async e => {
   const an = e.target.closest('[data-art]');
   if (an) { apneArt(an.dataset.art); return; }
   if (e.target.closest('[data-artlukk]')) { lukkArt(); return; }
-  if (e.target.closest('[data-forstart]')) { startForModus(); return; }
+  if (e.target.closest('[data-forstart]')) { tilbyForModus(); return; }
   const tl = e.target.closest('[data-tid]');
   if (tl) { openSum(tl.dataset.tid); return; }
   const j = e.target.closest('[data-i]');
@@ -4900,6 +4906,20 @@ ForSett.on(() => {
    the line); the days in the app, «× n» and «Sett i dag» are back after Ferdig. Registering for today is off
    meanwhile, so nothing is registered by mistake ---- */
 $('#fpAar').innerHTML = aarValg(null, 'År (valgfritt)');
+/* before the walk-through, from the menu, Innstillinger, Samlingen and the first time: it is optional, and what the mode is.
+   «Endre i livslisten» on the back of a card starts it straight away (the choice is made there) */
+function tilbyForModus() {
+  if (forModus) return;
+  if (Tell.aktiv()) { startForModus(); return; }                  // says why not
+  const n = forAntall();
+  sporsmal({
+    tittel: 'Livslisten – valgfritt',
+    tekst: `<p>Merk fuglene du har sett før du begynte med appen, gjerne med år. Det er helt valgfritt.${enkel ? ' Fuglene' : ' De gir ingen frø, men'} kommer med i livslisten din. Du kan gjøre det nå, senere fra menyen eller aldri.</p>
+      ${n ? `<p>Du har allerede ${flertall(n, 'art', 'arter')} merket som sett før.</p>` : ''}
+      <p>Mens du fyller ut, er appen i registreringsmodus (oransje). Trykk Ferdig når du er ferdig.</p>`,
+    knapper: [{ tekst: 'Start', pri: true, fn: () => startForModus() }, { tekst: 'Ikke nå' }],
+  });
+}
 function startForModus() {
   if (Tell.aktiv()) {
     sporsmal({ tittel: 'Hagefugltelling pågår', tekst: 'Avslutt tellingen før du fyller ut livslisten.', knapper: [{ tekst: 'OK', pri: true }] });
@@ -4967,7 +4987,7 @@ $('#fpAar').addEventListener('change', e => {      // a year for a bird already 
 });
 $('#fbFerdig').addEventListener('click', () => avsluttForModus());
 $('#fbListe').addEventListener('click', () => visForListe());
-$('#openFor').addEventListener('click', () => startForModus());
+$('#openFor').addEventListener('click', () => tilbyForModus());
 
 /* ---- the list: every bird alphabetically with a tick and the year, a search, and a list pasted in (one bird a
    line, Norwegian or Latin names, any case, æøå or not, one letter wrong is fine; a year on the line is kept) ---- */
@@ -5072,7 +5092,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '118059f3b0';
+const APPVERSJON = '9abb495c32';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
@@ -5989,7 +6009,7 @@ const INTRO = [
         <span class="idag-merke" aria-hidden="true" style="left:${P(BILDEFELT.x + 0.022)};top:${P(BILDEFELT.y + BILDEFELT.h - 0.058)}">${CHECK}Sett i dag</span></figure>`; } },
   { tittel: 'Frø og titler', fro: true, tekst: 'Du får frø for hver registrering, mest for nye og sjeldne arter. Klarer du å oppnå tittelen Fuglekonge?',
     bilde: () => `<span class="ti intro-konge" style="${tittelPos(TITLER.length - 1)}" role="img" aria-label="${TITLER[TITLER.length - 1].navn}"></span>` },
-  { tittel: 'Livslisten', tekst: 'Har du sett fugler før du begynte med appen? Merk dem i livslisten, gjerne med år. Du finner den i menyen.',
+  { tittel: 'Livslisten', tekst: 'Har du sett fugler før du begynte med appen? Merk dem i livslisten, gjerne med år. Det er valgfritt, og du finner den i menyen.',
     bilde: () => { const c = introKort('pica-pica'), [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje, P = v => (v * 100).toFixed(3) + '%', dLeft = lx - 0.13, dW = lw + 0.15;
       return `<figure class="intro-kort for"><img src="${esc(bildeAv(c))}" alt="">
         <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
@@ -6017,7 +6037,7 @@ function oppdragSideHtml() {
   return `<section class="intro-side" data-s="oppdrag" aria-labelledby="introToppdrag"><div class="intro-bilde"><div class="intro-oppdrag">
       <ul>${liste.slice(0, 3).map(o => `<li class="${ol[o.id] ? 'ok' : ''}"><span class="o-ring" aria-hidden="true">${ol[o.id] ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5.5 12.5 4 4 9-9"/></svg>' : ''}</span><span class="o-t">${esc(o.tekst)}${ol[o.id] ? '<span class="sr">, fullført</span>' : ''}</span><span class="o-fro">${FROIKON}${fmtFro(oppdragFro(o))}</span></li>`).join('')}</ul>
       <p><span>+ ${flertall(liste.length - 3, 'oppdrag', 'oppdrag')} til</span><b>${FROIKON}${fmtFro(sum)} frø i alt</b></p>
-    </div></div><h2 id="introToppdrag" tabindex="-1">Kom i gang</h2><p>${tekst}${introModus === 'forste' ? ' Du begynner med livslisten: fuglene du har sett før.' : ''}</p></section>`;
+    </div></div><h2 id="introToppdrag" tabindex="-1">Kom i gang</h2><p>${tekst}${introModus === 'forste' ? ' Vil du, kan du begynne med livslisten: fuglene du har sett før.' : ''}</p></section>`;
 }
 /* the tasks after the name step: added when it is answered, and the name step can no longer be changed here */
 function introVidere() {
@@ -6060,21 +6080,21 @@ function introTil(k) {
   introSpor.scrollTo({ left: s.offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   setTimeout(() => { const h = s.querySelector('h2'); if (h) h.focus({ preventScroll: true }); }, 380);
 }
-/* the introduction done without the tasks (enkel versjon, or the name step only): the first time, on to the life list */
-function introFerdig() { const livs = introModus === 'forste'; lukkIntro(); if (livs) setTimeout(startForModus, 320); }
+/* the introduction done without the tasks (enkel versjon, or the name step only): the first time, the offer of the life list */
+function introFerdig() { const livs = introModus === 'forste'; lukkIntro(); if (livs) setTimeout(tilbyForModus, 320); }
 function lukkIntro() {
   if (openSheet !== introEl) return;
   const tilbake = introTilbake; introModus = null; introTilbake = null;
   closeSheets(true);
   if (tilbake) tilbake(); else menyBtn.focus();
 }
-/* the last card: «Ferdig», or «Kom i gang» the first time, which goes on to the life list */
+/* the last card: «Ferdig», or «Kom i gang» the first time, which offers the life list (optional) */
 $('#introNeste').addEventListener('click', () => {
   const k = introIndeks(), side = introSpor.children[k];
   if (k < introSpor.children.length - 1) { introTil(k + 1); return; }
   const livs = introModus === 'forste' && !!side && side.dataset.s === 'oppdrag';
   lukkIntro();
-  if (livs) setTimeout(startForModus, 320);
+  if (livs) setTimeout(tilbyForModus, 320);
 });
 const navnSideUbesvart = () => { const i = [...introSpor.children].findIndex(x => x.dataset.s === 'navn'); return i >= 0 && !introSvart ? i : -1; };
 $('#introHopp').addEventListener('click', () => { const i = navnSideUbesvart(); if (i >= 0) introTil(i); else lukkIntro(); });

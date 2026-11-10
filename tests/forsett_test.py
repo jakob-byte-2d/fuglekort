@@ -1,6 +1,8 @@
-"""The walk-through of the life list (registreringsmodusen): «SETT (FØR)» on the bird cards, in orange, on the line of
-the printed SETT; the SETT box shows and ticks «seen before» only; the year on the date line; a tap on a marked bird
-takes it off; a bird registered in the app; no «(FØR)» on the dyrekort; everything as before after Ferdig.
+"""The walk-through of the life list (registreringsmodusen): the choice before it starts («Livslisten – valgfritt»,
+Start / Ikke nå; the first time too; «Endre i livslisten» on the back of a card starts it straight away); the mode
+plain to see («Livslisten» in the strip, an orange frame round the screen); «SETT (FØR)» on the bird cards, in orange,
+on the line of the printed SETT; the SETT box shows and ticks «seen before» only; the year on the date line; a tap on
+a marked bird takes it off; a bird registered in the app; no «(FØR)» on the dyrekort; everything as before after Ferdig.
 
 Run from the repo after python3 build.py (and python3 build.py --play ../fuglekort_nettside/app for the second part):
     python3 tests/forsett_test.py [../fuglekort_nettside] [MAPPE_FOR_SKJERMBILDER]
@@ -66,7 +68,17 @@ async def kjor(b, navn, rot, url, egen, bredde, hoyde, alt=True):
         fp = lambda: pg.evaluate("document.querySelector('#fpNavn').textContent")
 
         sjekk('«(FØR)» er skjult utenfor modusen', await topp("getComputedStyle(el.querySelector('.forord')).opacity") == '0')
-        await trykk('#openMeny', 300); await trykk('#openFor', 1000)
+        # the choice before the walk-through: optional, Start / Ikke nå
+        await trykk('#openMeny', 300); await trykk('#openFor', 600)
+        sjekk('valget før start: «Livslisten – valgfritt», Start og Ikke nå', await pg.evaluate("[document.querySelector('#dlgT').textContent, document.body.classList.contains('formodus'), [...document.querySelectorAll('#dlgKnapper .btn')].map(b => b.textContent), document.querySelector('#dlgTekst').textContent.includes('helt valgfritt'), document.querySelector('#dlgTekst').textContent.includes('allerede 1 art')]")
+              == ['Livslisten – valgfritt', False, ['Start', 'Ikke nå'], True, True])
+        if alt:
+            await trykk('#dlgKnapper [data-k="1"]', 500)
+            sjekk('«Ikke nå» starter ikke modusen', await pg.evaluate("[document.body.classList.contains('formodus'), !!document.querySelector('.dlg.on')]") == [False, False])
+            await trykk('#openMeny', 300); await trykk('#openFor', 600)
+        await trykk('#dlgKnapper .btn.pri', 1000)
+        sjekk('«Livslisten» i stripa og oransje ramme rundt skjermen', await pg.evaluate("[document.querySelector('#forbar .fb-navn').textContent, getComputedStyle(document.querySelector('#forbar .fb-navn')).color, getComputedStyle(document.body, '::after').borderTopColor, getComputedStyle(document.body, '::after').opacity, document.querySelector('#forbar .fb-sub').textContent]")
+              == ['Livslisten', 'rgb(184, 74, 37)', 'rgb(184, 74, 37)', '1', '1 art sett før · Ferdig avslutter'])
         sjekk('fonten Barlow SC Sett er lastet fra egen mappe', await pg.evaluate("document.fonts.check(\"700 20px 'Barlow SC Sett'\")")
               and any(urlparse(k).netloc == egen and k.endswith('/fonts/barlow-semi-condensed-700-sett.woff') for k in kall))
         sjekk('modusfargen på stripa og panelet', await pg.evaluate("[getComputedStyle(document.querySelector('#forbar')).borderTopColor, getComputedStyle(document.querySelector('#forpanel')).borderTopColor]")
@@ -151,6 +163,11 @@ async def kjor(b, navn, rot, url, egen, bredde, hoyde, alt=True):
                 await pg.keyboard.press('ArrowLeft'); await pg.wait_for_timeout(150)
             await pg.wait_for_timeout(500)
             sjekk('etter Ferdig: «(FØR)» borte, Kjøttmeis med 2010', await topp("[getComputedStyle(el.querySelector('.forord')).opacity, el.querySelector('.hand').textContent, el.classList.contains('for')]") == ['0', '2010', True])
+            sjekk('etter Ferdig: rammen er borte', await pg.evaluate("getComputedStyle(document.body, '::after').opacity") == '0')
+            # «Endre i livslisten» on the back of the card: straight into the mode, no question
+            await trykk('.card.is-top [data-act="forsett"]', 900)
+            sjekk('«Endre i livslisten» starter modusen direkte', await pg.evaluate("[document.body.classList.contains('formodus'), !!document.querySelector('.dlg.on')]") == [True, False])
+            await trykk('#fbFerdig', 700); await trykk('#dlgKnapper .btn.pri', 700)
             await pg.keyboard.press('ArrowRight'); await pg.wait_for_timeout(700)
             sjekk('etter Ferdig: Blåmeis uten år viser «før appen»', await topp("el.querySelector('.hand').textContent") == 'før appen')
             await pg.keyboard.press('ArrowRight'); await pg.wait_for_timeout(700)
@@ -159,6 +176,27 @@ async def kjor(b, navn, rot, url, egen, bredde, hoyde, alt=True):
             # outside the mode, a tap on SETT registers for today again
             await trykk('.card.is-top [data-act="toggle"]', 900)
             sjekk('utenfor modusen registrerer SETT som før', await pg.evaluate("JSON.parse(localStorage.getItem('hagefugler-oslo:sett:v1'))['turdus-merula'].dager.length") == 3)
+        if alt:
+            # the first time: the introduction, then the choice; «Vil du, kan du …»; Ikke nå goes to the cards
+            ctx2 = await b.new_context(viewport={'width': bredde, 'height': hoyde}, device_scale_factor=1, has_touch=True, is_mobile=True, service_workers='block')
+            await ctx2.route('https://qfustbltxgbpwsntcrpd.supabase.co/**', lambda r: r.abort())
+            await ctx2.add_init_script("if (!sessionStorage.getItem('s')) { sessionStorage.setItem('s', '1'); localStorage.clear(); localStorage.setItem('hagefugler:testmerke', '2026-09-30-pluss'); }")
+            p2 = await ctx2.new_page(); p2.on('pageerror', lambda e: js.append(str(e)))
+            await p2.goto(url, wait_until='networkidle'); await p2.wait_for_timeout(1200)
+            sistetekst = ''
+            for _ in range(20):
+                t = await p2.evaluate("document.querySelector('.dlg.on') ? document.querySelector('#dlgT').textContent : ''")
+                if t == 'Ikke dele?':                                # the name step: not sharing
+                    await p2.evaluate("document.querySelector('#dlgKnapper .btn.pri').click()"); await p2.wait_for_timeout(700); continue
+                if t: break
+                sistetekst = await p2.evaluate("(document.querySelector('[data-s=oppdrag] > p') || {}).textContent || ''") or sistetekst
+                ikke = await p2.evaluate("(() => { const b = document.querySelector('#inIkke'); return !!b && !b.hidden && b.getBoundingClientRect().width > 0; })()")
+                await p2.evaluate("document.querySelector(%s).click()" % json.dumps('#inIkke' if ikke else '#introNeste')); await p2.wait_for_timeout(700)
+            sjekk('første gang: «Vil du, kan du begynne med livslisten»', 'Vil du, kan du begynne med livslisten' in sistetekst, sistetekst)
+            sjekk('første gang: valget kommer etter introduksjonen', await p2.evaluate("[document.querySelector('.dlg.on #dlgT') && document.querySelector('#dlgT').textContent, document.body.classList.contains('formodus')]") == ['Livslisten – valgfritt', False])
+            await p2.evaluate("document.querySelector('#dlgKnapper [data-k=\"1\"]').click()"); await p2.wait_for_timeout(600)
+            sjekk('første gang: «Ikke nå» går til kortene', await p2.evaluate("[document.body.classList.contains('formodus'), !!document.querySelector('.dlg.on'), !!document.querySelector('.card.is-top')]") == [False, False, True])
+            await ctx2.close()
         sjekk('ingen kall utenom eget nettsted (og Supabase, som er stengt)', {urlparse(k).netloc for k in kall if urlparse(k).scheme in ('http', 'https')} <= {egen, 'qfustbltxgbpwsntcrpd.supabase.co'})
         sjekk('ingen JS-feil', not js, js)
         await ctx.close()
