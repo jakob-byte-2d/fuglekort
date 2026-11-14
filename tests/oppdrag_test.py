@@ -3,7 +3,7 @@ finished count of at least an hour (not by one of 30 minutes), showing 75 000 se
 task gives none of its own), the button «Tell» goes to the Telling tab, which says how to count and starts the count
 at once (no window of its own); the strip «Neste oppdrag» shows it first from 1 January until Hagefugltellingen's
 weekend is over (the small tasks first the rest of the year); BirdLife Norge named in the Telling tab and the summary,
-with the next weekend; the introduction: a card on Hagefugltellingen, «Frøbutikken», all the tasks without a sum; the help card «Om kortene» says «Hagefugler». The seeds of the counts: the
+with the next weekend, and a warning there and in the count bar when it is not Hagefugltellingen; the introduction: a card on Hagefugltellingen, «Frøbutikken», all the tasks without a sum; the help card «Om kortene» says «Hagefugler». The seeds of the counts: the
 first good count (an hour or more, with species) in Hagefugltellingen's weekend (the last Saturday of January and the
 Sunday) 75 000 via Tellekorps, once a year, and the task is done; counts started before 15 November 2026 keep the old
 rule (the year's first good count, any day); every other good count 3 000 (at most one a day, not the day of
@@ -80,7 +80,7 @@ async def main():
         async with async_playwright() as p:
             b = await p.chromium.launch()
             nov, jan, feb16 = datetime(2026, 11, 14, 12), datetime(2027, 1, 20, 12), datetime(2027, 2, 16, 12)
-            helg, feb1 = datetime(2027, 1, 30, 12), datetime(2027, 2, 1, 12)
+            helg, feb1 = datetime(2027, 1, 30, 12), datetime(2027, 2, 1, 12)   # (in Hagefugltellingen's weekend, and after)
 
             print('=== ny bruker i november: lista, stripa, knappen «Tell»')
             ctx, pg, js = await side(b, nov, init(nov))
@@ -108,6 +108,36 @@ async def main():
             gt = await pg.evaluate("[(document.querySelector('#goTell') || {}).textContent, !!document.querySelector('#tStart'), !!document.querySelector('#tOmrade')]")
             sjekk('   mens den pågår: «Tilbake til tellingen» i fanen', gt == ['Tilbake til tellingen', False, False], gt)
             sjekk('ingen JS-feil', not js, js); await ctx.close()
+
+            print('=== advarselen: ikke Hagefugltellingen nå')
+            T = datetime
+            V3000 = 'Det er ikke Hagefugltellingen nå. Du kan telle for moro skyld, men da får du bare 3 000 frø. Hagefugltellingen gir 75 000.'
+            VDAG = 'Det er ikke Hagefugltellingen nå. Du kan telle for moro skyld, men du har alt fått frø for en telling i dag.'
+            VENKEL = 'Det er ikke Hagefugltellingen nå, men du kan telle for moro skyld.'
+            n20 = T(2026, 11, 20, 12)
+            for navn, dato, tl, enk, vent, linje in (
+                    ('14. nov. 2026, i dag gjelder den gamle regelen: ingen advarsel', nov, None, False, '', ''),
+                    ('20. nov. 2026: 3 000 frø', n20, None, False, V3000, 'Ikke Hagefugltellingen nå · for moro skyld, 3 000 frø'),
+                    ('20. nov. 2026, alt fått frø i dag', n20, [(T(2026, 11, 20, 8), 61)], False, VDAG, 'Ikke Hagefugltellingen nå · for moro skyld, ingen frø i dag'),
+                    ('20. nov. 2026, den enkle versjonen', n20, None, True, VENKEL, 'Ikke Hagefugltellingen nå · for moro skyld'),
+                    ('lørdag 30. januar 2027, i tellehelga: ingen advarsel', helg, None, False, '', '')):
+                lager = init(dato, tellinger=tl); lager.update({'fuglekort:enkel': 'ja'} if enk else {})
+                ctx, pg, js = await side(b, dato, lager)
+                await pg.evaluate("document.querySelector('#openStats').click()"); await pg.wait_for_timeout(500)
+                await pg.evaluate("document.querySelector('#fane-telling').click()"); await pg.wait_for_timeout(600)
+                v = await pg.evaluate("((document.querySelector('#statsBody .tl-varsel') || {}).textContent || '').replace(/ /g, ' ')")
+                sjekk(f'{navn}{": «" + vent + "»" if vent else ""}', v == vent, v)
+                if BILDER and vent == V3000: await pg.screenshot(path=str(BILDER / 'telling_varsel.png'))
+                await pg.evaluate("document.querySelector('#tStart').click()"); await pg.wait_for_timeout(800)
+                l = await pg.evaluate("(() => { const e = document.querySelector('#tVarsel'); return e.hidden ? '' : e.textContent.replace(/ /g, ' '); })()")
+                sjekk(f'   mens du teller: {"«" + linje + "»" if linje else "ingen linje"}', l == linje, l)
+                if BILDER and linje.endswith('3 000 frø'): await pg.screenshot(path=str(BILDER / 'telling_varsel_teller.png'))
+                if vent:
+                    await pg.evaluate("document.querySelector('#openStats').click()"); await pg.wait_for_timeout(500)
+                    await pg.evaluate("document.querySelector('#fane-telling').click()"); await pg.wait_for_timeout(600)
+                    v2 = await pg.evaluate("((document.querySelector('#statsBody .tl-varsel') || {}).textContent || '').replace(/ /g, ' ')")
+                    sjekk('   og i fanen mens du teller', v2 == vent, v2)
+                sjekk('   ingen JS-feil', not js, js); await ctx.close()
 
             print('=== januar og 16. februar: stripa')
             ctx, pg, js = await side(b, jan, init(jan))

@@ -681,7 +681,7 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .telling .hint{display:none}
 
 /* ---------- counting (Hagefugltellingen) ---------- */
-.tellebar{display:flex;align-items:center;gap:8px;margin-top:8px;padding:6px 6px 6px 12px;border-radius:14px;
+.tellebar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px;padding:6px 6px 6px 12px;border-radius:14px;
   background:var(--surface);border:1px solid var(--line);box-shadow:0 6px 18px -12px rgba(var(--shadow),.5)}
 .tellebar[hidden]{display:none}
 .rec{width:10px;height:10px;border-radius:50%;background:var(--rec);flex-shrink:0;animation:rec 1.6s ease-in-out infinite}
@@ -1056,6 +1056,9 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .restore textarea{width:100%;min-height:90px;border-radius:10px;border:1px solid var(--line);background:var(--bg-hi);padding:10px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
 /* counting: the Telling tab (how to count, the area, Start), the list of species, the summary */
 .tl-lead{margin-top:4px}
+.tl-varsel{margin:2px 0 14px}
+.tb-varsel{flex-basis:100%;margin:2px 0 0 -6px;padding:5px 10px;border-radius:9px;background:var(--warn-bg);color:var(--warn-ink);font-size:12.5px;font-weight:600;line-height:1.3}
+.tb-varsel[hidden]{display:none}
 .lead{font-size:15px;line-height:1.5;margin:16px 0 0}
 .fakta{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px;line-height:1.4;color:var(--muted)}
 .fakta li{padding-left:18px;position:relative}
@@ -1264,6 +1267,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <div class="tb-t"><b id="tTid" role="timer">0:00</b><span id="tInfo"></span></div>
     <button class="tb-btn" id="tListe">Telleliste</button>
     <button class="tb-btn pri" id="tSlutt">Avslutt</button>
+    <p class="tb-varsel" id="tVarsel" hidden></p>
   </div>
 
   <div class="tellebar forbar" id="forbar" role="region" aria-label="Livslisten" hidden>
@@ -3546,6 +3550,7 @@ function renderStats() {
     </ul></div>` : ''}`,
     telling: () => `
     <div class="s-sec"><h3>Hagefugltelling</h3>
+      ${(v => (v ? `<p class="varsel tl-varsel">${v}</p>` : ''))(ikkeHelgVarsel(true))}
       <p class="lead tl-lead">For hver art teller du det høyeste antallet du ser <b>samtidig</b>, ikke alle du ser i løpet av tellingen.</p>
       <ul class="fakta">
         <li>Tell gjerne i minst én time. Klokka går øverst mens du teller.</li>
@@ -3733,6 +3738,7 @@ function paintTell() {
   const { arter, ind } = sumAv(a);
   $('#tInfo').textContent = arter ? flertall(arter, 'art', 'arter') : 'ingen talt';
   $('#tInfo').title = arter ? `${flertall(arter, 'art', 'arter')}, ${flertall(ind, 'individ', 'individer')}` : '';
+  const tv = ikkeHelgVarsel(false); $('#tVarsel').textContent = tv; $('#tVarsel').hidden = !tv;   // not Hagefugltellingen
   paintTeller();
 }
 function tikk() {
@@ -3759,6 +3765,25 @@ tlAnt.addEventListener('change', () => Tell.settAntall(CARDS[cur].key, tlAnt.val
 tlAnt.addEventListener('focus', () => tlAnt.select());
 tlAnt.addEventListener('keydown', e => { if (e.key === 'Enter') tlAnt.blur(); });
 
+/* what a good count started at this time would give, after the finished ones: «korps» (Tellekorps), «neste» (3 000)
+   or «samme-dag» (a count that day has already given) */
+function tellingGir(ms) {
+  const bel = tellingBelonning(), y = new Date(ms).getFullYear(), d = isoAv(ms);
+  let korps = false, dag = false;
+  Object.keys(bel).forEach(id => { const st = Tell.data[id].start;
+    if (bel[id] === 'korps' && new Date(st).getFullYear() === y) korps = true;
+    if (bel[id] !== 'kort' && bel[id] !== 'tom' && isoAv(st) === d) dag = true; });
+  return !korps && (ms < HELGREGEL || iTellehelg(ms)) ? 'korps' : dag ? 'samme-dag' : 'neste';
+}
+/* not Hagefugltellingen: a count started now (or the one going on) cannot give Tellekorps. lang: the box at the top of
+   the Telling tab; otherwise the line in the count bar. '' when it can */
+function ikkeHelgVarsel(lang) {
+  const a = Tell.aktiv(), gir = tellingGir(a ? a.start : Date.now());
+  if (gir === 'korps') return '';
+  if (lang) return enkel ? '<b>Det er ikke Hagefugltellingen nå,</b> men du kan telle for moro skyld.'
+    : `<b>Det er ikke Hagefugltellingen nå.</b> Du kan telle for moro skyld, men ${gir === 'neste' ? `da får du bare ${fmtFro(FRO.tellingNeste)} frø. Hagefugltellingen gir ${fmtFro(FRO.merker.tellekorps)}.` : 'du har alt fått frø for en telling i dag.'}`;
+  return `Ikke Hagefugltellingen nå · for moro skyld${enkel ? '' : gir === 'neste' ? `, ${fmtFro(FRO.tellingNeste)} frø` : ', ingen frø i dag'}`;
+}
 /* «Start telling» in the Telling tab (Min fugleliste) starts the count at once, with the area; the life list's mode
    ends first. The tab says how to count, so there is no window of its own */
 function startTelling() {
@@ -5169,7 +5194,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = 'f30b30cce9';
+const APPVERSJON = '5d333dd933';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
