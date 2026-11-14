@@ -1,7 +1,10 @@
 """The task «Gjennomfør en hagefugltelling»: first in the list (and on «Kom i gang» in the introduction), done by a
-finished count of at least an hour (not by one of 30 minutes), 3 000 seeds, the button «Tell» opens the count; the
-strip «Neste oppdrag» and the introduction's text show it first from 1 January to 15 February only (the small tasks
-first the rest of the year); BirdLife Norge named on the count pages; the help card «Om kortene» says «Hagefugler».
+finished count of at least an hour (not by one of 30 minutes), showing 75 000 seeds (they come from Tellekorps; the
+task gives none of its own), the button «Tell» opens the count; the strip «Neste oppdrag» and the introduction's text
+show it first from 1 January to 15 February only (the small tasks first the rest of the year); BirdLife Norge named on
+the count pages; the help card «Om kortene» says «Hagefugler». The seeds of the counts: the year's first good count
+(an hour or more, with species) 75 000 via Tellekorps (again the next year), each later one 3 000 (at most one a day,
+not the day of the year's first), none under an hour or without species; the summary and «Profil» say which.
 
 Run from the repo after python3 build.py:
     python3 tests/oppdrag_test.py [MAPPE_FOR_SKJERMBILDER]
@@ -28,11 +31,12 @@ def ms(d):
 
 
 def init(dato, tellinger=None, intro=True, sett=None):
-    """localStorage for a user on this date: optionally finished counts [(start, minutes)] and seen birds"""
+    """localStorage for a user on this date: optionally finished counts [(start, minutes[, species])] and seen birds"""
     x = {'hagefugler:testmerke': '2026-09-30-pluss'}
     if intro: x.update({'fuglekort:intro': 'ferdig', 'hagefugler-oslo:hint': 'ok', 'fuglekort:deling': 'nei', 'fuglekort:tittel:v2': '99'})   # else: as the very first time
     if tellinger:
-        x['hagefugler:tellinger:v1'] = json.dumps({f't{ms(s)}': {'start': ms(s), 'slutt': ms(s) + m * 60000, 'omrade': '', 'arter': {'parus-major': 3}, 'ts': ms(s)} for s, m in tellinger})
+        x['hagefugler:tellinger:v1'] = json.dumps({f't{ms(t[0])}': {'start': ms(t[0]), 'slutt': ms(t[0]) + t[1] * 60000, 'omrade': '',
+                                                    'arter': t[2] if len(t) > 2 else {'parus-major': 3}, 'ts': ms(t[0])} for t in tellinger})
     if sett: x['hagefugler-oslo:sett:v1'] = json.dumps(sett)
     return x
 
@@ -78,8 +82,8 @@ async def main():
             sjekk('stripa i november: de små oppdragene først', await stripa(pg) == 'Registrer din første fugl', await stripa(pg))
             ls = await lista(pg)
             sjekk('tellingen står øverst i lista', ls and ls[0]['t'] == 'Gjennomfør en hagefugltelling' and not ls[0]['ok'], ls[:1])
-            sjekk('med forklaring, knappen «Tell» og 3 000 frø', ls and ls[0]['under'] == 'Tell fuglene i hagen i minst én time, og send tallene til Hagefugltellingen på Fuglevennen.no.'
-                  and ls[0]['knapp'] == 'Tell' and ls[0]['fro'].replace(' ', ' ') == '3 000', ls[:1])
+            sjekk('med forklaring, knappen «Tell» og 75 000 frø', ls and ls[0]['under'] == 'Tell fuglene i hagen i minst én time, og send tallene til Hagefugltellingen på Fuglevennen.no.'
+                  and ls[0]['knapp'] == 'Tell' and ls[0]['fro'].replace('\u00a0', ' ') == '75 000', ls[:1])
             sjekk('de andre oppdragene som før', [o['t'] for o in ls[1:4]] == ['Registrer din første fugl', 'Finn en fugl med søket', 'Registrer tre ulike arter'], [o['t'] for o in ls])
             if BILDER: await pg.screenshot(path=str(BILDER / 'oppdrag_liste.png'))
             await pg.evaluate("document.querySelector('[data-oppdrag-gaa=telling]').click()"); await pg.wait_for_timeout(700)
@@ -127,6 +131,35 @@ async def main():
                 sjekk(f'introduksjonen {dato:%d.%m}: «{vent}»', vent in tekst, tekst)
                 sjekk(f'introduksjonen {dato:%d.%m}: tellingen først av de tre', tre and tre[0].startswith('Gjennomfør en hagefugltelling'), tre)
                 sjekk('ingen JS-feil', not js, js); await ctx.close()
+
+            print('=== frøene for tellingene')
+            T = datetime
+            d1, d1b, d2, d3 = T(2026, 11, 1, 10), T(2026, 11, 1, 13), T(2026, 11, 2, 10), T(2027, 1, 30, 10)
+            TEKST = lambda b_, y: {'korps': f'+75 000 frø: Tellekorps {y}, årets første hagefugltelling.', 'neste': '+3 000 frø for hagefugltellingen.',
+                                   'samme-dag': 'Du har alt fått frø for en telling denne dagen.', 'kort': 'Tellinger under én time gir ikke frø.',
+                                   'tom': 'En telling uten arter gir ikke frø.'}[b_]
+            linje = lambda navn: "(() => { const li = [...document.querySelectorAll('.fro-kilder li')].find(l => l.querySelector('span').textContent === %s); return li ? +li.querySelector('b').textContent.replace(/\\D/g, '') : 0; })()" % json.dumps(navn)
+            for navn, dato, tl, vent, sum_ in (
+                    ('første telling: 75 000 i alt (oppdraget gir ikke noe ekstra)', nov, [(d1, 61)], 75000, {d1: 'korps'}),
+                    ('to tellinger samme dag: fortsatt 75 000', nov, [(d1, 61), (d1b, 61)], 75000, {d1: 'korps', d1b: 'samme-dag'}),
+                    ('en ny dag samme år: + 3 000', nov, [(d1, 61), (d1b, 61), (d2, 61)], 78000, {d2: 'neste'}),
+                    ('neste år: Tellekorps igjen, + 75 000', T(2027, 2, 1, 12), [(d1, 61), (d1b, 61), (d2, 61), (d3, 61)], 153000, {d3: 'korps'}),
+                    ('under én time: 0', nov, [(d1, 30)], 0, {d1: 'kort'}),
+                    ('uten arter: 0', nov, [(d1, 61, {})], 0, {d1: 'tom'})):
+                ctx, pg, js = await side(b, dato, init(dato, tellinger=tl))
+                await pg.evaluate("document.querySelector('#openStats').click()"); await pg.wait_for_timeout(500)
+                await pg.evaluate("document.querySelector('#fane-profil').click()"); await pg.wait_for_timeout(600)
+                h, o = await pg.evaluate(linje('Hagefugltellinger')), await pg.evaluate(linje('Oppdrag'))
+                sjekk(f'{navn} (Profil: «Hagefugltellinger» {h}, «Oppdrag» {o})', h == vent and o == 0, (h, o))
+                if BILDER and len(tl) == 3: await pg.screenshot(path=str(BILDER / 'telling_fro_profil.png'))
+                await pg.evaluate("document.querySelector('#fane-telling').click()"); await pg.wait_for_timeout(600)
+                for start, b_ in sum_.items():
+                    await pg.evaluate("document.querySelector('[data-tid=\"t%d\"]').click()" % ms(start)); await pg.wait_for_timeout(700)
+                    t = (await pg.evaluate("(document.querySelector('#sumBody .sum-fro') || {}).textContent || ''")).replace(' ', ' ')
+                    sjekk(f'   oppsummeringen {start:%d.%m.%Y kl. %H}: «{TEKST(b_, start.year)}»', t == TEKST(b_, start.year), t)
+                    if BILDER and b_ in ('korps', 'kort') and start == d1: await pg.screenshot(path=str(BILDER / f'telling_fro_{b_}.png'))
+                    await pg.evaluate("document.querySelector('#closeSum').click()"); await pg.wait_for_timeout(500)
+                sjekk('   ingen JS-feil', not js, js); await ctx.close()
 
             print('=== oppsummeringen og fanen Telling, og «Om kortene»')
             ctx, pg, js = await side(b, nov, init(nov, tellinger=[(datetime(2026, 11, 1, 10), 65)]))

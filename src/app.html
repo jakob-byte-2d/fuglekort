@@ -1040,6 +1040,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .tl-go b{font-weight:600;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tl-go small{font-size:12px;color:var(--muted)}
 .sum-meta{margin:6px 0 0;font-size:14px;color:var(--muted);line-height:1.45}
+.sum-fro{display:flex;align-items:center;gap:6px;margin:12px 0 0;font-size:14px;color:var(--muted);line-height:1.4}.sum-fro.gir{color:var(--ink);font-weight:600}.sum-fro .froikon{width:16px;height:16px;flex-shrink:0}
 .varsel{margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);color:var(--warn-ink);font-size:14px;line-height:1.45}
 .sum-tall{display:flex;gap:18px;margin-top:18px}
 .sum-tall div{display:grid}
@@ -1929,7 +1930,8 @@ const FRO = {
   dagMerkeForste: 10000,                     // the «5 dager» badge
   dagMerke: 2000,                            // each «N dager» badge after that: one for every 5 observation days
   arsliste: { 10: 5000, 15: 12500, 20: 25000, 25: 50000 },   // species seen in one calendar year
-  oppdrag: { telling: 3000, forste: 1000, sok: 500, arter3: 1500, tavle: 500, dager2: 1500, kjop: 1000, arter5: 2000, dager3: 2000 },   // «Kom i gang»
+  oppdrag: { telling: 0, forste: 1000, sok: 500, arter3: 1500, tavle: 500, dager2: 1500, kjop: 1000, arter5: 2000, dager3: 2000 },   // «Kom i gang»
+  tellingNeste: 3000,                        // each garden bird count after the year's first (Tellekorps), at most one a day
   angreTid: 120000,                          // the newest purchase or move can be undone for 2 minutes
   flyttPerReg: 0.05,                         // moving a multiplier early: this share of its price per registration missing
 };
@@ -1940,7 +1942,7 @@ let froCache = null;
 const froNullstill = () => { froCache = null; };
 function froRegnskap() {
   if (froCache) return froCache;
-  const r = { reg: 0, forste: 0, dag: 0, niva: 0, merker: 0, mult: 0, oppdrag: 0, premier: 0 };
+  const r = { reg: 0, forste: 0, dag: 0, niva: 0, merker: 0, tellekorps: 0, telling: 0, mult: 0, oppdrag: 0, premier: 0 };
   CARDS.forEach(c => {
     if (c.bonus && !erApen(c)) return;                     // a dyrekort not bought gives nothing
     const dager = Store.days(c.key); if (!dager.length) return;
@@ -1959,10 +1961,11 @@ function froRegnskap() {
   });
   const t = nokkeltall();
   r.dag = t.obsDager * FRO.daglig;                                  // every day with a bird
-  merkerListe(t).forEach(m => { if (m.v(t) >= m.mal) r.merker += merkeFro(m); });
+  merkerListe(t).forEach(m => { if (m.v(t) >= m.mal) r[m.tAar ? 'tellekorps' : 'merker'] += merkeFro(m); });
+  r.telling = Object.values(tellingBelonning()).filter(b => b === 'neste').length * FRO.tellingNeste;   // the counts after the year's first
   const ol = oppdragLogg(); r.oppdrag = OPPDRAG.reduce((a, o) => a + (ol[o.id] ? oppdragFro(o) : 0), 0);   // the tasks done
   r.premier = Object.values(premieLogg()).reduce((a, p) => a + (+p.fro || 0), 0);   // the prizes won on the boards
-  r.tjent = r.reg + r.forste + r.dag + r.niva + r.merker + r.mult + r.oppdrag + r.premier;
+  r.tjent = r.reg + r.forste + r.dag + r.niva + r.merker + r.tellekorps + r.telling + r.mult + r.oppdrag + r.premier;
   r.brukt = Object.values(Kjop.data).reduce((a, v) => a + v.pris + (v.kort ? v.kort.reduce((b, p) => b + (p.pris || 0), 0) : 0), 0);   // moves too
   r.saldo = r.tjent - r.brukt;                                      // what can be spent; the titles go by r.tjent
   return (froCache = r);
@@ -1996,6 +1999,21 @@ function tellinger(raw) {
     out[id] = { start: v.start, slutt: Number.isFinite(v.slutt) && v.slutt > 0 ? v.slutt : 0, omrade: String(v.omrade || '').slice(0, 80), arter, ts: v.ts || 0 };
   });
   return out;
+}
+/* a garden bird count that counts (Tellekorps, the task, the seeds): finished, at least an hour, at least one species */
+const godTelling = v => !!v && v.slutt > 0 && v.slutt - v.start >= 3600000 && Object.values(v.arter || {}).some(n => n > 0);
+/* what each finished count gives: «korps» the year's first good count (Tellekorps, 75 000), «neste» the first good
+   count on a later day that year (3 000), «samme-dag» another good count on a day that already gave, «kort» under an
+   hour, «tom» no species. By the start time, in order */
+function tellingBelonning() {
+  const ut = {}, aar = {};
+  Tell.ferdige().map(id => [id, Tell.data[id]]).sort((a, b) => a[1].start - b[1].start).forEach(([id, v]) => {
+    if (v.slutt - v.start < 3600000) { ut[id] = 'kort'; return; }
+    if (!godTelling(v)) { ut[id] = 'tom'; return; }
+    const y = new Date(v.start).getFullYear(), d = isoAv(v.start), a = aar[y] || (aar[y] = new Set());
+    ut[id] = !a.size ? 'korps' : a.has(d) ? 'samme-dag' : 'neste'; a.add(d);
+  });
+  return ut;
 }
 const Tell = Object.assign(samling({
   col: 'tellinger', key: 'hagefugler:tellinger:v1', norm: tellinger, hva: 'Tellingen',
@@ -2054,8 +2072,8 @@ function nokkeltall() {
     // arter: every bird species seen, also those now «ute» (the badges and tasks); arterStokk: those in the deck
     arter: Object.keys(Store.data).filter(erFugl).length, arterStokk: seenCount(), obsDager: alle.length, rekke, arstider, iAar, startAar,
     aarene: startAar ? Array.from({ length: Math.max(0, naa - startAar + 1) }, (_, k) => startAar + k) : [],
-    langeTellinger: ferdige.filter(v => v.slutt - v.start >= 3600000).length,
-    tellAar: ferdige.filter(v => v.slutt - v.start >= 3600000).reduce((a, v) => { const y = new Date(v.start).getFullYear(); a[y] = (a[y] || 0) + 1; return a; }, {}),
+    langeTellinger: ferdige.filter(godTelling).length,
+    tellAar: ferdige.filter(godTelling).reduce((a, v) => { const y = new Date(v.start).getFullYear(); a[y] = (a[y] || 0) + 1; return a; }, {}),
     flokk: Math.max(0, ...ferdige.flatMap(v => Object.keys(v.arter).filter(erFugl).map(k => v.arter[k]))),
   };
 }
@@ -2120,7 +2138,7 @@ function nyheter(for_) {
    nesteOppdrag); a count of at least an hour, as Fuglevennen recommends and as for Tellekorps. */
 const OPPDRAG = [
   { id: 'telling', tekst: 'Gjennomfør en hagefugltelling', under: 'Tell fuglene i hagen i minst én time, og send tallene til Hagefugltellingen på Fuglevennen.no.',
-    v: t => t.langeTellinger >= 1, gaa: 'telling', sesong: true },
+    v: t => t.langeTellinger >= 1, gaa: 'telling', sesong: true, vis: () => FRO.merker.tellekorps },   // the seeds come from Tellekorps
   { id: 'forste', tekst: 'Registrer din første fugl', v: t => t.arter >= 1 },
   { id: 'sok', tekst: 'Finn en fugl med søket', gaa: 'sok' },
   { id: 'arter3', tekst: 'Registrer tre ulike arter', v: t => t.arter >= 3 },
@@ -2137,6 +2155,7 @@ const PREMIE_KEY = () => brukerNokkel('fuglekort:premier');
 function premieLogg() { try { const x = JSON.parse(lsGet(PREMIE_KEY()) || '{}'); return x && typeof x === 'object' && !Array.isArray(x) ? x : {}; } catch (e) { return {}; } }
 function oppdragLogg() { try { const x = JSON.parse(lsGet(OPPDRAG_KEY()) || '{}'); return x && typeof x === 'object' && !Array.isArray(x) ? x : {}; } catch (e) { return {}; } }
 const oppdragFro = o => FRO.oppdrag[o.id] || 0;
+const oppdragVisFro = o => (o.vis ? o.vis() : oppdragFro(o));          // what is shown: the count shows Tellekorps' 75 000
 const oppdragOk = (o, t, ol = oppdragLogg()) => !!ol[o.id] || (!!o.v && o.v(t));
 function loggOppdrag(ids) {
   const ol = oppdragLogg(); ids.forEach(id => { if (!ol[id]) ol[id] = todayISO(); });
@@ -3325,7 +3344,7 @@ function oppdragHtml() {
       return `<li class="${ok ? 'ok' : ''}"><span class="o-ring" aria-hidden="true">${ok ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5.5 12.5 4 4 9-9"/></svg>' : ''}</span>
         <span class="o-t">${esc(o.tekst)}${ok ? '<span class="sr">, fullført</span>' : o.under ? `<small>${esc(o.under)}</small>` : ''}</span>
         ${gaa ? `<button class="btn o-gaa" data-oppdrag-gaa="${o.gaa}">${{ telling: 'Tell', sok: 'Søk', tavle: 'Tavlen' }[o.gaa] || 'Butikken'}</button>` : ''}
-        <span class="o-fro">${FROIKON}${fmtFro(oppdragFro(o))}</span></li>`; }).join('')}</ul>
+        <span class="o-fro">${FROIKON}${fmtFro(oppdragVisFro(o))}</span></li>`; }).join('')}</ul>
   </div>`;
 }
 /* the year list in Merker: this year's species and four badges, and a line for each year before */
@@ -3409,7 +3428,7 @@ function renderStats() {
       <div class="row"><button class="btn pri" data-butikk>Åpne Frøbutikken</button></div>
       <ul class="fro-kilder">
         ${[['Registreringer', fr.reg], ['Dager med fugler', fr.dag], ['Første gang du så en art', fr.forste], ['Glinskant', fr.niva], ['Merker', fr.merker],
-          ...(fr.oppdrag ? [['Oppdrag', fr.oppdrag]] : []), ...(fr.premier ? [['Premier', fr.premier]] : []),
+          ...(fr.tellekorps + fr.telling ? [['Hagefugltellinger', fr.tellekorps + fr.telling]] : []), ...(fr.oppdrag ? [['Oppdrag', fr.oppdrag]] : []), ...(fr.premier ? [['Premier', fr.premier]] : []),
           ...(fr.mult || Object.keys(Kjop.data).some(k => k.startsWith('x-')) ? [['Multiplikatorer', fr.mult]] : [])]
           .map(([t, v]) => `<li><span>${t}</span><b>${fmtFro(v)}</b></li>`).join('')}
       </ul>
@@ -3740,7 +3759,8 @@ function renderSum() {
   $('#sumTitle').textContent = aktiv ? 'Avslutte tellingen?' : 'Hagefugltelling';
   $('#sumBody').innerHTML = `
     <p class="sum-meta">${stor(datoLang(v.start))}, kl. ${klokke(v.start)}–${aktiv ? 'nå' : klokke(slutt)} (${varighet(ms)})${v.omrade ? `<br>Område: ${esc(v.omrade)}` : ''}</p>
-    ${aktiv && ms < 3600000 ? `<p class="varsel">Tellingen har vart i ${varighet(ms)}. Fuglevennen anbefaler å telle i minst én time.</p>` : ''}
+    ${aktiv && ms < 3600000 ? `<p class="varsel">Tellingen har vart i ${varighet(ms)}. Fuglevennen anbefaler å telle i minst én time.${enkel ? '' : ' Tellinger under én time gir ikke frø.'}</p>` : ''}
+    ${!aktiv && !enkel ? tellingFroHtml(sumId, v) : ''}
     <div class="sum-tall"><div><b>${arter}</b><span>${arter === 1 ? 'art' : 'arter'}</span></div><div><b>${ind}</b><span>${ind === 1 ? 'individ' : 'individer'}</span></div></div>
     ${rader.length ? `<ul class="skjema">${rader.map(r => `<li><span>${esc(r.navn)}</span><b>${r.n}</b></li>`).join('')}</ul>
       <p class="cap">Samme rekkefølge som skjemaet på Fuglevennen.no, så du kan skrive av rett nedover. Arter som ikke står i skjemaet, legger du til under lista der. Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar.</p>
@@ -3752,6 +3772,13 @@ function renderSum() {
       ${aktiv ? '' : `<a class="btn" href="https://www.fuglevennen.no/" target="_blank" rel="noopener">Åpne Fuglevennen.no</a><button class="btn" id="sumSlett">Slett tellingen</button>`}
     </div>
     <div class="restore" id="sumTekstBoks" hidden><textarea id="sumTekst" readonly></textarea></div>`;
+}
+/* what a finished count gave, on the summary */
+function tellingFroHtml(id, v) {
+  const b = tellingBelonning()[id], y = new Date(v.start).getFullYear();
+  const t = { korps: `+${fmtFro(FRO.merker.tellekorps)} frø: Tellekorps ${y}, årets første hagefugltelling.`, neste: `+${fmtFro(FRO.tellingNeste)} frø for hagefugltellingen.`,
+    'samme-dag': 'Du har alt fått frø for en telling denne dagen.', kort: 'Tellinger under én time gir ikke frø.', tom: 'En telling uten arter gir ikke frø.' }[b];
+  return t ? `<p class="sum-fro${b === 'korps' || b === 'neste' ? ' gir' : ''}">${b === 'korps' || b === 'neste' ? FROIKON : ''}${t}</p>` : '';
 }
 function somTekst(v) {
   const slutt = v.slutt || Date.now(), { arter, ind } = sumAv(v);
@@ -6010,7 +6037,7 @@ function navnSideHtml(modus) {
 }
 /* the last card: the tasks, the first three with a tick when done, how many more and the seeds for all */
 function oppdragSideHtml() {
-  const ol = oppdragLogg(), liste = oppdragListe(), neste = nesteOppdrag(liste, ol), sum = liste.reduce((a, o) => a + oppdragFro(o), 0);
+  const ol = oppdragLogg(), liste = oppdragListe(), neste = nesteOppdrag(liste, ol), sum = liste.reduce((a, o) => a + oppdragVisFro(o), 0);
   const tekst = !neste ? 'Du har fullført alle oppdragene.' : neste.id === 'forste' ? 'Fullfør små oppdrag og få frø. Det første er å registrere din første fugl.'
     : `Fullfør små oppdrag og få frø. Neste er: ${neste.tekst.charAt(0).toLowerCase() + neste.tekst.slice(1)}.`;
   return `<section class="intro-side" data-s="oppdrag" aria-labelledby="introToppdrag"><div class="intro-bilde"><div class="intro-oppdrag">
@@ -6366,8 +6393,8 @@ function paintOppdrag() {
   if (el.hidden) return;
   const o = nesteOppdrag(liste, ol);
   $('#osTekst').innerHTML = `<small>Neste oppdrag</small><b>${esc(o.tekst)}</b>`;
-  $('#osFro').innerHTML = `${FROIKON}${fmtFro(oppdragFro(o))}`;
-  $('#osApne').setAttribute('aria-label', `Neste oppdrag: ${o.tekst}, ${fmtFro(oppdragFro(o))} frø. Vis alle oppdragene`);
+  $('#osFro').innerHTML = `${FROIKON}${fmtFro(oppdragVisFro(o))}`;
+  $('#osApne').setAttribute('aria-label', `Neste oppdrag: ${o.tekst}, ${fmtFro(oppdragVisFro(o))} frø. Vis alle oppdragene`);
 }
 $('#oppdragStripe .os-ikon').innerHTML = MIKON.oppdrag;
 $('#osApne').addEventListener('click', () => openStats('merker'));
