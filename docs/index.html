@@ -1054,7 +1054,8 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .alb.g4::before{background:linear-gradient(135deg,#ff8a8a,#ffe066,#8dff85,#7ee8ff,#9b8cff,#ff8ad8)}
 
 .restore textarea{width:100%;min-height:90px;border-radius:10px;border:1px solid var(--line);background:var(--bg-hi);padding:10px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
-/* counting sheets: start, list of species, summary */
+/* counting: the Telling tab (how to count, the area, Start), the list of species, the summary */
+.tl-lead{margin-top:4px}
 .lead{font-size:15px;line-height:1.5;margin:16px 0 0}
 .fakta{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px;line-height:1.4;color:var(--muted)}
 .fakta li{padding-left:18px;position:relative}
@@ -1439,22 +1440,6 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <div id="butikkBody" role="tabpanel" tabindex="-1"></div>
 </section>
 
-<section class="sheet stats" id="startSheet" role="dialog" aria-modal="true" aria-labelledby="startTitle">
-  <div class="s-head">
-    <h2 id="startTitle">Hagefugltelling</h2>
-    <button class="textbtn" id="closeStart">Lukk</button>
-  </div>
-  <p class="lead">For hver art teller du det høyeste antallet du ser <b>samtidig</b>, ikke alle du ser i løpet av tellingen.</p>
-  <ul class="fakta">
-    <li>Tell gjerne i minst én time. Klokka går øverst mens du teller.</li>
-    <li>Bla til kortet og trykk +, eller åpne telleliste for å finne arten raskt. Du kan også skrive inn tallet.</li>
-    <li>Ekorn står i telleliste, siden det er med i skjemaet.</li>
-    <li>Når du avslutter, får du tallene i samme rekkefølge som skjemaet på Fuglevennen.no, og alle artene du har talt får en observasjonsdag.</li>
-  </ul>
-  <p class="cap tl-birdlife">Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar. <span id="tlNeste"></span> Tallene sendes inn på <a href="https://www.fuglevennen.no/" target="_blank" rel="noopener">Fuglevennen.no</a>.</p>
-  <label class="felt">Område (valgfritt)<input id="tOmrade" maxlength="80" autocomplete="off" placeholder="f.eks. Hagen hjemme"></label>
-  <button class="btn pri big" id="tStart">Start telling</button>
-</section>
 
 <section class="sheet stats" id="listeSheet" role="dialog" aria-modal="true" aria-labelledby="listeTitle">
   <div class="s-head">
@@ -2067,7 +2052,7 @@ function helgTekst(h, { lang = false, aar = true } = {}) {
   const a = `${l.getDate()}.${m ? `\u00a0${MND_LANG[l.getMonth()]}` : ''}`, b = `${s.getDate()}.\u00a0${MND_LANG[s.getMonth()]}${aar ? ` ${s.getFullYear()}` : ''}`;   // no break before the month
   return lang ? `lørdag ${a} og søndag ${b}` : `${a}–${b}`;
 }
-/* the start page and the Telling tab: «Neste gang: lørdag 30. og søndag 31. januar 2027.» */
+/* the Telling tab: «Neste gang: lørdag 30. og søndag 31. januar 2027.» */
 const helgSetning = () => { const h = helgEtter(); return `${Date.now() >= h.fra ? 'Årets telling er nå' : 'Neste gang'}: ${helgTekst(h, { lang: true })}.`; };
 /* Tellekorps only in the weekend from 15 November 2026; a count started before keeps what it gave then (the year's
    first good count, any day) */
@@ -3561,8 +3546,17 @@ function renderStats() {
     </ul></div>` : ''}`,
     telling: () => `
     <div class="s-sec"><h3>Hagefugltelling</h3>
-      <p class="cap" style="margin:0 0 12px">Tell det høyeste antallet av hver art du ser samtidig, og send tallene til Hagefugltellingen på Fuglevennen.no. Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar. ${helgSetning()}</p>
-      <button class="btn pri" id="${aktivT ? 'goTell' : 'openStart'}">${aktivT ? 'Tilbake til tellingen' : 'Start telling'}</button>
+      <p class="lead tl-lead">For hver art teller du det høyeste antallet du ser <b>samtidig</b>, ikke alle du ser i løpet av tellingen.</p>
+      <ul class="fakta">
+        <li>Tell gjerne i minst én time. Klokka går øverst mens du teller.</li>
+        <li>Bla til kortet og trykk +, eller åpne telleliste for å finne arten raskt. Du kan også skrive inn tallet.</li>
+        <li>Ekorn står i telleliste, siden det er med i skjemaet.</li>
+        <li>Når du avslutter, får du tallene i samme rekkefølge som skjemaet på Fuglevennen.no, og alle artene du har talt får en observasjonsdag.</li>
+      </ul>
+      <p class="cap tl-birdlife">Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar. ${helgSetning()} Tallene sendes inn på <a href="https://www.fuglevennen.no/" target="_blank" rel="noopener">Fuglevennen.no</a>.</p>
+      ${aktivT ? '<button class="btn pri big" id="goTell">Tilbake til tellingen</button>'
+        : `<label class="felt">Område (valgfritt)<input id="tOmrade" maxlength="80" autocomplete="off" enterkeyhint="go" placeholder="f.eks. Hagen hjemme" value="${esc(lsGet(brukerNokkel('hagefugler:omrade')) || '')}"></label>
+      <button class="btn pri big" id="tStart">Start telling</button>`}
       ${ferdigeT.length ? `<ul class="recent tl-hist">${ferdigeT.map(id => { const v = Tell.data[id], x = sumAv(v), d = new Date(v.start); return `<li><button data-tid="${id}"><span class="ph tdato" aria-hidden="true"><span>${d.getDate()}.<small>${MND[d.getMonth()]}</small></span></span><span><b style="font-weight:600">${esc(stor(datoLang(v.start)))}</b><br><span style="font-size:12.5px;color:var(--muted)">${flertall(x.arter, 'art', 'arter')} · ${flertall(x.ind, 'individ', 'individer')} · ${varighet(v.slutt - v.start)}${v.omrade ? ` · ${esc(v.omrade)}` : ''}</span></span><span></span></button></li>`; }).join('')}</ul>` : ''}
     </div>`,
     kort: () => `
@@ -3609,7 +3603,7 @@ sb.addEventListener('click', async e => {
   if (e.target.closest('[data-del-pa]')) { visIntro('slaPa', () => openStats('tavle')); return; }
   if (e.target.closest('[data-oppdrag-vis]')) { lsDel(OPPDRAG_SKJULT()); paintOppdrag(); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
   const og = e.target.closest('[data-oppdrag-gaa]');
-  if (og) { const g = og.dataset.oppdragGaa; if (g === 'tavle') velgFane('tavle'); else if (g === 'butikk') openButikk(); else if (g === 'sok') { closeSheets(true); openSearch(); } else if (g === 'telling') openStart(); return; }
+  if (og) { const g = og.dataset.oppdragGaa; if (g === 'tavle') velgFane('tavle'); else if (g === 'butikk') openButikk(); else if (g === 'sok') { closeSheets(true); openSearch(); } else if (g === 'telling') velgFane('telling'); return; }
   const tr = e.target.closest('[data-tavle-rad]');
   if (tr) { tavleRad(tr.dataset.tavleRad); return; }
   if (e.target.closest('[data-profillukk]')) { lukkProfil(); return; }
@@ -3650,7 +3644,7 @@ sb.addEventListener('click', async e => {
   if (tl) { openSum(tl.dataset.tid); return; }
   const j = e.target.closest('[data-i]');
   if (j) { closeSheets(true); jump(+j.dataset.i); return; }
-  if (e.target.id === 'openStart') { openStart(); return; }
+  if (e.target.id === 'tStart') { startTelling(); return; }
   if (e.target.id === 'goTell') { closeSheets(); return; }
   if (e.target.id === 'copyBackup') {
     const txt = sikkerhetskopi();
@@ -3714,7 +3708,7 @@ sb.addEventListener('click', async e => {
 
 /* ---- Hagefugltelling: start, counter, list of species, summary ---- */
 const tellebar = $('#tellebar'), teller = $('#teller'), tlAnt = $('#tlAnt');
-const startSheet = $('#startSheet'), listeSheet = $('#listeSheet'), sumSheet = $('#sumSheet');
+const listeSheet = $('#listeSheet'), sumSheet = $('#sumSheet');
 let kol; try { kol = new Intl.Collator('nb'); } catch (e) { kol = { compare: (a, b) => a.localeCompare(b) }; }
 const pad2 = n => String(n).padStart(2, '0');
 const isoAv = ms => { const d = new Date(ms); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
@@ -3765,24 +3759,19 @@ tlAnt.addEventListener('change', () => Tell.settAntall(CARDS[cur].key, tlAnt.val
 tlAnt.addEventListener('focus', () => tlAnt.select());
 tlAnt.addEventListener('keydown', e => { if (e.key === 'Enter') tlAnt.blur(); });
 
-function openStart() {
+/* «Start telling» in the Telling tab (Min fugleliste) starts the count at once, with the area; the life list's mode
+   ends first. The tab says how to count, so there is no window of its own */
+function startTelling() {
   if (Tell.aktiv()) { closeSheets(); return; }
+  const inp = $('#tOmrade'), omrade = (inp ? inp.value : '').trim().slice(0, 80);
   if (forModus) avsluttForModus(false);
-  $('#tOmrade').value = lsGet(brukerNokkel('hagefugler:omrade')) || '';
-  $('#tlNeste').textContent = helgSetning();
-  showSheet(startSheet);
-  setTimeout(() => $('#tStart').focus(), 60);
-}
-$('#closeStart').addEventListener('click', () => closeSheets());
-$('#tStart').addEventListener('click', () => {
-  if (Tell.aktiv()) { closeSheets(); return; }
-  const omrade = $('#tOmrade').value.trim().slice(0, 80);
   lsSet(brukerNokkel('hagefugler:omrade'), omrade);
   timeVarslet = false;
   Tell.start(omrade);
   closeSheets(true);
   si('Tellingen er i gang. Bla til arten og trykk +, eller åpne telleliste.');
-});
+}
+sb.addEventListener('keydown', e => { if (e.target.id === 'tOmrade' && e.key === 'Enter') { e.preventDefault(); startTelling(); } });   // Enter in the area starts too
 
 /* the list: every species with its own counter, the commonest garden birds first, ekorn on top */
 const tlisteEl = $('#tliste'), lq = $('#lq');
@@ -5180,7 +5169,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '163457a682';
+const APPVERSJON = 'f30b30cce9';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };

@@ -1,8 +1,9 @@
 """The task «Gjennomfør en hagefugltelling»: first in the list (and on «Kom i gang» in the introduction), done by a
 finished count of at least an hour (not by one of 30 minutes), showing 75 000 seeds (they come from Tellekorps; the
-task gives none of its own), the button «Tell» opens the count; the strip «Neste oppdrag» and the introduction's text
-show it first from 1 January to 15 February only (the small tasks first the rest of the year); BirdLife Norge named on
-the count pages, with the next weekend; the help card «Om kortene» says «Hagefugler». The seeds of the counts: the
+task gives none of its own), the button «Tell» goes to the Telling tab, which says how to count and starts the count
+at once (no window of its own); the strip «Neste oppdrag» shows it first from 1 January until Hagefugltellingen's
+weekend is over (the small tasks first the rest of the year); BirdLife Norge named in the Telling tab and the summary,
+with the next weekend; the introduction: a card on Hagefugltellingen, «Frøbutikken», all the tasks without a sum; the help card «Om kortene» says «Hagefugler». The seeds of the counts: the
 first good count (an hour or more, with species) in Hagefugltellingen's weekend (the last Saturday of January and the
 Sunday) 75 000 via Tellekorps, once a year, and the task is done; counts started before 15 November 2026 keep the old
 rule (the year's first good count, any day); every other good count 3 000 (at most one a day, not the day of
@@ -91,10 +92,21 @@ async def main():
             sjekk('de andre oppdragene som før', [o['t'] for o in ls[1:4]] == ['Registrer din første fugl', 'Finn en fugl med søket', 'Registrer tre ulike arter'], [o['t'] for o in ls])
             if BILDER: await pg.screenshot(path=str(BILDER / 'oppdrag_liste.png'))
             await pg.evaluate("document.querySelector('[data-oppdrag-gaa=telling]').click()"); await pg.wait_for_timeout(700)
-            st = await pg.evaluate("(() => { const s = document.querySelector('#startSheet'); return [!!s && s.classList.contains('on') || getComputedStyle(s).visibility === 'visible', document.querySelector('#startTitle').textContent, ((document.querySelector('.tl-birdlife') || {}).textContent || '').replace(/\u00a0/g, ' ')] })()")
-            sjekk('«Tell» åpner startsiden for tellingen, med BirdLife Norge', st[0] and st[1] == 'Hagefugltelling' and st[2].startswith(BIRDLIFE), st)
-            sjekk('   og neste gang: lørdag 30. og søndag 31. januar 2027', 'Neste gang: lørdag 30. og søndag 31. januar 2027.' in st[2], st[2])
+            st = await pg.evaluate("""(() => { const f = document.querySelector('#faner [aria-selected=true]'), b = document.querySelector('#statsBody');
+                return [f && f.textContent, !!b.querySelector('.tl-lead') && b.querySelector('.tl-lead').textContent, b.querySelectorAll('.fakta li').length, ((b.querySelector('.tl-birdlife') || {}).textContent || '').replace(/ /g, ' '),
+                        !!b.querySelector('#tOmrade'), (b.querySelector('#tStart') || {}).textContent, !!document.querySelector('#startSheet')]; })()""")
+            sjekk('«Tell» bytter til fanen Telling, med forklaringen og BirdLife Norge', st[0] == 'Telling' and st[1] == 'For hver art teller du det høyeste antallet du ser samtidig, ikke alle du ser i løpet av tellingen.' and st[2] == 4 and st[3].startswith(BIRDLIFE), st)
+            sjekk('   og neste gang: lørdag 30. og søndag 31. januar 2027', 'Neste gang: lørdag 30. og søndag 31. januar 2027.' in st[3], st[3])
+            sjekk('   med området og «Start telling», og uten eget startvindu', st[4] and st[5] == 'Start telling' and not st[6], st)
             if BILDER: await pg.screenshot(path=str(BILDER / 'oppdrag_start.png'))
+            await pg.evaluate("document.querySelector('#tOmrade').value = 'Hagen hjemme'; document.querySelector('#tStart').click()"); await pg.wait_for_timeout(800)
+            ig = await pg.evaluate("""(() => { const t = JSON.parse(localStorage.getItem('hagefugler:tellinger:v1') || '{}'), a = Object.values(t).find(v => !v.slutt);
+                return [!!a, a && a.omrade, localStorage.getItem('hagefugler:omrade'), !!document.querySelector('.sheet.on'), !document.querySelector('#tTid').closest('[hidden]')]; })()""")
+            sjekk('«Start telling» starter tellingen med en gang: området lagret, vinduet lukket, klokka går', ig == [True, 'Hagen hjemme', 'Hagen hjemme', False, True], ig)
+            await pg.evaluate("document.querySelector('#openStats').click()"); await pg.wait_for_timeout(500)
+            await pg.evaluate("document.querySelector('#fane-telling').click()"); await pg.wait_for_timeout(600)
+            gt = await pg.evaluate("[(document.querySelector('#goTell') || {}).textContent, !!document.querySelector('#tStart'), !!document.querySelector('#tOmrade')]")
+            sjekk('   mens den pågår: «Tilbake til tellingen» i fanen', gt == ['Tilbake til tellingen', False, False], gt)
             sjekk('ingen JS-feil', not js, js); await ctx.close()
 
             print('=== januar og 16. februar: stripa')
