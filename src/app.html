@@ -1179,6 +1179,8 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .o-ring svg{width:14px;height:14px}
 .oppdrag li.ok .o-ring{background:var(--ok);box-shadow:none;color:#fff}
 .o-t{flex:1;min-width:0}
+.o-t small{display:block;margin-top:2px;font-size:12px;line-height:1.35;color:var(--muted)}
+.tl-birdlife{margin:14px 0 2px}.tl-birdlife a{color:var(--spruce-ink);font-weight:600;text-underline-offset:2px}
 .oppdrag li.ok .o-t{color:var(--muted)}
 .o-gaa{padding:5px 10px;font-size:12.5px}
 .o-fro{display:flex;align-items:center;gap:4px;font-weight:700;font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -1400,6 +1402,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <li>Ekorn står i telleliste, siden det er med i skjemaet.</li>
     <li>Når du avslutter, får du tallene i samme rekkefølge som skjemaet på Fuglevennen.no, og alle artene du har talt får en observasjonsdag.</li>
   </ul>
+  <p class="cap tl-birdlife">Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar. Tallene sendes inn på <a href="https://www.fuglevennen.no/" target="_blank" rel="noopener">Fuglevennen.no</a>.</p>
   <label class="felt">Område (valgfritt)<input id="tOmrade" maxlength="80" autocomplete="off" placeholder="f.eks. Hagen hjemme"></label>
   <button class="btn pri big" id="tStart">Start telling</button>
 </section>
@@ -1926,7 +1929,7 @@ const FRO = {
   dagMerkeForste: 10000,                     // the «5 dager» badge
   dagMerke: 2000,                            // each «N dager» badge after that: one for every 5 observation days
   arsliste: { 10: 5000, 15: 12500, 20: 25000, 25: 50000 },   // species seen in one calendar year
-  oppdrag: { forste: 1000, sok: 500, arter3: 1500, tavle: 500, dager2: 1500, kjop: 1000, arter5: 2000, dager3: 2000 },   // «Kom i gang»
+  oppdrag: { telling: 3000, forste: 1000, sok: 500, arter3: 1500, tavle: 500, dager2: 1500, kjop: 1000, arter5: 2000, dager3: 2000 },   // «Kom i gang»
   angreTid: 120000,                          // the newest purchase or move can be undone for 2 minutes
   flyttPerReg: 0.05,                         // moving a multiplier early: this share of its price per registration missing
 };
@@ -2112,8 +2115,12 @@ function nyheter(for_) {
    Small tasks for the first days, each with seeds (FRO.oppdrag). Most are read from the data, like the badges; two
    are things you do (find a bird with the search, see yourself on the board). A task done stays done, also if a
    sighting is deleted or a purchase undone: the day it was done is kept per user on this device, and the seeds
-   count from that list. */
+   count from that list. The garden bird count is first in the list (and on «Kom i gang» in the introduction), but on
+   the strip and in the introduction's text only in the weeks before and during Hagefugltellingen (sesong: see
+   nesteOppdrag); a count of at least an hour, as Fuglevennen recommends and as for Tellekorps. */
 const OPPDRAG = [
+  { id: 'telling', tekst: 'Gjennomfør en hagefugltelling', under: 'Tell fuglene i hagen i minst én time, og send tallene til Hagefugltellingen på Fuglevennen.no.',
+    v: t => t.langeTellinger >= 1, gaa: 'telling', sesong: true },
   { id: 'forste', tekst: 'Registrer din første fugl', v: t => t.arter >= 1 },
   { id: 'sok', tekst: 'Finn en fugl med søket', gaa: 'sok' },
   { id: 'arter3', tekst: 'Registrer tre ulike arter', v: t => t.arter >= 3 },
@@ -3299,17 +3306,25 @@ function strekHtml(nt) {
     <p class="cap strek-neste">${n ? '' : 'Ingen observasjonsdager ennå. '}${igjen === 1 ? '1 dag' : `${igjen} dager`} igjen til neste merke · ${fmtFro(fro)} frø</p>`;
 }
 /* «Kom i gang» in Merker: at the top while there are tasks left, at the bottom when all are done. The tasks you
-   can go and do have a button there (search, the board, Frøbutikken) */
+   can go and do have a button there (the count, search, the board, Frøbutikken) */
 const oppdragListe = () => { const ol = oppdragLogg(); return OPPDRAG.filter(o => !o.deling || deler() || ol[o.id]); };
+/* the next task on the strip and in the introduction: the first one left, but a seasonal one (the garden bird count) only
+   from 1 January to 15 February, before and during Hagefugltellingen (the last weekend of January); the rest of the year
+   the small tasks come first, and the count only when it is the last one left */
+const telletid = () => todayISO().slice(5) <= '02-15';
+function nesteOppdrag(liste = oppdragListe(), ol = oppdragLogg()) {
+  const igjen = liste.filter(o => !ol[o.id]);
+  return igjen.find(o => !o.sesong || telletid()) || igjen[0];
+}
 const oppdragFerdig = () => { const ol = oppdragLogg(); return oppdragListe().every(o => ol[o.id]); };
 function oppdragHtml() {
   const ol = oppdragLogg(), liste = oppdragListe(), ferdig = liste.filter(o => ol[o.id]).length;
   return `<div class="s-sec" id="oppdragSek"><h3>Kom i gang <span class="h3n">${ferdig} av ${liste.length}</span></h3>
-    <p class="cap" style="margin:0 0 10px">${ferdig === liste.length ? 'Alle oppdragene er fullført.' : 'Små oppdrag for de første dagene. Hvert oppdrag gir frø.'}${ferdig < liste.length && lsGet(OPPDRAG_SKJULT()) ? ' <button class="textbtn o-vis" data-oppdrag-vis>Vis neste oppdrag på forsiden</button>' : ''}</p>
+    <p class="cap" style="margin:0 0 10px">${ferdig === liste.length ? 'Alle oppdragene er fullført.' : 'Små oppdrag for de første dagene, og en hagefugltelling. Hvert oppdrag gir frø.'}${ferdig < liste.length && lsGet(OPPDRAG_SKJULT()) ? ' <button class="textbtn o-vis" data-oppdrag-vis>Vis neste oppdrag på forsiden</button>' : ''}</p>
     <ul class="oppdrag">${liste.map(o => { const ok = !!ol[o.id], gaa = !ok && o.gaa && (o.gaa !== 'tavle' || deler());
       return `<li class="${ok ? 'ok' : ''}"><span class="o-ring" aria-hidden="true">${ok ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5.5 12.5 4 4 9-9"/></svg>' : ''}</span>
-        <span class="o-t">${esc(o.tekst)}${ok ? '<span class="sr">, fullført</span>' : ''}</span>
-        ${gaa ? `<button class="btn o-gaa" data-oppdrag-gaa="${o.gaa}">${o.gaa === 'sok' ? 'Søk' : o.gaa === 'tavle' ? 'Tavlen' : 'Butikken'}</button>` : ''}
+        <span class="o-t">${esc(o.tekst)}${ok ? '<span class="sr">, fullført</span>' : o.under ? `<small>${esc(o.under)}</small>` : ''}</span>
+        ${gaa ? `<button class="btn o-gaa" data-oppdrag-gaa="${o.gaa}">${{ telling: 'Tell', sok: 'Søk', tavle: 'Tavlen' }[o.gaa] || 'Butikken'}</button>` : ''}
         <span class="o-fro">${FROIKON}${fmtFro(oppdragFro(o))}</span></li>`; }).join('')}</ul>
   </div>`;
 }
@@ -3450,7 +3465,7 @@ function renderStats() {
     </ul></div>` : ''}`,
     telling: () => `
     <div class="s-sec"><h3>Hagefugltelling</h3>
-      <p class="cap" style="margin:0 0 12px">Tell det høyeste antallet av hver art du ser samtidig, og send tallene til Hagefugltellingen på Fuglevennen.no.</p>
+      <p class="cap" style="margin:0 0 12px">Tell det høyeste antallet av hver art du ser samtidig, og send tallene til Hagefugltellingen på Fuglevennen.no. Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar.</p>
       <button class="btn pri" id="${aktivT ? 'goTell' : 'openStart'}">${aktivT ? 'Tilbake til tellingen' : 'Start telling'}</button>
       ${ferdigeT.length ? `<ul class="recent tl-hist">${ferdigeT.map(id => { const v = Tell.data[id], x = sumAv(v), d = new Date(v.start); return `<li><button data-tid="${id}"><span class="ph tdato" aria-hidden="true"><span>${d.getDate()}.<small>${MND[d.getMonth()]}</small></span></span><span><b style="font-weight:600">${esc(stor(datoLang(v.start)))}</b><br><span style="font-size:12.5px;color:var(--muted)">${flertall(x.arter, 'art', 'arter')} · ${flertall(x.ind, 'individ', 'individer')} · ${varighet(v.slutt - v.start)}${v.omrade ? ` · ${esc(v.omrade)}` : ''}</span></span><span></span></button></li>`; }).join('')}</ul>` : ''}
     </div>`,
@@ -3498,7 +3513,7 @@ sb.addEventListener('click', async e => {
   if (e.target.closest('[data-del-pa]')) { visIntro('slaPa', () => openStats('tavle')); return; }
   if (e.target.closest('[data-oppdrag-vis]')) { lsDel(OPPDRAG_SKJULT()); paintOppdrag(); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
   const og = e.target.closest('[data-oppdrag-gaa]');
-  if (og) { const g = og.dataset.oppdragGaa; if (g === 'tavle') velgFane('tavle'); else if (g === 'butikk') openButikk(); else if (g === 'sok') { closeSheets(true); openSearch(); } return; }
+  if (og) { const g = og.dataset.oppdragGaa; if (g === 'tavle') velgFane('tavle'); else if (g === 'butikk') openButikk(); else if (g === 'sok') { closeSheets(true); openSearch(); } else if (g === 'telling') openStart(); return; }
   const tr = e.target.closest('[data-tavle-rad]');
   if (tr) { tavleRad(tr.dataset.tavleRad); return; }
   if (e.target.closest('[data-profillukk]')) { lukkProfil(); return; }
@@ -3728,7 +3743,7 @@ function renderSum() {
     ${aktiv && ms < 3600000 ? `<p class="varsel">Tellingen har vart i ${varighet(ms)}. Fuglevennen anbefaler å telle i minst én time.</p>` : ''}
     <div class="sum-tall"><div><b>${arter}</b><span>${arter === 1 ? 'art' : 'arter'}</span></div><div><b>${ind}</b><span>${ind === 1 ? 'individ' : 'individer'}</span></div></div>
     ${rader.length ? `<ul class="skjema">${rader.map(r => `<li><span>${esc(r.navn)}</span><b>${r.n}</b></li>`).join('')}</ul>
-      <p class="cap">Samme rekkefølge som skjemaet på Fuglevennen.no, så du kan skrive av rett nedover. Arter som ikke står i skjemaet, legger du til under lista der.</p>
+      <p class="cap">Samme rekkefølge som skjemaet på Fuglevennen.no, så du kan skrive av rett nedover. Arter som ikke står i skjemaet, legger du til under lista der. Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar.</p>
 `
       : `<p class="cap">Ingen arter er talt ennå.</p>`}
     <div class="row">
@@ -5995,7 +6010,7 @@ function navnSideHtml(modus) {
 }
 /* the last card: the tasks, the first three with a tick when done, how many more and the seeds for all */
 function oppdragSideHtml() {
-  const ol = oppdragLogg(), liste = oppdragListe(), neste = liste.find(o => !ol[o.id]), sum = liste.reduce((a, o) => a + oppdragFro(o), 0);
+  const ol = oppdragLogg(), liste = oppdragListe(), neste = nesteOppdrag(liste, ol), sum = liste.reduce((a, o) => a + oppdragFro(o), 0);
   const tekst = !neste ? 'Du har fullført alle oppdragene.' : neste.id === 'forste' ? 'Fullfør små oppdrag og få frø. Det første er å registrere din første fugl.'
     : `Fullfør små oppdrag og få frø. Neste er: ${neste.tekst.charAt(0).toLowerCase() + neste.tekst.slice(1)}.`;
   return `<section class="intro-side" data-s="oppdrag" aria-labelledby="introToppdrag"><div class="intro-bilde"><div class="intro-oppdrag">
@@ -6346,10 +6361,10 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) plan
 
 /* ---- the next task, in a strip under the top ---- */
 function paintOppdrag() {
-  const el = $('#oppdragStripe'), ol = oppdragLogg(), igjen = oppdragListe().filter(o => !ol[o.id]);
+  const el = $('#oppdragStripe'), ol = oppdragLogg(), liste = oppdragListe(), igjen = liste.filter(o => !ol[o.id]);
   el.hidden = !igjen.length || !!lsGet(OPPDRAG_SKJULT());
   if (el.hidden) return;
-  const o = igjen[0];
+  const o = nesteOppdrag(liste, ol);
   $('#osTekst').innerHTML = `<small>Neste oppdrag</small><b>${esc(o.tekst)}</b>`;
   $('#osFro').innerHTML = `${FROIKON}${fmtFro(oppdragFro(o))}`;
   $('#osApne').setAttribute('aria-label', `Neste oppdrag: ${o.tekst}, ${fmtFro(oppdragFro(o))} frø. Vis alle oppdragene`);

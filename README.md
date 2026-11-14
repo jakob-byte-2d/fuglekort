@@ -182,10 +182,11 @@ Frøene tjenes ved å registrere fugler og samles i to tall: **frø samlet** (al
 
 ## Oppdrag: «Kom i gang»
 
-Små oppdrag for de første dagene, hvert med frø (`OPPDRAG` og `FRO.oppdrag`, til sammen 10 000):
+Små oppdrag for de første dagene, og en hagefugltelling, hvert med frø (`OPPDRAG` og `FRO.oppdrag`, til sammen 13 000):
 
 | Oppdrag | Frø |
 |---|---|
+| Gjennomfør en hagefugltelling (en avsluttet telling på minst én time, som Fuglevennen anbefaler og som for Tellekorps; knappen **Tell** åpner tellingen) | 3 000 |
 | Registrer din første fugl | 1 000 |
 | Finn en fugl med søket (trykk på et søketreff) | 500 |
 | Registrer tre ulike arter | 1 500 |
@@ -195,7 +196,9 @@ Små oppdrag for de første dagene, hvert med frø (`OPPDRAG` og `FRO.oppdrag`, 
 | Registrer fem arter | 2 000 |
 | Registrer fugler på tre ulike dager | 2 000 |
 
-De fleste leses av observasjonene og kjøpene, som merkene. Et oppdrag som er gjort, forblir gjort (også om en registrering slettes eller et kjøp angres): dagen lagres per bruker på telefonen (`fuglekort:oppdrag`), og frøene regnes av den lista. Frøene teller som tjente frø (titler og tavle) og står som «Oppdrag» under Solsikkefrø i Profil (premiene fra ledertavla står som «Premier»). Neste oppdrag står i en smal stripe under toppen; et trykk åpner Merker, og × skjuler stripen (den kan hentes tilbake under Merker). I fanen Merker står «Kom i gang · 3 av 8» øverst med en sjekkliste og knapper til søket, tavlen og butikken, og nederst når alt er gjort. Hvert oppdrag feires som et merke med frøene som strømmer til telleren; oppdrag gjort i et panel feires når panelet lukkes. Oppdrag som var gjort før de fantes (eller kom med en sikkerhetskopi), samles i én feiring, f.eks. «5 oppdrag fullført! · Kom i gang · 7 000 frø».
+De fleste leses av observasjonene og kjøpene, som merkene. Et oppdrag som er gjort, forblir gjort (også om en registrering slettes eller et kjøp angres): dagen lagres per bruker på telefonen (`fuglekort:oppdrag`), og frøene regnes av den lista. Frøene teller som tjente frø (titler og tavle) og står som «Oppdrag» under Solsikkefrø i Profil (premiene fra ledertavla står som «Premier»).
+
+**Hagefugltellingen øverst, men i sesong.** Tellingen står øverst i lista (og blant de tre på «Kom i gang» i introduksjonen) hele året. Stripa «Neste oppdrag» og introteksten viser det neste oppdraget som ikke er gjort (`nesteOppdrag`), men tellingen (`sesong: true`) bare fra 1. januar til 15. februar, før og under Hagefugltellingen (BirdLife Norge, siste helga i januar); resten av året kommer de små oppdragene først, og tellingen bare når den er den siste som står igjen. Startsiden for tellingen, fanen Telling og oppsummeringen sier at Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar. `tests/oppdrag_test.py` sjekker dette. Neste oppdrag står i en smal stripe under toppen; et trykk åpner Merker, og × skjuler stripen (den kan hentes tilbake under Merker). I fanen Merker står «Kom i gang · 3 av 8» øverst med en sjekkliste og knapper til søket, tavlen og butikken, og nederst når alt er gjort. Hvert oppdrag feires som et merke med frøene som strømmer til telleren; oppdrag gjort i et panel feires når panelet lukkes. Oppdrag som var gjort før de fantes (eller kom med en sikkerhetskopi), samles i én feiring, f.eks. «5 oppdrag fullført! · Kom i gang · 7 000 frø».
 
 ## Testmodus
 
@@ -346,7 +349,7 @@ Artefakten «app» kan ikke lastes ned fra Claude sin arbeidsflate (GitHub sende
 
 Telefonene får de nye bildene fordi navnet på hurtigbufferen i service workeren regnes av innholdet (`build.py`). Ved installering henter den alle filene med `cache: 'reload'`, rett fra nettet og ikke fra nettleserens egen hurtigbuffer, så en ny versjon ikke får med et gammelt kortbilde.
 
-Skriptet kopierer kortene, de to forklaringskortene, baksiden (Hagefugler-baksiden i `data/bakside.webp`; Fuglekort-builder har «Fuglekort» på sin), fotosettet og tegneseriesettet (se over), finner SETT-ruta og datolinja, lager `data/cards.json`, miniatyrene og app-ikonene, og kjører `build.py`. Avkrysningene lagres på artens latinske navn (f.eks. `parus-major`), ikke på kortnummeret, så de følger fuglen når kortene får ny rekkefølge. Avkrysninger fra før dette (lagret på kortnummer) flyttes over automatisk ved hjelp av `data/tidligere_nummer.json`.
+Skriptet kopierer kortene, de to forklaringskortene, baksiden (Hagefugler-baksiden i `data/bakside.webp`; Fuglekort-builder har også «Hagefugler» på sin fra 13. november 2026), fotosettet og tegneseriesettet (se over), finner SETT-ruta og datolinja, lager `data/cards.json`, miniatyrene og app-ikonene, og kjører `build.py`. Avkrysningene lagres på artens latinske navn (f.eks. `parus-major`), ikke på kortnummeret, så de følger fuglen når kortene får ny rekkefølge. Avkrysninger fra før dette (lagret på kortnummer) flyttes over automatisk ved hjelp av `data/tidligere_nummer.json`.
 
 Miniatyrene i `docs/sprites/` er rutenett med 10 kolonner og én rad per ti kort. Appen regner ut antall rader selv.
 

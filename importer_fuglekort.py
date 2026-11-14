@@ -147,7 +147,7 @@ def main(app):
     for f in (bonus.get("fotosett") or {}).get("forklaringskort", []):
         shutil.copy(app / f["kortbilde"], DOCS / "cards-foto" / f"{f['id']}.webp")
         hjelp_bonus_foto.append({"id": f["id"], "navn": f.get("navn") or f.get("tittel"), "bilde": f"cards-foto/{f['id']}.webp"})
-    # baksiden: Hagefugler-baksiden i data/bakside.webp når den finnes (Fuglekort-builder har «Fuglekort» på sin),
+    # baksiden: Hagefugler-baksiden i data/bakside.webp når den finnes (Fuglekort-builder har også «Hagefugler» på sin fra november 2026),
     # ellers den fra Fuglekort-builder. App-ikonene lages av den samme
     bakside = ROT / "data" / "bakside.webp"
     if not bakside.is_file():
