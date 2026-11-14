@@ -70,7 +70,7 @@ async def kjor(b, navn, rot, url, egen, bredde, hoyde, alt=True):
         sjekk('«(FØR)» er skjult utenfor modusen', await topp("getComputedStyle(el.querySelector('.forord')).opacity") == '0')
         # the choice before the walk-through: optional, Start / Ikke nå
         await trykk('#openMeny', 300); await trykk('#openFor', 600)
-        sjekk('valget før start: «Livslisten – valgfritt», Start og Ikke nå', await pg.evaluate("[document.querySelector('#dlgT').textContent, document.body.classList.contains('formodus'), [...document.querySelectorAll('#dlgKnapper .btn')].map(b => b.textContent), document.querySelector('#dlgTekst').textContent.includes('helt valgfritt'), document.querySelector('#dlgTekst').textContent.includes('allerede 1 art')]")
+        sjekk('valget før start: «Livslisten – valgfritt», Start og Ikke nå', await pg.evaluate("[document.querySelector('#dlgT').textContent, document.body.classList.contains('formodus'), [...document.querySelectorAll('#dlgKnapper .btn')].map(b => b.textContent), document.querySelector('#dlgTekst p').textContent === 'Merk fuglene du har sett før du begynte med appen, gjerne med år.', document.querySelector('#dlgTekst').textContent.includes('allerede 1 art')]")
               == ['Livslisten – valgfritt', False, ['Start', 'Ikke nå'], True, True])
         if alt:
             await trykk('#dlgKnapper [data-k="1"]', 500)
@@ -177,7 +177,7 @@ async def kjor(b, navn, rot, url, egen, bredde, hoyde, alt=True):
             await trykk('.card.is-top [data-act="toggle"]', 900)
             sjekk('utenfor modusen registrerer SETT som før', await pg.evaluate("JSON.parse(localStorage.getItem('hagefugler-oslo:sett:v1'))['turdus-merula'].dager.length") == 3)
         if alt:
-            # the first time: the introduction, then the choice; «Vil du, kan du …»; Ikke nå goes to the cards
+            # the first time: the introduction, then the choice; Ikke nå goes to the cards
             ctx2 = await b.new_context(viewport={'width': bredde, 'height': hoyde}, device_scale_factor=1, has_touch=True, is_mobile=True, service_workers='block')
             await ctx2.route('https://qfustbltxgbpwsntcrpd.supabase.co/**', lambda r: r.abort())
             await ctx2.add_init_script("if (!sessionStorage.getItem('s')) { sessionStorage.setItem('s', '1'); localStorage.clear(); localStorage.setItem('hagefugler:testmerke', '2026-09-30-pluss'); }")
@@ -192,7 +192,7 @@ async def kjor(b, navn, rot, url, egen, bredde, hoyde, alt=True):
                 sistetekst = await p2.evaluate("(document.querySelector('[data-s=oppdrag] > p') || {}).textContent || ''") or sistetekst
                 ikke = await p2.evaluate("(() => { const b = document.querySelector('#inIkke'); return !!b && !b.hidden && b.getBoundingClientRect().width > 0; })()")
                 await p2.evaluate("document.querySelector(%s).click()" % json.dumps('#inIkke' if ikke else '#introNeste')); await p2.wait_for_timeout(700)
-            sjekk('første gang: «Vil du, kan du begynne med livslisten»', 'Vil du, kan du begynne med livslisten' in sistetekst, sistetekst)
+            sjekk('første gang: «Kom i gang» sier bare «Fullfør oppdragene og få frø.»', sistetekst == 'Fullfør oppdragene og få frø.', sistetekst)
             sjekk('første gang: valget kommer etter introduksjonen', await p2.evaluate("[document.querySelector('.dlg.on #dlgT') && document.querySelector('#dlgT').textContent, document.body.classList.contains('formodus')]") == ['Livslisten – valgfritt', False])
             await p2.evaluate("document.querySelector('#dlgKnapper [data-k=\"1\"]').click()"); await p2.wait_for_timeout(600)
             sjekk('første gang: «Ikke nå» går til kortene', await p2.evaluate("[document.body.classList.contains('formodus'), !!document.querySelector('.dlg.on'), !!document.querySelector('.card.is-top')]") == [False, False, True])

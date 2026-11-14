@@ -127,13 +127,20 @@ async def main():
             sjekk('ingen JS-feil', not js, js); await ctx.close()
 
             print('=== første gang: introduksjonen')
-            TEKST = 'Fullfør oppdragene og få frø. Hagefugltellingen er lørdag 30. og søndag 31. januar 2027 og gir 75 000 frø. Vil du, kan du begynne med livslisten: fuglene du har sett før.'
-            BUTIKK = 'Bruk frøene på 17 dyrekort som ekorn, pinnsvin og elg, 9 nye baksider og merker som gir opptil ti ganger så mange frø for en fugl.'
+            TEKST = 'Fullfør oppdragene og få frø.'
+            BUTIKK = 'Bruk frøene på nye dyrekort, baksider eller multiplikatorer.'
+            TELLE = 'Tell fuglene i hagen for BirdLife Norge siste helga i januar. Bruk tellingen i appen: Min fugleliste → Telling.'
+            INTRO = ['Velkommen til Hagefugler', 'Registrer fugler når du ser dem', 'Bli med på Hagefugltellingen', 'Frø og titler', 'Frøbutikken', 'Livslisten']
             for dato, vent in ((nov, TEKST), (jan, TEKST)):
                 ctx, pg, js = await side(b, dato, init(dato, intro=False), intro=False)
-                sider = await pg.evaluate("[...document.querySelectorAll('#introSpor > section')].map(s => [s.querySelector('h2').textContent, (s.querySelector(':scope > p') || {}).textContent || '', !!s.querySelector('.intro-q b'), !!s.querySelector('.intro-q .xdisk'), s.querySelectorAll('.intro-vifte > img').length])")
+                sider = await pg.evaluate("[...document.querySelectorAll('#introSpor > section')].map(s => [s.querySelector('h2').textContent, ((s.querySelector(':scope > p') || {}).textContent || '').replace(/\\u00a0/g, ' '), !!s.querySelector('.intro-q b'), !!s.querySelector('.intro-q .xdisk'), s.querySelectorAll('.intro-vifte > img').length, !!s.querySelector('.intro-tell .intro-ant'), !!s.querySelector('.intro-tell .intro-tid')])")
                 titler = [x[0] for x in sider]
-                sjekk(f'introduksjonen {dato:%d.%m}: «Frøbutikken» etter «Frø og titler»', titler[:5] == ['Velkommen til Hagefugler', 'Registrer fugler når du ser dem', 'Frø og titler', 'Frøbutikken', 'Livslisten'], titler)
+                sjekk(f'introduksjonen {dato:%d.%m}: tellingen etter «Registrer», «Frøbutikken» etter «Frø og titler»', titler[:6] == INTRO, titler)
+                tk = next((x for x in sider if x[0] == 'Bli med på Hagefugltellingen'), None)
+                sjekk('   tellingen: teksten om BirdLife og hvor tellingen er', tk and tk[1] == TELLE, tk)
+                sjekk('   og bildet: et kort med antall og tid, som i tellingen', tk and tk[5] and tk[6], tk)
+                sjekk('   livslisten: «Merk fugler du har sett før i livslisten.», og velkomsten og frøene kortere', [x[1] for x in sider[:6] if x[0] in ('Livslisten', 'Velkommen til Hagefugler', 'Frø og titler')]
+                      == ['Bla gjennom fuglekort for de mest kjente fuglene i Norge.', 'Klarer du å oppnå tittelen Fuglekonge?', 'Merk fugler du har sett før i livslisten.'], [x[1] for x in sider])
                 fb = next((x for x in sider if x[0] == 'Frøbutikken'), None)
                 sjekk('   med teksten om dyrekort, baksider og merker', fb and fb[1] == BUTIKK, fb)
                 sjekk('   og bildet: to baksider, et dyrekort med «?» og ×2', fb and fb[2] and fb[3] and fb[4] == 2, fb)
@@ -161,7 +168,7 @@ async def main():
                 ctx, pg, js = await side(b, nov, lager)
                 await pg.evaluate("document.querySelector('#openIntro').click()"); await pg.wait_for_timeout(800)
                 titler = await pg.evaluate("[...document.querySelectorAll('#introSpor > section h2')].map(h => h.textContent)")
-                sjekk(f'fra menyen{" i den enkle versjonen" if enkel else ""}: {"uten" if enkel else "med"} «Frøbutikken»', ('Frøbutikken' in titler) != enkel, titler)
+                sjekk(f'fra menyen{" i den enkle versjonen" if enkel else ""}: {"uten" if enkel else "med"} «Frøbutikken», med tellingen', ('Frøbutikken' in titler) != enkel and 'Bli med på Hagefugltellingen' in titler, titler)
                 sjekk('   ingen JS-feil', not js, js); await ctx.close()
 
             print('=== frøene for tellingene')

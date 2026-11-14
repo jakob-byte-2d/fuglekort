@@ -1137,6 +1137,12 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .intro-kort img{display:block;width:100%;height:100%;border-radius:inherit}
 .intro-kort .idag-merke{display:flex}
 .intro-kort .tick path{transition-delay:.25s}
+.intro-tell .intro-ant{position:absolute;top:-5cqw;right:-6cqw;width:21cqw;height:21cqw;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#1b1402;
+  font-weight:700;font-size:11cqw;box-shadow:0 0 0 1.3cqw var(--surface),0 6px 14px -6px rgba(var(--shadow),.6)}
+.intro-tell .intro-tid{position:absolute;left:50%;bottom:-4.5cqw;transform:translateX(-50%);display:flex;align-items:baseline;gap:2.6cqw;padding:2.8cqw 5cqw;border-radius:99px;
+  background:var(--surface);box-shadow:0 8px 20px -8px rgba(var(--shadow),.6);font-weight:700;font-size:7.6cqw;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+.intro-tell .intro-tid i{align-self:center;width:3.6cqw;height:3.6cqw;border-radius:50%;background:var(--rec)}
+.intro-tell .intro-tid small{font-weight:500;font-size:5.8cqw;color:var(--muted)}
 .intro-konge{width:min(46vw,30vh,200px);height:min(46vw,30vh,200px);border-radius:22%;
   box-shadow:0 0 0 4px var(--gold),0 0 60px 10px color-mix(in srgb, var(--gold) 40%, transparent),0 20px 40px -18px rgba(0,0,0,.6)}
 .intro-side[data-s="oppdrag"]>.intro-bilde{height:auto}
@@ -4960,7 +4966,7 @@ function tilbyForModus() {
   const n = forAntall();
   sporsmal({
     tittel: 'Livslisten – valgfritt',
-    tekst: `<p>Merk fuglene du har sett før du begynte med appen, gjerne med år. Det er helt valgfritt.${enkel ? ' Fuglene' : ' De gir ingen frø, men'} kommer med i livslisten din. Du kan gjøre det nå, senere fra menyen eller aldri.</p>
+    tekst: `<p>Merk fuglene du har sett før du begynte med appen, gjerne med år.</p>
       ${n ? `<p>Du har allerede ${flertall(n, 'art', 'arter')} merket som sett før.</p>` : ''}
       <p>Mens du fyller ut, er appen i registreringsmodus (oransje). Trykk Ferdig når du er ferdig.</p>`,
     knapper: [{ tekst: 'Start', pri: true, fn: () => startForModus() }, { tekst: 'Ikke nå' }],
@@ -6038,7 +6044,7 @@ function slettMegSporsmal() {
   });
 }
 
-/* ---- the first time: a short introduction (five cards), then the username and the postcode, which also says
+/* ---- the first time: a short introduction (six cards), then the username and the postcode, which also says
    what is shared, and last the tasks («Kom i gang»), added when the name step is answered. Existing users who have
    not answered get the name step only; turning sharing on later shows it too, so the name on the board is seen
    first. From the menu: the cards and the tasks ---- */
@@ -6046,21 +6052,25 @@ const introEl = $('#introSheet'), introSpor = $('#introSpor'), introPrikker = $(
 let introModus = null, introTilbake = null, introRaf = 0, introOppdrag = false, introSvart = false;
 const introKort = key => CARDS[BY_KEY[key] != null ? BY_KEY[key] : BY_KEY[BIRDS[0].key]];
 const INTRO = [
-  { tittel: 'Velkommen til Hagefugler', tekst: 'Bla gjennom fuglekort for de mest kjente fuglene i Norge. Sveip mellom kortene, eller søk på navn eller kjennetegn.',
+  { tittel: 'Velkommen til Hagefugler', tekst: 'Bla gjennom fuglekort for de mest kjente fuglene i Norge.',
     bilde: () => `<div class="intro-vifte">${['cyanistes-caeruleus', 'erithacus-rubecula', 'parus-major'].map((k, j) => `<img src="${esc(bildeAv(introKort(k)))}" alt="" style="--j:${j - 1}">`).join('')}</div>` },
   { tittel: 'Registrer fugler når du ser dem', tekst: 'Trykk «Sett» på kortet. Registrer hver dag og få belønninger.', tekstEnkel: 'Trykk «Sett» på kortet hver dag du ser fuglen.',
     bilde: () => { const c = introKort('parus-major'), [bx, by, bw, bh] = c.sett.boks, P = v => (v * 100).toFixed(3) + '%';
       return `<figure class="intro-kort"><img src="${esc(bildeAv(c))}" alt="">
         <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
         <span class="idag-merke" aria-hidden="true" style="left:${P(BILDEFELT.x + 0.022)};top:${P(BILDEFELT.y + BILDEFELT.h - 0.058)}">${CHECK}Sett i dag</span></figure>`; } },
-  { tittel: 'Frø og titler', fro: true, tekst: 'Du får frø for hver registrering, mest for nye og sjeldne arter. Klarer du å oppnå tittelen Fuglekonge?',
+  /* Hagefugltellingen and where the count is in the app; the picture: a card as in the count (its number, the time) */
+  { tittel: 'Bli med på Hagefugltellingen', tekst: 'Tell fuglene i hagen for BirdLife Norge siste helga i januar. Bruk tellingen i appen: Min\u00a0fugleliste\u00a0→\u00a0Telling.',
+    bilde: () => `<figure class="intro-kort intro-tell"><img src="${esc(bildeAv(introKort('pyrrhula-pyrrhula')))}" alt=""><span class="intro-ant" aria-hidden="true">3</span>
+      <span class="intro-tid" aria-hidden="true"><i></i>42:03<small>5 arter</small></span></figure>` },
+  { tittel: 'Frø og titler', fro: true, tekst: 'Klarer du å oppnå tittelen Fuglekonge?',
     bilde: () => `<span class="ti intro-konge" style="${tittelPos(TITLER.length - 1)}" role="img" aria-label="${TITLER[TITLER.length - 1].navn}"></span>` },
-  /* what the seeds buy; the counts from the shop. The dyrekort as in the shop: the standard back with «?» */
+  /* what the seeds buy. The dyrekort as in the shop: the standard back with «?» */
   { tittel: 'Frøbutikken', fro: true,
-    tekst: `Bruk frøene på ${DYR.length} dyrekort som ekorn, pinnsvin og elg, ${BAKSIDER.length - 1} nye baksider og merker som gir opptil ${['', 'én', 'to', 'tre', 'fire', 'fem', 'seks', 'sju', 'åtte', 'ni', 'ti'][Math.max(...MULT.map(x => x.f))] || Math.max(...MULT.map(x => x.f))} ganger så mange frø for en fugl.`,
+    tekst: 'Bruk frøene på nye dyrekort, baksider eller multiplikatorer.',
     bilde: () => { const b = id => (BAKSIDER.find(x => x.id === id) || BAKSIDER[0]).bilde;
       return `<div class="intro-vifte intro-butikk"><img src="${esc(b('art-deco'))}" alt="" style="--j:-1"><img src="${esc(b('japansk-ro'))}" alt="" style="--j:1"><span class="intro-q" style="--j:0"><img src="${esc(BAKSIDER[0].bilde)}" alt=""><b aria-hidden="true">?</b><span class="xdisk x2" aria-hidden="true">×2</span></span></div>`; } },
-  { tittel: 'Livslisten', tekst: 'Har du sett fugler før du begynte med appen? Merk dem i livslisten, gjerne med år. Det er valgfritt, og du finner den i menyen.',
+  { tittel: 'Livslisten', tekst: 'Merk fugler du har sett før i livslisten.',
     bilde: () => { const c = introKort('pica-pica'), [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje, P = v => (v * 100).toFixed(3) + '%', dLeft = lx - 0.13, dW = lw + 0.15;
       return `<figure class="intro-kort for"><img src="${esc(bildeAv(c))}" alt="">
         <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
@@ -6081,14 +6091,13 @@ function navnSideHtml(modus) {
   </div></section>`;
 }
 /* the last card: all the tasks, as under Merker, with a tick when done and the seeds shown (the count: Tellekorps's
-   75 000); the text names Hagefugltellingen's weekend while the count is left */
+   75 000) */
 function oppdragSideHtml() {
-  const ol = oppdragLogg(), liste = oppdragListe(), neste = nesteOppdrag(liste, ol), telling = liste.find(o => o.id === 'telling');
-  const tekst = !neste ? 'Du har fullført alle oppdragene.'
-    : `Fullfør oppdragene og få frø.${telling && !ol.telling ? ` Hagefugltellingen er ${helgTekst(helgEtter(), { lang: true })} og gir ${fmtFro(oppdragVisFro(telling))} frø.` : ''}`;
+  const ol = oppdragLogg(), liste = oppdragListe(), neste = nesteOppdrag(liste, ol);
+  const tekst = neste ? 'Fullfør oppdragene og få frø.' : 'Du har fullført alle oppdragene.';
   return `<section class="intro-side" data-s="oppdrag" aria-labelledby="introToppdrag"><div class="intro-bilde"><div class="intro-oppdrag">
       <ul>${liste.map(o => `<li class="${ol[o.id] ? 'ok' : ''}"><span class="o-ring" aria-hidden="true">${ol[o.id] ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5.5 12.5 4 4 9-9"/></svg>' : ''}</span><span class="o-t">${esc(o.tekst)}${ol[o.id] ? '<span class="sr">, fullført</span>' : ''}</span><span class="o-fro">${FROIKON}${fmtFro(oppdragVisFro(o))}</span></li>`).join('')}</ul>
-    </div></div><h2 id="introToppdrag" tabindex="-1">Kom i gang</h2><p>${tekst}${introModus === 'forste' ? ' Vil du, kan du begynne med livslisten: fuglene du har sett før.' : ''}</p></section>`;
+    </div></div><h2 id="introToppdrag" tabindex="-1">Kom i gang</h2><p>${tekst}</p></section>`;
 }
 /* the tasks after the name step: added when it is answered, and the name step can no longer be changed here */
 function introVidere() {
