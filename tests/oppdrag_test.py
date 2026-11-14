@@ -127,22 +127,42 @@ async def main():
             sjekk('ingen JS-feil', not js, js); await ctx.close()
 
             print('=== første gang: introduksjonen')
-            for dato, vent in ((nov, 'Det første er å registrere din første fugl'), (jan, 'Neste er: gjennomfør en hagefugltelling')):
+            TEKST = 'Fullfør oppdragene og få frø. Hagefugltellingen er lørdag 30. og søndag 31. januar 2027 og gir 75 000 frø. Vil du, kan du begynne med livslisten: fuglene du har sett før.'
+            BUTIKK = 'Bruk frøene på 17 dyrekort som ekorn, pinnsvin og elg, 9 nye baksider og merker som gir opptil ti ganger så mange frø for en fugl.'
+            for dato, vent in ((nov, TEKST), (jan, TEKST)):
                 ctx, pg, js = await side(b, dato, init(dato, intro=False), intro=False)
+                sider = await pg.evaluate("[...document.querySelectorAll('#introSpor > section')].map(s => [s.querySelector('h2').textContent, (s.querySelector(':scope > p') || {}).textContent || '', !!s.querySelector('.intro-q b'), !!s.querySelector('.intro-q .xdisk'), s.querySelectorAll('.intro-vifte > img').length])")
+                titler = [x[0] for x in sider]
+                sjekk(f'introduksjonen {dato:%d.%m}: «Frøbutikken» etter «Frø og titler»', titler[:5] == ['Velkommen til Hagefugler', 'Registrer fugler når du ser dem', 'Frø og titler', 'Frøbutikken', 'Livslisten'], titler)
+                fb = next((x for x in sider if x[0] == 'Frøbutikken'), None)
+                sjekk('   med teksten om dyrekort, baksider og merker', fb and fb[1] == BUTIKK, fb)
+                sjekk('   og bildet: to baksider, et dyrekort med «?» og ×2', fb and fb[2] and fb[3] and fb[4] == 2, fb)
                 tekst, tre = '', []
                 for _ in range(20):
                     t = await pg.evaluate("document.querySelector('.dlg.on') ? document.querySelector('#dlgT').textContent : ''")
                     if t == 'Ikke dele?':
                         await pg.evaluate("document.querySelector('#dlgKnapper .btn.pri').click()"); await pg.wait_for_timeout(600); continue
                     if t: break
-                    x = await pg.evaluate("(() => { const s = document.querySelector('[data-s=oppdrag]'); return s ? [s.querySelector(':scope > p').textContent, [...s.querySelectorAll('.intro-oppdrag li')].map(li => li.textContent.trim())] : null; })()")
-                    if x: tekst, tre = x
+                    x = await pg.evaluate("(() => { const s = document.querySelector('[data-s=oppdrag]'); return s ? [s.querySelector(':scope > p').textContent.replace(/\\u00a0/g, ' '), [...s.querySelectorAll('.intro-oppdrag li')].map(li => [li.querySelector('.o-t').textContent, li.querySelector('.o-fro').textContent.replace(/\\u00a0/g, ' ')]), s.querySelector('.intro-oppdrag').textContent] : null; })()")
+                    if x: tekst, tre, kort = x
                     if x: break
                     ikke = await pg.evaluate("(() => { const b = document.querySelector('#inIkke'); return !!b && !b.hidden && b.getBoundingClientRect().width > 0; })()")
                     await pg.evaluate("document.querySelector(%s).click()" % json.dumps('#inIkke' if ikke else '#introNeste')); await pg.wait_for_timeout(600)
-                sjekk(f'introduksjonen {dato:%d.%m}: «{vent}»', vent in tekst, tekst)
-                sjekk(f'introduksjonen {dato:%d.%m}: tellingen først av de tre', tre and tre[0].startswith('Gjennomfør en hagefugltelling'), tre)
+                sjekk(f'«Kom i gang» {dato:%d.%m}: «{vent}»', tekst == vent, tekst)
+                sjekk('   alle oppdragene (8 uten deling), tellingen først med 75 000', [o[0] for o in tre] == ['Gjennomfør en hagefugltelling', 'Registrer din første fugl', 'Finn en fugl med søket', 'Registrer tre ulike arter',
+                      'Registrer fugler på to ulike dager', 'Kjøp noe i Frøbutikken', 'Registrer fem arter', 'Registrer fugler på tre ulike dager'] and tre[0][1] == '75 000', tre)
+                sjekk('   ingen sum («frø i alt», «oppdrag til»)', 'i alt' not in kort and 'oppdrag til' not in kort, kort[-80:])
+                hoyde = await pg.evaluate("(() => { const s = document.querySelector('[data-s=oppdrag]'); return [s.scrollHeight, s.clientHeight]; })()")
+                sjekk(f'   får plass uten å rulle ({hoyde[0]} av {hoyde[1]} px)', hoyde[0] <= hoyde[1], hoyde)
                 sjekk('ingen JS-feil', not js, js); await ctx.close()
+
+            for enkel in (False, True):                              # from the menu; the simple version has no seeds, so no shop
+                lager = init(nov); lager.update({'fuglekort:enkel': 'ja'} if enkel else {})
+                ctx, pg, js = await side(b, nov, lager)
+                await pg.evaluate("document.querySelector('#openIntro').click()"); await pg.wait_for_timeout(800)
+                titler = await pg.evaluate("[...document.querySelectorAll('#introSpor > section h2')].map(h => h.textContent)")
+                sjekk(f'fra menyen{" i den enkle versjonen" if enkel else ""}: {"uten" if enkel else "med"} «Frøbutikken»', ('Frøbutikken' in titler) != enkel, titler)
+                sjekk('   ingen JS-feil', not js, js); await ctx.close()
 
             print('=== frøene for tellingene')
             T = datetime

@@ -1,6 +1,6 @@
 // Hagefugler – offline-støtte for den frittstående appen.
 // build.py setter versjonen ut fra innholdet, så telefonene henter alt på nytt etter hver endring.
-const CACHE = 'hagefugler-cc4a654a2e';
+const CACHE = 'hagefugler-3163a38ac0';
 const ASSETS = [
   "./",
   "index.html",

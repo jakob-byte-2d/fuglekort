@@ -1124,23 +1124,29 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .intro-side h2{margin:22px 0 0;font-size:24px;line-height:1.2;letter-spacing:-.01em;outline:none}
 .intro-bilde{height:min(46vh,360px);width:100%;display:grid;place-items:center}
 .intro-vifte{position:relative;width:100%;height:100%}
-.intro-vifte img{position:absolute;left:50%;top:50%;height:min(76%, calc((100vw - 88px) * .89), 300px);aspect-ratio:750/1050;border-radius:5%/3.6%;
+.intro-vifte>*{position:absolute;left:50%;top:50%;height:min(76%, calc((100vw - 88px) * .89), 300px);aspect-ratio:750/1050;border-radius:5%/3.6%;
   box-shadow:0 14px 30px -12px rgba(var(--shadow),.65);transform:translate(-50%,-50%) translateX(calc(var(--j) * 29%)) rotate(calc(var(--j) * 8deg)) translateY(calc(var(--j) * var(--j) * 5%))}
-.intro-vifte img:nth-child(3){z-index:1}
+.intro-vifte>:nth-child(3){z-index:1}
+/* Frøbutikken: two card backs and a dyrekort as in the shop (the back with «?»), with a multiplier */
+.intro-q{container-type:inline-size}
+.intro-q img{display:block;width:100%;height:100%;border-radius:inherit}
+.intro-q b{position:absolute;inset:0;display:grid;place-items:center;border-radius:inherit;color:#ffe3a3;font-size:52cqw;font-weight:800;line-height:1;
+  text-shadow:0 0 6cqw rgba(255,190,80,.9);background:rgba(10,20,14,.42)}
+.intro-q .xdisk{position:absolute;right:-11%;bottom:-6%;width:34cqw;height:34cqw;font-size:12cqw;border-width:max(2px,1.6cqw)}
 .intro-kort{position:relative;margin:0;height:94%;aspect-ratio:750/1050;container-type:inline-size;border-radius:5.07cqw;box-shadow:0 14px 30px -12px rgba(var(--shadow),.65)}
 .intro-kort img{display:block;width:100%;height:100%;border-radius:inherit}
 .intro-kort .idag-merke{display:flex}
 .intro-kort .tick path{transition-delay:.25s}
 .intro-konge{width:min(46vw,30vh,200px);height:min(46vw,30vh,200px);border-radius:22%;
   box-shadow:0 0 0 4px var(--gold),0 0 60px 10px color-mix(in srgb, var(--gold) 40%, transparent),0 20px 40px -18px rgba(0,0,0,.6)}
-.intro-oppdrag{width:min(100%,330px);box-sizing:border-box;padding:6px 16px 4px;border-radius:18px;text-align:left;background:var(--surface);
+.intro-side[data-s="oppdrag"]>.intro-bilde{height:auto}
+.intro-oppdrag{width:min(100%,330px);box-sizing:border-box;padding:2px 16px;border-radius:18px;text-align:left;background:var(--surface);
   border:1px solid color-mix(in srgb, var(--gold) 45%, var(--line));box-shadow:0 14px 30px -14px rgba(var(--shadow),.55)}
 .intro-oppdrag ul{list-style:none;margin:0;padding:0}
-.intro-oppdrag li{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.intro-oppdrag li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.intro-oppdrag li:last-child{border-bottom:0}
 .intro-oppdrag li.ok .o-ring{background:var(--ok);box-shadow:none;color:#fff}
 .intro-oppdrag li.ok .o-t{color:var(--muted)}
-.intro-oppdrag p{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0;padding:11px 0 9px;font-size:13px;color:var(--muted)}
-.intro-oppdrag p b{display:flex;align-items:center;gap:4px;color:var(--ink);font-variant-numeric:tabular-nums}
 .intro-oppdrag .froikon{width:14px;height:14px}
 .intro-bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;width:100%;max-width:480px;box-sizing:border-box;margin:0 auto;padding:10px 20px 0}
 #introNeste{justify-self:end}
@@ -2163,7 +2169,7 @@ function nyheter(for_) {
    are things you do (find a bird with the search, see yourself on the board). A task done stays done, also if a
    sighting is deleted or a purchase undone: the day it was done is kept per user on this device, and the seeds
    count from that list. The garden bird count is first in the list (and on «Kom i gang» in the introduction), but on
-   the strip and in the introduction's text only in the weeks before and during Hagefugltellingen (sesong: see
+   the strip only in the weeks before and during Hagefugltellingen (sesong: see
    nesteOppdrag); done like Tellekorps, by a count of at least an hour in Hagefugltellingen's weekend. */
 const OPPDRAG = [
   { id: 'telling', tekst: 'Gjennomfør en hagefugltelling', under: () => `Tell fuglene i hagen i minst én time under Hagefugltellingen ${helgTekst(helgEtter())}, og send tallene til Fuglevennen.no.`,
@@ -3356,7 +3362,7 @@ function strekHtml(nt) {
 /* «Kom i gang» in Merker: at the top while there are tasks left, at the bottom when all are done. The tasks you
    can go and do have a button there (the count, search, the board, Frøbutikken) */
 const oppdragListe = () => { const ol = oppdragLogg(); return OPPDRAG.filter(o => !o.deling || deler() || ol[o.id]); };
-/* the next task on the strip and in the introduction: the first one left, but a seasonal one (the garden bird count) only
+/* the next task on the strip: the first one left, but a seasonal one (the garden bird count) only
    from 1 January until Hagefugltellingen is over (the last weekend of January); the rest of the year the small tasks
    come first, and the count only when it is the last one left */
 const telletid = () => helgEtter().aar === aarIdag();
@@ -6032,10 +6038,10 @@ function slettMegSporsmal() {
   });
 }
 
-/* ---- the first time: a short introduction (three cards), then the username and the postcode, which also says
+/* ---- the first time: a short introduction (five cards), then the username and the postcode, which also says
    what is shared, and last the tasks («Kom i gang»), added when the name step is answered. Existing users who have
    not answered get the name step only; turning sharing on later shows it too, so the name on the board is seen
-   first. From the menu: the three cards and the tasks ---- */
+   first. From the menu: the cards and the tasks ---- */
 const introEl = $('#introSheet'), introSpor = $('#introSpor'), introPrikker = $('#introPrikker'), introBar = $('#introBar');
 let introModus = null, introTilbake = null, introRaf = 0, introOppdrag = false, introSvart = false;
 const introKort = key => CARDS[BY_KEY[key] != null ? BY_KEY[key] : BY_KEY[BIRDS[0].key]];
@@ -6049,6 +6055,11 @@ const INTRO = [
         <span class="idag-merke" aria-hidden="true" style="left:${P(BILDEFELT.x + 0.022)};top:${P(BILDEFELT.y + BILDEFELT.h - 0.058)}">${CHECK}Sett i dag</span></figure>`; } },
   { tittel: 'Frø og titler', fro: true, tekst: 'Du får frø for hver registrering, mest for nye og sjeldne arter. Klarer du å oppnå tittelen Fuglekonge?',
     bilde: () => `<span class="ti intro-konge" style="${tittelPos(TITLER.length - 1)}" role="img" aria-label="${TITLER[TITLER.length - 1].navn}"></span>` },
+  /* what the seeds buy; the counts from the shop. The dyrekort as in the shop: the standard back with «?» */
+  { tittel: 'Frøbutikken', fro: true,
+    tekst: `Bruk frøene på ${DYR.length} dyrekort som ekorn, pinnsvin og elg, ${BAKSIDER.length - 1} nye baksider og merker som gir opptil ${['', 'én', 'to', 'tre', 'fire', 'fem', 'seks', 'sju', 'åtte', 'ni', 'ti'][Math.max(...MULT.map(x => x.f))] || Math.max(...MULT.map(x => x.f))} ganger så mange frø for en fugl.`,
+    bilde: () => { const b = id => (BAKSIDER.find(x => x.id === id) || BAKSIDER[0]).bilde;
+      return `<div class="intro-vifte intro-butikk"><img src="${esc(b('art-deco'))}" alt="" style="--j:-1"><img src="${esc(b('japansk-ro'))}" alt="" style="--j:1"><span class="intro-q" style="--j:0"><img src="${esc(BAKSIDER[0].bilde)}" alt=""><b aria-hidden="true">?</b><span class="xdisk x2" aria-hidden="true">×2</span></span></div>`; } },
   { tittel: 'Livslisten', tekst: 'Har du sett fugler før du begynte med appen? Merk dem i livslisten, gjerne med år. Det er valgfritt, og du finner den i menyen.',
     bilde: () => { const c = introKort('pica-pica'), [bx, by, bw, bh] = c.sett.boks, [lx, ly, lw] = c.sett.linje, P = v => (v * 100).toFixed(3) + '%', dLeft = lx - 0.13, dW = lw + 0.15;
       return `<figure class="intro-kort for"><img src="${esc(bildeAv(c))}" alt="">
@@ -6069,14 +6080,14 @@ function navnSideHtml(modus) {
     <div class="navn-knapper"><button class="btn pri" id="inStart">${pa ? 'Del og se ledertavlen' : introOppdrag ? 'Neste' : 'Start'}</button><button class="textbtn" id="inIkke">${pa ? 'Avbryt' : 'Ikke del'}</button></div>
   </div></section>`;
 }
-/* the last card: the tasks, the first three with a tick when done, how many more and the seeds for all */
+/* the last card: all the tasks, as under Merker, with a tick when done and the seeds shown (the count: Tellekorps's
+   75 000); the text names Hagefugltellingen's weekend while the count is left */
 function oppdragSideHtml() {
-  const ol = oppdragLogg(), liste = oppdragListe(), neste = nesteOppdrag(liste, ol), sum = liste.reduce((a, o) => a + oppdragVisFro(o), 0);
-  const tekst = !neste ? 'Du har fullført alle oppdragene.' : neste.id === 'forste' ? 'Fullfør små oppdrag og få frø. Det første er å registrere din første fugl.'
-    : `Fullfør små oppdrag og få frø. Neste er: ${neste.tekst.charAt(0).toLowerCase() + neste.tekst.slice(1)}.`;
+  const ol = oppdragLogg(), liste = oppdragListe(), neste = nesteOppdrag(liste, ol), telling = liste.find(o => o.id === 'telling');
+  const tekst = !neste ? 'Du har fullført alle oppdragene.'
+    : `Fullfør oppdragene og få frø.${telling && !ol.telling ? ` Hagefugltellingen er ${helgTekst(helgEtter(), { lang: true })} og gir ${fmtFro(oppdragVisFro(telling))} frø.` : ''}`;
   return `<section class="intro-side" data-s="oppdrag" aria-labelledby="introToppdrag"><div class="intro-bilde"><div class="intro-oppdrag">
-      <ul>${liste.slice(0, 3).map(o => `<li class="${ol[o.id] ? 'ok' : ''}"><span class="o-ring" aria-hidden="true">${ol[o.id] ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5.5 12.5 4 4 9-9"/></svg>' : ''}</span><span class="o-t">${esc(o.tekst)}${ol[o.id] ? '<span class="sr">, fullført</span>' : ''}</span><span class="o-fro">${FROIKON}${fmtFro(oppdragFro(o))}</span></li>`).join('')}</ul>
-      <p><span>+ ${flertall(liste.length - 3, 'oppdrag', 'oppdrag')} til</span><b>${FROIKON}${fmtFro(sum)} frø i alt</b></p>
+      <ul>${liste.map(o => `<li class="${ol[o.id] ? 'ok' : ''}"><span class="o-ring" aria-hidden="true">${ol[o.id] ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5.5 12.5 4 4 9-9"/></svg>' : ''}</span><span class="o-t">${esc(o.tekst)}${ol[o.id] ? '<span class="sr">, fullført</span>' : ''}</span><span class="o-fro">${FROIKON}${fmtFro(oppdragVisFro(o))}</span></li>`).join('')}</ul>
     </div></div><h2 id="introToppdrag" tabindex="-1">Kom i gang</h2><p>${tekst}${introModus === 'forste' ? ' Vil du, kan du begynne med livslisten: fuglene du har sett før.' : ''}</p></section>`;
 }
 /* the tasks after the name step: added when it is answered, and the name step can no longer be changed here */
