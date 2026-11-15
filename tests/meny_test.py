@@ -1,5 +1,5 @@
 """The menu at the top right: Profil first (Min fugleliste on the Profil tab, also in the simple version and for
-children), then Søk etter fugl, Livslisten, Om kortene, Slik virker appen, «Få kortene i postkassen» (opens
+children), Hagefugltelling (its own sheet; «Pågår» while counting), then Søk etter fugl, Livslisten, Om kortene, Slik virker appen, «Få kortene i postkassen» (opens
 https://hagefugler.no/#bestill; not for the user type «Barn») and Innstillinger.
 Run from the repo after python3 build.py:   python3 tests/meny_test.py [MAPPE_FOR_SKJERMBILDER]
 """
@@ -10,7 +10,7 @@ ROT = pathlib.Path(__file__).resolve().parent.parent
 BILDER = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1] else None
 URL = 'http://localhost:8794/'
 FEIL = []
-ALLE = ['Profil', 'Søk etter fugl', 'Livslisten', 'Om kortene', 'Slik virker appen', 'Få kortene i postkassen', 'Innstillinger']
+ALLE = ['Profil', 'Hagefugltelling', 'Søk etter fugl', 'Livslisten', 'Om kortene', 'Slik virker appen', 'Få kortene i postkassen', 'Innstillinger']
 
 
 def sjekk(navn, ok, info=''):
@@ -20,7 +20,7 @@ def sjekk(navn, ok, info=''):
 
 def bruker(**x):
     d = {'hagefugler:testmerke': '2026-09-30-pluss', 'fuglekort:intro': 'ferdig', 'hagefugler-oslo:hint': 'ok', 'fuglekort:deling': 'nei',
-         'fuglekort:tittel:v2': '99', 'hagefugler:varsler-spurt': '1', 'fuglekort:fane': 'telling'}
+         'fuglekort:tittel:v2': '99', 'hagefugler:varsler-spurt': '1', 'fuglekort:fane': 'telling'}   # the old tab: Profil opens
     d.update(x); return d
 
 
@@ -38,6 +38,13 @@ async def side(b, lager):
 async def meny(pg):
     await pg.evaluate("document.querySelector('#openMeny').click()"); await pg.wait_for_timeout(400)
     return await pg.evaluate("[[...document.querySelectorAll('#meny [role=menuitem]')].filter(b => !b.hidden).map(b => b.querySelector('.mt').textContent), document.activeElement && document.activeElement.id]")
+
+
+async def telling(pg):
+    await meny(pg)
+    pa = await pg.evaluate("!document.querySelector('#tellPagar').hidden")
+    await pg.evaluate("document.querySelector('#openTelling').click()"); await pg.wait_for_timeout(600)
+    return pa, await pg.evaluate("[document.querySelector('#tellSheet').classList.contains('on'), document.querySelector('#tellTitle').textContent, !!document.querySelector('#tellBody #tStart'), document.activeElement && document.activeElement.id, document.querySelector('#meny').hidden]")
 
 
 async def main():
@@ -60,6 +67,16 @@ async def main():
                 r = await pg.evaluate("[document.querySelector('#statsSheet').classList.contains('on'), document.querySelector('#faner [aria-selected=true]').textContent, document.querySelector('#meny').hidden]")
                 sjekk('   Profil åpner Min fugleliste på fanen Profil (fra fanen Telling sist)', r == [True, 'Profil', True], r)
                 await pg.evaluate("document.querySelector('#closeStats').click()"); await pg.wait_for_timeout(500)
+                pa, r = await telling(pg)
+                sjekk('   Hagefugltelling åpner sitt eget vindu med «Start telling», uten «Pågår»', not pa and r == [True, 'Hagefugltelling', True, 'closeTell', True], [pa, r])
+                if BILDER and navn == 'vanlig bruker': await pg.screenshot(path=str(BILDER / 'telling_meny.png'))
+                await pg.evaluate("document.querySelector('#tOmrade').focus(); document.querySelector('#tOmrade').value = 'Hytta'")
+                await pg.keyboard.press('Enter'); await pg.wait_for_timeout(700)
+                r = await pg.evaluate("[!document.querySelector('.sheet.on'), !document.querySelector('#tellebar').hidden]")
+                sjekk('   Enter i Område starter tellingen og lukker vinduet', r == [True, True], r)
+                pa, r = await telling(pg)
+                sjekk('   mens den pågår: «Pågår» i menyen, og «Tilbake til tellingen»', pa and r[0] and not r[2] and await pg.evaluate("(document.querySelector('#goTell') || {}).textContent") == 'Tilbake til tellingen', [pa, r])
+                await pg.evaluate("document.querySelector('#closeTell').click()"); await pg.wait_for_timeout(500)
                 if 'Få kortene i postkassen' in vent:
                     await meny(pg)
                     await pg.evaluate("document.querySelector('#openPost').click()"); await pg.wait_for_timeout(400)

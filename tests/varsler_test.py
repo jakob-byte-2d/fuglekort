@@ -198,10 +198,10 @@ async def main():
             rpc = []
             ctx, pg, js = await side(b, bruker(**{'__test:perm': 'granted'}), rpc, url=URL + '?vis=telling')
             await pg.wait_for_timeout(1000)
-            sjekk('…/?vis=telling åpner fanen Telling, og adressen ryddes', await pg.evaluate("[document.querySelector('#statsSheet').classList.contains('on'), document.querySelector('#faner [aria-selected=true]').textContent, location.search]") == [True, 'Telling', ''])
-            await pg.evaluate("document.querySelector('#closeStats').click()"); await pg.wait_for_timeout(500)
+            sjekk('…/?vis=telling åpner Hagefugltelling, og adressen ryddes', await pg.evaluate("[document.querySelector('#tellSheet').classList.contains('on'), location.search]") == [True, ''])
+            await pg.evaluate("document.querySelector('#closeTell').click()"); await pg.wait_for_timeout(500)
             await pg.evaluate("navigator.serviceWorker.dispatchEvent(new MessageEvent('message', { data: { type: 'vis', vis: 'telling' } }))"); await pg.wait_for_timeout(700)
-            sjekk('en melding fra service workeren (appen var åpen) gjør det samme', await pg.evaluate("[document.querySelector('#statsSheet').classList.contains('on'), document.querySelector('#faner [aria-selected=true]').textContent]") == [True, 'Telling'])
+            sjekk('en melding fra service workeren (appen var åpen) gjør det samme', await pg.evaluate("document.querySelector('#tellSheet').classList.contains('on')"))
             sjekk('   ingen JS-feil', not js, js); await ctx.close()
 
             print('=== service workeren viser varselet (push via Chrome DevTools)')

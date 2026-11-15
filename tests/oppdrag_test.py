@@ -92,10 +92,10 @@ async def main():
             sjekk('de andre oppdragene som før', [o['t'] for o in ls[1:4]] == ['Registrer din første fugl', 'Finn en fugl med søket', 'Registrer tre ulike arter'], [o['t'] for o in ls])
             if BILDER: await pg.screenshot(path=str(BILDER / 'oppdrag_liste.png'))
             await pg.evaluate("document.querySelector('[data-oppdrag-gaa=telling]').click()"); await pg.wait_for_timeout(700)
-            st = await pg.evaluate("""(() => { const f = document.querySelector('#faner [aria-selected=true]'), b = document.querySelector('#statsBody');
-                return [f && f.textContent, !!b.querySelector('.tl-lead') && b.querySelector('.tl-lead').textContent, b.querySelectorAll('.fakta li').length, ((b.querySelector('.tl-birdlife') || {}).textContent || '').replace(/ /g, ' '),
+            st = await pg.evaluate("""(() => { const b = document.querySelector('#tellBody');
+                return [document.querySelector('#tellSheet').classList.contains('on') && !document.querySelector('#statsSheet').classList.contains('on') ? 'Hagefugltelling' : '?', !!b.querySelector('.tl-lead') && b.querySelector('.tl-lead').textContent, b.querySelectorAll('.fakta li').length, ((b.querySelector('.tl-birdlife') || {}).textContent || '').replace(/ /g, ' '),
                         !!b.querySelector('#tOmrade'), (b.querySelector('#tStart') || {}).textContent, !!document.querySelector('#startSheet')]; })()""")
-            sjekk('«Tell» bytter til fanen Telling, med forklaringen og BirdLife Norge', st[0] == 'Telling' and st[1] == 'For hver art teller du det høyeste antallet du ser samtidig, ikke alle du ser i løpet av tellingen.' and st[2] == 4 and st[3].startswith(BIRDLIFE), st)
+            sjekk('«Tell» åpner Hagefugltelling, med forklaringen og BirdLife Norge', st[0] == 'Hagefugltelling' and st[1] == 'For hver art teller du det høyeste antallet du ser samtidig, ikke alle du ser i løpet av tellingen.' and st[2] == 4 and st[3].startswith(BIRDLIFE), st)
             sjekk('   og neste gang: lørdag 30. og søndag 31. januar 2027', 'Neste gang: lørdag 30. og søndag 31. januar 2027.' in st[3], st[3])
             sjekk('   med området og «Start telling», og uten eget startvindu', st[4] and st[5] == 'Start telling' and not st[6], st)
             if BILDER: await pg.screenshot(path=str(BILDER / 'oppdrag_start.png'))
@@ -103,10 +103,15 @@ async def main():
             ig = await pg.evaluate("""(() => { const t = JSON.parse(localStorage.getItem('hagefugler:tellinger:v1') || '{}'), a = Object.values(t).find(v => !v.slutt);
                 return [!!a, a && a.omrade, localStorage.getItem('hagefugler:omrade'), !!document.querySelector('.sheet.on'), !document.querySelector('#tTid').closest('[hidden]')]; })()""")
             sjekk('«Start telling» starter tellingen med en gang: området lagret, vinduet lukket, klokka går', ig == [True, 'Hagen hjemme', 'Hagen hjemme', False, True], ig)
-            await pg.evaluate("document.querySelector('#openStats').click()"); await pg.wait_for_timeout(500)
-            await pg.evaluate("document.querySelector('#fane-telling').click()"); await pg.wait_for_timeout(600)
+            await pg.evaluate("document.querySelector('#openMeny').click()"); await pg.wait_for_timeout(300); await pg.evaluate("document.querySelector('#openTelling').click()"); await pg.wait_for_timeout(600)
             gt = await pg.evaluate("[(document.querySelector('#goTell') || {}).textContent, !!document.querySelector('#tStart'), !!document.querySelector('#tOmrade')]")
-            sjekk('   mens den pågår: «Tilbake til tellingen» i fanen', gt == ['Tilbake til tellingen', False, False], gt)
+            sjekk('   mens den pågår: «Tilbake til tellingen» i Hagefugltelling', gt == ['Tilbake til tellingen', False, False], gt)
+            await pg.evaluate("document.querySelector('#goTell').click()"); await pg.wait_for_timeout(500)
+            sjekk('   som lukker vinduet', not await pg.evaluate("!!document.querySelector('.sheet.on')"))
+            await pg.evaluate("document.querySelector('#openMeny').click()"); await pg.wait_for_timeout(300)
+            pa = await pg.evaluate("[!document.querySelector('#tellPagar').hidden, document.querySelector('#openTelling').textContent]")
+            sjekk('   og «Pågår» ved Hagefugltelling i menyen', pa == [True, 'HagefugltellingPågår'], pa)
+            await pg.keyboard.press('Escape'); await pg.wait_for_timeout(300)
             sjekk('ingen JS-feil', not js, js); await ctx.close()
 
             print('=== advarselen: ikke Hagefugltellingen nå')
@@ -123,9 +128,8 @@ async def main():
                     ('lørdag 30. januar 2027, i tellehelga: ingen advarsel', helg, None, False, '', '')):
                 lager = init(dato, tellinger=tl); lager.update({'fuglekort:enkel': 'ja'} if enk else {})
                 ctx, pg, js = await side(b, dato, lager)
-                await pg.evaluate("document.querySelector('#openStats').click()"); await pg.wait_for_timeout(500)
-                await pg.evaluate("document.querySelector('#fane-telling').click()"); await pg.wait_for_timeout(600)
-                v = await pg.evaluate("((document.querySelector('#statsBody .tl-varsel') || {}).textContent || '').replace(/ /g, ' ')")
+                await pg.evaluate("document.querySelector('#openMeny').click()"); await pg.wait_for_timeout(300); await pg.evaluate("document.querySelector('#openTelling').click()"); await pg.wait_for_timeout(600)
+                v = await pg.evaluate("((document.querySelector('#tellBody .tl-varsel') || {}).textContent || '').replace(/ /g, ' ')")
                 sjekk(f'{navn}{": «" + vent + "»" if vent else ""}', v == vent, v)
                 if BILDER and vent == V3000: await pg.screenshot(path=str(BILDER / 'telling_varsel.png'))
                 await pg.evaluate("document.querySelector('#tStart').click()"); await pg.wait_for_timeout(800)
@@ -133,10 +137,9 @@ async def main():
                 sjekk(f'   mens du teller: {"«" + linje + "»" if linje else "ingen linje"}', l == linje, l)
                 if BILDER and linje.endswith('3 000 frø'): await pg.screenshot(path=str(BILDER / 'telling_varsel_teller.png'))
                 if vent:
-                    await pg.evaluate("document.querySelector('#openStats').click()"); await pg.wait_for_timeout(500)
-                    await pg.evaluate("document.querySelector('#fane-telling').click()"); await pg.wait_for_timeout(600)
-                    v2 = await pg.evaluate("((document.querySelector('#statsBody .tl-varsel') || {}).textContent || '').replace(/ /g, ' ')")
-                    sjekk('   og i fanen mens du teller', v2 == vent, v2)
+                    await pg.evaluate("document.querySelector('#openMeny').click()"); await pg.wait_for_timeout(300); await pg.evaluate("document.querySelector('#openTelling').click()"); await pg.wait_for_timeout(600)
+                    v2 = await pg.evaluate("((document.querySelector('#tellBody .tl-varsel') || {}).textContent || '').replace(/ /g, ' ')")
+                    sjekk('   og i Hagefugltelling mens du teller', v2 == vent, v2)
                 sjekk('   ingen JS-feil', not js, js); await ctx.close()
 
             print('=== januar og 16. februar: stripa')
@@ -146,9 +149,8 @@ async def main():
             await ctx.close()
             ctx, pg, js = await side(b, helg, init(helg))
             sjekk('stripa lørdag 30. januar: tellingen først', await stripa(pg) == 'Gjennomfør en hagefugltelling', await stripa(pg))
-            await pg.evaluate("document.querySelector('#openStats').click()"); await pg.wait_for_timeout(500)
-            await pg.evaluate("document.querySelector('#fane-telling').click()"); await pg.wait_for_timeout(600)
-            sjekk('fanen Telling i helga: «Årets telling er nå …»', 'Årets telling er nå: lørdag 30. og søndag 31. januar 2027.' in await pg.evaluate("document.querySelector('#statsBody').textContent.replace(/\u00a0/g, ' ')"))
+            await pg.evaluate("document.querySelector('#openMeny').click()"); await pg.wait_for_timeout(300); await pg.evaluate("document.querySelector('#openTelling').click()"); await pg.wait_for_timeout(600)
+            sjekk('Hagefugltelling i helga: «Årets telling er nå …»', 'Årets telling er nå: lørdag 30. og søndag 31. januar 2027.' in await pg.evaluate("document.querySelector('#tellBody').textContent.replace(/\u00a0/g, ' ')"))
             await ctx.close()
             for dato, navn in ((feb1, '1. februar'), (feb16, '16. februar')):
                 ctx, pg, js = await side(b, dato, init(dato))
@@ -171,7 +173,7 @@ async def main():
             print('=== første gang: introduksjonen')
             TEKST = 'Fullfør oppdragene og få frø.'
             BUTIKK = 'Bruk frøene på nye dyrekort, baksider eller multiplikatorer.'
-            TELLE = 'Tell fuglene i hagen for BirdLife Norge siste helga i januar. Bruk tellingen i appen: Min fugleliste → Telling.'
+            TELLE = 'Tell fuglene i hagen for BirdLife Norge siste helga i januar. Bruk tellingen i appen: Menyen → Hagefugltelling.'
             INTRO = ['Velkommen til Hagefugler', 'Registrer fugler når du ser dem', 'Bli med på Hagefugltellingen', 'Frø og titler', 'Frøbutikken', 'Livslisten']
             for dato, vent in ((nov, TEKST), (jan, TEKST)):
                 ctx, pg, js = await side(b, dato, init(dato, intro=False), intro=False)
@@ -247,7 +249,8 @@ async def main():
                 sjekk(f'   oppdraget {"fullført" if opp else "ikke fullført"}, Merker viser {merke}', (m[0] is True) == opp and len(m[1]) == 1 and m[1][0][0] == merke, m)
                 if merke == 'Tellekorps 2027' and not opp:
                     sjekk('   med teksten «… under Hagefugltellingen 30.–31. januar 2027»', m[1][0][2] == 'En hagefugltelling på minst én time under Hagefugltellingen 30.–31. januar 2027', m[1][0][2])
-                await pg.evaluate("document.querySelector('#fane-telling').click()"); await pg.wait_for_timeout(600)
+                await pg.evaluate("document.querySelector('#closeStats').click()"); await pg.wait_for_timeout(400); await pg.evaluate("document.querySelector('#openMeny').click()"); await pg.wait_for_timeout(300); await pg.evaluate("document.querySelector('#openTelling').click()"); await pg.wait_for_timeout(600)
+                sjekk('   «Tidligere tellinger» i Hagefugltelling', await pg.evaluate("[...document.querySelectorAll('#tellBody h3')].map(h => h.textContent)") == ['Tidligere tellinger'])
                 for start, vt in sum_.items():
                     await pg.evaluate("document.querySelector('[data-tid=\"t%d\"]').click()" % ms(start)); await pg.wait_for_timeout(700)
                     t = [x.replace(' ', ' ') for x in await pg.evaluate("[...document.querySelectorAll('#sumBody .sum-fro')].map(p => p.textContent)")]
@@ -256,11 +259,16 @@ async def main():
                     await pg.evaluate("document.querySelector('#closeSum').click()"); await pg.wait_for_timeout(500)
                 sjekk('   ingen JS-feil', not js, js); await ctx.close()
 
-            print('=== oppsummeringen og fanen Telling, og «Om kortene»')
+            print('=== oppsummeringen og Hagefugltelling, og «Om kortene»')
             ctx, pg, js = await side(b, nov, init(nov, tellinger=[(datetime(2026, 11, 1, 10), 65)]))
+            await pg.evaluate("document.querySelector('#openMeny').click()"); await pg.wait_for_timeout(300); await pg.evaluate("document.querySelector('#openTelling').click()"); await pg.wait_for_timeout(600)
+            sjekk('Hagefugltelling nevner BirdLife Norge', BIRDLIFE in await pg.evaluate("document.querySelector('#tellSheet').textContent"))
+            if BILDER: await pg.screenshot(path=str(BILDER / 'telling_vindu.png'))
+            await pg.evaluate("document.querySelector('#closeTell').click()"); await pg.wait_for_timeout(400)
             await pg.evaluate("document.querySelector('#openStats').click()"); await pg.wait_for_timeout(500)
-            await pg.evaluate("document.querySelector('#fane-telling').click()"); await pg.wait_for_timeout(700)
-            sjekk('fanen Telling nevner BirdLife Norge', BIRDLIFE in await pg.evaluate("document.querySelector('#statsSheet, .sheet.stats.on').textContent"))
+            sjekk('Min fugleliste har ikke lenger fanen Telling', await pg.evaluate("[...document.querySelectorAll('#faner [data-fane]')].map(b => b.textContent)") == ['Profil', 'Statistikk', 'Kort', 'Merker', 'Tavle'])
+            await pg.evaluate("document.querySelector('#closeStats').click()"); await pg.wait_for_timeout(400)
+            await pg.evaluate("document.querySelector('#openMeny').click()"); await pg.wait_for_timeout(300); await pg.evaluate("document.querySelector('#openTelling').click()"); await pg.wait_for_timeout(600)
             await pg.evaluate("document.querySelector('[data-tid]').click()"); await pg.wait_for_timeout(700)
             sjekk('oppsummeringen nevner BirdLife Norge', BIRDLIFE in await pg.evaluate("document.querySelector('#sumBody').textContent"))
             w = await pg.evaluate("fetch('cards/000a.webp').then(r => r.blob()).then(b => b.size)")

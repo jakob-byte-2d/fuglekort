@@ -270,6 +270,9 @@ button{cursor:pointer;touch-action:manipulation}
 .meny .mi svg{width:21px;height:21px}
 .meny .mi.q{font-size:19px;font-weight:800;line-height:1}
 .meny .mt{flex:1}
+.meny .m-pagar{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--rec)}
+.meny .m-pagar::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--rec)}
+.meny .m-pagar[hidden]{display:none}
 .meny kbd{font:inherit;font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px}
 @media (hover:none){.meny kbd{display:none}}
 .brand h1{display:flex;min-width:0}
@@ -1353,10 +1356,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 
 <div class="scrim" id="scrim"></div>
 
-<!-- the menu at the top right: profile, search, the life list, about the cards, the introduction, the cards by post, settings -->
+<!-- the menu at the top right: profile, the garden bird count, search, the life list, about the cards, the introduction, the cards by post, settings -->
 <div class="meny-bak" id="menyBak" hidden></div>
 <div class="meny" id="meny" role="menu" aria-label="Meny" hidden>
   <button role="menuitem" id="openProfil"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.8-3.9 3.8-6 7.5-6s6.7 2.1 7.5 6"/></svg></span><span class="mt">Profil</span></button>
+  <button role="menuitem" id="openTelling"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="4" width="15" height="17" rx="2"/><path d="M9 4V2.8h6V4"/><path d="M8.5 10v6.5M11 10v6.5M13.5 10v6.5M16 10v6.5"/><path d="M7 15.5 17.5 11"/></svg></span><span class="mt">Hagefugltelling</span><span class="m-pagar" id="tellPagar" hidden>Pågår</span></button>
   <button role="menuitem" id="openSearch"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg></span><span class="mt">Søk etter fugl</span><kbd aria-hidden="true">/</kbd></button>
   <button role="menuitem" id="openFor"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3.5 4.5V9H8"/><path d="M12 7.5V12l3 2"/></svg></span><span class="mt">Livslisten</span></button>
   <button role="menuitem" id="openHelp"><span class="mi q" aria-hidden="true">?</span><span class="mt">Om kortene</span><kbd aria-hidden="true">?</kbd></button>
@@ -1396,13 +1400,20 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <div class="faner" id="faner" role="tablist" aria-labelledby="statsTitle">
       <button role="tab" id="fane-profil" data-fane="profil" aria-controls="statsBody">Profil</button>
       <button role="tab" id="fane-statistikk" data-fane="statistikk" aria-controls="statsBody">Statistikk</button>
-      <button role="tab" id="fane-telling" data-fane="telling" aria-controls="statsBody">Telling</button>
       <button role="tab" id="fane-kort" data-fane="kort" aria-controls="statsBody">Kort</button>
       <button role="tab" id="fane-merker" data-fane="merker" aria-controls="statsBody">Merker</button>
       <button role="tab" id="fane-tavle" data-fane="tavle" aria-controls="statsBody" aria-label="Ledertavle">Tavle</button>
     </div>
   </div>
   <div id="statsBody" role="tabpanel" tabindex="-1"></div>
+</section>
+
+<section class="sheet stats" id="tellSheet" role="dialog" aria-modal="true" aria-labelledby="tellTitle">
+  <div class="s-head">
+    <h2 id="tellTitle">Hagefugltelling</h2>
+    <button class="textbtn" id="closeTell">Lukk</button>
+  </div>
+  <div id="tellBody"></div>
 </section>
 
 <section class="sheet stats" id="settingsSheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
@@ -3253,12 +3264,13 @@ function closeSheets(silent) {
 }
 scrim.addEventListener('click', () => closeSheets());
 
-/* ---- the menu at the top right: profile, search, the life list, about the cards, the introduction, the cards by post, settings ---- */
+/* ---- the menu at the top right: profile, the garden bird count, search, the life list, about the cards, the introduction, the cards by post, settings ---- */
 const menyEl = $('#meny'), menyBak = $('#menyBak'), menyBtn = $('#openMeny');
 const menyApen = () => !menyEl.hidden;
 const menyValg = () => [...menyEl.querySelectorAll('[role="menuitem"]')].filter(b => !b.hidden);
 function apneMeny() {
   $('#openPost').hidden = BRUKER.type === 'barn';                // the cards by post: not for children
+  $('#tellPagar').hidden = !Tell.aktiv();                         // a count going on
   const r = menyBtn.getBoundingClientRect();
   menyEl.style.top = `${Math.round(r.bottom + 8)}px`;
   menyEl.style.right = `${Math.max(8, Math.round(document.documentElement.clientWidth - r.right))}px`;
@@ -3292,6 +3304,7 @@ let filter = 'alle';
 function openSearch() { showSheet($('#searchSheet')); renderSearch(); setTimeout(() => qEl.focus(), 60); }
 $('#openSearch').addEventListener('click', openSearch);
 $('#openProfil').addEventListener('click', () => openStats('profil'));
+$('#openTelling').addEventListener('click', () => openTelling());
 /* the cards by post: the list on hagefugler.no (#bestill opens it), not for children (it asks for name, email and phone) */
 const POSTKASSE_URL = 'https://hagefugler.no/#bestill';
 $('#openPost').addEventListener('click', () => { window.open(POSTKASSE_URL, '_blank', 'noopener'); });
@@ -3492,7 +3505,7 @@ setSheet.addEventListener('keydown', e => {
 /* ---- stats ---- */
 const sb = $('#statsBody');
 /* the tabs of Min fugleliste; the last one used is opened again (on this device) */
-const FANER = ['profil', 'statistikk', 'telling', 'kort', 'merker', 'tavle'];
+const FANER = ['profil', 'statistikk', 'kort', 'merker', 'tavle'];   // Telling was a tab until 15 Nov 2026; a saved «telling» opens Profil
 let statsFane = FANER.includes(lsGet('fuglekort:fane')) ? lsGet('fuglekort:fane') : 'profil';
 const fanerNa = () => FANER.filter(f => !(enkel && f === 'merker'));   // enkel versjon: no Merker
 const fanerEl = $('#faner');
@@ -3608,7 +3621,6 @@ function renderStats() {
   const recent = alleIds.map(id => ({ id, d: last(id), ant: Store.data[id].dager.length, ts: Store.data[id].ts }))
     .sort((a, b) => (b.d > a.d ? 1 : b.d < a.d ? -1 : b.ts - a.ts)).slice(0, 6);
   const cardOf = key => BY_KEY[key];
-  const aktivT = Tell.aktiv(), ferdigeT = Tell.ferdige();
   const nt = nokkeltall(), merkerOk = merkerListe(nt).filter(m => m.v(nt) >= m.mal).length;
   const perNiva = [0, 0, 0, 0, 0]; CARDS.filter(c => erApen(c)).forEach(c => perNiva[nivaAv(c)]++);
   const naermest = CARDS.map((c, i) => ({ c, i, n: erApen(c) && Store.has(c.key) && nesteNiva(c) })).filter(x => x.n).sort((a, b) => a.n.mangler - b.n.mangler || b.c.stjerner - a.c.stjerner).slice(0, 3);
@@ -3710,22 +3722,6 @@ function renderStats() {
     ${recent.length ? `<div class="s-sec"><h3>Sist sett</h3><ul class="recent">
       ${recent.map(r => { const i = cardOf(r.id), c = CARDS[i]; return `<li><button data-i="${i}">${miniatyr(c, i)}<span><b style="font-weight:600">${esc(c.navn)}</b><br><span style="font-size:12.5px;color:var(--muted)">${esc(RAR[c.stjerner])} · ${dagerTekst(r.ant)}</span></span>${r.d === todayISO() ? '<span class="d idag">I dag</span>' : `<span class="d">${fmtHand(r.d)}</span>`}</button></li>`; }).join('')}
     </ul></div>` : ''}`,
-    telling: () => `
-    <div class="s-sec"><h3>Hagefugltelling</h3>
-      ${(v => (v ? `<p class="varsel tl-varsel">${v}</p>` : ''))(ikkeHelgVarsel(true))}
-      <p class="lead tl-lead">For hver art teller du det høyeste antallet du ser <b>samtidig</b>, ikke alle du ser i løpet av tellingen.</p>
-      <ul class="fakta">
-        <li>Tell gjerne i minst én time. Klokka går øverst mens du teller.</li>
-        <li>Bla til kortet og trykk +, eller åpne telleliste for å finne arten raskt. Du kan også skrive inn tallet.</li>
-        <li>Ekorn står i telleliste, siden det er med i skjemaet.</li>
-        <li>Når du avslutter, får du tallene i samme rekkefølge som skjemaet på Fuglevennen.no, og alle artene du har talt får en observasjonsdag.</li>
-      </ul>
-      <p class="cap tl-birdlife">Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar. ${helgSetning()} Tallene sendes inn på <a href="https://www.fuglevennen.no/" target="_blank" rel="noopener">Fuglevennen.no</a>.</p>
-      ${aktivT ? '<button class="btn pri big" id="goTell">Tilbake til tellingen</button>'
-        : `<label class="felt">Område (valgfritt)<input id="tOmrade" maxlength="80" autocomplete="off" enterkeyhint="go" placeholder="f.eks. Hagen hjemme" value="${esc(lsGet(brukerNokkel('hagefugler:omrade')) || '')}"></label>
-      <button class="btn pri big" id="tStart">Start telling</button>`}
-      ${ferdigeT.length ? `<ul class="recent tl-hist">${ferdigeT.map(id => { const v = Tell.data[id], x = sumAv(v), d = new Date(v.start); return `<li><button data-tid="${id}"><span class="ph tdato" aria-hidden="true"><span>${d.getDate()}.<small>${MND[d.getMonth()]}</small></span></span><span><b style="font-weight:600">${esc(stor(datoLang(v.start)))}</b><br><span style="font-size:12.5px;color:var(--muted)">${flertall(x.arter, 'art', 'arter')} · ${flertall(x.ind, 'individ', 'individer')} · ${varighet(v.slutt - v.start)}${v.omrade ? ` · ${esc(v.omrade)}` : ''}</span></span><span></span></button></li>`; }).join('')}</ul>` : ''}
-    </div>`,
     kort: () => `
     <div class="s-sec"><h3>Samlingen</h3>
       <div class="tegnf" role="note" aria-label="Tegnforklaring"><span><b class="okdot" aria-hidden="true">3</b>dager sett</span><span><i class="idag-hake" aria-hidden="true">${CHECK}</i>sett i dag</span>${BIRDS.some(c => bareFor(c.key)) ? `<span><i class="for-hake" aria-hidden="true">${CHECK}</i>sett før appen</span>` : ''}</div>
@@ -3770,7 +3766,7 @@ sb.addEventListener('click', async e => {
   if (e.target.closest('[data-del-pa]')) { visIntro('slaPa', () => openStats('tavle')); return; }
   if (e.target.closest('[data-oppdrag-vis]')) { lsDel(OPPDRAG_SKJULT()); paintOppdrag(); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
   const og = e.target.closest('[data-oppdrag-gaa]');
-  if (og) { const g = og.dataset.oppdragGaa; if (g === 'tavle') velgFane('tavle'); else if (g === 'butikk') openButikk(); else if (g === 'sok') { closeSheets(true); openSearch(); } else if (g === 'telling') velgFane('telling'); return; }
+  if (og) { const g = og.dataset.oppdragGaa; if (g === 'tavle') velgFane('tavle'); else if (g === 'butikk') openButikk(); else if (g === 'sok') { closeSheets(true); openSearch(); } else if (g === 'telling') { closeSheets(true); openTelling(); } return; }
   const tr = e.target.closest('[data-tavle-rad]');
   if (tr) { tavleRad(tr.dataset.tavleRad); return; }
   if (e.target.closest('[data-profillukk]')) { lukkProfil(); return; }
@@ -3808,12 +3804,8 @@ sb.addEventListener('click', async e => {
   if (an) { apneArt(an.dataset.art); return; }
   if (e.target.closest('[data-artlukk]')) { lukkArt(); return; }
   if (e.target.closest('[data-forstart]')) { tilbyForModus(); return; }
-  const tl = e.target.closest('[data-tid]');
-  if (tl) { openSum(tl.dataset.tid); return; }
   const j = e.target.closest('[data-i]');
   if (j) { closeSheets(true); jump(+j.dataset.i); return; }
-  if (e.target.id === 'tStart') { startTelling(); return; }
-  if (e.target.id === 'goTell') { closeSheets(); return; }
   if (e.target.id === 'copyBackup') {
     const txt = sikkerhetskopi();
     try { await navigator.clipboard.writeText(txt); kvittering(e.target, 'Kopiert!'); si('Sikkerhetskopien er kopiert.'); }
@@ -3947,8 +3939,45 @@ function ikkeHelgVarsel(lang) {
     : `<b>Det er ikke Hagefugltellingen nå.</b> Du kan telle for moro skyld, men ${gir === 'neste' ? `da får du bare ${fmtFro(FRO.tellingNeste)} frø. Hagefugltellingen gir ${fmtFro(FRO.merker.tellekorps)}.` : 'du har alt fått frø for en telling i dag.'}`;
   return `Ikke Hagefugltellingen nå · for moro skyld${enkel ? '' : gir === 'neste' ? `, ${fmtFro(FRO.tellingNeste)} frø` : ', ingen frø i dag'}`;
 }
-/* «Start telling» in the Telling tab (Min fugleliste) starts the count at once, with the area; the life list's mode
-   ends first. The tab says how to count, so there is no window of its own */
+/* ---- Hagefugltelling: its own sheet from the menu (until 15 Nov 2026 the tab Telling in Min fugleliste): the warning
+   outside the count weekend, how to count, BirdLife Norge and the next date, the area and «Start telling» (or «Tilbake
+   til tellingen» while counting), and the counts done, which open the summary ---- */
+const tellSheet = $('#tellSheet'), tellBody = $('#tellBody');
+function tellingHtml() {
+  const aktivT = Tell.aktiv(), ferdigeT = Tell.ferdige();
+  return `
+    <div class="s-sec tl-sek">
+      ${(v => (v ? `<p class="varsel tl-varsel">${v}</p>` : ''))(ikkeHelgVarsel(true))}
+      <p class="lead tl-lead">For hver art teller du det høyeste antallet du ser <b>samtidig</b>, ikke alle du ser i løpet av tellingen.</p>
+      <ul class="fakta">
+        <li>Tell gjerne i minst én time. Klokka går øverst mens du teller.</li>
+        <li>Bla til kortet og trykk +, eller åpne telleliste for å finne arten raskt. Du kan også skrive inn tallet.</li>
+        <li>Ekorn står i telleliste, siden det er med i skjemaet.</li>
+        <li>Når du avslutter, får du tallene i samme rekkefølge som skjemaet på Fuglevennen.no, og alle artene du har talt får en observasjonsdag.</li>
+      </ul>
+      <p class="cap tl-birdlife">Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar. ${helgSetning()} Tallene sendes inn på <a href="https://www.fuglevennen.no/" target="_blank" rel="noopener">Fuglevennen.no</a>.</p>
+      ${aktivT ? '<button class="btn pri big" id="goTell">Tilbake til tellingen</button>'
+        : `<label class="felt">Område (valgfritt)<input id="tOmrade" maxlength="80" autocomplete="off" enterkeyhint="go" placeholder="f.eks. Hagen hjemme" value="${esc(lsGet(brukerNokkel('hagefugler:omrade')) || '')}"></label>
+      <button class="btn pri big" id="tStart">Start telling</button>`}
+    </div>
+    ${ferdigeT.length ? `<div class="s-sec"><h3>Tidligere tellinger</h3><ul class="recent tl-hist">${ferdigeT.map(id => { const v = Tell.data[id], x = sumAv(v), d = new Date(v.start); return `<li><button data-tid="${id}"><span class="ph tdato" aria-hidden="true"><span>${d.getDate()}.<small>${MND[d.getMonth()]}</small></span></span><span><b style="font-weight:600">${esc(stor(datoLang(v.start)))}</b><br><span style="font-size:12.5px;color:var(--muted)">${flertall(x.arter, 'art', 'arter')} · ${flertall(x.ind, 'individ', 'individer')} · ${varighet(v.slutt - v.start)}${v.omrade ? ` · ${esc(v.omrade)}` : ''}</span></span><span></span></button></li>`; }).join('')}</ul></div>` : ''}`;
+}
+function renderTelling() {
+  const f = $('#tOmrade'), v = f && f.value, fokus = f && document.activeElement === f;   // what is typed in the area stays
+  tellBody.innerHTML = tellingHtml();
+  const g = $('#tOmrade'); if (g && f) { g.value = v; if (fokus) g.focus(); }
+}
+function openTelling() { showSheet(tellSheet); renderTelling(); tellSheet.scrollTop = 0; setTimeout(() => $('#closeTell').focus(), 60); }
+$('#closeTell').addEventListener('click', () => closeSheets());
+tellBody.addEventListener('click', e => {
+  const tl = e.target.closest('[data-tid]');
+  if (tl) { openSum(tl.dataset.tid); return; }
+  if (e.target.id === 'tStart') { startTelling(); return; }
+  if (e.target.id === 'goTell') closeSheets();
+});
+tellBody.addEventListener('keydown', e => { if (e.target.id === 'tOmrade' && e.key === 'Enter') { e.preventDefault(); startTelling(); } });   // Enter in the area starts too
+/* «Start telling» (Hagefugltelling) starts the count at once, with the area; the life list's mode ends first. The
+   sheet says how to count, so there is no window of its own */
 function startTelling() {
   if (Tell.aktiv()) { closeSheets(); return; }
   const inp = $('#tOmrade'), omrade = (inp ? inp.value : '').trim().slice(0, 80);
@@ -3959,7 +3988,6 @@ function startTelling() {
   closeSheets(true);
   si('Tellingen er i gang. Bla til arten og trykk +, eller åpne telleliste.');
 }
-sb.addEventListener('keydown', e => { if (e.target.id === 'tOmrade' && e.key === 'Enter') { e.preventDefault(); startTelling(); } });   // Enter in the area starts too
 
 /* the list: every species with its own counter, the commonest garden birds first, ekorn on top */
 const tlisteEl = $('#tliste'), lq = $('#lq');
@@ -5346,6 +5374,7 @@ Tell.on(() => {
   if (openSheet === listeSheet) oppdaterListe();
   if (openSheet === sumSheet) renderSum();
   if (openSheet && openSheet.id === 'statsSheet') renderStats();
+  if (openSheet === tellSheet) renderTelling();
 });
 
 /* ================= Deling: ledertavle og statistikk (Supabase) =================
@@ -5357,7 +5386,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = 'f4c2f9df45';
+const APPVERSJON = '471f2de343';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
@@ -6273,7 +6302,7 @@ const INTRO = [
         <svg class="tick" viewBox="0 0 100 100" aria-hidden="true" style="left:${P(bx - 0.012)};top:${P(by - bh * 0.45)};width:${P(bw * 1.55)};height:${P(bh * 1.5)}">${PEN}</svg>
         <span class="idag-merke" aria-hidden="true" style="left:${P(BILDEFELT.x + 0.022)};top:${P(BILDEFELT.y + BILDEFELT.h - 0.058)}">${CHECK}Sett i dag</span></figure>`; } },
   /* Hagefugltellingen and where the count is in the app; the picture: a card as in the count (its number, the time) */
-  { tittel: 'Bli med på Hagefugltellingen', tekst: 'Tell fuglene i hagen for BirdLife Norge siste helga i januar. Bruk tellingen i appen: Min\u00a0fugleliste\u00a0→\u00a0Telling.',
+  { tittel: 'Bli med på Hagefugltellingen', tekst: 'Tell fuglene i hagen for BirdLife Norge siste helga i januar. Bruk tellingen i appen: Menyen\u00a0→\u00a0Hagefugltelling.',
     bilde: () => `<figure class="intro-kort intro-tell"><img src="${esc(bildeAv(introKort('pyrrhula-pyrrhula')))}" alt=""><span class="intro-ant" aria-hidden="true">3</span>
       <span class="intro-tid" aria-hidden="true"><i></i>42:03<small>5 arter</small></span></figure>` },
   { tittel: 'Frø og titler', fro: true, tekst: 'Klarer du å oppnå tittelen Fuglekonge?',
@@ -6562,7 +6591,7 @@ $('#varselTest').addEventListener('click', async () => {
 function visFraVarsel(vis) {
   if (vis !== 'telling' && vis !== 'tavle') return;
   if (openSheet === introEl || dlgApen) return;
-  openStats(vis);
+  if (vis === 'telling') openTelling(); else openStats(vis);
 }
 if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'vis') visFraVarsel(e.data.vis); });
 {
