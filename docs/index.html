@@ -1376,6 +1376,12 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <div class="s-sec" id="enkelSek"><h3>Enkel versjon</h3>
     <button class="bryter" id="enkelBtn" role="switch" aria-checked="false"><span><b>Bare registrering</b><small>Ingen frø, titler, feiringer, oppdrag, merker, Frøbutikk eller glinskant. Tavla viser bare arter. Slår du det av igjen, er alt tilbake, også det du har samlet i mellomtiden.</small></span><i aria-hidden="true"></i></button>
   </div>
+  <div class="s-sec" id="varselSek"><h3>Varsler</h3>
+    <button class="bryter" id="varselTelling" role="switch" aria-checked="false"><span><b>Hagefugltellingen</b><small>Dagen før og når den starter, siste helga i januar.</small></span><i aria-hidden="true"></i></button>
+    <button class="bryter" id="varselPremie" role="switch" aria-checked="false"><span><b>Premier du vinner</b><small>Når du kommer blant de tre beste på ukas, månedens eller årets ledertavle. Bare når du deler.</small></span><i aria-hidden="true"></i></button>
+    <p class="valg-merk" id="varselStatus" role="status"></p>
+    <button class="btn" id="varselTest" hidden>Send et testvarsel</button>
+  </div>
   <div class="s-sec" id="bildeSek"><h3 id="bildevalgTitle">Bilder på kortene</h3>
     <div class="valg" role="radiogroup" aria-labelledby="bildevalgTitle">
       <button role="radio" data-bilder="ki" aria-checked="false"><span class="rd"></span><b>KI-illustrasjoner</b><small>Tegnede fuglebilder laget til kortstokken. Samme bilder som på de trykte kortene.</small></button>
@@ -3292,7 +3298,7 @@ function paintSettings() {
   setSheet.querySelectorAll('[data-bilder]').forEach(b => b.setAttribute('aria-checked', b.dataset.bilder === bildevalg));
   $('#vippBtn').setAttribute('aria-checked', Vipp.aktiv ? 'true' : 'false');
   $('#enkelBtn').setAttribute('aria-checked', enkel ? 'true' : 'false');
-  paintBrukere();
+  paintBrukere(); setTimeout(() => { paintVarsler(); varselSynk(); }, 0);   // (after the start: the code is further down)
 }
 $('#enkelBtn').addEventListener('click', () => settEnkel(!enkel));
 $('#forFraInnst').addEventListener('click', () => tilbyForModus());
@@ -5194,7 +5200,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '5d333dd933';
+const APPVERSJON = '4e55d14b65';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
@@ -6191,7 +6197,11 @@ function introTil(k) {
   setTimeout(() => { const h = s.querySelector('h2'); if (h) h.focus({ preventScroll: true }); }, 380);
 }
 /* the introduction done without the tasks (enkel versjon, or the name step only): the first time, the offer of the life list */
-function introFerdig() { const livs = introModus === 'forste'; lukkIntro(); if (livs) setTimeout(tilbyForModus, 320); }
+function introFerdig() {
+  const livs = introModus === 'forste';
+  if (livs && varselStotte() && Notification.permission === 'default') varselBeOm();
+  lukkIntro(); if (livs) setTimeout(tilbyForModus, 320);
+}
 function lukkIntro() {
   if (openSheet !== introEl) return;
   const tilbake = introTilbake; introModus = null; introTilbake = null;
@@ -6203,6 +6213,7 @@ $('#introNeste').addEventListener('click', () => {
   const k = introIndeks(), side = introSpor.children[k];
   if (k < introSpor.children.length - 1) { introTil(k + 1); return; }
   const livs = introModus === 'forste' && !!side && side.dataset.s === 'oppdrag';
+  if (livs && varselStotte() && Notification.permission === 'default') varselBeOm();   // varsler: the phone asks now
   lukkIntro();
   if (livs) setTimeout(tilbyForModus, 320);
 });
@@ -6267,7 +6278,7 @@ function sporOmStart(forsok = 0) {
 
 /* ---- Innstillinger: sharing on and off, the postcode, hidden names, and what is waiting ---- */
 function paintDeling() {
-  paintTittel(); paintGrupper();
+  paintTittel(); paintGrupper(); setTimeout(varselSynk, 0);   // sharing on or off: the prizes to this phone or not
   if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') { const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; }
   const b = $('#delBtn'); if (!b) return;
   const pa = deler(), slett = !!lsGet(DK('slett'));
@@ -6291,6 +6302,116 @@ $('#visArterBtn').addEventListener('click', () => {
 });
 $('#visSkjulte').addEventListener('click', () => { lagreSkjulte({}); paintDeling(); si('De skjulte navnene vises igjen.'); });
 $('#postnrFelt').addEventListener('change', e => { if (lagrePostnr(e.target.value)) si(e.target.value.trim() ? 'Postnummeret er lagret.' : 'Postnummeret er fjernet.'); paintDeling(); });
+
+/* ---- Varsler (push): Hagefugltellingen and the prizes one wins. On from the start, each can be turned off. The phone
+   says yes once: on «Kom i gang» the first time, otherwise in a window once. The address the browser gives goes to
+   Supabase (varsel_lagre) with the choices, and the user if the phone shares; send-varsler sends them. Per device ---- */
+const VARSEL_KEY = 'hagefugler:varsler', VARSEL_SPURT = 'hagefugler:varsler-spurt', VARSEL_SIST = 'hagefugler:varsler-sist', VARSEL_NOKKEL = 'hagefugler:varsel-nokkel';
+const varselStotte = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window && /^https?:$/.test(location.protocol);
+const varselValg = () => ({ telling: true, premier: true, ...lsJson(VARSEL_KEY, {}) });
+const varselTillatt = () => varselStotte() && Notification.permission === 'granted';
+const varselB64u = b => btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const varselBytes = t => Uint8Array.from(atob(t.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - (t.length % 4)) % 4)), c => c.charCodeAt(0));
+async function varselNokkel() {
+  const k = lsGet(VARSEL_NOKKEL); if (k) return k;
+  const r = await rpc('varsel_nokkel');
+  if (r.ok && typeof r.j === 'string' && r.j.length > 60) { lsSet(VARSEL_NOKKEL, r.j); return r.j; }
+  return null;
+}
+/* the address and the choices to Supabase: when something changed, otherwise at most once a day */
+let varselSynkP = null;
+function varselSynk(tving) {
+  return varselSynkP || (varselSynkP = (async () => {
+    if (!varselTillatt()) return;
+    const v = varselValg(), premier = !!v.premier && !enkel, paa = !!v.telling || premier;
+    const reg = await Promise.race([navigator.serviceWorker.ready, new Promise(r => setTimeout(() => r(null), 8000))]);
+    if (!reg || !reg.pushManager) return;
+    let sub = await reg.pushManager.getSubscription();
+    if (!paa) {                                                  // both off: away from Supabase and the browser
+      if (sub) { const r = await rpc('varsel_slett', { p_endpoint: sub.endpoint }); if (r.ok) await sub.unsubscribe().catch(() => {}); }
+      lsDel(VARSEL_SIST); return;
+    }
+    const nokkel = await varselNokkel(); if (!nokkel) return;
+    if (sub && sub.options && sub.options.applicationServerKey && varselB64u(sub.options.applicationServerKey) !== nokkel) { await sub.unsubscribe().catch(() => {}); sub = null; }
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: varselBytes(nokkel) });
+    const j = sub.toJSON(), koble = deler() && !!lsGet(DK('okt'));
+    const sig = JSON.stringify([j.endpoint, !!v.telling, premier, !enkel, koble, BRUKER.id]), sist = lsJson(VARSEL_SIST, null);
+    if (!tving && sist && sist.sig === sig && Date.now() - sist.t < 864e5) return;
+    const r = await rpc('varsel_lagre', { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_telling: !!v.telling, p_premier: premier,
+                                          p_fro: !enkel, p_app: APPVERSJON.startsWith('play') ? 'play' : 'web', p_koble: koble });
+    if (r.ok) lsSet(VARSEL_SIST, JSON.stringify({ sig, t: Date.now(), endpoint: j.endpoint }));
+  })().catch(() => {}).finally(() => { varselSynkP = null; }));
+}
+/* the phone's question (after a tap: browsers only ask then) */
+function varselBeOm() {
+  if (!varselStotte()) return Promise.resolve('');
+  lsSet(VARSEL_SPURT, '1');
+  let p; try { p = Notification.requestPermission(); } catch (e) { p = null; }
+  return Promise.resolve(p).then(() => Notification.permission).then(svar => {
+    paintVarsler();
+    if (svar === 'granted') varselSynk(true).then(paintVarsler);
+    return svar;
+  }).catch(() => '');
+}
+const varselTekst = () => (deler() && !enkel ? 'Få beskjed når Hagefugltellingen starter og når du vinner en premie.' : 'Få beskjed når Hagefugltellingen starter.');
+/* at start: with a yes already, the address to Supabase; otherwise once, a window (not the first time: «Kom i gang») */
+function varselOppstart(forsok = 0) {
+  if (!varselStotte()) return;
+  if (Notification.permission === 'granted') { varselSynk(); return; }
+  const sist = lsJson(VARSEL_SIST, null);                   // turned off in the phone's settings: away from Supabase too
+  if (Notification.permission === 'denied' && sist && sist.endpoint) rpc('varsel_slett', { p_endpoint: sist.endpoint }).then(r => { if (r.ok) lsDel(VARSEL_SIST); });
+  if (Notification.permission !== 'default' || lsGet(VARSEL_SPURT) || delingValg() == null) return;
+  const opptatt = dlgApen || festAapen || festKo.length || openSheet || !$('#festVent').hidden;
+  if (opptatt) { if (forsok < 120) setTimeout(() => varselOppstart(forsok + 1), 1000); return; }
+  lsSet(VARSEL_SPURT, '1');
+  sporsmal({
+    tittel: 'Varsler',
+    tekst: `<p>${varselTekst()} Du kan slå dem av i Innstillinger.</p>`,
+    knapper: [{ tekst: 'Slå på', pri: true, fn: () => { varselBeOm().then(svar => { if (svar === 'granted') si('Varslene er på.'); }); } }, { tekst: 'Ikke nå' }],
+  });
+}
+function paintVarsler() {
+  if (!$('#varselSek')) return;
+  const st = varselStotte(), tillatt = varselTillatt(), blokkert = st && Notification.permission === 'denied', v = varselValg();
+  [['#varselTelling', !!v.telling], ['#varselPremie', !!v.premier]].forEach(([id, paa]) => {
+    const b = $(id); b.setAttribute('aria-checked', tillatt && paa ? 'true' : 'false'); b.disabled = !st || blokkert;
+  });
+  $('#varselPremie').hidden = enkel;
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  $('#varselStatus').textContent = !st ? (ios ? 'På iPhone virker varsler når appen er lagt på hjemskjermen.' : 'Varsler virker ikke i denne nettleseren.')
+    : blokkert ? 'Varsler er blokkert. Slå dem på i telefonens innstillinger.'
+    : !tillatt ? 'Trykk på en bryter for å slå på varsler.' : '';
+  $('#varselTest').hidden = !(tillatt && (v.telling || (v.premier && !enkel)));
+}
+[['#varselTelling', 'telling'], ['#varselPremie', 'premier']].forEach(([id, k]) => $(id).addEventListener('click', () => {
+  if (!varselStotte()) return;
+  const v = varselValg();
+  if (!varselTillatt()) { v[k] = true; lsSet(VARSEL_KEY, JSON.stringify(v)); varselBeOm(); return; }
+  v[k] = !v[k]; lsSet(VARSEL_KEY, JSON.stringify(v)); paintVarsler(); varselSynk(true);
+  si(k === 'telling' ? (v[k] ? 'Du får varsel om Hagefugltellingen.' : 'Ingen varsler om Hagefugltellingen.') : (v[k] ? 'Du får varsel når du vinner en premie.' : 'Ingen varsler om premier.'));
+}));
+$('#varselTest').addEventListener('click', async () => {
+  const st = $('#varselStatus');
+  if (!navigator.onLine) { st.textContent = 'Du trenger nett for å sende et testvarsel.'; return; }
+  st.textContent = 'Sender …';
+  await varselSynk(true);
+  const reg = await navigator.serviceWorker.ready, sub = reg && reg.pushManager && await reg.pushManager.getSubscription();
+  if (!sub) { st.textContent = 'Varslene er ikke klare ennå. Prøv igjen om litt.'; return; }
+  const r = await rpc('send_testvarsel', { p_endpoint: sub.endpoint });
+  st.textContent = r.ok && r.j === true ? 'Testvarselet er sendt. Det kommer om noen sekunder.'
+    : r.ok ? 'Vent et minutt før du sender et nytt testvarsel.' : r.feil === 'nett' ? 'Du trenger nett for å sende et testvarsel.' : 'Testvarselet kunne ikke sendes.';
+});
+/* a notification tapped: the Telling tab or the board (…/?vis=telling, or a message from the service worker) */
+function visFraVarsel(vis) {
+  if (vis !== 'telling' && vis !== 'tavle') return;
+  if (openSheet === introEl || dlgApen) return;
+  openStats(vis);
+}
+if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'vis') visFraVarsel(e.data.vis); });
+{
+  const vis = new URLSearchParams(location.search).get('vis');
+  if (vis) { try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {} setTimeout(() => visFraVarsel(vis), 1200); }
+}
 
 /* ---- Brukere på denne telefonen (see «Brukere»): the list in Innstillinger, a new user, a new name, change, delete.
    A child: the cartoon birds, and not sharing (no name step; it can be turned on in Innstillinger) ---- */
@@ -6527,6 +6648,7 @@ if (lsGet(brukerNokkel('fuglekort:intro')) === 'barn') { lsDel(brukerNokkel('fug
 setTimeout(slettVentende, 2500);                          // users deleted without a network: what they shared
 setTimeout(handterInvitasjon, 2600);                      // …/#bli=KODE: an invitation to a group
 setTimeout(sjekkBonus, 900);                              // dyrekort bought on another device: revealed now
+setTimeout(varselOppstart, 3500);                         // varsler: the address to Supabase, or the question once
 })();
 </script>
 

@@ -16,6 +16,8 @@
 --   dyrearter    dyrekortene, som ikke teller på artstavla  bare du (Table Editor)
 --   grupper      grupper med egen tavle (navn, kode, eier)  bare via funksjonene under (medlemmene)
 --   gruppemedlem hvem som er med i hvilken gruppe          bare via funksjonene under
+--   varsel_abonnement  telefonene som vil ha varsler (push)   bare via funksjonene (se «Varsler»)
+--   varsel_ko    varslene som skal sendes, og som er sendt   bare du
 -- Profilen på tavla (profil_arter): fugleartene en bruker har registrert, for andre på tavla (kan skjules med vis_arter).
 -- Grupper og favoritter (gruppetavle, favoritt_tavle): egne små tavler med bare medlemmene, eller favorittene og deg.
 -- Du som eier prosjektet, ser alt i SQL Editor (der gjelder ikke RLS), f.eks. via visningen observasjoner.
@@ -756,6 +758,234 @@ $$;
 update public.premier set navn = null where user_id is null and navn is not null;
 revoke execute on function public.slett_meg() from public, anon;
 grant execute on function public.slett_meg() to authenticated;
+
+-- ---------- Varsler (push) ----------
+-- Telefonene som vil ha varsler: adressen nettleseren gir (endpoint og nøklene), valgene, og brukeren hvis telefonen
+-- deler (til premievarslene). Varslene legges i en kø og sendes av Edge-funksjonen send-varsler (Web Push), som
+-- lager nøkkelparet (VAPID) første gang og legger det i varsel_nokler. Det trengs to tillegg: Cron (Integrations →
+-- Cron) og pg_net (Database → Extensions); linjene under slår dem på hvis de er av.
+--   Hagefugltellingen: fredagen før kl. 18 og lørdag kl. 9 (siste helga i januar, se tellehelg), norsk tid
+--   premier: kl. 9 dagen premien ble delt ut (mandag for uka, den 1. for måneden, 1. januar for året)
+create extension if not exists pg_net with schema extensions;
+create extension if not exists pg_cron with schema pg_catalog;
+
+create table if not exists public.varsel_abonnement (
+  endpoint  text primary key check (length(endpoint) between 20 and 1000),
+  p256dh    text not null check (length(p256dh) between 40 and 200),
+  auth      text not null check (length(auth) between 10 and 100),
+  telling   boolean not null default true,              -- Hagefugltellingen
+  premier   boolean not null default true,              -- premier brukeren vinner
+  fro       boolean not null default true,              -- false i den enkle versjonen (teksten uten frø)
+  app       text not null default 'web' check (app in ('web', 'play')),
+  user_id   uuid references auth.users (id) on delete set null,   -- bare når telefonen deler
+  opprettet timestamptz not null default now(),
+  sett      timestamptz not null default now(),         -- sist appen meldte seg
+  feil      smallint not null default 0,
+  test_sendt timestamptz
+);
+create index if not exists varsel_abonnement_bruker on public.varsel_abonnement (user_id) where user_id is not null;
+create table if not exists public.varsel_ko (
+  id       bigserial primary key,
+  endpoint text not null references public.varsel_abonnement (endpoint) on delete cascade,
+  tittel   text not null,
+  tekst    text not null,
+  url      text not null default './',
+  tag      text,
+  ttl      integer not null default 86400,               -- sekunder varselet kan vente hos push-tjenesten
+  laget    timestamptz not null default now(),
+  sendt    timestamptz,
+  status   smallint                                       -- HTTP-svaret fra push-tjenesten (0: nettfeil)
+);
+create index if not exists varsel_ko_usendt on public.varsel_ko (id) where sendt is null;
+create table if not exists public.varsel_logg (hva text primary key, tid timestamptz not null default now());   -- hva som er lagt i køen
+create table if not exists public.varsel_nokler (
+  id        smallint primary key default 1 check (id = 1),
+  offentlig text not null,                               -- til appen (applicationServerKey)
+  privat    jsonb not null,                              -- bare for send-varsler
+  laget     timestamptz not null default now()
+);
+-- Hagefugltellingen: siste lørdag i januar og søndagen etter. Velger BirdLife en annen helg, legg lørdagen inn her
+-- (og i TELLEHELG i appen): insert into public.tellehelg values (2031, '2031-01-25');
+create table if not exists public.tellehelg (aar integer primary key, lordag date not null);
+alter table public.varsel_abonnement enable row level security;   -- ingen regler: bare funksjonene under
+alter table public.varsel_ko enable row level security;
+alter table public.varsel_logg enable row level security;
+alter table public.varsel_nokler enable row level security;
+alter table public.tellehelg enable row level security;
+revoke all on public.varsel_abonnement, public.varsel_ko, public.varsel_logg, public.varsel_nokler, public.tellehelg from anon, authenticated;
+
+create or replace function public.tellehelg_lordag(y integer) returns date
+language sql stable set search_path = '' as $$
+  select coalesce((select t.lordag from public.tellehelg t where t.aar = y),
+                  make_date(y, 1, 31) - ((extract(dow from make_date(y, 1, 31))::integer + 1) % 7));
+$$;
+
+-- appen: lagre telefonen og valgene (koble: telefonen deler, så premiene til brukeren kommer hit)
+create or replace function public.varsel_lagre(p_endpoint text, p_p256dh text, p_auth text, p_telling boolean, p_premier boolean,
+                                               p_fro boolean, p_app text, p_koble boolean) returns void
+language plpgsql security definer set search_path = '' as $$
+begin
+  if p_endpoint !~ '^https://(fcm\.googleapis\.com|[a-z0-9.-]*push\.services\.mozilla\.com|web\.push\.apple\.com|[a-z0-9.-]+\.notify\.windows\.com)/' then
+    raise exception 'ukjent_adresse';
+  end if;
+  insert into public.varsel_abonnement as a (endpoint, p256dh, auth, telling, premier, fro, app, user_id)
+  values (p_endpoint, p_p256dh, p_auth, coalesce(p_telling, true), coalesce(p_premier, true), coalesce(p_fro, true),
+          case when p_app = 'play' then 'play' else 'web' end, case when p_koble then (select auth.uid()) end)
+  on conflict (endpoint) do update set p256dh = excluded.p256dh, auth = excluded.auth, telling = excluded.telling,
+    premier = excluded.premier, fro = excluded.fro, app = excluded.app, user_id = excluded.user_id, sett = now(), feil = 0;
+end $$;
+create or replace function public.varsel_slett(p_endpoint text) returns void
+language sql security definer set search_path = '' as $$
+  delete from public.varsel_abonnement a where a.endpoint = p_endpoint;
+$$;
+-- den offentlige nøkkelen; finnes den ikke ennå, bes send-varsler om å lage den (appen spør igjen senere)
+create or replace function public.varsel_nokkel() returns text
+language plpgsql security definer set search_path = '' as $$
+declare k text;
+begin
+  select n.offentlig into k from public.varsel_nokler n where n.id = 1;
+  if k is null then perform public.varsel_send(); end if;
+  return k;
+end $$;
+-- et testvarsel til telefonen (høyst ett i minuttet)
+create or replace function public.send_testvarsel(p_endpoint text) returns boolean
+language plpgsql security definer set search_path = '' as $$
+declare a public.varsel_abonnement;
+begin
+  update public.varsel_abonnement v set test_sendt = now()
+  where v.endpoint = p_endpoint and (v.test_sendt is null or v.test_sendt < now() - interval '1 minute')
+  returning * into a;
+  if not found then return false; end if;
+  insert into public.varsel_ko (endpoint, tittel, tekst, url, tag, ttl)
+  values (a.endpoint, 'Hagefugler', 'Varslene virker. Du får beskjed når ' || case
+            when a.telling and a.premier and a.fro then 'Hagefugltellingen starter og når du vinner en premie.'
+            when a.premier and a.fro and not a.telling then 'du vinner en premie.'
+            else 'Hagefugltellingen starter.' end, './', 'test', 600);
+  perform public.varsel_send();
+  return true;
+end $$;
+
+-- ber Edge-funksjonen send-varsler sende det som ligger i køen (og lage nøklene første gang)
+create or replace function public.varsel_send() returns void
+language plpgsql security definer set search_path = '' as $$
+begin
+  perform net.http_post(url := 'https://qfustbltxgbpwsntcrpd.supabase.co/functions/v1/send-varsler',
+                        body := '{}'::jsonb, headers := '{"Content-Type": "application/json"}'::jsonb,
+                        timeout_milliseconds := 60000);
+end $$;
+
+-- legger varslene som skal ut nå i køen, hvert bare én gang (varsel_logg); p_na bare til testing
+create or replace function public.planlegg_varsler(p_na timestamptz default now()) returns integer
+language plpgsql security definer set search_path = '' as $$
+declare
+  na  timestamp := p_na at time zone 'Europe/Oslo';
+  y   integer := extract(year from na)::integer;
+  lor date := public.tellehelg_lordag(y);
+  n   integer := 0; k integer; p record; navn text; mnd text[] := array['januar', 'februar', 'mars', 'april', 'mai', 'juni',
+       'juli', 'august', 'september', 'oktober', 'november', 'desember'];
+begin
+  -- Hagefugltellingen: fredagen før kl. 18–24 og lørdag kl. 9–18
+  if na >= (lor - 1) + time '18:00' and na < lor + time '00:00' then
+    insert into public.varsel_logg (hva) values ('telling-fre:' || y) on conflict do nothing;
+    if found then
+      insert into public.varsel_ko (endpoint, tittel, tekst, url, tag, ttl)
+      select a.endpoint, 'Hagefugltellingen', 'Hagefugltellingen er i morgen og søndag. Tell fuglene i hagen i én time.', './?vis=telling', 'telling', 21600
+      from public.varsel_abonnement a where a.telling;
+      get diagnostics k = row_count; n := n + k;
+    end if;
+  end if;
+  if na >= lor + time '09:00' and na < lor + time '18:00' then
+    insert into public.varsel_logg (hva) values ('telling-lor:' || y) on conflict do nothing;
+    if found then
+      insert into public.varsel_ko (endpoint, tittel, tekst, url, tag, ttl)
+      select a.endpoint, 'Hagefugltellingen', case when a.fro then 'Hagefugltellingen er i gang! Tell i én time og få 75 000 frø.'
+                                                   else 'Hagefugltellingen er i gang! Tell fuglene i hagen i én time.' end,
+             './?vis=telling', 'telling', 21600
+      from public.varsel_abonnement a where a.telling;
+      get diagnostics k = row_count; n := n + k;
+    end if;
+  end if;
+  -- premiene: fra kl. 9 den dagen de ble delt ut, i tre dager
+  for p in select pr.periode, pr.plass, pr.user_id, pr.fro, pr.tid from public.premier pr
+           where pr.user_id is not null and pr.tid > p_na - interval '3 days' and pr.tid <= p_na
+             and na >= (pr.tid at time zone 'Europe/Oslo')::date + time '09:00'
+             and not exists (select 1 from public.varsel_logg l where l.hva = 'premie:' || pr.periode || ':' || pr.plass)
+           order by pr.tid loop
+    insert into public.varsel_logg (hva) values ('premie:' || p.periode || ':' || p.plass) on conflict do nothing;
+    navn := case split_part(p.periode, ':', 1)
+              when 'uke' then 'uke ' || split_part(split_part(p.periode, ':', 2), '-', 2)::integer
+              when 'mnd' then mnd[split_part(split_part(p.periode, ':', 2), '-', 2)::integer] || ' ' || split_part(split_part(p.periode, ':', 2), '-', 1)
+              else split_part(p.periode, ':', 2) end;
+    insert into public.varsel_ko (endpoint, tittel, tekst, url, tag)
+    select a.endpoint,
+           case split_part(p.periode, ':', 1) when 'uke' then 'Ukas ledertavle' when 'mnd' then 'Månedens ledertavle' else 'Årets ledertavle' end,
+           'Du kom på ' || p.plass || '. plass i ' || navn || ' og vant ' || replace(to_char(p.fro, 'FM999,999,999'), ',', chr(160)) || ' frø!',
+           './?vis=tavle', 'premie'
+    from public.varsel_abonnement a where a.premier and a.fro and a.user_id = p.user_id;
+    get diagnostics k = row_count; n := n + k;
+  end loop;
+  return n;
+end $$;
+
+-- hvert tiende minutt (Cron): premiene for perioder som er over, varslene som skal ut, og sendingen
+create or replace function public.varsler_tikk() returns void
+language plpgsql security definer set search_path = '' as $$
+begin
+  perform public.avslutt_perioder();
+  perform public.planlegg_varsler();
+  if exists (select 1 from public.varsel_ko k where k.sendt is null) then perform public.varsel_send(); end if;
+end $$;
+
+-- for send-varsler (secret key): nøklene, køen, og hvordan det gikk
+create or replace function public.varsler_nokler(p_offentlig text default null, p_privat jsonb default null) returns jsonb
+language plpgsql security definer set search_path = '' as $$
+declare r jsonb;
+begin
+  if p_offentlig is not null and p_privat is not null then
+    insert into public.varsel_nokler (id, offentlig, privat) values (1, p_offentlig, p_privat) on conflict (id) do nothing;
+  end if;
+  select jsonb_build_object('offentlig', n.offentlig, 'privat', n.privat) into r from public.varsel_nokler n where n.id = 1;
+  return r;
+end $$;
+create or replace function public.varsler_hent(p_antall integer default 200)
+returns table (id bigint, endpoint text, p256dh text, auth text, tittel text, tekst text, url text, tag text, ttl integer)
+language sql security definer set search_path = '' as $$
+  select k.id, a.endpoint, a.p256dh, a.auth, k.tittel, k.tekst, k.url, k.tag, k.ttl
+  from public.varsel_ko k join public.varsel_abonnement a on a.endpoint = k.endpoint
+  where k.sendt is null and k.laget > now() - interval '1 day'
+  order by k.id limit least(greatest(p_antall, 1), 500);
+$$;
+-- p_svar: [{ "id": 1, "status": 201 }, …]. 404/410: telefonen har sluttet å ta imot, og fjernes; etter fem feil på rad også
+create or replace function public.varsler_ferdig(p_svar jsonb) returns void
+language plpgsql security definer set search_path = '' as $$
+begin
+  with s as (select (x->>'id')::bigint as id, coalesce((x->>'status')::integer, 0) as status from jsonb_array_elements(p_svar) x)
+  update public.varsel_ko k set sendt = now(), status = s.status from s where k.id = s.id;
+  delete from public.varsel_abonnement a using public.varsel_ko k
+  where k.endpoint = a.endpoint and k.sendt > now() - interval '5 minutes' and k.status in (404, 410);
+  update public.varsel_abonnement a set feil = case when k.status between 200 and 299 then 0 else a.feil + 1 end
+  from public.varsel_ko k
+  where k.endpoint = a.endpoint and k.id in (select (x->>'id')::bigint from jsonb_array_elements(p_svar) x);
+  delete from public.varsel_abonnement a where a.feil >= 5 or a.sett < now() - interval '1 year';
+  update public.varsel_ko k set sendt = now(), status = 0 where k.sendt is null and k.laget <= now() - interval '1 day';
+  delete from public.varsel_ko k where k.laget < now() - interval '30 days';
+end $$;
+
+revoke execute on function public.varsel_lagre(text, text, text, boolean, boolean, boolean, text, boolean), public.varsel_slett(text),
+  public.varsel_nokkel(), public.send_testvarsel(text), public.varsel_send(), public.planlegg_varsler(timestamptz), public.varsler_tikk(),
+  public.varsler_nokler(text, jsonb), public.varsler_hent(integer), public.varsler_ferdig(jsonb), public.tellehelg_lordag(integer) from public, anon, authenticated;
+grant execute on function public.varsel_lagre(text, text, text, boolean, boolean, boolean, text, boolean), public.varsel_slett(text),
+  public.varsel_nokkel(), public.send_testvarsel(text) to anon, authenticated;
+grant execute on function public.varsler_nokler(text, jsonb), public.varsler_hent(integer), public.varsler_ferdig(jsonb) to service_role;
+do $$
+begin
+  if exists (select 1 from pg_extension where extname = 'pg_cron') then
+    execute $c$select cron.schedule('hagefugler-varsler', '*/10 * * * *', 'select public.varsler_tikk()')$c$;
+  end if;
+end $$;
+-- Prøv: select public.planlegg_varsler(); select * from public.varsel_ko order by id desc limit 20;
+-- Et varsel til alle (f.eks. en rettelse): insert into public.varsel_ko (endpoint, tittel, tekst)
+--   select endpoint, 'Hagefugler', '…' from public.varsel_abonnement; select public.varsel_send();
 
 -- ---------- Eksempler på statistikk (kjør i SQL Editor) ----------
 -- Hvor mange dager og brukere hver art er sett:
