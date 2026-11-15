@@ -78,7 +78,9 @@ async def kjor(b, navn, url, egen, play):
     # the board, the favourites and a group, the picture sets and the big picture, Innstillinger
     await pg.evaluate(lukk); await pg.keyboard.press('Escape'); await pg.wait_for_timeout(300)
     await trykk('#openStats')
-    for fane in ('#fane-statistikk', '#fane-kort', '#fane-merker', '#fane-tavle'): await trykk(fane, 500)
+    for fane in ('#fane-statistikk', '#fane-kort', '#fane-merker'): await trykk(fane, 500)
+    await pg.keyboard.press('Escape'); await pg.wait_for_timeout(300)
+    await trykk('#openMeny', 200); await trykk('#openTavle', 600)
     await trykk('[data-tavlehvem="fav"]'); await trykk('[data-tavlehvem="alle"]')
     await pg.keyboard.press('Escape'); await pg.wait_for_timeout(300)
     await trykk('#openMeny', 200); await trykk('#openSettings')

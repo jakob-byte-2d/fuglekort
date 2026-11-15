@@ -1,5 +1,5 @@
-"""The menu at the top right: Profil first (Min fugleliste on the Profil tab, also in the simple version and for
-children), Hagefugltelling (its own sheet; «Pågår» while counting), then Søk etter fugl, Livslisten, Om kortene, Slik virker appen, «Få kortene i postkassen» (opens
+"""The menu at the top right: Profil first (the sheet Profil, before «Min fugleliste», on the tab Profil, also in the
+simple version and for children), Ledertavle (its own sheet, on Totalt each time), Hagefugltelling (its own sheet; «Pågår» while counting), then Søk etter fugl, Livslisten, Om kortene, Slik virker appen, «Få kortene i postkassen» (opens
 https://hagefugler.no/#bestill; not for the user type «Barn») and Innstillinger.
 Run from the repo after python3 build.py:   python3 tests/meny_test.py [MAPPE_FOR_SKJERMBILDER]
 """
@@ -10,7 +10,7 @@ ROT = pathlib.Path(__file__).resolve().parent.parent
 BILDER = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1] else None
 URL = 'http://localhost:8794/'
 FEIL = []
-ALLE = ['Profil', 'Hagefugltelling', 'Søk etter fugl', 'Livslisten', 'Om kortene', 'Slik virker appen', 'Få kortene i postkassen', 'Innstillinger']
+ALLE = ['Profil', 'Ledertavle', 'Hagefugltelling', 'Søk etter fugl', 'Livslisten', 'Om kortene', 'Slik virker appen', 'Få kortene i postkassen', 'Innstillinger']
 
 
 def sjekk(navn, ok, info=''):
@@ -64,9 +64,14 @@ async def main():
                 sjekk('   markøren står på Profil', fokus == 'openProfil', fokus)
                 if BILDER and navn == 'vanlig bruker': await pg.screenshot(path=str(BILDER / 'meny.png'))
                 await pg.evaluate("document.querySelector('#openProfil').click()"); await pg.wait_for_timeout(700)
-                r = await pg.evaluate("[document.querySelector('#statsSheet').classList.contains('on'), document.querySelector('#faner [aria-selected=true]').textContent, document.querySelector('#meny').hidden]")
-                sjekk('   Profil åpner Min fugleliste på fanen Profil (fra fanen Telling sist)', r == [True, 'Profil', True], r)
+                r = await pg.evaluate("[document.querySelector('#statsSheet').classList.contains('on'), document.querySelector('#faner [aria-selected=true]').textContent, document.querySelector('#meny').hidden, document.querySelector('#statsTitle').textContent, [...document.querySelectorAll('#faner [data-fane]')].filter(b => b.offsetParent).map(b => b.textContent)]")
+                faner = ['Profil', 'Statistikk', 'Kort'] + ([] if navn == 'den enkle versjonen' else ['Merker'])
+                sjekk('   Profil åpner vinduet «Profil» på fanen Profil (fra fanen Telling sist), uten fanene Telling og Tavle', r == [True, 'Profil', True, 'Profil', faner], r)
                 await pg.evaluate("document.querySelector('#closeStats').click()"); await pg.wait_for_timeout(500)
+                await meny(pg); await pg.evaluate("document.querySelector('#openTavle').click()"); await pg.wait_for_timeout(600)
+                r = await pg.evaluate("[document.querySelector('#tavleSheet').classList.contains('on'), document.querySelector('#tavleTitle').textContent, document.activeElement && document.activeElement.id, !!document.querySelector('#tavleBody [data-del-pa]')]")
+                sjekk('   Ledertavle åpner sitt eget vindu (deler ikke: «Del og se ledertavlen»)', r == [True, 'Ledertavle', 'closeTavle', True], r)
+                await pg.evaluate("document.querySelector('#closeTavle').click()"); await pg.wait_for_timeout(500)
                 pa, r = await telling(pg)
                 sjekk('   Hagefugltelling åpner sitt eget vindu med «Start telling», uten «Pågår»', not pa and r == [True, 'Hagefugltelling', True, 'closeTell', True], [pa, r])
                 if BILDER and navn == 'vanlig bruker': await pg.screenshot(path=str(BILDER / 'telling_meny.png'))

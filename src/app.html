@@ -834,7 +834,7 @@ body.formodus::after{opacity:1;visibility:visible;transition:opacity .3s}
   padding:calc(env(safe-area-inset-top,0px) + 14px) 20px calc(env(safe-area-inset-bottom,0px) + 28px)}
 .stats.on{transform:translateX(0)}
 .s-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
-/* Min fugleliste and Frøbutikken: the title and the tabs stay at the top while the tab scrolls. The space for the
+/* Profil (until 15 Nov 2026 «Min fugleliste») and Frøbutikken: the title and the tabs stay at the top while the tab scrolls. The space for the
    top of the phone (the status bar, the Dynamic Island) is in the header only, not in the sheet as well: Safari
    puts a sticky header below the sheet's own padding, and then the header came down twice that space and covered
    the top of the tab */
@@ -876,6 +876,7 @@ button.p-tittel:focus-visible{outline:3px solid var(--spruce-ink);outline-offset
 .pb-knapp:not(.tittel-ikon){border-radius:50%}
 /* «Profilbilde»: the birds on the life list */
 .dlg-kort:has(.pb-rutenett){max-height:100%;overflow:auto}
+.pb-sett{margin:12px 0 0}
 .pb-rutenett{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:6px;max-height:min(40vh,300px);overflow:auto;margin:12px -6px 0;padding:4px 6px 6px;overscroll-behavior:contain}
 .pb-rutenett button{display:grid;justify-items:center;gap:4px;min-width:0;border:0;border-radius:12px;background:none;padding:6px 2px;color:var(--ink);font:inherit;cursor:pointer}
 .pb-rutenett button:hover{background:var(--surface-2)}
@@ -1260,7 +1261,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
       <p id="sub">Kort 001 av 73</p>
     </div>
     <button class="frobtn" id="openFro" aria-label="Solsikkefrø. Åpne Frøbutikken" title="Frøbutikken"><span id="froIkon"></span><b id="froTall">0</b></button>
-    <button class="iconbtn ring" id="openStats" aria-label="Min fugleliste" title="Min fugleliste">
+    <button class="iconbtn ring" id="openStats" aria-label="Profil" title="Profil">
       <svg viewBox="0 0 42 42" aria-hidden="true"><circle class="trk" cx="21" cy="21" r="19"/><circle class="arc" id="ringArc" cx="21" cy="21" r="19" stroke-dasharray="0 120"/></svg>
       <span class="ti" id="ringIkon" aria-hidden="true"></span>
       <span class="pb" id="ringBilde" aria-hidden="true" hidden></span>
@@ -1322,10 +1323,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 
 <div class="scrim" id="scrim"></div>
 
-<!-- the menu at the top right: profile, the garden bird count, search, the life list, about the cards, the introduction, the cards by post, settings -->
+<!-- the menu at the top right: profile, the leaderboard, the garden bird count, search, the life list, about the cards, the introduction, the cards by post, settings -->
 <div class="meny-bak" id="menyBak" hidden></div>
 <div class="meny" id="meny" role="menu" aria-label="Meny" hidden>
   <button role="menuitem" id="openProfil"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.8-3.9 3.8-6 7.5-6s6.7 2.1 7.5 6"/></svg></span><span class="mt">Profil</span></button>
+  <button role="menuitem" id="openTavle"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 20.5v-9h7v9"/><path d="M3 20.5v-5.5h5.5"/><path d="M15.5 20.5v-7H21v7"/><path d="M2 20.5h20"/><path d="m12 3.2.9 1.9 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3z"/></svg></span><span class="mt">Ledertavle</span></button>
   <button role="menuitem" id="openTelling"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="4" width="15" height="17" rx="2"/><path d="M9 4V2.8h6V4"/><path d="M8.5 10v6.5M11 10v6.5M13.5 10v6.5M16 10v6.5"/><path d="M7 15.5 17.5 11"/></svg></span><span class="mt">Hagefugltelling</span><span class="m-pagar" id="tellPagar" hidden>Pågår</span></button>
   <button role="menuitem" id="openSearch"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg></span><span class="mt">Søk etter fugl</span><kbd aria-hidden="true">/</kbd></button>
   <button role="menuitem" id="openFor"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3.5 4.5V9H8"/><path d="M12 7.5V12l3 2"/></svg></span><span class="mt">Livslisten</span></button>
@@ -1360,7 +1362,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <section class="sheet stats med-topp" id="statsSheet" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
   <div class="s-topp">
     <div class="s-head">
-      <h2 id="statsTitle">Min fugleliste</h2>
+      <h2 id="statsTitle">Profil</h2>
       <button class="textbtn" id="closeStats">Lukk</button>
     </div>
     <div class="faner" id="faner" role="tablist" aria-labelledby="statsTitle">
@@ -1368,10 +1370,17 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
       <button role="tab" id="fane-statistikk" data-fane="statistikk" aria-controls="statsBody">Statistikk</button>
       <button role="tab" id="fane-kort" data-fane="kort" aria-controls="statsBody">Kort</button>
       <button role="tab" id="fane-merker" data-fane="merker" aria-controls="statsBody">Merker</button>
-      <button role="tab" id="fane-tavle" data-fane="tavle" aria-controls="statsBody" aria-label="Ledertavle">Tavle</button>
     </div>
   </div>
   <div id="statsBody" role="tabpanel" tabindex="-1"></div>
+</section>
+
+<section class="sheet stats" id="tavleSheet" role="dialog" aria-modal="true" aria-labelledby="tavleTitle">
+  <div class="s-head">
+    <h2 id="tavleTitle">Ledertavle</h2>
+    <button class="textbtn" id="closeTavle">Lukk</button>
+  </div>
+  <div id="tavleBody"></div>
 </section>
 
 <section class="sheet stats" id="tellSheet" role="dialog" aria-modal="true" aria-labelledby="tellTitle">
@@ -1963,17 +1972,22 @@ const forAntall = () => BIRDS.filter(c => ForSett.erFor(c.key)).length;
 const livsliste = () => BIRDS.filter(c => erSett(c.key)).length;
 
 /* ================= Profilbilde =================
-   A bird from the life list or (as before, and the default) the icon of your title; in the simple version, which has
-   no titles, nothing. Shown in the ring at the top right, in the Profil tab and, when sharing, at your name on the
-   boards and your profile (ledertavle.profilfugl). Per user on this device (hagefugler:profilbilde): {fugl: key}. A
-   bird no longer on the life list falls back to the title. A picture of your own was offered for a few hours on
-   15 Nov 2026; one kept is deleted at the start */
+   A bird from the life list, as a photo or an illustration, or (as before, and the default) the icon of your title; in
+   the simple version, which has no titles, nothing. Shown in the ring at the top right, in the Profil tab and, when
+   sharing, at your name on the boards and your profile (ledertavle.profilfugl and .profilsett), in the style chosen
+   whatever picture set the one looking uses. Per user on this device (hagefugler:profilbilde): {fugl: key, sett:
+   'foto' | 'tegneserie'}; without sett (chosen before the style could be) the picture set used now, or Foto. A bird no
+   longer on the life list falls back to the title. A picture of your own was offered for a few hours on 15 Nov 2026;
+   one kept is deleted at the start */
 const PB_KEY = () => brukerNokkel('hagefugler:profilbilde');
 /* a bird the app knows (not a dyrekort), or null: what is shown for someone else on the board */
 const gyldigProfilfugl = k => (typeof k === 'string' && BY_KEY[k] != null && !CARDS[BY_KEY[k]].bonus ? k : null);
+const PB_SETT = ['foto', 'tegneserie'], PB_SETTNAVN = { foto: 'Foto', tegneserie: 'Illustrasjon' };
+const gyldigSett = v => (PB_SETT.includes(v) ? v : null);
+const standardPbSett = () => (tegneserie() ? 'tegneserie' : 'foto');
 function profilbilde() {
   let v = null; try { v = JSON.parse(lsGet(PB_KEY()) || 'null'); } catch (e) {}
-  return v && gyldigProfilfugl(v.fugl) && erSett(v.fugl) ? { fugl: v.fugl } : null;
+  return v && gyldigProfilfugl(v.fugl) && erSett(v.fugl) ? { fugl: v.fugl, sett: gyldigSett(v.sett) || standardPbSett() } : null;
 }
 const profilfugl = () => (profilbilde() || {}).fugl || null;
 try {                                                        // a picture of your own, from those hours: deleted
@@ -1982,11 +1996,14 @@ try {                                                        // a picture of you
     if (k && k.startsWith('hagefugler:profilbilde') && (localStorage.getItem(k) || '').includes('"eget"')) localStorage.removeItem(k);
   }
 } catch (e) {}
-const fuglBilde = k => `<span class="ph" style="background-position:${spritePos(BY_KEY[k])}" aria-hidden="true"></span>`;
-const pbInnhold = p => fuglBilde(p.fugl);
-const pbBeskrivelse = p => (p ? CARDS[BY_KEY[p.fugl]].navn : '');
+/* the bird from the sprite of its style (photos-foto / photos-tegneserie, the same places as the others); without a
+   style (someone on the board with an older app), the picture set of the one looking */
+const pbSprite = sett => (sett ? `;background-image:url('sprites/photos-${sett}.webp')` : '');
+const fuglBilde = (k, sett) => `<span class="ph" style="background-position:${spritePos(BY_KEY[k])}${pbSprite(gyldigSett(sett))}" aria-hidden="true"></span>`;
+const pbInnhold = p => fuglBilde(p.fugl, p.sett);
+const pbBeskrivelse = p => (p ? `${CARDS[BY_KEY[p.fugl]].navn}, ${p.sett === 'tegneserie' ? 'illustrasjon' : 'foto'}` : '');
 function paintProfilbilde() {
-  const p = profilbilde(), el = $('#ringBilde'), s = p ? p.fugl : '';
+  const p = profilbilde(), el = $('#ringBilde'), s = p ? `${p.fugl}:${p.sett}` : '';
   if (el.dataset.s === s) return;
   el.dataset.s = s; el.innerHTML = p ? pbInnhold(p) : ''; el.hidden = !p;
   $('#openStats').classList.toggle('har-pb', !!p);
@@ -1996,13 +2013,18 @@ function settProfilbilde(v) {
   paintProfilbilde();
   if (deler()) planleggSending(1200);                        // the bird at your name on the board
   if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'profil') { renderStats(); const b = $('#statsBody [data-profilbilde]'); if (b) b.focus({ preventScroll: true }); }
-  si(v ? `Profilbildet er nå ${CARDS[BY_KEY[v.fugl]].navn.toLowerCase()}.` : enkel ? 'Profilbildet er fjernet.' : 'Profilbildet er nå tittelikonet ditt.');
+  si(v ? `Profilbildet er nå ${CARDS[BY_KEY[v.fugl]].navn.toLowerCase()} (${v.sett === 'tegneserie' ? 'illustrasjon' : 'foto'}).` : enkel ? 'Profilbildet er fjernet.' : 'Profilbildet er nå tittelikonet ditt.');
 }
-/* «Profilbilde»: the birds on the life list (registered in the app or seen before), by name; back to the title */
+/* «Profilbilde»: Foto or Illustrasjon (the style of the profile picture, else the picture set used now), and the birds
+   on the life list (registered in the app or seen before) in that style, by name; a bird chosen keeps the style shown;
+   back to the title */
+let pbSett = 'foto';
 function velgProfilbilde() {
   const p = profilbilde(), liste = BIRDS.filter(c => erSett(c.key)).sort((a, b) => kol.compare(a.navn, b.navn));
-  const tekst = `<p>Velg en fugl fra livslisten din.${deler() ? ' Den vises også ved navnet ditt på ledertavla.' : ''}</p>`
-    + (liste.length ? `<div class="pb-rutenett" role="group" aria-label="Fugler fra livslisten">${liste.map(c => `<button type="button" data-pb-fugl="${c.key}" aria-pressed="${!!p && p.fugl === c.key}">${fuglBilde(c.key)}<span class="pb-n">${esc(c.navn)}</span></button>`).join('')}</div>` : '')
+  pbSett = p ? p.sett : standardPbSett();
+  const tekst = `<p>${liste.length ? 'Velg Foto eller Illustrasjon, og trykk på en fugl fra livslisten din.' : 'Velg en fugl fra livslisten din.'}${deler() ? ' Den vises også ved navnet ditt på ledertavla.' : ''}</p>`
+    + (liste.length ? `<div class="kal-valg pb-sett" role="group" aria-label="Bildetype">${PB_SETT.map(v => `<button type="button" class="chip" data-pb-sett="${v}" aria-pressed="${v === pbSett}">${PB_SETTNAVN[v]}</button>`).join('')}</div>`
+      + `<div class="pb-rutenett" role="group" aria-label="Fugler fra livslisten">${liste.map(c => `<button type="button" data-pb-fugl="${c.key}" aria-pressed="${!!p && p.fugl === c.key}">${fuglBilde(c.key, pbSett)}<span class="pb-n">${esc(c.navn)}</span></button>`).join('')}</div>` : '')
     + `<p class="pb-merk">${liste.length ? 'Flere fugler kommer når du registrerer dem eller merker dem i livslisten.' : 'Fuglene på livslisten din kan bli profilbilde. Registrer en fugl, eller merk fugler du har sett før i livslisten.'}</p>`;
   sporsmal({ tittel: 'Profilbilde', tekst, knapper: [
     { tekst: 'Åpne livslisten', pri: !liste.length, fn: () => { closeSheets(true); tilbyForModus(); } },
@@ -2011,8 +2033,15 @@ function velgProfilbilde() {
   ] });
 }
 $('#dlg').addEventListener('click', e => {
+  const st = e.target.closest('[data-pb-sett]');
+  if (st) {                                                  // the other style: the birds are shown in it
+    pbSett = st.dataset.pbSett;
+    document.querySelectorAll('#dlg [data-pb-sett]').forEach(x => x.setAttribute('aria-pressed', String(x === st)));
+    document.querySelectorAll('#dlg [data-pb-fugl] .ph').forEach(x => { x.style.backgroundImage = `url('sprites/photos-${pbSett}.webp')`; });
+    return;
+  }
   const b = e.target.closest('[data-pb-fugl]'); if (!b) return;
-  const k = b.dataset.pbFugl; lukkDlg(() => settProfilbilde({ fugl: k }));
+  const k = b.dataset.pbFugl; lukkDlg(() => settProfilbilde({ fugl: k, sett: pbSett }));
 });
 const forAarTekst = k => { const v = ForSett.svar(k); return v && v.aar ? String(v.aar) : 'før appen'; };
 const aarValg = (valgt, tom = 'Husker ikke') => `<option value="">${tom}</option>`
@@ -3052,7 +3081,7 @@ document.addEventListener('keydown', e => {
   if (festAapen) { if (e.key === 'Escape') { e.preventDefault(); lukkFest(); } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); festTrykk(); } return; }
   if (openSheet && openSheet.id === 'introSheet') { if (e.key === 'Escape') { e.preventDefault(); introEsc(); } return; }
   if (e.target.closest('input, textarea')) { if (e.key === 'Escape') closeSheets(); return; }
-  if (openSheet) { if (e.key === 'Escape') { if (artVis && openSheet.id === 'statsSheet') lukkArt(); else if (profilVis && openSheet.id === 'statsSheet') lukkProfil(); else closeSheets(); } return; }
+  if (openSheet) { if (e.key === 'Escape') { if (artVis && openSheet.id === 'statsSheet') lukkArt(); else if (profilVis && openSheet === tavleSheet) lukkProfil(); else closeSheets(); } return; }
   if (e.key === 'ArrowRight') { e.preventDefault(); stopRiffle(); go(1); }
   else if (e.key === 'ArrowLeft') { e.preventDefault(); stopRiffle(); go(-1); }
   else if (e.key === 'Escape') { stopRiffle(); }
@@ -3139,7 +3168,7 @@ function paintChrome() {
 let ringVist = null, ringT = 0;
 const planleggRing = ms => { clearTimeout(ringT); ringT = setTimeout(paintRing, ms); };
 function paintRing() {
-  if (enkel) { ringVist = null; $('#openStats').setAttribute('aria-label', 'Min fugleliste'); $('#openStats').title = 'Min fugleliste'; return; }
+  if (enkel) { ringVist = null; $('#openStats').setAttribute('aria-label', 'Profil'); $('#openStats').title = 'Profil'; return; }
   if (froHold > 0) return;                                  // seeds on their way: the counter first, then the ring
   const fT = froRegnskap().tjent - froParkert();
   if (fT === ringVist) return;
@@ -3149,7 +3178,7 @@ function paintRing() {
   $('#ringIkon').setAttribute('style', tittelPos(tk));
   $('#ringArc').setAttribute('stroke-dasharray', `${(andel * C).toFixed(2)} ${C.toFixed(2)}`);
   $('#ringArc').style.opacity = andel > 0 ? 1 : 0;           // no dot when the way has just started
-  $('#openStats').setAttribute('aria-label', `Min fugleliste. ${tt.navn}${tn ? `, ${Math.round(andel * 100)} prosent av veien til ${tn.navn}` : ', den høyeste tittelen'}`);
+  $('#openStats').setAttribute('aria-label', `Profil. ${tt.navn}${tn ? `, ${Math.round(andel * 100)} prosent av veien til ${tn.navn}` : ', den høyeste tittelen'}`);
   $('#openStats').title = tt.navn;
 }
 
@@ -3159,6 +3188,8 @@ function nudgeHint() { if (++hintCount === 4) { $('#hint').classList.add('gone')
 
 /* ================= Sheets ================= */
 let openSheet = null, lastFocus = null;
+const tavleSheet = $('#tavleSheet'), tb = $('#tavleBody');   // Ledertavle (see «Ledertavle: its own sheet»)
+const tavleApen = () => openSheet === tavleSheet;
 const app = $('#app'), scrim = $('#scrim');
 function showSheet(el) {
   if (openSheet === el) return;
@@ -3177,7 +3208,7 @@ function closeSheets(silent) {
 }
 scrim.addEventListener('click', () => closeSheets());
 
-/* ---- the menu at the top right: profile, the garden bird count, search, the life list, about the cards, the introduction, the cards by post, settings ---- */
+/* ---- the menu at the top right: profile, the leaderboard, the garden bird count, search, the life list, about the cards, the introduction, the cards by post, settings ---- */
 const menyEl = $('#meny'), menyBak = $('#menyBak'), menyBtn = $('#openMeny');
 const menyApen = () => !menyEl.hidden;
 const menyValg = () => [...menyEl.querySelectorAll('[role="menuitem"]')].filter(b => !b.hidden);
@@ -3217,6 +3248,7 @@ let filter = 'alle';
 function openSearch() { showSheet($('#searchSheet')); renderSearch(); setTimeout(() => qEl.focus(), 60); }
 $('#openSearch').addEventListener('click', openSearch);
 $('#openProfil').addEventListener('click', () => openStats('profil'));
+$('#openTavle').addEventListener('click', () => openTavle());
 $('#openTelling').addEventListener('click', () => openTelling());
 /* the cards by post: the list on hagefugler.no (#bestill opens it), not for children (it asks for name, email and phone) */
 const POSTKASSE_URL = 'https://hagefugler.no/#bestill';
@@ -3418,7 +3450,7 @@ setSheet.addEventListener('keydown', e => {
 /* ---- stats ---- */
 const sb = $('#statsBody');
 /* the tabs of Min fugleliste; the last one used is opened again (on this device) */
-const FANER = ['profil', 'statistikk', 'kort', 'merker', 'tavle'];   // Telling was a tab until 15 Nov 2026; a saved «telling» opens Profil
+const FANER = ['profil', 'statistikk', 'kort', 'merker'];   // Telling and Tavle were tabs until 15 Nov 2026; a saved one opens Profil
 let statsFane = FANER.includes(lsGet('fuglekort:fane')) ? lsGet('fuglekort:fane') : 'profil';
 const fanerNa = () => FANER.filter(f => !(enkel && f === 'merker'));   // enkel versjon: no Merker
 const fanerEl = $('#faner');
@@ -3431,11 +3463,10 @@ function paintFaner() {
 }
 function velgFane(f, fokus) {
   if (!fanerNa().includes(f)) f = 'profil';
-  const ny = f !== statsFane || artVis || profilVis;
-  statsFane = f; lsSet('fuglekort:fane', f); artVis = null; profilVis = null;
+  const ny = f !== statsFane || artVis;
+  statsFane = f; lsSet('fuglekort:fane', f); artVis = null;
   renderStats();
   if (ny) $('#statsSheet').scrollTop = 0;
-  if (f === 'tavle') hentTavle();
   const b = fanerEl.querySelector(`[data-fane="${f}"]`);
   b.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   if (fokus) b.focus();
@@ -3447,7 +3478,7 @@ fanerEl.addEventListener('keydown', e => {
     : e.key === 'Home' ? F[0] : e.key === 'End' ? F[F.length - 1] : null;
   if (ny) { e.preventDefault(); velgFane(ny, true); }
 });
-function openStats(fane) { artVis = null; profilVis = null; if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; if (statsFane === 'tavle') hentTavle(); setTimeout(() => $('#closeStats').focus(), 60); }
+function openStats(fane) { artVis = null; if (fane) { statsFane = fane; lsSet('fuglekort:fane', fane); } showSheet($('#statsSheet')); renderStats(); $('#statsSheet').scrollTop = 0; setTimeout(() => $('#closeStats').focus(), 60); }
 $('#openStats').addEventListener('click', () => openStats('profil'));
 $('#closeStats').addEventListener('click', () => closeSheets());
 /* a small picture of the card */
@@ -3662,31 +3693,32 @@ function renderStats() {
     </div>
     ${arslisteHtml(nt)}
     ${oppdragFerdig() ? oppdragHtml() : ''}`,
-    tavle: () => tavleHtml(),
   };
   paintFaner();
-  sb.innerHTML = statsFane === 'statistikk' && artVis ? artHtml(artVis) : statsFane === 'tavle' && profilVis ? profilHtml() : FANER_HTML[statsFane]();
+  sb.innerHTML = statsFane === 'statistikk' && artVis ? artHtml(artVis) : FANER_HTML[statsFane]();
 
   const tip = $('#mtip'), mEl = $('#months');
   if (!mEl) return;
   const showTip = b => { const x = months[+b.dataset.k]; tip.textContent = `${MND[x.m - 1]}. ${x.y}: ${x.n} ${enhet(x.n)}`; const r = b.getBoundingClientRect(), pr = mEl.getBoundingClientRect(); tip.style.left = (r.left - pr.left + r.width / 2) + 'px'; tip.style.top = Math.max(0, r.bottom - pr.top - (b.querySelector('i').offsetHeight) - 6) + 'px'; tip.classList.add('on'); };
   mEl.querySelectorAll('.mcol').forEach(b => { b.addEventListener('pointerenter', () => showTip(b)); b.addEventListener('focus', () => showTip(b)); b.addEventListener('click', () => showTip(b)); b.addEventListener('pointerleave', () => tip.classList.remove('on')); b.addEventListener('blur', () => tip.classList.remove('on')); });
 }
-sb.addEventListener('click', async e => {
+/* clicks in Profil and in Ledertavle (the board, the profiles on it and the groups) */
+async function statsKlikk(e) {
+  const rot = e.currentTarget;
   if (e.target.closest('[data-bytt-navn]')) { byttNavn(); return; }
   if (e.target.closest('[data-bytt-bruker]')) { byttBrukerSporsmal(); return; }
   if (e.target.closest('[data-slett-meg]')) { slettMegSporsmal(); return; }
-  if (e.target.closest('[data-del-pa]')) { visIntro('slaPa', () => openStats('tavle')); return; }
+  if (e.target.closest('[data-del-pa]')) { visIntro('slaPa', () => openTavle()); return; }
   if (e.target.closest('[data-oppdrag-vis]')) { lsDel(OPPDRAG_SKJULT()); paintOppdrag(); const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; return; }
   const og = e.target.closest('[data-oppdrag-gaa]');
-  if (og) { const g = og.dataset.oppdragGaa; if (g === 'tavle') velgFane('tavle'); else if (g === 'butikk') openButikk(); else if (g === 'sok') { closeSheets(true); openSearch(); } else if (g === 'telling') { closeSheets(true); openTelling(); } return; }
+  if (og) { const g = og.dataset.oppdragGaa; if (g === 'tavle') { closeSheets(true); openTavle(); } else if (g === 'butikk') openButikk(); else if (g === 'sok') { closeSheets(true); openSearch(); } else if (g === 'telling') { closeSheets(true); openTelling(); } return; }
   const tr = e.target.closest('[data-tavle-rad]');
   if (tr) { tavleRad(tr.dataset.tavleRad); return; }
   if (e.target.closest('[data-profillukk]')) { lukkProfil(); return; }
   if (e.target.closest('[data-profil-rapporter]') && profilVis) { rapporterSporsmal(profilVis.uid, visNavn(profilVis.x)); return; }
   if (e.target.closest('[data-profil-fav]') && profilVis) {
     byttFavoritt(profilVis.uid, skjulte()[profilVis.uid] != null ? 'Navnet' : visNavn(profilVis.x)); paintDeling();
-    const f = sb.querySelector('[data-profil-fav]'); if (f) f.focus({ preventScroll: true }); return;
+    const f = rot.querySelector('[data-profil-fav]'); if (f) f.focus({ preventScroll: true }); return;
   }
   if (e.target.closest('[data-profil-fjern]') && profilVis) { const g = gruppeAv(tavleHvem()); if (g) fjernMedlemSporsmal(g, profilVis.uid, visNavn(profilVis.x)); return; }
   const th = e.target.closest('[data-tavlehvem]');
@@ -3696,7 +3728,7 @@ sb.addEventListener('click', async e => {
   if (e.target.closest('[data-profil-visnavn]') && profilVis) { const s = skjulte(); delete s[profilVis.uid]; lagreSkjulte(s); paintDeling(); return; }
   if (e.target.closest('[data-lukk-melding]')) { lsDel(DK('navn-melding')); paintDeling(); return; }
   const tv = e.target.closest('[data-tavlevis]');
-  if (tv) { tavleVis = tv.dataset.tavlevis; lsSet('fuglekort:tavlevis', tavleVis); paintDeling(); hentTavle(); return; }
+  if (tv) { tavleVis = tv.dataset.tavlevis; paintDeling(); hentTavle(); return; }   // not kept: the board opens on Totalt
   const te = e.target.closest('[data-tavleetter]');
   if (te) { tavleValgt = te.dataset.tavleetter; lsSet('fuglekort:tavleetter', tavleValgt); paintDeling(); hentTavle(); return; }
   if (e.target.closest('[data-butikk]')) { openButikk(e.target.closest('[data-butikk]').dataset.butikk); return; }
@@ -3777,7 +3809,8 @@ sb.addEventListener('click', async e => {
       restoreMld(mld); si(mld);
     } catch (err) { restoreMld('Teksten er ikke en gyldig sikkerhetskopi. Lim inn hele teksten du kopierte.'); }
   }
-});
+}
+sb.addEventListener('click', statsKlikk);
 
 /* ---- Hagefugltelling: start, counter, list of species, summary ---- */
 const tellebar = $('#tellebar'), teller = $('#teller'), tlAnt = $('#tlAnt');
@@ -5046,7 +5079,7 @@ function lukkOverste() {
   if (festAapen) { lukkFest(); return; }
   if (menyApen()) { lukkMeny(true); return; }
   if (openSheet && openSheet.id === 'statsSheet' && artVis) { lukkArt(); return; }
-  if (openSheet && openSheet.id === 'statsSheet' && profilVis) { lukkProfil(); return; }
+  if (openSheet === tavleSheet && profilVis) { lukkProfil(); return; }
   if (openSheet === butikkSheet && butikkVelg) { butikkVelg = null; renderButikk(); return; }
   if (openSheet && openSheet.id === 'introSheet') { introEsc(); return; }   // the same as Esc there
   if (openSheet) closeSheets();
@@ -5092,6 +5125,7 @@ Store.on(() => {
   pool.forEach(paintCard);
   paintChrome();
   if (openSheet && openSheet.id === 'statsSheet') renderStats();
+  if (tavleApen()) { const y = tavleSheet.scrollTop; renderTavleSide(); tavleSheet.scrollTop = y; }
   if (openSheet && openSheet.id === 'searchSheet') renderSearch();
 });
 
@@ -5469,9 +5503,9 @@ async function navnStatus(navn) {
 const oppsummering = () => { const t = froTotalt(); return { fro: Math.max(0, Math.min(1e8, Math.round(t))), arter: seenCount(), dager: Math.min(40000, nokkeltall().obsDager), tittel: tittelAv(t) }; };
 
 /* ---- what is sent besides the copy: the row on the board, the reports and the profile ---- */
-/* the column for the profile bird missing in Supabase (profilfugl.sql not run yet): the row is sent without it, and it
-   is tried again after 6 hours */
-const utenProfilfugl = () => Date.now() - (+lsGet(DK('uten-profilfugl')) || 0) < 6 * 3600e3;
+/* a column for the profile picture missing in Supabase (profilfugl.sql or profilsett.sql not run yet): the row is sent
+   without it, and it is tried again after 6 hours */
+const kolonneMangler = kolonne => Date.now() - (+lsGet(DK('uten-' + kolonne)) || 0) < 6 * 3600e3;
 /* the row on the board. A taken name gets a number; a name that is not allowed (or reported by three) is sent
    empty and the person is asked for a new one. Gives true when the row was sent now */
 async function sendTavlerad(okt) {
@@ -5479,7 +5513,10 @@ async function sendTavlerad(okt) {
   const o = oppsummering(), ut = utenfor();
   const rad = { navn: navnStengt() ? null : n.navn, ord: null, fugl: null, tall: null, ...o,
     fro_utenfor: Math.min(o.fro, ut.fro), arter_utenfor: Math.min(o.arter, ut.arter, 200), vis_arter: visArter() };
-  if (!utenProfilfugl()) rad.profilfugl = profilfugl();      // the profile picture: a bird, or null for the title
+  if (!kolonneMangler('profilfugl')) {                                  // the profile picture: a bird and its style, or null for the title
+    const pb = profilbilde(); rad.profilfugl = pb ? pb.fugl : null;
+    if (!kolonneMangler('profilsett')) rad.profilsett = pb ? pb.sett : null;
+  }
   if (lsGet(DK('tavle-sendt')) === okt.uid + JSON.stringify(rad)) return false;
   const forst = n.navn;
   for (let forsok = 0; forsok < 10; forsok++) {
@@ -5492,7 +5529,8 @@ async function sendTavlerad(okt) {
       if (!n.forslag) lsSet(DK('navn-melding'), JSON.stringify({ fra: forst, til: n.navn }));
       continue;
     }
-    if ('profilfugl' in rad && /profilfugl/.test(feil.message || '')) { lsSet(DK('uten-profilfugl'), String(Date.now())); delete rad.profilfugl; continue; }
+    const mangler = (feil.message || '').match(/'(profilfugl|profilsett)'/);   // the column not made yet (profilfugl.sql / profilsett.sql)
+    if (mangler && mangler[1] in rad) { lsSet(DK('uten-' + mangler[1]), String(Date.now())); delete rad[mangler[1]]; if (mangler[1] === 'profilfugl') delete rad.profilsett; continue; }
     if (feil.message === 'navn_stengt' && rad.navn) { lsSet(DK('navn-stengt'), rad.navn); rad.navn = null; paintTittelSnart(); continue; }
     if (/navn_form/.test(feil.message || '') && rad.navn) { n = tilfeldigNavn(); lagreKallenavn(n); rad.navn = n.navn; continue; }
     throw new Error(`ledertavle ${r && r.status}`);
@@ -5572,7 +5610,7 @@ async function sendAlt() {
   finally {
     sender = false; paintDeling();
     // the board open: fetched again when the row on it has changed (a new name, more seeds)
-    if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle' && (ny || !lsGet(DK('tavle')))) hentTavle();
+    if (tavleApen() && (ny || !lsGet(DK('tavle')))) hentTavle();
   }
 }
 /* turning sharing on and off. Off deletes the anonymous user in Supabase (and with it everything shared); without
@@ -5616,7 +5654,17 @@ const lagrePostnr = v => {
    each hour) and in total (the top 50 and your place). Each is kept on the device, so it shows without a network ---- */
 const TAVLER = ['uke', 'mnd', 'aar', 'tot'], TAVLENAVN = { uke: 'Uke', mnd: 'Måned', aar: 'År', tot: 'Totalt' };
 const DENNE = { uke: 'denne uka', mnd: 'denne måneden', aar: 'i år' }, FORRIGE = { uke: 'Forrige uke', mnd: 'Forrige måned', aar: 'I fjor' };
-let tavleVis = TAVLER.includes(lsGet('fuglekort:tavlevis')) ? lsGet('fuglekort:tavlevis') : 'uke';
+let tavleVis = 'tot';                                        // Totalt each time Ledertavle opens (15 Nov 2026; before, the last one, from Uke)
+/* ---- Ledertavle: its own sheet from the menu (until 15 Nov 2026 the tab Tavle in Min fugleliste): the board, the
+   profiles on it (profilVis) and the groups ---- */
+function renderTavleSide() { tb.innerHTML = profilVis ? profilHtml() : tavleHtml(); }
+function openTavle() {
+  profilVis = null; tavleVis = 'tot';
+  showSheet(tavleSheet); renderTavleSide(); tavleSheet.scrollTop = 0; hentTavle();
+  setTimeout(() => $('#closeTavle').focus(), 60);
+}
+$('#closeTavle').addEventListener('click', () => closeSheets());
+tb.addEventListener('click', statsKlikk);
 /* the board for seeds (frø) or for bird species (arter): for the species, how many were registered in the period
    (Totalt: in the app), counted by Supabase from the observation days (tavle_arter); a shared place when equal */
 let tavleValgt = lsGet('fuglekort:tavleetter') === 'arter' ? 'arter' : 'fro';
@@ -5674,8 +5722,8 @@ async function hentTavle() {
       lsSet(tavleNokkel(hva, 'arter'), JSON.stringify({ ...j, hentet: Date.now() }));
     } else if (hva === 'tot') {
       const sp = 'user_id,navn,ord,fugl,tall,fro,arter,dager,tittel,merket', resten = '&order=fro.desc,oppdatert.asc&limit=50';
-      let r = await supa(`/rest/v1/ledertavle?select=${sp},profilfugl${resten}`, { okt, hoder: { Prefer: 'count=exact' } });
-      if (r.status === 400) r = await supa(`/rest/v1/ledertavle?select=${sp}${resten}`, { okt, hoder: { Prefer: 'count=exact' } });   // no profilfugl yet
+      let r = await supa(`/rest/v1/ledertavle?select=${sp},profilfugl,profilsett${resten}`, { okt, hoder: { Prefer: 'count=exact' } });
+      if (r.status === 400) r = await supa(`/rest/v1/ledertavle?select=${sp}${resten}`, { okt, hoder: { Prefer: 'count=exact' } });   // the columns not made yet
       if (!r.ok) throw new Error('tavle ' + r.status);
       const rader = await r.json(), antall = tallFra(r.headers.get('content-range')) || rader.length;
       const i = okt ? rader.findIndex(x => x.user_id === okt.uid) : -1;
@@ -5698,17 +5746,17 @@ async function hentTavle() {
       lsSet(tavleNokkel(hva, 'fro'), JSON.stringify({ ...j, hentet: Date.now() }));
     }
     tavleFeil = false;
-    if (plass && openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') oppdragGjort('tavle');   // «Se deg selv på ledertavlen»
+    if (plass && tavleApen()) oppdragGjort('tavle');   // «Se deg selv på ledertavlen»
   } catch (e) { tavleFeil = true; }
   finally {
     henter = false; paintDeling();
-    if ((tavleVis !== hva || tavleEtter() !== etter || tavleHvem() !== hvem) && openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') hentTavle();   // another board chosen meanwhile
+    if ((tavleVis !== hva || tavleEtter() !== etter || tavleHvem() !== hvem) && tavleApen()) hentTavle();   // another board chosen meanwhile
   }
 }
-setInterval(() => { if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle' && !document.hidden) hentTavle(); }, 60000);
+setInterval(() => { if (tavleApen() && !document.hidden) hentTavle(); }, 60000);
 function tavleHtml() {
-  if (lsGet(DK('slett'))) return `<div class="s-sec"><h3>Ledertavle</h3><p class="cap">Det du har delt, slettes så snart du har nett. Imens vises ikke ledertavlen.</p></div>`;
-  if (!deler()) return `<div class="s-sec tv-av"><h3>Ledertavle</h3>
+  if (lsGet(DK('slett'))) return `<div class="s-sec"><p class="cap">Det du har delt, slettes så snart du har nett. Imens vises ikke ledertavlen.</p></div>`;
+  if (!deler()) return `<div class="s-sec tv-av">
     <p class="cap">Du deler ikke, og ser derfor ikke ledertavlen. Når du deler, vises du med brukernavnet ditt sammen med frø, arter, observasjonsdager og tittel, og observasjonene dine sendes til statistikk over hagefuglene, uten navn og e-post, men knyttet til en tilfeldig ID.</p>
     <div class="row"><button class="btn pri" data-del-pa>Del og se ledertavlen</button></div></div>`;
   const hvem = tavleHvem(), utvalg = hvem !== 'alle', g = gruppeAv(hvem), favTom = hvem === 'fav' && !favoritter().length;
@@ -5719,8 +5767,8 @@ function tavleHtml() {
   const harFugl = () => !!profilfugl() || (c && Array.isArray(c.rader) ? c.rader : []).some(x => sk[x.user_id] == null && gyldigProfilfugl(x.profilfugl));
   const innhold = (x, nr, meg) => { const skjult = !meg && sk[x.user_id] != null, navn = meg ? (navnStengt() ? 'Fuglevenn' : mittNavn()) : skjult ? 'Skjult navn' : visNavn(x);
     const ti = `<span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>`;
-    const pf = meg ? profilfugl() : skjult ? null : gyldigProfilfugl(x.profilfugl);   // a hidden name: the title, not the bird
-    const ikon = pf ? `<span class="tv-pb">${fuglBilde(pf)}${enkel ? '' : ti}</span>` : enkel && harFugl() ? '<span class="tv-pb tom"></span>' : ti;
+    const pb = meg ? profilbilde() : skjult ? null : gyldigProfilfugl(x.profilfugl) ? { fugl: x.profilfugl, sett: x.profilsett } : null;   // a hidden name: the title, not the bird
+    const ikon = pb ? `<span class="tv-pb">${pbInnhold(pb)}${enkel ? '' : ti}</span>` : enkel && harFugl() ? '<span class="tv-pb tom"></span>' : ti;
     return `<span class="tv-nr ${nr <= 3 ? 'topp' : ''}">${nr}</span>${ikon}
     <span class="tv-t ${skjult ? 'skjult' : ''}"><b>${esc(navn)}${x.merket ? merke : ''}</b><small>${enkel ? `${flertall(x.arter, 'art', 'arter')} i alt` : arter ? `${fmtFro(x.fro)} frø` : flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span>${arter ? `<span class="tv-fro tv-ant">${x.n || 0} <small>${x.n === 1 ? 'art' : 'arter'}</small></span>` : `<span class="tv-fro">${fmtFro(x.fro)}</span>`}`; };
   const rad = (x, nr, meg) => meg ? `<li class="meg"><button class="tv-rad" data-tavle-rad="meg">${innhold(x, nr, true)}</button></li>`
@@ -5743,7 +5791,7 @@ function tavleHtml() {
   const forrige = per && !arter && !utvalg && c && Array.isArray(c.forrige) && c.forrige.length ? `<div class="tv-forrige"><h4>${FORRIGE[hva]}</h4><ol>${c.forrige.map(p =>
     `<li class="${p.user_id && p.user_id === uid ? 'meg' : ''}"><span class="tv-med m${p.plass}" aria-label="${p.plass}. plass">${p.plass}</span><b>${esc(p.navn || 'Slettet bruker')}</b><small>${fmtFro(p.poeng)} frø · premie ${fmtFro(p.fro)}</small></li>`).join('')}</ol></div>` : '';
   return `<div class="s-sec">
-    <div class="tv-meg">${(t => (profilfugl() ? `<span class="tv-pb">${fuglBilde(profilfugl())}${enkel ? '' : t}</span>` : t))(`<span class="ti" style="${tittelPos(o.tittel)}" aria-hidden="true"></span>`)}
+    <div class="tv-meg">${(t => (profilbilde() ? `<span class="tv-pb">${pbInnhold(profilbilde())}${enkel ? '' : t}</span>` : t))(`<span class="ti" style="${tittelPos(o.tittel)}" aria-hidden="true"></span>`)}
       <span class="tv-t"><b>${esc(mittNavn())}</b><small>${plassTekst}</small></span>
       <button class="btn" data-bytt-navn>Bytt navn</button></div>
     ${varsel}
@@ -5775,8 +5823,8 @@ function tavleRad(uid) {
   const x = meg ? null : c && Array.isArray(c.rader) ? c.rader.find(r => r.user_id === uid) : null;
   if (!meg && !x) return;
   profilVis = { uid, x, meg, d: meg ? null : profilCache.get(uid) || null, status: meg ? 'ok' : 'henter' };
-  tavleRull = $('#statsSheet').scrollTop;
-  renderStats(); $('#statsSheet').scrollTop = 0;
+  tavleRull = tavleSheet.scrollTop;
+  renderTavleSide(); tavleSheet.scrollTop = 0;
   setTimeout(() => { const h = $('#profilNavn'); h && h.focus({ preventScroll: true }); }, 30);
   if (!meg) hentProfil(uid);
 }
@@ -5794,17 +5842,17 @@ async function hentProfil(uid) {
 function settProfil(uid, status, d) {
   if (!profilVis || profilVis.uid !== uid) return;
   profilVis.status = status; if (d) profilVis.d = d;
-  if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') {
-    const y = $('#statsSheet').scrollTop, fok = document.activeElement && document.activeElement.id === 'profilNavn';
-    renderStats(); $('#statsSheet').scrollTop = y;
+  if (tavleApen()) {
+    const y = tavleSheet.scrollTop, fok = document.activeElement && document.activeElement.id === 'profilNavn';
+    renderTavleSide(); tavleSheet.scrollTop = y;
     if (fok) $('#profilNavn').focus({ preventScroll: true });
   }
 }
 function lukkProfil() {
   if (!profilVis) return;
   const uid = profilVis.uid; profilVis = null;
-  renderStats(); $('#statsSheet').scrollTop = tavleRull;
-  const b = sb.querySelector(`[data-tavle-rad="${uid}"]`); if (b) b.focus({ preventScroll: true });
+  renderTavleSide(); tavleSheet.scrollTop = tavleRull;
+  const b = tb.querySelector(`[data-tavle-rad="${uid}"]`); if (b) b.focus({ preventScroll: true });
 }
 function profilHtml() {
   const p = profilVis, skjult = !p.meg && skjulte()[p.uid] != null, g = gruppeAv(tavleHvem());
@@ -5822,9 +5870,10 @@ function profilHtml() {
   if (liste) liste.sort((a, b) => kol.compare(a.navn, b.navn));
   const status = p.status === 'borte' ? 'Brukeren er ikke lenger på tavla.' : antall == null ? (p.status === 'feil' ? 'Lista hentes når du har nett.' : 'Henter …')
     : p.status === 'feil' ? 'Uten nett – viser lista fra sist.' : '';
-  const pf = p.meg ? profilfugl() : skjult ? null : gyldigProfilfugl(p.d && 'profilfugl' in p.d ? p.d.profilfugl : p.x && p.x.profilfugl);
+  const kilde = p.d && 'profilfugl' in p.d ? p.d : p.x || {};
+  const pb = p.meg ? profilbilde() : skjult ? null : gyldigProfilfugl(kilde.profilfugl) ? { fugl: kilde.profilfugl, sett: kilde.profilsett } : null;
   return `<button class="textbtn art-tilbake" data-profillukk>‹ Tilbake til tavla</button>
-    <div class="profil-topp">${pf ? `<span class="profil-pb" role="img" aria-label="Profilbilde: ${esc(CARDS[BY_KEY[pf]].navn)}">${fuglBilde(pf)}</span>` : ''}<h3 class="profil-navn" id="profilNavn" tabindex="-1">${esc(navn)}</h3></div>
+    <div class="profil-topp">${pb ? `<span class="profil-pb" role="img" aria-label="Profilbilde: ${esc(CARDS[BY_KEY[pb.fugl]].navn)}">${pbInnhold(pb)}</span>` : ''}<h3 class="profil-navn" id="profilNavn" tabindex="-1">${esc(navn)}</h3></div>
     ${antall != null && p.status !== 'borte' ? `<p class="profil-antall">${flertall(antall, 'fugl', 'fugler')} observert i hagen</p>` : ''}
     ${status ? `<p class="cap" role="status">${status}</p>` : ''}${merk ? `<p class="cap">${merk}</p>` : ''}
     ${liste && liste.length && p.status !== 'borte' ? `<div class="naa profil-arter">${liste.map(c => { const i = BY_KEY[c.key]; return `<button data-i="${i}">${miniatyr(c, i)}${esc(c.navn)}</button>`; }).join('')}</div>` : ''}
@@ -5953,14 +6002,14 @@ dlgEl.addEventListener('input', e => { if (e.target.id === 'dlgFelt') { e.target
 /* the board for a group after making it or joining it */
 function visGruppeTavle(g) {
   settHvem('g:' + g.id);
-  if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') { profilVis = null; renderStats(); hentTavle(); }
-  else openStats('tavle');
+  if (tavleApen()) { profilVis = null; renderTavleSide(); hentTavle(); }
+  else openTavle();
 }
 function trengerDeling() {
   sporsmal({
     tittel: 'Grupper og favoritter',
     tekst: '<p>Grupper og favoritter er en del av ledertavlen. For å være med må du dele.</p>',
-    knapper: [{ tekst: 'Del og se ledertavlen', pri: true, fn: () => visIntro('slaPa', () => openStats('tavle')) }, { tekst: 'Avbryt' }],
+    knapper: [{ tekst: 'Del og se ledertavlen', pri: true, fn: () => visIntro('slaPa', () => openTavle()) }, { tekst: 'Avbryt' }],
   });
 }
 function nyGruppeValg() {
@@ -6070,7 +6119,7 @@ function forlatSporsmal(g) {
       const r = await rpc('forlat_gruppe', { gruppe: g.id });
       if (!r.ok) return gruppeFeil(r.feil);
       utAvGruppe(g.id); lukkDlg(); si(`Du har forlatt «${g.navn}».`);
-      profilVis = null; paintDeling(); if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') hentTavle();
+      profilVis = null; paintDeling(); if (tavleApen()) hentTavle();
       return null;
     }), { tekst: 'Avbryt' }],
   });
@@ -6083,7 +6132,7 @@ function fjernMedlemSporsmal(g, uid, navn) {
       const r = await rpc('fjern_medlem', { gruppe: g.id, uid });
       if (!r.ok) return gruppeFeil(r.feil);
       lukkDlg(); si(`«${navn}» er fjernet fra «${g.navn}».`);
-      profilVis = null; renderStats(); hentTavle();
+      profilVis = null; if (tavleApen()) renderTavleSide(); hentTavle();
       return null;
     }), { tekst: 'Avbryt' }],
   });
@@ -6140,7 +6189,7 @@ async function handterInvitasjon() {
     sporsmal({
       tittel: 'Invitasjon til en gruppe',
       tekst: '<p>Du er invitert til en gruppe med egen tavle. Grupper er en del av ledertavlen, så for å være med må du dele.</p>',
-      knapper: [{ tekst: 'Del og bli med', pri: true, fn: () => { fjernBliHash(); leggTilVentende(kode, true); visIntro('slaPa', () => openStats('tavle')); } }, { tekst: 'Avbryt', fn: fjernBliHash }],
+      knapper: [{ tekst: 'Del og bli med', pri: true, fn: () => { fjernBliHash(); leggTilVentende(kode, true); visIntro('slaPa', () => openTavle()); } }, { tekst: 'Avbryt', fn: fjernBliHash }],
       avbryt: fjernBliHash,
     });
     return;
@@ -6391,7 +6440,7 @@ function sporOmStart(forsok = 0) {
 /* ---- Innstillinger: sharing on and off, the postcode, hidden names, and what is waiting ---- */
 function paintDeling() {
   paintTittel(); paintGrupper(); setTimeout(varselSynk, 0);   // sharing on or off: the prizes to this phone or not
-  if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'tavle') { const y = $('#statsSheet').scrollTop; renderStats(); $('#statsSheet').scrollTop = y; }
+  if (tavleApen()) { const y = tavleSheet.scrollTop; renderTavleSide(); tavleSheet.scrollTop = y; }
   const b = $('#delBtn'); if (!b) return;
   const pa = deler(), slett = !!lsGet(DK('slett'));
   b.setAttribute('aria-checked', pa ? 'true' : 'false');
@@ -6517,7 +6566,7 @@ $('#varselTest').addEventListener('click', async () => {
 function visFraVarsel(vis) {
   if (vis !== 'telling' && vis !== 'tavle') return;
   if (openSheet === introEl || dlgApen) return;
-  if (vis === 'telling') openTelling(); else openStats(vis);
+  if (vis === 'telling') openTelling(); else openTavle();
 }
 if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'vis') visFraVarsel(e.data.vis); });
 {
@@ -6616,7 +6665,7 @@ function slettBrukerSporsmal(b) {
   sporsmal({
     tittel: `Slette ${brukerNavn(b)}?`,
     tekst: `<p>Lista, tellingene, frøene og alt annet ${esc(brukerNavn(b))} har på denne telefonen, slettes${delt ? ', og det som er delt med ledertavlen og statistikken' : ''}. Det kan ikke angres.</p>
-      <p>Vil du ta vare på noe, bytter du til brukeren og kopierer en sikkerhetskopi først (Min fugleliste → Profil).</p>`,
+      <p>Vil du ta vare på noe, bytter du til brukeren og kopierer en sikkerhetskopi først (under Profil).</p>`,
     knapper: [{ tekst: 'Slett brukeren', pri: true, fn: () => slettBruker(b) }, { tekst: 'Avbryt' }],
   });
 }
@@ -6709,7 +6758,7 @@ function startPaNyttSporsmal() {
     knapper: [
       ...(har.length ? [{ tekst: 'Kopier sikkerhetskopi først', sjekk: b => {
         Promise.resolve().then(() => navigator.clipboard.writeText(sikkerhetskopi())).then(() => { kvittering(b, 'Kopiert!'); si('Sikkerhetskopien er kopiert.'); },
-          () => { kvittering(b, 'Kunne ikke kopiere'); si('Sikkerhetskopien kunne ikke kopieres. Bruk «Kopier sikkerhetskopi» i Min fugleliste, under Profil.'); });
+          () => { kvittering(b, 'Kunne ikke kopiere'); si('Sikkerhetskopien kunne ikke kopieres. Bruk «Kopier sikkerhetskopi» under Profil.'); });
         return false;
       } }] : []),
       { tekst: 'Nullstill fremgangen', pri: true, fn: () => startPaNytt(false) },
@@ -6720,7 +6769,7 @@ function startPaNyttSporsmal() {
 }
 $('#startPaNytt').addEventListener('click', startPaNyttSporsmal);
 [Store, Tell, Kjop].forEach(x => x.on(() => { if (deler()) planleggSending(4000); }));
-addEventListener('online', () => { planleggSending(500); if (statsFane === 'tavle') hentTavle(); setTimeout(slettVentende, 1500); });
+addEventListener('online', () => { planleggSending(500); if (tavleApen()) hentTavle(); setTimeout(slettVentende, 1500); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) planleggSending(1500); });
 
 /* ---- the next task, in a strip under the top ---- */

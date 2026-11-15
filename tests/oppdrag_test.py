@@ -266,7 +266,7 @@ async def main():
             if BILDER: await pg.screenshot(path=str(BILDER / 'telling_vindu.png'))
             await pg.evaluate("document.querySelector('#closeTell').click()"); await pg.wait_for_timeout(400)
             await pg.evaluate("document.querySelector('#openStats').click()"); await pg.wait_for_timeout(500)
-            sjekk('Min fugleliste har ikke lenger fanen Telling', await pg.evaluate("[...document.querySelectorAll('#faner [data-fane]')].map(b => b.textContent)") == ['Profil', 'Statistikk', 'Kort', 'Merker', 'Tavle'])
+            sjekk('Profil har ikke lenger fanene Telling og Tavle', await pg.evaluate("[...document.querySelectorAll('#faner [data-fane]')].map(b => b.textContent)") == ['Profil', 'Statistikk', 'Kort', 'Merker'])
             await pg.evaluate("document.querySelector('#closeStats').click()"); await pg.wait_for_timeout(400)
             await pg.evaluate("document.querySelector('#openMeny').click()"); await pg.wait_for_timeout(300); await pg.evaluate("document.querySelector('#openTelling').click()"); await pg.wait_for_timeout(600)
             await pg.evaluate("document.querySelector('[data-tid]').click()"); await pg.wait_for_timeout(700)
