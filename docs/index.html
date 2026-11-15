@@ -1388,7 +1388,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <div class="valg" role="radiogroup" aria-labelledby="bildevalgTitle">
       <button role="radio" data-bilder="ki" aria-checked="false"><span class="rd"></span><b>KI-illustrasjoner</b><small>Tegnede fuglebilder laget til kortstokken. Samme bilder som på de trykte kortene.</small></button>
       <button role="radio" data-bilder="foto" aria-checked="true"><span class="rd"></span><b>Fotografier</b><small id="fotoAntall"></small></button>
-      <button role="radio" data-bilder="tegneserie" aria-checked="false"><span class="rd"></span><b>Tegneseriefugler</b><small id="tegneserieAntall"></small></button>
+      <button role="radio" data-bilder="tegneserie" aria-checked="false"><span class="rd"></span><b>Illustrasjoner</b><small id="tegneserieAntall"></small></button>
     </div>
     <p class="valg-merk">Valget gjelder alle kortene på denne enheten. Avkrysningene dine påvirkes ikke. Trykk på bildet på et kort for å se det stort og bla mellom bildetypene.</p>
   </div>
@@ -1505,7 +1505,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <div class="sb-nabo neste" aria-hidden="true" hidden><img alt=""></div>
   </div>
   <div class="sb-valg" id="sbValg" role="radiogroup" aria-label="Vis bildet">
-    <button role="radio" data-sb="ki" aria-checked="false">KI</button><button role="radio" data-sb="foto" aria-checked="false">Foto</button><button role="radio" data-sb="tegneserie" aria-checked="false">Tegneserie</button>
+    <button role="radio" data-sb="ki" aria-checked="false">KI</button><button role="radio" data-sb="foto" aria-checked="false">Foto</button><button role="radio" data-sb="tegneserie" aria-checked="false">Illustrasjon</button>
   </div>
   <p class="sb-hint" id="sbHint"></p>
   <p class="sb-innst"><span id="sbInnstTekst"></span> <button class="sb-lenke" id="sbTilInnst">Endre i Innstillinger</button></p>
@@ -1576,7 +1576,7 @@ const flereBrukere = () => BRUKERE.length > 1;
 const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const fmtHand = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-'); return `${d}.${m}.${y}`; };
 const fmtLong = iso => { if (!iso) return ''; const [y,m,d] = iso.split('-').map(Number); return `${d}. ${MND[m-1]}. ${y}`; };
-/* Bildesett: fotografier fra Artsdatabanken (standard), KI-illustrasjoner eller tegneseriefugler, der de finnes.
+/* Bildesett: fotografier fra Artsdatabanken (standard), KI-illustrasjoner eller illustrasjoner (id «tegneserie»), der de finnes.
    Et kort uten bilde i det valgte settet viser KI-kortet. */
 const HAR_FOTO = Array.isArray(DATA.hjelpFoto) && CARDS.some(c => c.bildeFoto);
 const HAR_TEGNESERIE = !!DATA.tegneserie && CARDS.some(c => c.bildeTegneserie);
@@ -3295,10 +3295,10 @@ setSheet.querySelectorAll('[data-bilder]').forEach(b => { b.hidden = !finnesSett
 $('#vippSek').hidden = !Vipp.stottet;
 // only the dyrekort already bought are mentioned
 const fotoTekst = () => `Fotografier fra Artsdatabanken og Artsobservasjoner for ${BIRDS.filter(c => c.bildeFoto).length} av ${NB} fugler`
-  + '. De andre viser illustrasjonen. Fotografene står på kortene Bildekreditering under Om kortene i menyen.'
+  + '. De andre viser KI-illustrasjonen. Fotografene står på kortene Bildekreditering under Om kortene i menyen.'
   + (BONUS.some(c => erApen(c) && c.bildeFoto) ? ' Dyrekortene du har kjøpt, har også fotografi.' : '');
-const tegneserieTekst = () => `Fuglene tegnet i tegneseriestil, for ${BIRDS.filter(c => c.bildeTegneserie).length} av ${NB} fugler. De andre viser illustrasjonen.`
-  + (BONUS.some(c => erApen(c) && c.bildeTegneserie) ? ' Dyrekortene du har kjøpt, er også tegnet.' : '');
+const tegneserieTekst = () => `Illustrerte fugler, for ${BIRDS.filter(c => c.bildeTegneserie).length} av ${NB} fugler. De andre viser KI-illustrasjonen.`
+  + (BONUS.some(c => erApen(c) && c.bildeTegneserie) ? ' Dyrekortene du har kjøpt, er også illustrert.' : '');
 function paintSettings() {
   $('#fotoAntall').textContent = fotoTekst();
   $('#tegneserieAntall').textContent = tegneserieTekst();
@@ -3321,7 +3321,7 @@ function settBilder(v) {
   settSprites();
   pool.forEach(oppdaterBilde);
   renderHelp(); paintSettings(); setTimeout(warm, 300);
-  si(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : v === 'tegneserie' ? 'Kortene viser nå tegneseriefuglene der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
+  si(v === 'foto' ? 'Kortene viser nå fotografier der de finnes.' : v === 'tegneserie' ? 'Kortene viser nå illustrasjonene der de finnes.' : 'Kortene viser nå KI-illustrasjoner.');
 }
 /* the picture on a card in the deck follows its choice */
 function oppdaterBilde(el) {
@@ -4157,12 +4157,12 @@ function sjekkBonus() {
 }
 Kjop.on(sjekkBonus);
 Vist.on(sjekkBonus);
-/* ---- the picture in full screen: KI, Foto or Tegneserie for this card ----
+/* ---- the picture in full screen: KI, Foto or Illustrasjon for this card ----
    A tap on the picture field opens it; the choice is kept for this card. A tap on the picture (or outside)
    goes back to the card. */
 const sbEl = $('#storbilde'), sbBildeEl = $('#sbBilde'), sporEl = $('#sbSpor');
-const SETTNAVN = { ki: 'illustrasjonen', foto: 'fotografiet', tegneserie: 'tegneseriefuglen' };
-const SETTFLERTALL = { ki: 'KI-illustrasjoner', foto: 'fotografier', tegneserie: 'tegneseriefugler' };
+const SETTNAVN = { ki: 'KI-illustrasjonen', foto: 'fotografiet', tegneserie: 'illustrasjonen' };
+const SETTFLERTALL = { ki: 'KI-illustrasjoner', foto: 'fotografier', tegneserie: 'illustrasjoner' };
 /* sbVis: the picture shown in full screen. Only looking: the card keeps the picture chosen in Innstillinger. */
 let sbKort = null, sbVis = 'ki', sbFokus = null, sbLukker = false, sbApnet = 0;
 const sbImg = $('#sbImg');
@@ -4185,7 +4185,7 @@ function paintStorbilde() {
     b.setAttribute('aria-checked', s === v ? 'true' : 'false');
     b.setAttribute('aria-disabled', har ? 'false' : 'true');
     b.tabIndex = s === v ? 0 : -1;
-    if (!b.hidden && !har) mangler.push(s === 'foto' ? 'fotografi' : 'tegneseriefugl');
+    if (!b.hidden && !har) mangler.push(s === 'foto' ? 'fotografi' : 'illustrasjon');
   });
   const kred = $('#sbKred');
   kred.textContent = v === 'foto' && c.fotograf ? `Foto: ${c.fotograf}${c.lisens ? ` · ${c.lisens}` : ''}` : '';
@@ -4194,7 +4194,7 @@ function paintStorbilde() {
   $('#sbInnstTekst').textContent = `Kortene viser ${SETTFLERTALL[bildevalg]}${bildevalg === 'ki' ? '' : ' der de finnes'}.`;
   sbBildeEl.setAttribute('aria-label', `${c.navn}, ${SETTNAVN[v]}. Tilbake til kortet. Piltastene viser de andre bildene.`);
 }
-/* the picture set before or after the one shown, in the order of the buttons (KI · Foto · Tegneserie),
+/* the picture set before or after the one shown, in the order of the buttons (KI · Foto · Illustrasjon),
    skipping the ones this bird does not have */
 const SETTREKKE = ['ki', 'foto', 'tegneserie'];
 function naboSett(c, d) {
@@ -4254,7 +4254,7 @@ function velgStorbilde(v) {
   glid(v, SETTREKKE.indexOf(v) > SETTREKKE.indexOf(sbVis) ? 1 : -1);
   const b = sbEl.querySelector(`[data-sb="${v}"]`); if (b && document.activeElement && document.activeElement.closest('#sbValg')) b.focus();
 }
-/* swiping between the pictures of this bird (KI, Foto, Tegneserie): the pictures lie side by side and slide,
+/* swiping between the pictures of this bird (KI, Foto, Illustrasjon): the pictures lie side by side and slide,
    like a row of photos; the one coming in is at full strength the whole way, and nothing fades */
 let sbDx = 0, sbDra = null, sbKikk = null, sbBytter = false;
 const sbFingre = new Map();
@@ -5207,7 +5207,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '0bf816b11f';
+const APPVERSJON = '69012718f0';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
@@ -6446,7 +6446,7 @@ function nyBrukerSporsmal() {
       <p class="navn-feil" id="nbFeil" role="alert"></p>
       <div class="nb-type" role="radiogroup" aria-label="Type bruker">
         <label><input type="radio" name="nbType" value="vanlig" checked><span><b>Vanlig</b><small>Egen liste, egne frø og titler, og eget brukernavn og postnummer på tavla.</small></span></label>
-        <label><input type="radio" name="nbType" value="barn"><span><b>Barn</b><small>Tegneseriebilder, og deler ikke med tavla. Det kan endres i Innstillinger.</small></span></label>
+        <label><input type="radio" name="nbType" value="barn"><span><b>Barn</b><small>Illustrasjoner, og deler ikke med tavla. Det kan endres i Innstillinger.</small></span></label>
       </div>`,
     knapper: [
       { tekst: 'Legg til og bytt', pri: true, sjekk: () => {
