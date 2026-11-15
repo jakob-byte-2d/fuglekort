@@ -763,7 +763,8 @@ grant execute on function public.slett_meg() to authenticated;
 -- Telefonene som vil ha varsler: adressen nettleseren gir (endpoint og nøklene), valgene, og brukeren hvis telefonen
 -- deler (til premievarslene). Varslene legges i en kø og sendes av Edge-funksjonen send-varsler (Web Push), som
 -- lager nøkkelparet (VAPID) første gang og legger det i varsel_nokler. Det trengs to tillegg: Cron (Integrations →
--- Cron) og pg_net (Database → Extensions); linjene under slår dem på hvis de er av.
+-- Cron) og pg_net (Database → Extensions); linjene under slår dem på hvis de er av. Funksjonen heter «Send varsler» i
+-- Supabase, med adressen …/functions/v1/hyper-api (koden: supabase/functions/send-varsler/index.ts).
 --   Hagefugltellingen: fredagen før kl. 18 og lørdag kl. 9 (siste helga i januar, se tellehelg), norsk tid
 --   premier: kl. 9 dagen premien ble delt ut (mandag for uka, den 1. for måneden, 1. januar for året)
 create extension if not exists pg_net with schema extensions;
@@ -869,7 +870,7 @@ end $$;
 create or replace function public.varsel_send() returns void
 language plpgsql security definer set search_path = '' as $$
 begin
-  perform net.http_post(url := 'https://qfustbltxgbpwsntcrpd.supabase.co/functions/v1/send-varsler',
+  perform net.http_post(url := 'https://qfustbltxgbpwsntcrpd.supabase.co/functions/v1/hyper-api',   -- send-varsler («Send varsler»)
                         body := '{}'::jsonb, headers := '{"Content-Type": "application/json"}'::jsonb,
                         timeout_milliseconds := 60000);
 end $$;

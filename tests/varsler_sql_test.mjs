@@ -81,7 +81,7 @@ sjekk('1. januar: årets', n3 === 1 && k[0].tittel === 'Årets ledertavle' && k[
 await db.exec(`delete from public.varsel_ko; delete from net.kall`);
 sjekk('testvarsel', (await q(`select public.send_testvarsel($1) ok`, [ep(1)])).rows[0].ok === true);
 sjekk('   ikke to i samme minutt', (await q(`select public.send_testvarsel($1) ok`, [ep(1)])).rows[0].ok === false);
-sjekk('   send-varsler ble bedt om å sende', (await q(`select count(*)::int n from net.kall where url like '%/functions/v1/send-varsler'`)).rows[0].n === 1);
+sjekk('   send-varsler ble bedt om å sende', (await q(`select count(*)::int n from net.kall where url like '%/functions/v1/hyper-api'`)).rows[0].n === 1);
 sjekk('   teksten', (await ko())[0].tekst === 'Varslene virker. Du får beskjed når Hagefugltellingen starter og når du vinner en premie.');
 await q(`select public.send_testvarsel($1)`, [ep(2)]);
 sjekk('   den enkle versjonen: bare tellingen', (await ko())[1].tekst === 'Varslene virker. Du får beskjed når Hagefugltellingen starter.');
