@@ -91,11 +91,10 @@ button{cursor:pointer;touch-action:manipulation}
 .ring circle{fill:none;stroke-width:3.2}
 .ring .trk{stroke:var(--track)}
 .ring .arc{stroke:var(--gold);stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.2,.8,.2,1)}
-/* the profile picture (a bird from the life list or a picture of your own) in place of the title icon; the way to the
-   next title stays around it */
+/* the profile picture (a bird from the life list) in place of the title icon; the way to the next title stays around it */
 .ring .pb{position:absolute;left:50%;top:50%;width:31px;height:31px;margin:-15.5px 0 0 -15.5px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.06);background:var(--track)}
 .ring.har-pb .ti{visibility:hidden}
-.pb>*,.pb-stor>*{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover}
+.pb>*,.pb-stor>*{display:block;width:100%;height:100%;border-radius:50%}
 .pb>.ph,.pb-stor>.ph{width:100%;height:100%;border-radius:50%;background-color:var(--track)}   /* over .ph's own 48 px */
 
 /* ---------- deck ---------- */
@@ -370,6 +369,8 @@ button{cursor:pointer;touch-action:manipulation}
 /* Ledertavlen */
 .tv-meg{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface-2)}
 .tv-meg .ti{width:44px;height:44px;flex-shrink:0}
+.tv-meg .tv-pb,.tv-meg .tv-pb>.ph{width:44px;height:44px}
+.tv-meg .tv-pb>.ti{position:absolute;right:-5px;bottom:-5px;width:20px;height:20px;border-radius:30%;box-shadow:0 0 0 2px var(--surface-2)}
 .tv-t{flex:1;min-width:0;display:grid;gap:2px}
 .tv-t b{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tv-t small{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -400,6 +401,10 @@ button.tv-rad:focus-visible{outline:2px solid var(--spruce-ink);outline-offset:-
 .tv-med.m3{color:#3d2412;background:radial-gradient(circle at 35% 30%, #ffe6cf 0, #d99a62 40%, #9a5a2c 100%)}
 .tavle li.meg{background:color-mix(in srgb, var(--gold) 16%, transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--gold) 55%, transparent)}
 .tavle .ti{width:30px;height:30px;flex-shrink:0}
+/* the profile bird on the board: round, with the title in the corner (not in the simple version) */
+.tv-pb{position:relative;display:block;width:30px;height:30px;flex-shrink:0}
+.tv-pb>.ph{display:block;width:30px;height:30px;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
+.tavle .tv-pb>.ti{position:absolute;right:-4px;bottom:-4px;width:15px;height:15px;border-radius:30%;box-shadow:0 0 0 1.5px var(--surface)}
 .tv-nr{width:26px;flex-shrink:0;text-align:right;font-weight:700;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
 .tavle li:nth-child(-n+3) .tv-nr,.tavle .tv-nr.topp{color:var(--gold-ink)}
 .tv-fro{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
@@ -895,8 +900,7 @@ button.p-tittel{justify-self:start;border:0;background:none;padding:2px 0;font-f
 button.p-tittel .pil{display:inline-block;margin-left:5px;color:var(--muted);font-size:12px;transition:transform .2s}
 button.p-tittel[aria-expanded="true"] .pil{transform:rotate(180deg)}
 button.p-tittel:focus-visible{outline:3px solid var(--spruce-ink);outline-offset:2px;border-radius:6px}
-/* the profile picture in the Profil tab: the title icon (the tile), a bird or your own picture (round); the pencil
-   opens «Profilbilde» */
+/* the profile picture in the Profil tab: the title icon (the tile) or a bird (round); the pencil opens «Profilbilde» */
 .pb-knapp{position:relative;flex-shrink:0;border:0;padding:0;background:none;cursor:pointer}
 .pb-knapp.rund{border-radius:50%;box-shadow:0 6px 16px -6px rgba(var(--shadow),.55),0 0 0 2px var(--gold)}
 .pb-stor{display:block;width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--track)}
@@ -906,8 +910,8 @@ button.p-tittel:focus-visible{outline:3px solid var(--spruce-ink);outline-offset
 .pb-blyant svg{width:15px;height:15px}
 .pb-knapp:focus-visible{outline:3px solid var(--spruce-ink);outline-offset:3px}
 .pb-knapp:not(.tittel-ikon){border-radius:50%}
-/* «Profilbilde»: the birds on the life list, and placing a picture of your own in the circle */
-.dlg-kort:has(.pb-rutenett),.dlg-kort:has(.pb-ramme){max-height:100%;overflow:auto}
+/* «Profilbilde»: the birds on the life list */
+.dlg-kort:has(.pb-rutenett){max-height:100%;overflow:auto}
 .pb-rutenett{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:6px;max-height:min(40vh,300px);overflow:auto;margin:12px -6px 0;padding:4px 6px 6px;overscroll-behavior:contain}
 .pb-rutenett button{display:grid;justify-items:center;gap:4px;min-width:0;border:0;border-radius:12px;background:none;padding:6px 2px;color:var(--ink);font:inherit;cursor:pointer}
 .pb-rutenett button:hover{background:var(--surface-2)}
@@ -916,12 +920,6 @@ button.p-tittel:focus-visible{outline:3px solid var(--spruce-ink);outline-offset
 .pb-rutenett .pb-n{max-width:100%;font-size:11.5px;line-height:1.2;font-weight:600;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pb-rutenett button:focus-visible{outline:3px solid var(--spruce-ink);outline-offset:-1px}
 .dlg-tekst p.pb-merk{margin-top:10px;font-size:13.5px}
-.pb-ramme{position:relative;width:min(240px,100%);aspect-ratio:1;margin:14px auto 0;border-radius:50%;overflow:hidden;background:var(--track);touch-action:none;cursor:grab;box-shadow:0 0 0 2px var(--gold)}
-.pb-ramme:active{cursor:grabbing}
-.pb-ramme:focus-visible{outline:3px solid var(--spruce-ink);outline-offset:4px}
-.pb-ramme img{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;user-select:none;-webkit-user-select:none;pointer-events:none}
-.pb-zoom{display:flex;align-items:center;gap:10px;margin:14px 0 0;font-size:14px;font-weight:600;color:var(--ink)}
-.pb-zoom input{flex:1;accent-color:var(--spruce)}
 .tittel-bar{margin-top:12px}
 .tittel-bar .tb-linje{display:flex;align-items:center;gap:10px}
 .tittel-bar .bar{flex:1;margin:0}
@@ -1035,6 +1033,10 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .naa button{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg-hi);border-radius:99px;padding:4px 12px 4px 4px;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink)}
 .naa .ph{width:30px;height:30px;border-radius:50%}
 .profil-navn{margin:10px 0 0;font-size:22px;letter-spacing:-.01em;outline:none}
+.profil-topp{display:flex;align-items:center;gap:14px}
+.profil-pb{flex-shrink:0;margin-top:10px}
+.profil-pb{display:block}
+.profil-pb>.ph{display:block;width:56px;height:56px;border-radius:50%;box-shadow:0 0 0 2px var(--gold)}
 .profil-antall{margin:6px 0 14px;font-size:17px;font-weight:700;color:var(--gold-ink)}
 .art-tilbake{margin:12px 0 0 -6px}
 .art-hode{display:flex;align-items:center;gap:14px;margin-top:8px}
@@ -1561,7 +1563,6 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <p class="sb-hint" id="sbHint"></p>
   <p class="sb-innst"><span id="sbInnstTekst"></span> <button class="sb-lenke" id="sbTilInnst">Endre i Innstillinger</button></p>
 </div>
-<input type="file" id="pbFil" accept="image/*" hidden tabindex="-1" aria-hidden="true">
 <div class="dlg" id="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgTekst" hidden>
   <div class="dlg-kort"><h3 id="dlgT"></h3><div id="dlgTekst" class="dlg-tekst"></div><div class="dlg-knapper" id="dlgKnapper"></div></div>
 </div>
@@ -1998,43 +1999,49 @@ const forAntall = () => BIRDS.filter(c => ForSett.erFor(c.key)).length;
 const livsliste = () => BIRDS.filter(c => erSett(c.key)).length;
 
 /* ================= Profilbilde =================
-   A bird from the life list, a picture of your own or (as before, and the default) the icon of your title; in the
-   simple version, which has no titles, nothing. Shown in the ring at the top right and in the Profil tab, not on the
-   board. Per user on this device only (hagefugler:profilbilde): {fugl: key} or {eget: a 256 × 256 JPEG as a data URL}.
-   The own picture never leaves the device. A bird no longer on the life list falls back to the title */
+   A bird from the life list or (as before, and the default) the icon of your title; in the simple version, which has
+   no titles, nothing. Shown in the ring at the top right, in the Profil tab and, when sharing, at your name on the
+   boards and your profile (ledertavle.profilfugl). Per user on this device (hagefugler:profilbilde): {fugl: key}. A
+   bird no longer on the life list falls back to the title. A picture of your own was offered for a few hours on
+   15 Nov 2026; one kept is deleted at the start */
 const PB_KEY = () => brukerNokkel('hagefugler:profilbilde');
+/* a bird the app knows (not a dyrekort), or null: what is shown for someone else on the board */
+const gyldigProfilfugl = k => (typeof k === 'string' && BY_KEY[k] != null && !CARDS[BY_KEY[k]].bonus ? k : null);
 function profilbilde() {
   let v = null; try { v = JSON.parse(lsGet(PB_KEY()) || 'null'); } catch (e) {}
-  if (v && typeof v.eget === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(v.eget)) return { eget: v.eget };
-  if (v && typeof v.fugl === 'string' && BY_KEY[v.fugl] != null && !CARDS[BY_KEY[v.fugl]].bonus && erSett(v.fugl)) return { fugl: v.fugl };
-  return null;
+  return v && gyldigProfilfugl(v.fugl) && erSett(v.fugl) ? { fugl: v.fugl } : null;
 }
-const pbInnhold = p => (p.eget ? `<img src="${esc(p.eget)}" alt="" draggable="false">` : `<span class="ph" style="background-position:${spritePos(BY_KEY[p.fugl])}"></span>`);
-const pbBeskrivelse = p => (p ? (p.fugl ? CARDS[BY_KEY[p.fugl]].navn : 'eget bilde') : '');
+const profilfugl = () => (profilbilde() || {}).fugl || null;
+try {                                                        // a picture of your own, from those hours: deleted
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('hagefugler:profilbilde') && (localStorage.getItem(k) || '').includes('"eget"')) localStorage.removeItem(k);
+  }
+} catch (e) {}
+const fuglBilde = k => `<span class="ph" style="background-position:${spritePos(BY_KEY[k])}" aria-hidden="true"></span>`;
+const pbInnhold = p => fuglBilde(p.fugl);
+const pbBeskrivelse = p => (p ? CARDS[BY_KEY[p.fugl]].navn : '');
 function paintProfilbilde() {
-  const p = profilbilde(), el = $('#ringBilde'), s = p ? (p.fugl ? `f:${p.fugl}` : `e:${p.eget.length}:${p.eget.slice(-32)}`) : '';
+  const p = profilbilde(), el = $('#ringBilde'), s = p ? p.fugl : '';
   if (el.dataset.s === s) return;
   el.dataset.s = s; el.innerHTML = p ? pbInnhold(p) : ''; el.hidden = !p;
   $('#openStats').classList.toggle('har-pb', !!p);
 }
 function settProfilbilde(v) {
-  if (v) { try { localStorage.setItem(PB_KEY(), JSON.stringify(v)); } catch (e) { si('Bildet fikk ikke plass på telefonen. Prøv et annet bilde.'); return false; } }
-  else { try { localStorage.removeItem(PB_KEY()); } catch (e) {} }
+  if (v) lsSet(PB_KEY(), JSON.stringify(v)); else lsDel(PB_KEY());
   paintProfilbilde();
+  if (deler()) planleggSending(1200);                        // the bird at your name on the board
   if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'profil') { renderStats(); const b = $('#statsBody [data-profilbilde]'); if (b) b.focus({ preventScroll: true }); }
-  si(v ? (v.fugl ? `Profilbildet er nå ${CARDS[BY_KEY[v.fugl]].navn.toLowerCase()}.` : 'Profilbildet er byttet til bildet ditt.') : enkel ? 'Profilbildet er fjernet.' : 'Profilbildet er nå tittelikonet ditt.');
-  return true;
+  si(v ? `Profilbildet er nå ${CARDS[BY_KEY[v.fugl]].navn.toLowerCase()}.` : enkel ? 'Profilbildet er fjernet.' : 'Profilbildet er nå tittelikonet ditt.');
 }
-/* «Profilbilde»: the birds on the life list (registered in the app or seen before), by name; a picture of your own;
-   back to the title */
+/* «Profilbilde»: the birds on the life list (registered in the app or seen before), by name; back to the title */
 function velgProfilbilde() {
   const p = profilbilde(), liste = BIRDS.filter(c => erSett(c.key)).sort((a, b) => kol.compare(a.navn, b.navn));
-  const tekst = `<p>Velg en fugl fra livslisten din, eller bruk et eget bilde. Et eget bilde lagres bare på denne telefonen.</p>`
-    + (liste.length ? `<div class="pb-rutenett" role="group" aria-label="Fugler fra livslisten">${liste.map(c => `<button type="button" data-pb-fugl="${c.key}" aria-pressed="${!!p && p.fugl === c.key}"><span class="ph" style="background-position:${spritePos(BY_KEY[c.key])}" aria-hidden="true"></span><span class="pb-n">${esc(c.navn)}</span></button>`).join('')}</div>` : '')
+  const tekst = `<p>Velg en fugl fra livslisten din.${deler() ? ' Den vises også ved navnet ditt på ledertavla.' : ''}</p>`
+    + (liste.length ? `<div class="pb-rutenett" role="group" aria-label="Fugler fra livslisten">${liste.map(c => `<button type="button" data-pb-fugl="${c.key}" aria-pressed="${!!p && p.fugl === c.key}">${fuglBilde(c.key)}<span class="pb-n">${esc(c.navn)}</span></button>`).join('')}</div>` : '')
     + `<p class="pb-merk">${liste.length ? 'Flere fugler kommer når du registrerer dem eller merker dem i livslisten.' : 'Fuglene på livslisten din kan bli profilbilde. Registrer en fugl, eller merk fugler du har sett før i livslisten.'}</p>`;
   sporsmal({ tittel: 'Profilbilde', tekst, knapper: [
-    { tekst: 'Velg eget bilde', pri: !liste.length, fn: () => $('#pbFil').click() },
-    { tekst: 'Åpne livslisten', fn: () => { closeSheets(true); tilbyForModus(); } },
+    { tekst: 'Åpne livslisten', pri: !liste.length, fn: () => { closeSheets(true); tilbyForModus(); } },
     ...(p ? [{ tekst: enkel ? 'Fjern profilbildet' : 'Bruk tittelikonet', fn: () => settProfilbilde(null) }] : []),
     { tekst: 'Avbryt' },
   ] });
@@ -2043,64 +2050,6 @@ $('#dlg').addEventListener('click', e => {
   const b = e.target.closest('[data-pb-fugl]'); if (!b) return;
   const k = b.dataset.pbFugl; lukkDlg(() => settProfilbilde({ fugl: k }));
 });
-/* a picture of your own: from the camera or the photos; placed in the circle by dragging, pinching, the slider, the
-   wheel or the arrow keys, and kept as 256 × 256 pixels */
-$('#pbFil').addEventListener('change', e => {
-  const f = e.target.files && e.target.files[0]; e.target.value = '';
-  if (!f) return;
-  const url = URL.createObjectURL(f), img = new Image();
-  img.onload = () => plasserBilde(img, url);
-  img.onerror = () => { URL.revokeObjectURL(url); sporsmal({ tittel: 'Bildet kunne ikke åpnes', tekst: '<p>Prøv et annet bilde, for eksempel et fotografi fra kamerarullen.</p>', knapper: [{ tekst: 'OK', pri: true }] }); };
-  img.src = url;
-});
-function plasserBilde(img, url) {
-  const w = img.naturalWidth, h = img.naturalHeight;
-  if (!w || !h) { URL.revokeObjectURL(url); return; }
-  sporsmal({
-    tittel: 'Plasser bildet',
-    tekst: `<div class="pb-ramme" id="pbRamme" tabindex="0" role="img" aria-label="Utsnittet av bildet. Dra for å flytte det, eller bruk piltastene."><img id="pbBilde" src="${esc(url)}" alt="" draggable="false"></div>
-      <label class="pb-zoom">Zoom<input type="range" id="pbZoom" min="1" max="4" step="0.01" value="1"></label>
-      <p class="pb-merk">Dra for å flytte bildet. Det lagres bare på denne telefonen.</p>`,
-    knapper: [{ tekst: 'Bruk bildet', pri: true, fn: () => { lagre(); URL.revokeObjectURL(url); } }, { tekst: 'Avbryt', fn: () => URL.revokeObjectURL(url) }],
-    avbryt: () => URL.revokeObjectURL(url),
-  });
-  const ramme = $('#pbRamme'), bilde = $('#pbBilde'), zoom = $('#pbZoom');
-  const S = () => ramme.clientWidth || 240, s0 = () => S() / Math.min(w, h);
-  let z = 1, x = 0, y = 0;
-  const klem = () => { const k = s0() * z; x = Math.min(0, Math.max(S() - w * k, x)); y = Math.min(0, Math.max(S() - h * k, y)); };
-  const vis = () => { klem(); const k = s0() * z; bilde.style.width = `${w * k}px`; bilde.style.height = `${h * k}px`; bilde.style.transform = `translate(${x}px,${y}px)`; };
-  const settZoom = (nz, mx = S() / 2, my = S() / 2) => {     // keeps the point under (mx, my) in place
-    nz = Math.min(4, Math.max(1, nz)); const k0 = s0() * z, k1 = s0() * nz;
-    x = mx - (mx - x) * k1 / k0; y = my - (my - y) * k1 / k0; z = nz; zoom.value = String(z); vis();
-  };
-  { const k = s0(); x = (S() - w * k) / 2; y = (S() - h * k) / 2; vis(); }
-  const fingre = new Map(); let start = null;
-  const midt = () => { const a = [...fingre.values()], r = ramme.getBoundingClientRect(); return { mx: (a[0].x + a[1].x) / 2 - r.left, my: (a[0].y + a[1].y) / 2 - r.top, d: Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y) }; };
-  ramme.addEventListener('pointerdown', e => { ramme.setPointerCapture(e.pointerId); fingre.set(e.pointerId, { x: e.clientX, y: e.clientY }); start = fingre.size === 2 ? { ...midt(), z } : null; });
-  ramme.addEventListener('pointermove', e => {
-    const f = fingre.get(e.pointerId); if (!f) return;
-    if (fingre.size === 1) { x += e.clientX - f.x; y += e.clientY - f.y; f.x = e.clientX; f.y = e.clientY; vis(); return; }
-    f.x = e.clientX; f.y = e.clientY;
-    if (fingre.size === 2 && start) { const m = midt(); settZoom(start.z * m.d / Math.max(1, start.d), m.mx, m.my); }
-  });
-  const slipp = e => { fingre.delete(e.pointerId); start = fingre.size === 2 ? { ...midt(), z } : null; };
-  ramme.addEventListener('pointerup', slipp); ramme.addEventListener('pointercancel', slipp);
-  ramme.addEventListener('wheel', e => { e.preventDefault(); const r = ramme.getBoundingClientRect(); settZoom(z * Math.exp(-e.deltaY / 400), e.clientX - r.left, e.clientY - r.top); }, { passive: false });
-  ramme.addEventListener('keydown', e => {
-    const d = { ArrowLeft: [10, 0], ArrowRight: [-10, 0], ArrowUp: [0, 10], ArrowDown: [0, -10] }[e.key];
-    if (d) { e.preventDefault(); e.stopPropagation(); x += d[0]; y += d[1]; vis(); }
-    else if (e.key === '+' || e.key === '-') { e.preventDefault(); settZoom(z * (e.key === '+' ? 1.15 : 1 / 1.15)); }
-  });
-  zoom.addEventListener('input', () => settZoom(+zoom.value));
-  function lagre() {
-    const k = s0() * z, n = 256, c = document.createElement('canvas'); c.width = c.height = n;
-    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, n, n); g.imageSmoothingQuality = 'high';
-    g.drawImage(img, -x / k, -y / k, S() / k, S() / k, 0, 0, n, n);
-    let data = c.toDataURL('image/jpeg', 0.85);
-    if (data.length > 90000) data = c.toDataURL('image/jpeg', 0.7);
-    settProfilbilde({ eget: data });
-  }
-}
 const forAarTekst = k => { const v = ForSett.svar(k); return v && v.aar ? String(v.aar) : 'før appen'; };
 const aarValg = (valgt, tom = 'Husker ikke') => `<option value="">${tom}</option>`
   + Array.from({ length: AAR_NA - AAR_FRA + 1 }, (_, j) => AAR_NA - j).map(a => `<option value="${a}"${a === valgt ? ' selected' : ''}>${a}</option>`).join('');
@@ -5386,7 +5335,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '471f2de343';
+const APPVERSJON = '19d767cefc';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
@@ -5556,6 +5505,9 @@ async function navnStatus(navn) {
 const oppsummering = () => { const t = froTotalt(); return { fro: Math.max(0, Math.min(1e8, Math.round(t))), arter: seenCount(), dager: Math.min(40000, nokkeltall().obsDager), tittel: tittelAv(t) }; };
 
 /* ---- what is sent besides the copy: the row on the board, the reports and the profile ---- */
+/* the column for the profile bird missing in Supabase (profilfugl.sql not run yet): the row is sent without it, and it
+   is tried again after 6 hours */
+const utenProfilfugl = () => Date.now() - (+lsGet(DK('uten-profilfugl')) || 0) < 6 * 3600e3;
 /* the row on the board. A taken name gets a number; a name that is not allowed (or reported by three) is sent
    empty and the person is asked for a new one. Gives true when the row was sent now */
 async function sendTavlerad(okt) {
@@ -5563,6 +5515,7 @@ async function sendTavlerad(okt) {
   const o = oppsummering(), ut = utenfor();
   const rad = { navn: navnStengt() ? null : n.navn, ord: null, fugl: null, tall: null, ...o,
     fro_utenfor: Math.min(o.fro, ut.fro), arter_utenfor: Math.min(o.arter, ut.arter, 200), vis_arter: visArter() };
+  if (!utenProfilfugl()) rad.profilfugl = profilfugl();      // the profile picture: a bird, or null for the title
   if (lsGet(DK('tavle-sendt')) === okt.uid + JSON.stringify(rad)) return false;
   const forst = n.navn;
   for (let forsok = 0; forsok < 10; forsok++) {
@@ -5575,6 +5528,7 @@ async function sendTavlerad(okt) {
       if (!n.forslag) lsSet(DK('navn-melding'), JSON.stringify({ fra: forst, til: n.navn }));
       continue;
     }
+    if ('profilfugl' in rad && /profilfugl/.test(feil.message || '')) { lsSet(DK('uten-profilfugl'), String(Date.now())); delete rad.profilfugl; continue; }
     if (feil.message === 'navn_stengt' && rad.navn) { lsSet(DK('navn-stengt'), rad.navn); rad.navn = null; paintTittelSnart(); continue; }
     if (/navn_form/.test(feil.message || '') && rad.navn) { n = tilfeldigNavn(); lagreKallenavn(n); rad.navn = n.navn; continue; }
     throw new Error(`ledertavle ${r && r.status}`);
@@ -5755,7 +5709,9 @@ async function hentTavle() {
       plass = j.plass || null;
       lsSet(tavleNokkel(hva, 'arter'), JSON.stringify({ ...j, hentet: Date.now() }));
     } else if (hva === 'tot') {
-      const r = await supa('/rest/v1/ledertavle?select=user_id,navn,ord,fugl,tall,fro,arter,dager,tittel,merket&order=fro.desc,oppdatert.asc&limit=50', { okt, hoder: { Prefer: 'count=exact' } });
+      const sp = 'user_id,navn,ord,fugl,tall,fro,arter,dager,tittel,merket', resten = '&order=fro.desc,oppdatert.asc&limit=50';
+      let r = await supa(`/rest/v1/ledertavle?select=${sp},profilfugl${resten}`, { okt, hoder: { Prefer: 'count=exact' } });
+      if (r.status === 400) r = await supa(`/rest/v1/ledertavle?select=${sp}${resten}`, { okt, hoder: { Prefer: 'count=exact' } });   // no profilfugl yet
       if (!r.ok) throw new Error('tavle ' + r.status);
       const rader = await r.json(), antall = tallFra(r.headers.get('content-range')) || rader.length;
       const i = okt ? rader.findIndex(x => x.user_id === okt.uid) : -1;
@@ -5795,8 +5751,13 @@ function tavleHtml() {
   const hva = tavleVis, per = hva !== 'tot', arter = tavleEtter() === 'arter', c = favTom ? null : lesTavle(hva), uid = (lsJson(DK('okt'), null) || {}).uid, o = oppsummering(), sk = skjulte();
   const status = favTom ? '' : henter && !c ? 'Henter tavlen …' : (tavleFeil || !navigator.onLine) ? (c ? `Uten nett – viser tavlen fra ${naarTekst(c.hentet)}` : 'Tavlen hentes når du har nett.') : c ? `Oppdatert ${naarTekst(c.hentet)}` : 'Henter tavlen …';
   const merke = '<span class="tv-merket" role="img" aria-label="merket for uvanlig mange frø eller arter på kort tid" title="Merket for uvanlig mange frø eller arter på kort tid">!</span>';
+  /* the simple version has no title icons: a row without a bird keeps the room when another row has one */
+  const harFugl = () => !!profilfugl() || (c && Array.isArray(c.rader) ? c.rader : []).some(x => sk[x.user_id] == null && gyldigProfilfugl(x.profilfugl));
   const innhold = (x, nr, meg) => { const skjult = !meg && sk[x.user_id] != null, navn = meg ? (navnStengt() ? 'Fuglevenn' : mittNavn()) : skjult ? 'Skjult navn' : visNavn(x);
-    return `<span class="tv-nr ${nr <= 3 ? 'topp' : ''}">${nr}</span><span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>
+    const ti = `<span class="ti" style="${tittelPos(Math.max(0, Math.min(TITLER.length - 1, x.tittel || 0)))}" aria-hidden="true"></span>`;
+    const pf = meg ? profilfugl() : skjult ? null : gyldigProfilfugl(x.profilfugl);   // a hidden name: the title, not the bird
+    const ikon = pf ? `<span class="tv-pb">${fuglBilde(pf)}${enkel ? '' : ti}</span>` : enkel && harFugl() ? '<span class="tv-pb tom"></span>' : ti;
+    return `<span class="tv-nr ${nr <= 3 ? 'topp' : ''}">${nr}</span>${ikon}
     <span class="tv-t ${skjult ? 'skjult' : ''}"><b>${esc(navn)}${x.merket ? merke : ''}</b><small>${enkel ? `${flertall(x.arter, 'art', 'arter')} i alt` : arter ? `${fmtFro(x.fro)} frø` : flertall(x.arter, 'art', 'arter')} · ${flertall(x.dager, 'dag', 'dager')}</small></span>${arter ? `<span class="tv-fro tv-ant">${x.n || 0} <small>${x.n === 1 ? 'art' : 'arter'}</small></span>` : `<span class="tv-fro">${fmtFro(x.fro)}</span>`}`; };
   const rad = (x, nr, meg) => meg ? `<li class="meg"><button class="tv-rad" data-tavle-rad="meg">${innhold(x, nr, true)}</button></li>`
     : `<li><button class="tv-rad" data-tavle-rad="${esc(x.user_id)}">${innhold(x, nr, false)}</button></li>`;
@@ -5818,7 +5779,7 @@ function tavleHtml() {
   const forrige = per && !arter && !utvalg && c && Array.isArray(c.forrige) && c.forrige.length ? `<div class="tv-forrige"><h4>${FORRIGE[hva]}</h4><ol>${c.forrige.map(p =>
     `<li class="${p.user_id && p.user_id === uid ? 'meg' : ''}"><span class="tv-med m${p.plass}" aria-label="${p.plass}. plass">${p.plass}</span><b>${esc(p.navn || 'Slettet bruker')}</b><small>${fmtFro(p.poeng)} frø · premie ${fmtFro(p.fro)}</small></li>`).join('')}</ol></div>` : '';
   return `<div class="s-sec">
-    <div class="tv-meg"><span class="ti" style="${tittelPos(o.tittel)}" aria-hidden="true"></span>
+    <div class="tv-meg">${(t => (profilfugl() ? `<span class="tv-pb">${fuglBilde(profilfugl())}${enkel ? '' : t}</span>` : t))(`<span class="ti" style="${tittelPos(o.tittel)}" aria-hidden="true"></span>`)}
       <span class="tv-t"><b>${esc(mittNavn())}</b><small>${plassTekst}</small></span>
       <button class="btn" data-bytt-navn>Bytt navn</button></div>
     ${varsel}
@@ -5897,8 +5858,9 @@ function profilHtml() {
   if (liste) liste.sort((a, b) => kol.compare(a.navn, b.navn));
   const status = p.status === 'borte' ? 'Brukeren er ikke lenger på tavla.' : antall == null ? (p.status === 'feil' ? 'Lista hentes når du har nett.' : 'Henter …')
     : p.status === 'feil' ? 'Uten nett – viser lista fra sist.' : '';
+  const pf = p.meg ? profilfugl() : skjult ? null : gyldigProfilfugl(p.d && 'profilfugl' in p.d ? p.d.profilfugl : p.x && p.x.profilfugl);
   return `<button class="textbtn art-tilbake" data-profillukk>‹ Tilbake til tavla</button>
-    <h3 class="profil-navn" id="profilNavn" tabindex="-1">${esc(navn)}</h3>
+    <div class="profil-topp">${pf ? `<span class="profil-pb" role="img" aria-label="Profilbilde: ${esc(CARDS[BY_KEY[pf]].navn)}">${fuglBilde(pf)}</span>` : ''}<h3 class="profil-navn" id="profilNavn" tabindex="-1">${esc(navn)}</h3></div>
     ${antall != null && p.status !== 'borte' ? `<p class="profil-antall">${flertall(antall, 'fugl', 'fugler')} observert i hagen</p>` : ''}
     ${status ? `<p class="cap" role="status">${status}</p>` : ''}${merk ? `<p class="cap">${merk}</p>` : ''}
     ${liste && liste.length && p.status !== 'borte' ? `<div class="naa profil-arter">${liste.map(c => { const i = BY_KEY[c.key]; return `<button data-i="${i}">${miniatyr(c, i)}${esc(c.navn)}</button>`; }).join('')}</div>` : ''}

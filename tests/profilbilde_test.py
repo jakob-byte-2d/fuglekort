@@ -1,9 +1,10 @@
-"""Profilbilde: a bird from the life list, a picture of your own or the title icon (the default; in the simple version,
-nothing). Shown in the ring at the top right and in the Profil tab. Per user on this device only; the own picture is
-never sent anywhere. A bird no longer on the life list falls back to the title.
+"""Profilbilde: a bird from the life list or the title icon (the default; in the simple version, nothing). Shown in the
+ring at the top right and in the Profil tab; when sharing also at the name on the board and the profile (see
+tavle_profilfugl_test.py). Per user on this device. A bird no longer on the life list falls back to the title. A
+picture of your own (offered for a few hours on 15 Nov 2026) is deleted at the start.
 Run from the repo after python3 build.py:   python3 tests/profilbilde_test.py [MAPPE_FOR_SKJERMBILDER]
 """
-import asyncio, io, json, subprocess, sys, pathlib
+import asyncio, json, subprocess, sys, pathlib
 from playwright.async_api import async_playwright
 
 ROT = pathlib.Path(__file__).resolve().parent.parent
@@ -26,14 +27,6 @@ def lager(**x):
          'hagefugler:kjop:v1': json.dumps({'dyr-sciurus-vulgaris': {'pris': 12000, 'dato': '2026-10-01', 'ts': 1}}),
          'hagefugler:bonusvist:v1': json.dumps({'sciurus-vulgaris': {'ts': 1}}), 'hagefugler-oslo:kort': '0'}
     d.update(x); return d
-
-
-def testbilde():
-    """an 800 × 500 PNG: red on the left, blue on the right, a white square in the middle"""
-    from PIL import Image, ImageDraw
-    im = Image.new('RGB', (800, 500), (200, 30, 30)); dr = ImageDraw.Draw(im)
-    dr.rectangle([400, 0, 800, 500], fill=(30, 60, 200)); dr.rectangle([350, 200, 450, 300], fill=(255, 255, 255))
-    b = io.BytesIO(); im.save(b, 'PNG'); return b.getvalue()
 
 
 async def side(b, ls, mork=False):
@@ -62,17 +55,16 @@ async def dialog(pg):
 
 async def tilstand(pg):
     return await pg.evaluate("""(() => { const r = document.querySelector('#ringBilde'), k = document.querySelector('#statsBody [data-profilbilde]');
-      return { ring: !r.hidden && getComputedStyle(r).display !== 'none', ringFugl: !!r.querySelector('.ph'), ringEget: !!r.querySelector('img'), harPb: document.querySelector('#openStats').classList.contains('har-pb'),
+      return { ring: !r.hidden && getComputedStyle(r).display !== 'none', ringFugl: !!r.querySelector('.ph'), harPb: document.querySelector('#openStats').classList.contains('har-pb'),
         tiSynlig: getComputedStyle(document.querySelector('#ringIkon')).visibility === 'visible' && getComputedStyle(document.querySelector('#ringIkon')).display !== 'none',
         enkelIkon: getComputedStyle(document.querySelector('#openStats .enkel-ikon')).display !== 'none',
-        hode: k ? (k.querySelector('.pb-stor .ph') ? 'fugl' : k.querySelector('.pb-stor img') ? 'eget' : k.querySelector('.ti') ? 'tittel' : k.querySelector('.pb-tom') ? 'tom' : '?') : null,
+        hode: k ? (k.querySelector('.pb-stor .ph') ? 'fugl' : k.querySelector('.ti') ? 'tittel' : k.querySelector('.pb-tom') ? 'tom' : '?') : null,
         fyll: [r, k && k.querySelector('.pb-stor')].filter(Boolean).every(e => { const p = e.firstElementChild; if (!p || e.hidden) return true; const a = p.getBoundingClientRect(), b = e.getBoundingClientRect(); return Math.abs(a.width - b.width) < 1 && Math.abs(a.height - b.height) < 1; }),
         label: k ? k.getAttribute('aria-label') : null, blyant: !!(k && k.querySelector('.pb-blyant')), fokus: document.activeElement && document.activeElement.matches('[data-profilbilde]'),
         lagret: localStorage.getItem('hagefugler:profilbilde') }; })()""")
 
 
 async def main():
-    png = testbilde()
     srv = subprocess.Popen([sys.executable, '-m', 'http.server', '8792', '-d', str(ROT / 'docs')], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
         async with async_playwright() as pw:
@@ -89,7 +81,8 @@ async def main():
             await klikk(pg, '#statsBody [data-profilbilde]', 500)
             d = await dialog(pg)
             sjekk('«Profilbilde» viser fuglene på livslisten (registrert og sett før), ikke dyrekortet', d['apen'] and d['tittel'] == 'Profilbilde' and d['fugler'] == ['Kjøttmeis', 'Svarttrost'], d)
-            sjekk('   knappene: Velg eget bilde, Åpne livslisten, Avbryt', d['knapper'] == ['Velg eget bilde', 'Åpne livslisten', 'Avbryt'] and d['pri'] == '', d['knapper'])
+            sjekk('   knappene: Åpne livslisten, Avbryt (ikke «Velg eget bilde»)', d['knapper'] == ['Åpne livslisten', 'Avbryt'] and d['pri'] == '', d['knapper'])
+            sjekk('   teksten: «Velg en fugl fra livslisten din.»', await pg.evaluate("document.querySelector('#dlgTekst p').textContent") == 'Velg en fugl fra livslisten din.')
             sjekk('   «Flere fugler kommer …»', d['merk'].startswith('Flere fugler kommer'), d['merk'])
             if BILDER: await pg.screenshot(path=str(BILDER / 'pb_velg.png'))
             await klikk(pg, '[data-pb-fugl="parus-major"]', 600)
@@ -120,31 +113,8 @@ async def main():
             d = await dialog(pg)
             sjekk('   og bare svarttrost står i lista', d['fugler'] == ['Svarttrost'] and d['valgt'] == [], d)
 
-            print('=== eget bilde')
-            async with pg.expect_file_chooser() as fc:
-                await pg.evaluate("[...document.querySelectorAll('#dlgKnapper .btn')].find(b => b.textContent === 'Velg eget bilde').click()")
-            await (await fc.value).set_files(files=[{'name': 'meg.png', 'mimeType': 'image/png', 'buffer': png}])
-            await pg.wait_for_timeout(800)
-            d = await dialog(pg)
-            r = await pg.evaluate("(() => { const f = document.querySelector('#pbRamme'), i = document.querySelector('#pbBilde'); return f && [f.clientWidth, f.clientHeight, i.getBoundingClientRect().width, i.getBoundingClientRect().height]; })()")
-            sjekk('«Plasser bildet» med bildet i sirkelen, dekker hele sirkelen', d['tittel'] == 'Plasser bildet' and d['knapper'] == ['Bruk bildet', 'Avbryt'] and r and r[0] == r[1] and abs(r[3] - r[1]) < 1 and r[2] > r[0], [d, r])
-            if BILDER: await pg.screenshot(path=str(BILDER / 'pb_plasser.png'))
-            # drag to the right: the red half comes into view; then zoom
-            fr = await pg.evaluate("(() => { const r = document.querySelector('#pbRamme').getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; })()")
-            await pg.mouse.move(*fr); await pg.mouse.down(); await pg.mouse.move(fr[0] + 400, fr[1], steps=8); await pg.mouse.up(); await pg.wait_for_timeout(200)
-            await pg.evaluate("(() => { const z = document.querySelector('#pbZoom'); z.value = '1.5'; z.dispatchEvent(new Event('input', {bubbles: true})); })()")
-            r = await pg.evaluate("(() => { const f = document.querySelector('#pbRamme').getBoundingClientRect(), i = document.querySelector('#pbBilde').getBoundingClientRect(); return [i.left <= f.left + .5, i.top <= f.top + .5, i.right >= f.right - .5, i.bottom >= f.bottom - .5]; })()")
-            sjekk('   dra og zoom: bildet dekker fortsatt sirkelen', all(r), r)
-            await klikk(pg, '#dlgKnapper .btn.pri', 900)
-            t = await tilstand(pg)
-            data = json.loads(t['lagret'] or '{}').get('eget', '')
-            mal = await pg.evaluate("""(async src => { const i = new Image(); i.src = src; await i.decode(); const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'); g.drawImage(i, 0, 0);
-              const px = (x, y) => [...g.getImageData(x, y, 1, 1).data.slice(0, 3)]; return [i.naturalWidth, i.naturalHeight, px(40, 128), px(216, 128)]; })""", data) if data else None
-            sjekk('lagret som JPEG 256 × 256 under 90 kB, venstre del rød (dratt mot høyre)', data.startswith('data:image/jpeg;base64,') and len(data) < 90000 and mal[:2] == [256, 256]
-                  and mal[2][0] > 150 and mal[2][2] < 90, [len(data), mal])
-            sjekk('   vises i ringen og i Profil, og fyller sirkelen', t['ring'] and t['ringEget'] and t['hode'] == 'eget' and t['label'].startswith('Profilbilde: eget bilde') and t['fyll'], t)
-            sjekk('   bildet er ikke sendt noe sted', not any('data:image' in p or 'profilbilde' in u + p for u, p in ut), [u for u, p in ut][:5])
-            if BILDER: await pg.screenshot(path=str(BILDER / 'pb_profil_eget.png'))
+            await klikk(pg, '[data-pb-fugl="turdus-merula"]', 600)
+            sjekk('svarttrost valgt', (await tilstand(pg))['ringFugl'])
             await klikk(pg, '#statsBody [data-profilbilde]', 500)
             await pg.evaluate("[...document.querySelectorAll('#dlgKnapper .btn')].find(b => b.textContent === 'Bruk tittelikonet').click()"); await pg.wait_for_timeout(500)
             t = await tilstand(pg)
@@ -176,29 +146,27 @@ async def main():
             await klikk(pg, '#openStats', 700)
             await klikk(pg, '#statsBody [data-profilbilde]', 500)
             d = await dialog(pg)
-            sjekk('   tom livsliste: ingen fugler, forklaring, «Velg eget bilde» er hovedknappen', d['fugler'] == [] and d['merk'].startswith('Fuglene på livslisten din kan bli profilbilde') and d['pri'] == 'Velg eget bilde', d)
+            sjekk('   tom livsliste: ingen fugler, forklaring, «Åpne livslisten» er hovedknappen', d['fugler'] == [] and d['merk'].startswith('Fuglene på livslisten din kan bli profilbilde') and d['pri'] == 'Åpne livslisten' and d['knapper'] == ['Åpne livslisten', 'Avbryt'], d)
             if BILDER: await pg.screenshot(path=str(BILDER / 'pb_tom.png'))
-            async with pg.expect_file_chooser() as fc:
-                await klikk(pg, '#dlgKnapper .btn.pri', 0)
-            await (await fc.value).set_files(files=[{'name': 'emma.png', 'mimeType': 'image/png', 'buffer': png}])
-            await pg.wait_for_timeout(800); await klikk(pg, '#dlgKnapper .btn.pri', 800)
-            r = await pg.evaluate("[(localStorage.getItem('hagefugler:profilbilde@b1') || '').slice(0, 30), localStorage.getItem('hagefugler:profilbilde')]")
-            sjekk('   Emmas eget bilde lagres for Emma, Jakobs står', r[0].startswith('{"eget":"data:image/jpeg') and json.loads(r[1]) == {'fugl': 'turdus-merula'}, r)
-            sjekk('   bildet er ikke sendt noe sted', not any('data:image' in p for u, p in ut))
+            await klikk(pg, '#dlgKnapper .btn:last-child', 400)
+            r = await pg.evaluate("[localStorage.getItem('hagefugler:profilbilde@b1'), JSON.parse(localStorage.getItem('hagefugler:profilbilde'))]")
+            sjekk('   ingenting lagret for Emma, Jakobs står', r == [None, {'fugl': 'turdus-merula'}], r)
             await pg.evaluate("localStorage.setItem('fuglekort:bruker', 'meg')")
             await pg.reload(wait_until='networkidle'); await pg.wait_for_timeout(1300)
             sjekk('tilbake til Jakob: svarttrosten i ringen', (await tilstand(pg))['ringFugl'])
             sjekk('ingen JS-feil', not js, js); await ctx.close()
 
-            print('=== feil fil')
-            ctx, pg, js, ut = await side(b, lager())
-            await klikk(pg, '#openStats', 700); await klikk(pg, '#statsBody [data-profilbilde]', 500)
-            async with pg.expect_file_chooser() as fc:
-                await pg.evaluate("[...document.querySelectorAll('#dlgKnapper .btn')].find(b => b.textContent === 'Velg eget bilde').click()")
-            await (await fc.value).set_files(files=[{'name': 'tekst.png', 'mimeType': 'image/png', 'buffer': b'ikke et bilde'}])
-            await pg.wait_for_timeout(800)
-            d = await dialog(pg)
-            sjekk('et ødelagt bilde gir «Bildet kunne ikke åpnes», og ingenting lagres', d['tittel'] == 'Bildet kunne ikke åpnes' and (await tilstand(pg))['lagret'] is None, d)
+            print('=== et eget bilde fra de timene det gikk an: slettes, tittelikonet igjen')
+            eget = json.dumps({'eget': 'data:image/jpeg;base64,' + 'A' * 400})
+            ctx, pg, js, ut = await side(b, lager(**{'hagefugler:profilbilde': eget, 'hagefugler:profilbilde@b1': eget, 'hagefugler:profilbilde@b2': json.dumps({'fugl': 'parus-major'}),
+                                               'fuglekort:brukere': json.dumps([{'id': 'meg', 'navn': ''}, {'id': 'b1', 'navn': 'Emma'}, {'id': 'b2', 'navn': 'Ola'}])}))
+            r = await pg.evaluate("[localStorage.getItem('hagefugler:profilbilde'), localStorage.getItem('hagefugler:profilbilde@b1'), localStorage.getItem('hagefugler:profilbilde@b2')]")
+            sjekk('egne bilder slettet for alle brukerne, en valgt fugl står', r == [None, None, json.dumps({'fugl': 'parus-major'})], r)
+            t = await tilstand(pg)
+            sjekk('   ringen viser tittelikonet', not t['ring'] and t['tiSynlig'], t)
+            await klikk(pg, '#openStats', 700)
+            sjekk('   og Profil også', (await tilstand(pg))['hode'] == 'tittel')
+            sjekk('ingen filvelger i appen', await pg.evaluate("!document.querySelector('input[type=file]')"))
             sjekk('ingen JS-feil', not js, js); await ctx.close()
 
             if BILDER:

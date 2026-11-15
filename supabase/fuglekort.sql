@@ -2,7 +2,7 @@
 -- Lim inn alt i Supabase → SQL Editor og trykk Run. Kan kjøres flere ganger.
 --
 -- Hver telefon (hver bruker i appen) er en anonym Supabase-bruker. Telefonen er fasit; her ligger en kopi.
---   ledertavle   brukernavn og oppsummering på tavlen      alle kan lese, bare eieren kan skrive
+--   ledertavle   brukernavn, oppsummering og profilfugl     alle kan lese, bare eieren kan skrive
 --   profil       postnummer (valgfritt), appversjon …      bare eieren
 --   sett         observasjonsdagene, én rad per art        bare eieren
 --   tellinger    hagefugltellingene                        bare eieren
@@ -254,10 +254,13 @@ alter table public.ledertavle add column if not exists fro_utenfor bigint not nu
 alter table public.ledertavle add column if not exists arter_utenfor smallint not null default 0 check (arter_utenfor between 0 and 200);  -- arter fra en sikkerhetskopi
 alter table public.ledertavle add column if not exists merket boolean not null default false;   -- settes bare av databasen
 alter table public.ledertavle add column if not exists vis_arter boolean not null default true;   -- artslista på profilen (se profil_arter)
+-- profilbildet: en fugl fra livslisten (artsnavnet, f.eks. parus-major), eller tom for tittelikonet
+alter table public.ledertavle add column if not exists profilfugl text
+  constraint ledertavle_profilfugl_form check (profilfugl is null or (profilfugl ~ '^[a-z]+(-[a-z]+){1,3}$' and length(profilfugl) <= 50));
 -- appen kan skrive sine egne kolonner, men aldri «merket»
 revoke insert, update on public.ledertavle from authenticated;
-grant insert (user_id, navn, ord, fugl, tall, fro, arter, dager, tittel, fro_utenfor, arter_utenfor, vis_arter),
-      update (user_id, navn, ord, fugl, tall, fro, arter, dager, tittel, fro_utenfor, arter_utenfor, vis_arter) on public.ledertavle to authenticated;
+grant insert (user_id, navn, ord, fugl, tall, fro, arter, dager, tittel, fro_utenfor, arter_utenfor, vis_arter, profilfugl),
+      update (user_id, navn, ord, fugl, tall, fro, arter, dager, tittel, fro_utenfor, arter_utenfor, vis_arter, profilfugl) on public.ledertavle to authenticated;
 
 create table if not exists public.fro_logg (
   user_id uuid not null references auth.users (id) on delete cascade,
@@ -352,7 +355,7 @@ begin
   perform public.avslutt_perioder();
   s := public.periode_start(hva); e := public.periode_slutt(hva, s);
   with r as (
-    select pp.user_id, pp.poeng, l.navn, l.ord, l.fugl, l.tall, l.tittel, l.arter, l.dager, l.merket,
+    select pp.user_id, pp.poeng, l.navn, l.ord, l.fugl, l.tall, l.tittel, l.arter, l.dager, l.merket, l.profilfugl,
            row_number() over (order by pp.poeng desc, pp.sist asc, pp.user_id) as nr
     from public.periode_poeng(s, e) pp join public.ledertavle l on l.user_id = pp.user_id
     where pp.poeng > 0
@@ -363,7 +366,7 @@ begin
     'plass', (select r.nr from r where r.user_id = meg),
     'meg', (select r.poeng from r where r.user_id = meg),
     'rader', coalesce((select jsonb_agg(jsonb_build_object('user_id', r.user_id, 'navn', r.navn, 'ord', r.ord, 'fugl', r.fugl, 'tall', r.tall,
-                         'tittel', r.tittel, 'arter', r.arter, 'dager', r.dager, 'merket', r.merket, 'fro', r.poeng) order by r.nr) from r where r.nr <= 50), '[]'::jsonb),
+                         'tittel', r.tittel, 'arter', r.arter, 'dager', r.dager, 'merket', r.merket, 'fro', r.poeng, 'profilfugl', r.profilfugl) order by r.nr) from r where r.nr <= 50), '[]'::jsonb),
     'forrige', coalesce((select jsonb_agg(jsonb_build_object('plass', p.plass, 'navn', p.navn, 'poeng', p.poeng, 'fro', p.fro, 'user_id', p.user_id) order by p.plass)
                          from public.premier p where p.periode = public.periode_navn(hva, public.periode_start(hva, s - interval '1 second'))), '[]'::jsonb),
     'premier', to_jsonb(array[public.premie(hva, 1), public.premie(hva, 2), public.premie(hva, 3)])
@@ -470,7 +473,7 @@ begin
           and exists (select 1 from unnest(st.dager) d where d >= fra and d < til)) end as n
     from public.ledertavle l
   ), r as (
-    select t.user_id, t.n, l.navn, l.ord, l.fugl, l.tall, l.tittel, l.arter, l.dager, l.fro, l.merket,
+    select t.user_id, t.n, l.navn, l.ord, l.fugl, l.tall, l.tittel, l.arter, l.dager, l.fro, l.merket, l.profilfugl,
            rank() over (order by t.n desc) as plass,
            row_number() over (order by t.n desc, l.fro desc, l.user_id) as rekke
     from tall t join public.ledertavle l on l.user_id = t.user_id
@@ -482,7 +485,8 @@ begin
     'plass', (select r.plass from r where r.user_id = meg),
     'meg', (select r.n from r where r.user_id = meg),
     'rader', coalesce((select jsonb_agg(jsonb_build_object('user_id', r.user_id, 'navn', r.navn, 'ord', r.ord, 'fugl', r.fugl, 'tall', r.tall,
-                         'tittel', r.tittel, 'n', r.n, 'arter', r.arter, 'dager', r.dager, 'fro', r.fro, 'merket', r.merket, 'plass', r.plass) order by r.rekke)
+                         'tittel', r.tittel, 'n', r.n, 'arter', r.arter, 'dager', r.dager, 'fro', r.fro, 'merket', r.merket, 'plass', r.plass,
+                         'profilfugl', r.profilfugl) order by r.rekke)
                        from r where r.rekke <= 50), '[]'::jsonb)
   ) into ut;
   return ut;
@@ -527,7 +531,7 @@ begin
   from public.sett st where st.user_id = uid and not exists (select 1 from public.dyrearter da where da.art = st.art);
   vis := l.vis_arter or uid = (select auth.uid());
   return jsonb_build_object('user_id', uid, 'navn', l.navn, 'antall', jsonb_array_length(arter), 'vis', vis,
-                            'arter', case when vis then arter end);
+                            'arter', case when vis then arter end, 'profilfugl', l.profilfugl);
 end $$;
 grant execute on function public.profil_arter(uuid) to anon, authenticated;
 
@@ -705,7 +709,7 @@ begin
                    and exists (select 1 from unnest(st.dager) d where d >= fra and d < til)) end as n
     from u left join pp on pp.user_id = u.user_id
   ), r as (
-    select t.user_id, t.n, u.navn, u.ord, u.fugl, u.tall, u.tittel, u.arter, u.dager, u.fro, u.merket,
+    select t.user_id, t.n, u.navn, u.ord, u.fugl, u.tall, u.tittel, u.arter, u.dager, u.fro, u.merket, u.profilfugl,
            rank() over (order by t.n desc) as plass,
            row_number() over (order by t.n desc, t.sist asc nulls last, u.fro desc, u.user_id) as rekke
     from tall t join u on u.user_id = t.user_id
@@ -717,7 +721,7 @@ begin
     'meg', (select r.n from r where r.user_id = meg),
     'rader', coalesce((select jsonb_agg(jsonb_build_object('user_id', r.user_id, 'navn', r.navn, 'ord', r.ord, 'fugl', r.fugl, 'tall', r.tall,
                          'tittel', r.tittel, 'n', r.n, 'fro', case when etter = 'fro' then r.n else r.fro end, 'arter', r.arter,
-                         'dager', r.dager, 'merket', r.merket, 'plass', r.plass) order by r.rekke) from r), '[]'::jsonb)
+                         'dager', r.dager, 'merket', r.merket, 'plass', r.plass, 'profilfugl', r.profilfugl) order by r.rekke) from r), '[]'::jsonb)
   ) into ut;
   return ut;
 end $$;
