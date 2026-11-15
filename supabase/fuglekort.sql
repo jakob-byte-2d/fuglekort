@@ -12,7 +12,7 @@
 --   stengte_navn navn som er sperret                       bare du (Table Editor)
 --   fro_logg     frøene hver time (til ukes-, måneds- og årstavla)   bare du
 --   premier      de tre beste i hver uke, måned og år       alle kan lese
---   merket       brukere med uvanlig mange frø på kort tid  bare du (godkjenn i SQL Editor)
+--   merket       brukere med uvanlig mange frø på kort tid  bare du (godkjenn / merk i SQL Editor); vises ikke på den åpne tavla
 --   dyrearter    dyrekortene, som ikke teller på artstavla  bare du (Table Editor)
 --   grupper      grupper med egen tavle (navn, kode, eier)  bare via funksjonene under (medlemmene)
 --   gruppemedlem hvem som er med i hvilken gruppe          bare via funksjonene under
@@ -113,7 +113,7 @@ begin
   end loop;
 end $$;
 
--- ledertavlen kan alle lese
+-- ledertavlen kan alle lese (merkede brukere unntatt; se under «merket»)
 drop policy if exists "alle kan lese tavlen" on public.ledertavle;
 create policy "alle kan lese tavlen" on public.ledertavle for select to anon, authenticated using (true);
 grant usage on schema public to anon, authenticated;
@@ -253,6 +253,10 @@ on conflict (ord) do nothing;
 alter table public.ledertavle add column if not exists fro_utenfor bigint not null default 0 check (fro_utenfor between 0 and 100000000);
 alter table public.ledertavle add column if not exists arter_utenfor smallint not null default 0 check (arter_utenfor between 0 and 200);  -- arter fra en sikkerhetskopi
 alter table public.ledertavle add column if not exists merket boolean not null default false;   -- settes bare av databasen
+-- merkede brukere (uvanlig mange frø eller arter på kort tid) ser bare de selv på tavla, til de er godkjent
+-- (15. november 2026; før stod de der med «!»). Grupper og favoritter (tavle_utvalg) viser dem
+drop policy if exists "alle kan lese tavlen" on public.ledertavle;
+create policy "alle kan lese tavlen" on public.ledertavle for select to anon, authenticated using (not merket or user_id = (select auth.uid()));
 alter table public.ledertavle add column if not exists vis_arter boolean not null default true;   -- artslista på profilen (se profil_arter)
 -- profilbildet: en fugl fra livslisten (artsnavnet, f.eks. parus-major), eller tom for tittelikonet
 alter table public.ledertavle add column if not exists profilfugl text
@@ -361,7 +365,7 @@ begin
     select pp.user_id, pp.poeng, l.navn, l.ord, l.fugl, l.tall, l.tittel, l.arter, l.dager, l.merket, l.profilfugl, l.profilsett,
            row_number() over (order by pp.poeng desc, pp.sist asc, pp.user_id) as nr
     from public.periode_poeng(s, e) pp join public.ledertavle l on l.user_id = pp.user_id
-    where pp.poeng > 0
+    where pp.poeng > 0 and (not l.merket or l.user_id = meg)          -- merkede: bare for seg selv
   )
   select jsonb_build_object(
     'periode', public.periode_navn(hva, s), 'fra', s, 'til', e,
@@ -378,9 +382,10 @@ begin
 end $$;
 
 -- ---------- Merking: uvanlig mange frø på kort tid ----------
--- Siste døgn mer enn 25 nye arter eller mer enn 300 000 frø (uten premier og gjenopprettede frø): brukeren merkes
--- på tavla og kan ikke vinne premier før du godkjenner: select public.godkjenn('<user_id>');
--- (Mer enn 40 arter registrert på én dag merkes også; se Artstavla under.)
+-- Siste døgn mer enn 25 nye arter eller mer enn 300 000 frø (uten premier og gjenopprettede frø): brukeren merkes,
+-- tas bort fra den åpne tavla og kan ikke vinne premier før du godkjenner: select public.godkjenn('<user_id>');
+-- Merke for hånd (f.eks. en som har misforstått registreringen): select public.merk('<user_id>');
+-- (Mer enn 25 arter registrert på én dag merkes også; se Artstavla under.) Merkede vises ikke på den åpne tavla.
 create table if not exists public.merket (
   user_id   uuid primary key references auth.users (id) on delete cascade,
   tid       timestamptz not null default now(),     -- da brukeren ble merket
@@ -416,6 +421,13 @@ language sql security definer set search_path = '' as $$
   update public.merket set godkjent = now() where user_id = uid;
   update public.ledertavle set merket = false where user_id = uid;
 $$;
+create or replace function public.merk(uid uuid, grunn text default 'merket for hånd') returns void
+language sql security definer set search_path = '' as $$
+  insert into public.merket (user_id, tid, grunn) values (uid, now(), grunn)
+    on conflict (user_id) do update set tid = excluded.tid, grunn = excluded.grunn, fro_dogn = null, arter_dogn = null, godkjent = null;
+  update public.ledertavle set merket = true where user_id = uid;
+$$;
+revoke execute on function public.merk(uuid, text) from public, anon, authenticated;
 
 -- hver gang frøene sendes: øyeblikksbildet for timen, og sjekken
 create or replace function public.logg_fro() returns trigger
@@ -480,7 +492,7 @@ begin
            rank() over (order by t.n desc) as plass,
            row_number() over (order by t.n desc, l.fro desc, l.user_id) as rekke
     from tall t join public.ledertavle l on l.user_id = t.user_id
-    where t.n > 0
+    where t.n > 0 and (not l.merket or l.user_id = meg)               -- merkede: bare for seg selv
   )
   select jsonb_build_object(
     'periode', case when hva = 'tot' then null else public.periode_navn(hva, s) end, 'fra', s, 'til', e,
@@ -496,8 +508,9 @@ begin
 end $$;
 grant execute on function public.tavle_arter(text) to anon, authenticated;
 
--- Merking: mer enn 40 fuglearter registrert på samme dag (norsk tid). Som for frøene: merket på tavla, ingen premier
--- før du godkjenner (select public.godkjenn('<user_id>');), og ikke merket igjen samme dag etter en godkjenning.
+-- Merking: mer enn 25 fuglearter registrert på samme dag (norsk tid; 40 til 15. november 2026). Som for frøene: borte
+-- fra den åpne tavla, ingen premier før du godkjenner (select public.godkjenn('<user_id>');), og ikke merket igjen samme
+-- dag etter en godkjenning.
 create or replace function public.sjekk_arter_dag() returns trigger
 language plpgsql security definer set search_path = '' as $$
 declare idag date := (now() at time zone 'Europe/Oslo')::date; n integer; g timestamptz;
@@ -508,8 +521,8 @@ begin
   if g is not null and (g at time zone 'Europe/Oslo')::date = idag then return null; end if;
   select count(*) into n from public.sett st
   where st.user_id = new.user_id and idag = any(st.dager) and not exists (select 1 from public.dyrearter da where da.art = st.art);
-  if n > 40 then
-    insert into public.merket (user_id, tid, grunn, fro_dogn, arter_dogn) values (new.user_id, now(), 'mer enn 40 arter på én dag', null, n)
+  if n > 25 then
+    insert into public.merket (user_id, tid, grunn, fro_dogn, arter_dogn) values (new.user_id, now(), 'mer enn 25 arter på én dag', null, n)
       on conflict (user_id) do update set tid = excluded.tid, grunn = excluded.grunn, fro_dogn = excluded.fro_dogn, arter_dogn = excluded.arter_dogn;
     update public.ledertavle set merket = true where user_id = new.user_id;
   end if;
@@ -1028,6 +1041,10 @@ end $$;
 -- Merkede brukere, og godkjenne en (fjerner merket; det som kom før, teller ikke igjen):
 --   select m.*, l.navn from public.merket m left join public.ledertavle l using (user_id) order by m.tid desc;
 --   select public.godkjenn('<user_id>');
+-- Merke en bruker for hånd (borte fra den åpne tavla til godkjenn), f.eks. etter navnet:
+--   select public.merk(user_id) from public.ledertavle where navn = 'Navnet';
+-- Arter registrert per dag for en bruker:
+--   select d as dag, count(*) as arter from public.sett st, unnest(st.dager) d where st.user_id = '<user_id>' group by d order by d;
 -- Tellinger: høyeste antall per art og telling:
 --   select t.user_id, t.start, a.key as art, a.value::int as antall
 --   from public.tellinger t cross join lateral jsonb_each_text(t.arter) a;

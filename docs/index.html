@@ -3062,7 +3062,7 @@ function registrer(c, d) {
   const for_ = opptjent(), f0 = froFor();
   froFrys();
   Store.put(c.key, [d]);
-  if (!c.bonus) sjekkTempo();
+  if (!c.bonus && d === todayISO()) sjekkTempo(c);
   haptic(12);
   const n = seenCount();
   const msg = c.bonus ? `${c.navn}! Dyrekortet er sett for første gang.`
@@ -3072,22 +3072,53 @@ function registrer(c, d) {
   si(msg + froTekst(f0) + nyheter(for_));
   froEffekt(c, f0, d);
 }
-/* 15 new species within an hour (with SETT; not from a count): a warning that names with unusually many seeds in a
-   short time are marked on the board. Once a day */
-function sjekkTempo() {
-  const k = brukerNokkel('fuglekort:nye-tider'), na = Date.now();
-  let t = []; try { t = JSON.parse(lsGet(k) || '[]'); } catch (e) {}
-  t = (Array.isArray(t) ? t : []).filter(x => na - x < 3600000); t.push(na); lsSet(k, JSON.stringify(t.slice(-40)));
+/* 10 new species with SETT on the same day (not from a count; until 15 Nov 2026: 15 within an hour): perhaps birds seen
+   before the app. Once a day «Mange nye arter i dag»: such birds belong in Livslisten (no seeds), and «Flytt dem til
+   livslisten» moves today's new ones there (seen before; today's registration and its seeds go). «Jeg har sett dem i
+   dag» keeps them. Kept per user and day (fuglekort:nye-idag) */
+const NYE_GRENSE = 10, NYE_KEY = () => brukerNokkel('fuglekort:nye-idag');
+function sjekkTempo(c) {
+  const d = todayISO();
+  let v = null; try { v = JSON.parse(lsGet(NYE_KEY()) || 'null'); } catch (e) {}
+  if (!v || v.dag !== d || !Array.isArray(v.arter)) v = { dag: d, arter: [] };
+  if (!v.arter.includes(c.key)) v.arter.push(c.key);
+  lsSet(NYE_KEY(), JSON.stringify(v));
   const vk = brukerNokkel('fuglekort:tempo-varslet');
-  if (t.length >= 15 && lsGet(vk) !== todayISO()) { lsSet(vk, todayISO()); visTempoVarsel(); }
+  if (dagensNye().length >= NYE_GRENSE && lsGet(vk) !== d) { lsSet(vk, d); setTimeout(visTempoVarsel, 1800); }   // after the seeds have flown
+}
+/* the new ones of today with SETT that still have today as their only day */
+function dagensNye() {
+  let v = null; try { v = JSON.parse(lsGet(NYE_KEY()) || 'null'); } catch (e) {}
+  const d = todayISO();
+  return v && v.dag === d && Array.isArray(v.arter)
+    ? v.arter.filter(k => BY_KEY[k] != null && !CARDS[BY_KEY[k]].bonus && Store.days(k).length === 1 && Store.days(k)[0] === d) : [];
 }
 function visTempoVarsel(forsok = 0) {
   const opptatt = dlgApen || festAapen || festKo.length || froVent.length || openSheet || !$('#festVent').hidden;
   if (opptatt) { if (forsok < 240) setTimeout(() => visTempoVarsel(forsok + 1), 500); return; }
+  const arter = dagensNye(); if (arter.length < NYE_GRENSE) return;
+  const navn = arter.map(k => CARDS[BY_KEY[k]].navn).sort(kol.compare);
   sporsmal({
-    tittel: 'Mange nye arter på kort tid',
-    tekst: `<p>Du har registrert mange nye arter den siste timen. Registrer bare fugler du har sett selv i dag.</p><p>${enkel ? 'Brukere som registrerer uvanlig mange arter på kort tid, blir merket på ledertavlen.' : 'Brukere som får uvanlig mange frø på kort tid, blir merket på ledertavlen og kan ikke vinne premier.'}</p>`,
-    knapper: [{ tekst: 'Forstått', pri: true }],
+    tittel: 'Mange nye arter i dag',
+    tekst: `<p>Du har registrert ${arter.length} nye arter i dag. SETT er for fugler du ser i dag.</p>
+      <p>Fugler du har sett før du begynte med appen, hører hjemme i livslisten. ${enkel ? 'Der kommer de med på listen din.' : 'De gir ingen frø der, men kommer med på listen din.'}</p>
+      <p class="pb-merk">${esc(navn.join(', '))}</p>
+      ${deler() ? '<p class="pb-merk">Brukere som registrerer uvanlig mange arter på kort tid, blir merket og tatt bort fra den åpne ledertavla til det er sjekket.</p>' : ''}`,
+    knapper: [{ tekst: 'Flytt dem til livslisten', pri: true, fn: flyttTilLivslisten }, { tekst: 'Jeg har sett dem i dag' }],
+  });
+}
+/* today's new ones: seen before (no year) on the life list, and today's registration taken away (with its seeds) */
+function flyttTilLivslisten() {
+  const arter = dagensNye(); if (!arter.length) return;
+  ForSett.leggTil(arter.map(key => ({ key, aar: null })));
+  arter.forEach(k => Store.put(k, []));
+  lsDel(NYE_KEY());
+  if (deler()) planleggSending(800);
+  si(`${flertall(arter.length, 'art', 'arter')} flyttet til livslisten.`);
+  sporsmal({
+    tittel: 'Flyttet til livslisten',
+    tekst: `<p>${flertall(arter.length, 'art', 'arter')} står nå som sett før på livslisten din, og registreringen i dag er tatt bort. Du kan legge til året under Livslisten i menyen.</p>`,
+    knapper: [{ tekst: 'OK', pri: true }],
   });
 }
 /* × on the back: asked first, since the day and its seeds go */
@@ -5369,7 +5400,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = 'ff01dc616c';
+const APPVERSJON = 'a247bf0c4d';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
@@ -5813,7 +5844,7 @@ function tavleHtml() {
   const megRad = arter ? { ...o, n: (c && c.meg) || (per ? 0 : o.arter), merket: !!lsGet(DK('merket')) }
     : per ? { ...o, fro: (c && c.meg) || 0, merket: !!lsGet(DK('merket')) } : { ...o, merket: !!lsGet(DK('merket')) };
   const melding = lsJson(DK('navn-melding'), null);
-  const varsel = [lsGet(DK('merket')) ? '<div class="tv-varsel" role="status">Du er merket på ledertavlen fordi du har fått uvanlig mange frø eller registrert uvanlig mange arter på kort tid. Merket blir stående til det er sjekket, og imens kan du ikke vinne premier.</div>' : '',
+  const varsel = [lsGet(DK('merket')) ? '<div class="tv-varsel" role="status">Du er merket fordi du har fått uvanlig mange frø eller registrert uvanlig mange arter på kort tid. Til det er sjekket, ser bare du deg selv på den åpne ledertavla (gruppene dine ser deg fortsatt), og du kan ikke vinne premier. Fugler du så før du begynte med appen, hører hjemme i livslisten.</div>' : '',
     navnStengt() ? `<div class="tv-varsel" role="status">Navnet «${esc(mittNavn())}» kan ikke brukes på ledertavlen, fordi det er rapportert eller ikke tillatt. Til du velger et nytt, står du som «Fuglevenn».<button class="btn" data-bytt-navn>Velg nytt navn</button></div>`
     : melding ? `<div class="tv-varsel" role="status">«${esc(melding.fra)}» var tatt, så nå heter du «${esc(melding.til)}». Du kan bytte navn når du vil.<button class="textbtn" data-lukk-melding>OK</button></div>` : ''].join('');
   const mine = arter ? (per ? `${flertall((c && c.meg) || 0, 'art', 'arter')} ${DENNE[hva]}` : flertall(o.arter, 'art', 'arter'))
