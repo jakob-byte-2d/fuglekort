@@ -1313,13 +1313,15 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 
 <div class="scrim" id="scrim"></div>
 
-<!-- the menu at the top right: search, about the cards, settings -->
+<!-- the menu at the top right: profile, search, the life list, about the cards, the introduction, the cards by post, settings -->
 <div class="meny-bak" id="menyBak" hidden></div>
 <div class="meny" id="meny" role="menu" aria-label="Meny" hidden>
+  <button role="menuitem" id="openProfil"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.8-3.9 3.8-6 7.5-6s6.7 2.1 7.5 6"/></svg></span><span class="mt">Profil</span></button>
   <button role="menuitem" id="openSearch"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg></span><span class="mt">Søk etter fugl</span><kbd aria-hidden="true">/</kbd></button>
   <button role="menuitem" id="openFor"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3.5 4.5V9H8"/><path d="M12 7.5V12l3 2"/></svg></span><span class="mt">Livslisten</span></button>
   <button role="menuitem" id="openHelp"><span class="mi q" aria-hidden="true">?</span><span class="mt">Om kortene</span><kbd aria-hidden="true">?</kbd></button>
   <button role="menuitem" id="openIntro"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg></span><span class="mt">Slik virker appen</span></button>
+  <button role="menuitem" id="openPost"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span><span class="mt">Få kortene i postkassen</span></button>
   <button role="menuitem" id="openSettings"><span class="mi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span><span class="mt">Innstillinger</span></button>
 </div>
 
@@ -3105,11 +3107,12 @@ function closeSheets(silent) {
 }
 scrim.addEventListener('click', () => closeSheets());
 
-/* ---- the menu at the top right: search, about the cards, settings ---- */
+/* ---- the menu at the top right: profile, search, the life list, about the cards, the introduction, the cards by post, settings ---- */
 const menyEl = $('#meny'), menyBak = $('#menyBak'), menyBtn = $('#openMeny');
 const menyApen = () => !menyEl.hidden;
 const menyValg = () => [...menyEl.querySelectorAll('[role="menuitem"]')].filter(b => !b.hidden);
 function apneMeny() {
+  $('#openPost').hidden = BRUKER.type === 'barn';                // the cards by post: not for children
   const r = menyBtn.getBoundingClientRect();
   menyEl.style.top = `${Math.round(r.bottom + 8)}px`;
   menyEl.style.right = `${Math.max(8, Math.round(document.documentElement.clientWidth - r.right))}px`;
@@ -3142,6 +3145,10 @@ const qEl = $('#q'), resEl = $('#results');
 let filter = 'alle';
 function openSearch() { showSheet($('#searchSheet')); renderSearch(); setTimeout(() => qEl.focus(), 60); }
 $('#openSearch').addEventListener('click', openSearch);
+$('#openProfil').addEventListener('click', () => openStats('profil'));
+/* the cards by post: the list on hagefugler.no (#bestill opens it), not for children (it asks for name, email and phone) */
+const POSTKASSE_URL = 'https://hagefugler.no/#bestill';
+$('#openPost').addEventListener('click', () => { window.open(POSTKASSE_URL, '_blank', 'noopener'); });
 $('#closeSearch').addEventListener('click', () => closeSheets());
 qEl.addEventListener('input', renderSearch);
 qEl.addEventListener('keydown', e => { if (e.key === 'Enter') { const first = resEl.querySelector('.res'); if (first) first.click(); } });
@@ -5200,7 +5207,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '4e55d14b65';
+const APPVERSJON = '0bf816b11f';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
