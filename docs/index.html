@@ -91,6 +91,12 @@ button{cursor:pointer;touch-action:manipulation}
 .ring circle{fill:none;stroke-width:3.2}
 .ring .trk{stroke:var(--track)}
 .ring .arc{stroke:var(--gold);stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.2,.8,.2,1)}
+/* the profile picture (a bird from the life list or a picture of your own) in place of the title icon; the way to the
+   next title stays around it */
+.ring .pb{position:absolute;left:50%;top:50%;width:31px;height:31px;margin:-15.5px 0 0 -15.5px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.06);background:var(--track)}
+.ring.har-pb .ti{visibility:hidden}
+.pb>*,.pb-stor>*{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover}
+.pb>.ph,.pb-stor>.ph{width:100%;height:100%;border-radius:50%;background-color:var(--track)}   /* over .ph's own 48 px */
 
 /* ---------- deck ---------- */
 .stage{position:relative;min-height:0;container-type:size;display:grid;place-items:center;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -740,6 +746,8 @@ body.formodus::after{opacity:1;visibility:visible;transition:opacity .3s}
 .enkel .ring{border-color:var(--line)}
 .enkel .ring>svg,.enkel .ring>.ti{display:none}
 .enkel .ring .enkel-ikon{display:grid;place-items:center}
+.enkel .ring.har-pb .enkel-ikon{display:none}
+.enkel .ring .pb{width:34px;height:34px;margin:-17px 0 0 -17px}
 .ring .enkel-ikon svg{position:static;width:20px;height:20px;margin:0;transform:none}
 .enkel .frobtn,.enkel #froPluss,.enkel .oppdrag-stripe,.enkel #fane-merker,.enkel .xmerke,.enkel .lniva,.enkel #vippSek,.enkel .tv-etter{display:none!important}
 .enkel .card[data-niva] .mkant{display:none}
@@ -880,6 +888,37 @@ body.formodus::after{opacity:1;visibility:visible;transition:opacity .3s}
 .tittel-ikon:focus-visible{outline:3px solid var(--spruce-ink);outline-offset:3px}
 .p-tittel{font-size:15px;font-weight:700;color:var(--gold-ink)}
 .p-tittel small{font-weight:600;color:var(--muted);font-size:12.5px;margin-left:4px}
+button.p-tittel{justify-self:start;border:0;background:none;padding:2px 0;font-family:inherit;text-align:left;cursor:pointer}
+button.p-tittel .pil{display:inline-block;margin-left:5px;color:var(--muted);font-size:12px;transition:transform .2s}
+button.p-tittel[aria-expanded="true"] .pil{transform:rotate(180deg)}
+button.p-tittel:focus-visible{outline:3px solid var(--spruce-ink);outline-offset:2px;border-radius:6px}
+/* the profile picture in the Profil tab: the title icon (the tile), a bird or your own picture (round); the pencil
+   opens «Profilbilde» */
+.pb-knapp{position:relative;flex-shrink:0;border:0;padding:0;background:none;cursor:pointer}
+.pb-knapp.rund{border-radius:50%;box-shadow:0 6px 16px -6px rgba(var(--shadow),.55),0 0 0 2px var(--gold)}
+.pb-stor{display:block;width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--track)}
+.pb-tom{display:grid;place-items:center;width:80px;height:80px;border-radius:50%;background:var(--surface-2);color:var(--muted);box-shadow:inset 0 0 0 1.5px var(--line)}
+.pb-tom svg{width:40px;height:40px}
+.pb-blyant{position:absolute;right:-4px;bottom:-4px;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--surface);color:var(--ink);box-shadow:0 2px 6px rgba(var(--shadow),.3),0 0 0 1px var(--line)}
+.pb-blyant svg{width:15px;height:15px}
+.pb-knapp:focus-visible{outline:3px solid var(--spruce-ink);outline-offset:3px}
+.pb-knapp:not(.tittel-ikon){border-radius:50%}
+/* «Profilbilde»: the birds on the life list, and placing a picture of your own in the circle */
+.dlg-kort:has(.pb-rutenett),.dlg-kort:has(.pb-ramme){max-height:100%;overflow:auto}
+.pb-rutenett{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:6px;max-height:min(40vh,300px);overflow:auto;margin:12px -6px 0;padding:4px 6px 6px;overscroll-behavior:contain}
+.pb-rutenett button{display:grid;justify-items:center;gap:4px;min-width:0;border:0;border-radius:12px;background:none;padding:6px 2px;color:var(--ink);font:inherit;cursor:pointer}
+.pb-rutenett button:hover{background:var(--surface-2)}
+.pb-rutenett .ph{width:52px;height:52px;border-radius:50%}
+.pb-rutenett button[aria-pressed="true"] .ph{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--gold)}
+.pb-rutenett .pb-n{max-width:100%;font-size:11.5px;line-height:1.2;font-weight:600;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb-rutenett button:focus-visible{outline:3px solid var(--spruce-ink);outline-offset:-1px}
+.dlg-tekst p.pb-merk{margin-top:10px;font-size:13.5px}
+.pb-ramme{position:relative;width:min(240px,100%);aspect-ratio:1;margin:14px auto 0;border-radius:50%;overflow:hidden;background:var(--track);touch-action:none;cursor:grab;box-shadow:0 0 0 2px var(--gold)}
+.pb-ramme:active{cursor:grabbing}
+.pb-ramme:focus-visible{outline:3px solid var(--spruce-ink);outline-offset:4px}
+.pb-ramme img{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;user-select:none;-webkit-user-select:none;pointer-events:none}
+.pb-zoom{display:flex;align-items:center;gap:10px;margin:14px 0 0;font-size:14px;font-weight:600;color:var(--ink)}
+.pb-zoom input{flex:1;accent-color:var(--spruce)}
 .tittel-bar{margin-top:12px}
 .tittel-bar .tb-linje{display:flex;align-items:center;gap:10px}
 .tittel-bar .bar{flex:1;margin:0}
@@ -1255,6 +1294,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
     <button class="iconbtn ring" id="openStats" aria-label="Min fugleliste" title="Min fugleliste">
       <svg viewBox="0 0 42 42" aria-hidden="true"><circle class="trk" cx="21" cy="21" r="19"/><circle class="arc" id="ringArc" cx="21" cy="21" r="19" stroke-dasharray="0 120"/></svg>
       <span class="ti" id="ringIkon" aria-hidden="true"></span>
+      <span class="pb" id="ringBilde" aria-hidden="true" hidden></span>
       <span class="enkel-ikon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5z"/><path d="M5 20.5A2.5 2.5 0 0 0 7.5 23H19v-5"/><path d="M9 7.5h6M9 11h4"/></svg></span>
     </button>
     <button class="iconbtn" id="openMeny" aria-label="Meny" title="Meny" aria-haspopup="menu" aria-expanded="false" aria-controls="meny">
@@ -1510,6 +1550,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   <p class="sb-hint" id="sbHint"></p>
   <p class="sb-innst"><span id="sbInnstTekst"></span> <button class="sb-lenke" id="sbTilInnst">Endre i Innstillinger</button></p>
 </div>
+<input type="file" id="pbFil" accept="image/*" hidden tabindex="-1" aria-hidden="true">
 <div class="dlg" id="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgTekst" hidden>
   <div class="dlg-kort"><h3 id="dlgT"></h3><div id="dlgTekst" class="dlg-tekst"></div><div class="dlg-knapper" id="dlgKnapper"></div></div>
 </div>
@@ -1944,6 +1985,111 @@ const erSett = k => Store.has(k) || ForSett.erFor(k);           // in the collec
 const bareFor = k => !Store.has(k) && ForSett.erFor(k);         // seen before, not registered in the app yet
 const forAntall = () => BIRDS.filter(c => ForSett.erFor(c.key)).length;
 const livsliste = () => BIRDS.filter(c => erSett(c.key)).length;
+
+/* ================= Profilbilde =================
+   A bird from the life list, a picture of your own or (as before, and the default) the icon of your title; in the
+   simple version, which has no titles, nothing. Shown in the ring at the top right and in the Profil tab, not on the
+   board. Per user on this device only (hagefugler:profilbilde): {fugl: key} or {eget: a 256 × 256 JPEG as a data URL}.
+   The own picture never leaves the device. A bird no longer on the life list falls back to the title */
+const PB_KEY = () => brukerNokkel('hagefugler:profilbilde');
+function profilbilde() {
+  let v = null; try { v = JSON.parse(lsGet(PB_KEY()) || 'null'); } catch (e) {}
+  if (v && typeof v.eget === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(v.eget)) return { eget: v.eget };
+  if (v && typeof v.fugl === 'string' && BY_KEY[v.fugl] != null && !CARDS[BY_KEY[v.fugl]].bonus && erSett(v.fugl)) return { fugl: v.fugl };
+  return null;
+}
+const pbInnhold = p => (p.eget ? `<img src="${esc(p.eget)}" alt="" draggable="false">` : `<span class="ph" style="background-position:${spritePos(BY_KEY[p.fugl])}"></span>`);
+const pbBeskrivelse = p => (p ? (p.fugl ? CARDS[BY_KEY[p.fugl]].navn : 'eget bilde') : '');
+function paintProfilbilde() {
+  const p = profilbilde(), el = $('#ringBilde'), s = p ? (p.fugl ? `f:${p.fugl}` : `e:${p.eget.length}:${p.eget.slice(-32)}`) : '';
+  if (el.dataset.s === s) return;
+  el.dataset.s = s; el.innerHTML = p ? pbInnhold(p) : ''; el.hidden = !p;
+  $('#openStats').classList.toggle('har-pb', !!p);
+}
+function settProfilbilde(v) {
+  if (v) { try { localStorage.setItem(PB_KEY(), JSON.stringify(v)); } catch (e) { si('Bildet fikk ikke plass på telefonen. Prøv et annet bilde.'); return false; } }
+  else { try { localStorage.removeItem(PB_KEY()); } catch (e) {} }
+  paintProfilbilde();
+  if (openSheet && openSheet.id === 'statsSheet' && statsFane === 'profil') { renderStats(); const b = $('#statsBody [data-profilbilde]'); if (b) b.focus({ preventScroll: true }); }
+  si(v ? (v.fugl ? `Profilbildet er nå ${CARDS[BY_KEY[v.fugl]].navn.toLowerCase()}.` : 'Profilbildet er byttet til bildet ditt.') : enkel ? 'Profilbildet er fjernet.' : 'Profilbildet er nå tittelikonet ditt.');
+  return true;
+}
+/* «Profilbilde»: the birds on the life list (registered in the app or seen before), by name; a picture of your own;
+   back to the title */
+function velgProfilbilde() {
+  const p = profilbilde(), liste = BIRDS.filter(c => erSett(c.key)).sort((a, b) => kol.compare(a.navn, b.navn));
+  const tekst = `<p>Velg en fugl fra livslisten din, eller bruk et eget bilde. Et eget bilde lagres bare på denne telefonen.</p>`
+    + (liste.length ? `<div class="pb-rutenett" role="group" aria-label="Fugler fra livslisten">${liste.map(c => `<button type="button" data-pb-fugl="${c.key}" aria-pressed="${!!p && p.fugl === c.key}"><span class="ph" style="background-position:${spritePos(BY_KEY[c.key])}" aria-hidden="true"></span><span class="pb-n">${esc(c.navn)}</span></button>`).join('')}</div>` : '')
+    + `<p class="pb-merk">${liste.length ? 'Flere fugler kommer når du registrerer dem eller merker dem i livslisten.' : 'Fuglene på livslisten din kan bli profilbilde. Registrer en fugl, eller merk fugler du har sett før i livslisten.'}</p>`;
+  sporsmal({ tittel: 'Profilbilde', tekst, knapper: [
+    { tekst: 'Velg eget bilde', pri: !liste.length, fn: () => $('#pbFil').click() },
+    { tekst: 'Åpne livslisten', fn: () => { closeSheets(true); tilbyForModus(); } },
+    ...(p ? [{ tekst: enkel ? 'Fjern profilbildet' : 'Bruk tittelikonet', fn: () => settProfilbilde(null) }] : []),
+    { tekst: 'Avbryt' },
+  ] });
+}
+$('#dlg').addEventListener('click', e => {
+  const b = e.target.closest('[data-pb-fugl]'); if (!b) return;
+  const k = b.dataset.pbFugl; lukkDlg(() => settProfilbilde({ fugl: k }));
+});
+/* a picture of your own: from the camera or the photos; placed in the circle by dragging, pinching, the slider, the
+   wheel or the arrow keys, and kept as 256 × 256 pixels */
+$('#pbFil').addEventListener('change', e => {
+  const f = e.target.files && e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  const url = URL.createObjectURL(f), img = new Image();
+  img.onload = () => plasserBilde(img, url);
+  img.onerror = () => { URL.revokeObjectURL(url); sporsmal({ tittel: 'Bildet kunne ikke åpnes', tekst: '<p>Prøv et annet bilde, for eksempel et fotografi fra kamerarullen.</p>', knapper: [{ tekst: 'OK', pri: true }] }); };
+  img.src = url;
+});
+function plasserBilde(img, url) {
+  const w = img.naturalWidth, h = img.naturalHeight;
+  if (!w || !h) { URL.revokeObjectURL(url); return; }
+  sporsmal({
+    tittel: 'Plasser bildet',
+    tekst: `<div class="pb-ramme" id="pbRamme" tabindex="0" role="img" aria-label="Utsnittet av bildet. Dra for å flytte det, eller bruk piltastene."><img id="pbBilde" src="${esc(url)}" alt="" draggable="false"></div>
+      <label class="pb-zoom">Zoom<input type="range" id="pbZoom" min="1" max="4" step="0.01" value="1"></label>
+      <p class="pb-merk">Dra for å flytte bildet. Det lagres bare på denne telefonen.</p>`,
+    knapper: [{ tekst: 'Bruk bildet', pri: true, fn: () => { lagre(); URL.revokeObjectURL(url); } }, { tekst: 'Avbryt', fn: () => URL.revokeObjectURL(url) }],
+    avbryt: () => URL.revokeObjectURL(url),
+  });
+  const ramme = $('#pbRamme'), bilde = $('#pbBilde'), zoom = $('#pbZoom');
+  const S = () => ramme.clientWidth || 240, s0 = () => S() / Math.min(w, h);
+  let z = 1, x = 0, y = 0;
+  const klem = () => { const k = s0() * z; x = Math.min(0, Math.max(S() - w * k, x)); y = Math.min(0, Math.max(S() - h * k, y)); };
+  const vis = () => { klem(); const k = s0() * z; bilde.style.width = `${w * k}px`; bilde.style.height = `${h * k}px`; bilde.style.transform = `translate(${x}px,${y}px)`; };
+  const settZoom = (nz, mx = S() / 2, my = S() / 2) => {     // keeps the point under (mx, my) in place
+    nz = Math.min(4, Math.max(1, nz)); const k0 = s0() * z, k1 = s0() * nz;
+    x = mx - (mx - x) * k1 / k0; y = my - (my - y) * k1 / k0; z = nz; zoom.value = String(z); vis();
+  };
+  { const k = s0(); x = (S() - w * k) / 2; y = (S() - h * k) / 2; vis(); }
+  const fingre = new Map(); let start = null;
+  const midt = () => { const a = [...fingre.values()], r = ramme.getBoundingClientRect(); return { mx: (a[0].x + a[1].x) / 2 - r.left, my: (a[0].y + a[1].y) / 2 - r.top, d: Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y) }; };
+  ramme.addEventListener('pointerdown', e => { ramme.setPointerCapture(e.pointerId); fingre.set(e.pointerId, { x: e.clientX, y: e.clientY }); start = fingre.size === 2 ? { ...midt(), z } : null; });
+  ramme.addEventListener('pointermove', e => {
+    const f = fingre.get(e.pointerId); if (!f) return;
+    if (fingre.size === 1) { x += e.clientX - f.x; y += e.clientY - f.y; f.x = e.clientX; f.y = e.clientY; vis(); return; }
+    f.x = e.clientX; f.y = e.clientY;
+    if (fingre.size === 2 && start) { const m = midt(); settZoom(start.z * m.d / Math.max(1, start.d), m.mx, m.my); }
+  });
+  const slipp = e => { fingre.delete(e.pointerId); start = fingre.size === 2 ? { ...midt(), z } : null; };
+  ramme.addEventListener('pointerup', slipp); ramme.addEventListener('pointercancel', slipp);
+  ramme.addEventListener('wheel', e => { e.preventDefault(); const r = ramme.getBoundingClientRect(); settZoom(z * Math.exp(-e.deltaY / 400), e.clientX - r.left, e.clientY - r.top); }, { passive: false });
+  ramme.addEventListener('keydown', e => {
+    const d = { ArrowLeft: [10, 0], ArrowRight: [-10, 0], ArrowUp: [0, 10], ArrowDown: [0, -10] }[e.key];
+    if (d) { e.preventDefault(); e.stopPropagation(); x += d[0]; y += d[1]; vis(); }
+    else if (e.key === '+' || e.key === '-') { e.preventDefault(); settZoom(z * (e.key === '+' ? 1.15 : 1 / 1.15)); }
+  });
+  zoom.addEventListener('input', () => settZoom(+zoom.value));
+  function lagre() {
+    const k = s0() * z, n = 256, c = document.createElement('canvas'); c.width = c.height = n;
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, n, n); g.imageSmoothingQuality = 'high';
+    g.drawImage(img, -x / k, -y / k, S() / k, S() / k, 0, 0, n, n);
+    let data = c.toDataURL('image/jpeg', 0.85);
+    if (data.length > 90000) data = c.toDataURL('image/jpeg', 0.7);
+    settProfilbilde({ eget: data });
+  }
+}
 const forAarTekst = k => { const v = ForSett.svar(k); return v && v.aar ? String(v.aar) : 'før appen'; };
 const aarValg = (valgt, tom = 'Husker ikke') => `<option value="">${tom}</option>`
   + Array.from({ length: AAR_NA - AAR_FRA + 1 }, (_, j) => AAR_NA - j).map(a => `<option value="${a}"${a === valgt ? ' selected' : ''}>${a}</option>`).join('');
@@ -3055,7 +3201,7 @@ function paintSub() {
 }
 function paintChrome() {
   const c = CARDS[cur];
-  paintSub(); paintTittel();
+  paintSub(); paintTittel(); paintProfilbilde();
   paintFro();                                                // the ring around the title comes after the counter
   ticks.forEach((t, p) => { const i = DECK[p]; t.classList.toggle('s', Store.has(CARDS[i].key)); t.classList.toggle('c', i === cur); });
   paintTeller(); paintForModus();
@@ -3474,10 +3620,13 @@ function renderStats() {
   const fT = froTotalt(), tk = tittelAv(fT), tt = TITLER[tk], tn = TITLER[tk + 1];
   const andel = tn ? Math.max(0, Math.min(1, (fT - tt.fra) / (tn.fra - tt.fra))) : 1;
   const navnKnapp = `<button class="p-navn ${navn ? '' : 'tom'}" data-bytt-navn aria-label="${navn ? `Brukernavn: ${esc(navn)}. Bytt navn` : 'Velg brukernavn'}"><span>${esc(navn || 'Velg brukernavn')}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg></button>`;
-  const profilHode = enkel ? `<div class="profil"><span class="p-t">${navnKnapp}</span></div>` : `<div class="profil">
-    <button class="tittel-ikon" data-titler aria-expanded="${titlerApen}" aria-label="${tt.navn}, tittel ${tk + 1} av ${TITLER.length}. Vis alle titlene."><span class="ti" style="${tittelPos(tk)}"></span></button>
+  const pb = profilbilde(), blyant = '<span class="pb-blyant" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg></span>';
+  const pbKnapp = `<button class="pb-knapp ${pb ? 'rund' : enkel ? '' : 'tittel-ikon'}" data-profilbilde aria-haspopup="dialog" aria-label="Profilbilde: ${pb ? esc(pbBeskrivelse(pb)) : enkel ? 'ikke valgt' : `tittelikonet, ${tt.navn}`}. Bytt profilbilde">${pb ? `<span class="pb-stor">${pbInnhold(pb)}</span>`
+    : enkel ? '<span class="pb-tom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.8-3.9 3.8-6 7.5-6s6.7 2.1 7.5 6"/></svg></span>' : `<span class="ti" style="${tittelPos(tk)}"></span>`}${blyant}</button>`;
+  const profilHode = enkel ? `<div class="profil">${pbKnapp}<span class="p-t">${navnKnapp}</span></div>` : `<div class="profil">
+    ${pbKnapp}
     <span class="p-t">${navnKnapp}
-    <b class="p-tittel">${tt.navn}<small>${tk + 1} av ${TITLER.length}</small></b></span></div>
+    <button class="p-tittel" data-titler aria-expanded="${titlerApen}" aria-label="${tt.navn}, tittel ${tk + 1} av ${TITLER.length}. Vis alle titlene.">${tt.navn}<small>${tk + 1} av ${TITLER.length}</small><span class="pil" aria-hidden="true">▾</span></button></span></div>
     <div class="tittel-bar">
       <div class="tb-linje"><i class="bar" role="img" aria-label="${Math.round(andel * 100)} prosent til neste tittel"><i style="width:${(andel * 100).toFixed(1)}%"></i></i>${tn ? `<span class="ti" style="${tittelPos(tk + 1)}" aria-hidden="true"></span>` : ''}</div>
       <small>${tn ? `${fmtFro(fT)} av ${fmtFro(tn.fra)} frø til ${tn.navn}` : `${fmtFro(fT)} frø · den høyeste tittelen!`}</small>
@@ -3653,6 +3802,7 @@ sb.addEventListener('click', async e => {
     $('#kalTip').innerHTML = `<b>${esc(c.navn)}</b> · ${MND_LANG[m]}${aar ? ` ${aar}` : ', alle år'}: ${v ? `${v} ${v === 1 ? 'dag' : 'dager'}` : 'ikke sett'}`;
     return;
   }
+  if (e.target.closest('[data-profilbilde]')) { velgProfilbilde(); return; }
   if (e.target.closest('[data-titler]')) { titlerApen = !titlerApen; renderStats(); const b = sb.querySelector('[data-titler]'); b && b.focus({ preventScroll: true }); return; }
   const an = e.target.closest('[data-art]');
   if (an) { apneArt(an.dataset.art); return; }
@@ -5207,7 +5357,7 @@ Tell.on(() => {
    postcode is optional and only for statistics. Turning sharing off or «Slett meg» deletes the anonymous user in
    Supabase, and with it everything shared (on delete cascade). The tables: supabase/fuglekort.sql */
 const SUPA = { url: 'https://qfustbltxgbpwsntcrpd.supabase.co', key: 'sb_publishable_tQmgTjIyvYtMLJRL3o2Vaw_o2sYYpYt' };
-const APPVERSJON = '69012718f0';
+const APPVERSJON = 'f4c2f9df45';
 const DK = k => brukerNokkel('fuglekort:' + k);            // everything here belongs to the person using the app
 const visArter = () => lsGet(DK('vis-arter')) !== 'nei';    // the species on my profile on the board (else the number only)
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
