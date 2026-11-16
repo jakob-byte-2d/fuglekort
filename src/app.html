@@ -1085,6 +1085,14 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .tl-go .ph{width:40px;height:40px;border-radius:10px;flex-shrink:0}
 .tl-go .ph.ekorn{display:grid;place-items:center;background:var(--surface-2);color:var(--muted)}
 .tl-go .ph.ekorn svg{width:22px;height:22px}
+/* own species in Telleliste (not in the deck): × takes one away; adding one at the bottom */
+.tl-fjern{flex-shrink:0;width:36px;height:36px;border:0;border-radius:50%;background:none;color:var(--muted);font-size:22px;line-height:1;cursor:pointer}
+.tl-fjern:hover{background:var(--surface-2);color:var(--ink)}
+.tliste li.tl-ny{display:grid;gap:8px;padding:14px 8px 4px}
+.tliste li.tl-ny .btn{width:100%}
+.tl-tom{margin:0;color:var(--muted);font-size:14.5px}
+.egen-felt{display:grid;gap:6px;margin:12px 0 0;font-size:14px;font-weight:600;color:var(--ink)}
+.sum-h{margin:20px 0 0;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .tl-go span:last-child{min-width:0;display:grid}
 .tl-go b{font-weight:600;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tl-go small{font-size:12px;color:var(--muted)}
@@ -2133,6 +2141,12 @@ const EKSTRA_ALLE = [{ key: 'ekorn', navn: 'Ekorn', art: 'sciurus-vulgaris' }]; 
 const ALIAS = Object.fromEntries(EKSTRA_ALLE.filter(e => BY_KEY[e.art] != null).map(e => [e.key, e.art]));
 const EKSTRA = EKSTRA_ALLE.filter(e => !ALIAS[e.key]);
 const NAVN = Object.fromEntries([...CARDS.map(c => [c.key, c.navn]), ...EKSTRA.map(e => [e.key, e.navn])]);
+/* a species name typed in (not in the deck): spaces tidied, 2–40 characters, a capital first letter */
+const EGNE_MAKS = 30;
+function egetNavn(t) {
+  const n = String(t || '').replace(/\s+/g, ' ').trim().slice(0, 40);
+  return n.length >= 2 ? n.charAt(0).toLocaleUpperCase('nb') + n.slice(1) : null;
+}
 function tellinger(raw) {
   const out = {};
   Object.keys(raw || {}).forEach(id => {
@@ -2140,13 +2154,18 @@ function tellinger(raw) {
     if (!v || !/^t\d+$/.test(id) || !Number.isFinite(v.start)) return;
     const arter = {};
     Object.keys(v.arter || {}).forEach(k0 => { const k = ALIAS[k0] || k0, n = Math.floor(+v.arter[k0]); if (NAVN[k] && n > 0) arter[k] = Math.max(arter[k] || 0, Math.min(n, 9999)); });
-    out[id] = { start: v.start, slutt: Number.isFinite(v.slutt) && v.slutt > 0 ? v.slutt : 0, omrade: String(v.omrade || '').slice(0, 80), arter, ts: v.ts || 0 };
+    const egne = {};                                             // own species (16 Nov 2026): name → the highest number; 0 while counting
+    Object.keys(v.egne && typeof v.egne === 'object' ? v.egne : {}).forEach(n0 => {
+      const n = egetNavn(n0), a = Math.floor(+v.egne[n0]);
+      if (n && a >= 0 && Object.keys(egne).length < EGNE_MAKS) egne[n] = Math.max(egne[n] || 0, Math.min(a, 9999));
+    });
+    out[id] = { start: v.start, slutt: Number.isFinite(v.slutt) && v.slutt > 0 ? v.slutt : 0, omrade: String(v.omrade || '').slice(0, 80), arter, egne, ts: v.ts || 0 };
   });
   return out;
 }
 /* a garden bird count that counts (Tellekorps, the task, the seeds): finished, at least an hour, at least one species;
    Tellekorps and the task also in Hagefugltellingen's weekend (tellingBelonning) */
-const godTelling = v => !!v && v.slutt > 0 && v.slutt - v.start >= 3600000 && Object.values(v.arter || {}).some(n => n > 0);
+const godTelling = v => !!v && v.slutt > 0 && v.slutt - v.start >= 3600000 && [...Object.values(v.arter || {}), ...Object.values(v.egne || {})].some(n => n > 0);
 /* Hagefugltellingen (BirdLife Norge): the last weekend of January, Saturday and Sunday. TELLEHELG holds the Saturday
    for a year BirdLife chooses another weekend (e.g. { 2031: '2031-01-25' }). fra–til in local time, til = Monday 00:00 */
 const TELLEHELG = {};
@@ -2186,14 +2205,15 @@ function tellingBelonning() {
 }
 const Tell = Object.assign(samling({
   col: 'tellinger', key: 'hagefugler:tellinger:v1', norm: tellinger, hva: 'Tellingen',
-  toDoc: (id, v) => ({ start: v.start, slutt: v.slutt, omrade: v.omrade, arter: v.arter, ts: v.ts }),
+  toDoc: (id, v) => ({ start: v.start, slutt: v.slutt, omrade: v.omrade, arter: v.arter, egne: v.egne || {}, ts: v.ts }),
 }), {
-  // data: "t1790700000000" -> { start, slutt (0 while counting), omrade, arter: { "parus-major": 4, "ekorn": 1 }, ts }
+  // data: "t1790700000000" -> { start, slutt (0 while counting), omrade, arter: { "parus-major": 4, "ekorn": 1 },
+  //   egne: { "Sidensvans": 12 } (species typed in, not in the deck), ts }
   aktivId() { return Object.keys(this.data).filter(id => !this.data[id].slutt).sort((a, b) => this.data[b].start - this.data[a].start)[0] || null; },
   aktiv() { const id = this.aktivId(); return id ? this.data[id] : null; },
   ferdige() { return Object.keys(this.data).filter(id => this.data[id].slutt).sort((a, b) => this.data[b].start - this.data[a].start); },
   lagre(id) { this.data[id].ts = Date.now(); this.saveLocal(); this.emit(); this.push(id); },
-  start(omrade) { const t = Date.now(), id = 't' + t; this.data[id] = { start: t, slutt: 0, omrade, arter: {}, ts: t }; this.lagre(id); return id; },
+  start(omrade) { const t = Date.now(), id = 't' + t; this.data[id] = { start: t, slutt: 0, omrade, arter: {}, egne: {}, ts: t }; this.lagre(id); return id; },
   antall(key) { const a = this.aktiv(); return a ? a.arter[key] || 0 : 0; },
   settAntall(key, n) {
     const id = this.aktivId(); if (!id) return;
@@ -2203,7 +2223,20 @@ const Tell = Object.assign(samling({
     if (n) a.arter[key] = n; else delete a.arter[key];
     this.lagre(id);
   },
-  avslutt() { const id = this.aktivId(); if (!id) return null; this.data[id].slutt = Date.now(); this.lagre(id); return id; },
+  /* own species: the number (null takes it away) */
+  egne() { const a = this.aktiv(); return a ? a.egne || {} : {}; },
+  settEgen(navn, n) {
+    const id = this.aktivId(); if (!id) return;
+    const a = this.data[id], e = a.egne || (a.egne = {});
+    if (n === null) { if (!(navn in e)) return; delete e[navn]; }
+    else { n = Math.max(0, Math.min(9999, Math.floor(+n) || 0)); if (e[navn] === n) return; e[navn] = n; }
+    this.lagre(id);
+  },
+  avslutt() {
+    const id = this.aktivId(); if (!id) return null;
+    const e = this.data[id].egne || {}; Object.keys(e).forEach(k => { if (!e[k]) delete e[k]; });   // an own species left at 0 goes
+    this.data[id].slutt = Date.now(); this.lagre(id); return id;
+  },
   slett(id) { const v = this.data[id]; delete this.data[id]; this.saveLocal(); this.emit(); this.push(id); return v; },
   gjenopprett(id, v) { this.data[id] = v; this.lagre(id); },
 });
@@ -3856,7 +3889,8 @@ const datoLang = ms => { const d = new Date(ms); return `${UKEDAG[d.getDay()]} $
 const stor = t => t.charAt(0).toUpperCase() + t.slice(1);
 const flertall = (n, en, flere) => `${n} ${n === 1 ? en : flere}`;
 const EKORN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9.5c0-3 2-5 4-5s4 2 4 5v1H8z"/><path d="M8.5 10.5c0 4.5 1.5 8 3.5 9 2-1 3.5-4.5 3.5-9"/><path d="M12 4.5V3"/></svg>';
-const sumAv = v => { const ks = Object.keys(v.arter); return { arter: ks.length, ind: ks.reduce((a, k) => a + v.arter[k], 0) }; };
+const egneAv = v => Object.keys(v.egne || {}).filter(k => v.egne[k] > 0).map(navn => ({ navn, n: v.egne[navn] })).sort((a, b) => kol.compare(a.navn, b.navn));
+const sumAv = v => { const ks = Object.keys(v.arter), e = egneAv(v); return { arter: ks.length + e.length, ind: ks.reduce((a, k) => a + v.arter[k], 0) + e.reduce((a, r) => a + r.n, 0) }; };
 const sorterte = v => Object.keys(v.arter).map(k => ({ k, navn: NAVN[k], n: v.arter[k] })).sort((a, b) => kol.compare(a.navn, b.navn));
 
 let tellTimer = 0, timeVarslet = false;
@@ -3978,33 +4012,97 @@ function renderListe() {
   const rader = [...kort.filter(r => forst(CARDS[r.i])).map(r => erApen(CARDS[r.i]) ? r : { ...r, i: null }), ...EKSTRA.map(e => ({ key: e.key, navn: e.navn, i: null })),
     ...kort.filter(r => !CARDS[r.i].bonus && !CARDS[r.i].ute)]
     .filter(r => !q || norm(r.navn).s.includes(q));
-  if (!rader.length) { tlisteEl.innerHTML = `<li class="empty">Ingen art passer til «${esc(lq.value)}».</li>`; return; }
-  tlisteEl.innerHTML = rader.map(r => {
+  // own species (not in the deck) on top; at the bottom a way to add one, with what is typed in the search
+  const egne = Object.keys(Tell.egne()).filter(n => !q || norm(n).s.includes(q)).sort(kol.compare);
+  const sokt = lq.value.trim(), treff = sokt && (kjentArt(sokt) || Object.keys(Tell.egne()).some(n => norm(n).s === norm(sokt).s));
+  const ny = `<li class="tl-ny">${!rader.length && !egne.length ? `<p class="tl-tom">Ingen art i kortstokken passer til «${esc(sokt)}».</p>` : ''}<button class="btn" data-ny-egen="${sokt && !treff ? esc(sokt) : ''}">${sokt && !treff ? `Legg til «${esc(egetNavn(sokt) || sokt)}»` : 'Legg til en art som ikke er i kortstokken'}</button></li>`;
+  const egneHtml = egne.map(navn => {
+    const n = Tell.egne()[navn];
+    return `<li class="${n ? 'har' : ''} tl-egen" data-egen="${esc(navn)}">
+      <div class="tl-go"><span class="ph ekorn" aria-hidden="true">${EGEN_SVG}</span><span><b>${esc(navn)}</b><small>Ikke i kortstokken</small></span></div>
+      <div class="step sm"><button class="st-btn" data-d="-1" aria-label="En færre ${esc(navn)}">−</button><input type="number" inputmode="numeric" min="0" max="9999" enterkeyhint="done" value="${n}" aria-label="Flest samtidig av ${esc(navn)}"><button class="st-btn plus" data-d="1" aria-label="En til ${esc(navn)}">+</button></div>
+      <button class="tl-fjern" data-fjern-egen aria-label="Fjern ${esc(navn)} fra tellingen">×</button>
+    </li>`;
+  }).join('');
+  if (!rader.length) { tlisteEl.innerHTML = egneHtml + ny; return; }
+  tlisteEl.innerHTML = egneHtml + rader.map(r => {
     const n = Tell.antall(r.key), fugl = r.i != null;
     const inn = `${fugl ? miniatyr(CARDS[r.i], r.i) : `<span class="ph ekorn" aria-hidden="true">${EKORN_SVG}</span>`}<span><b>${esc(r.navn)}</b><small>${fugl ? `${CARDS[r.i].bonus ? 'Dyrekort · ' : ''}${esc(RAR[CARDS[r.i].stjerner])}` : 'Med i skjemaet'}</small></span>`;
     return `<li class="${n ? 'har' : ''}" data-k="${r.key}">
       ${fugl ? `<button class="tl-go" data-go="${r.i}" aria-label="Vis kortet for ${esc(r.navn)}">${inn}</button>` : `<div class="tl-go">${inn}</div>`}
       <div class="step sm"><button class="st-btn" data-d="-1" aria-label="En færre ${esc(r.navn)}">−</button><input type="number" inputmode="numeric" min="0" max="9999" enterkeyhint="done" value="${n}" aria-label="Flest samtidig av ${esc(r.navn)}"><button class="st-btn plus" data-d="1" aria-label="En til ${esc(r.navn)}">+</button></div>
     </li>`;
-  }).join('');
+  }).join('') + ny;
 }
 function oppdaterListe() {
-  tlisteEl.querySelectorAll('li[data-k]').forEach(li => {
-    const n = Tell.antall(li.dataset.k), inp = li.querySelector('input');
+  const egne = Tell.egne();
+  if (Object.keys(egne).length !== tlisteEl.querySelectorAll('li[data-egen]').length) { renderListe(); return; }   // one added or taken away
+  tlisteEl.querySelectorAll('li[data-k], li[data-egen]').forEach(li => {
+    const n = li.dataset.k ? Tell.antall(li.dataset.k) : egne[li.dataset.egen] || 0, inp = li.querySelector('input');
     li.classList.toggle('har', n > 0);
     if (document.activeElement !== inp) inp.value = n;
   });
 }
 tlisteEl.addEventListener('click', e => {
+  const ny = e.target.closest('[data-ny-egen]');
+  if (ny) { leggTilEgen(ny.dataset.nyEgen); return; }
+  const egen = e.target.closest('li[data-egen]');
+  if (egen && e.target.closest('[data-fjern-egen]')) { const navn = egen.dataset.egen; Tell.settEgen(navn, null); si(`${navn} er fjernet fra tellingen.`); lq.focus(); return; }
   const b = e.target.closest('[data-d]');
+  if (b && egen) { const navn = egen.dataset.egen, n = Math.max(0, (Tell.egne()[navn] || 0) + +b.dataset.d); Tell.settEgen(navn, n); egen.querySelector('input').value = n; egen.classList.toggle('har', n > 0); return; }
   if (b) { endreAntall(b.closest('li').dataset.k, +b.dataset.d); return; }
   const g = e.target.closest('[data-go]');
   if (g) { closeSheets(true); jump(+g.dataset.go); }
 });
-tlisteEl.addEventListener('change', e => { const inp = e.target.closest('input'); if (inp) Tell.settAntall(inp.closest('li').dataset.k, inp.value); });
+tlisteEl.addEventListener('change', e => {
+  const inp = e.target.closest('input'); if (!inp) return;
+  const li = inp.closest('li');
+  if (li.dataset.egen) Tell.settEgen(li.dataset.egen, inp.value); else Tell.settAntall(li.dataset.k, inp.value);
+});
 tlisteEl.addEventListener('focusin', e => { if (e.target.matches('input')) e.target.select(); });
 tlisteEl.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) e.target.blur(); });
 lq.addEventListener('input', renderListe);
+/* a species not in the deck: the name and the number, in the question box. A name that is in the deck (or Ekorn) is
+   that species instead; the same name again is the same row (the higher number); at most EGNE_MAKS in a count */
+const EGEN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15c2.5 0 4-1.2 5-3.5C10.2 8.6 12 7 14.5 7c2 0 3.5 1.3 3.5 3.2 0 .6-.1 1.1-.4 1.6L21 13l-3.6.4c-1 2.6-3.6 4.6-7.4 4.6H5"/><path d="M15 9.8h.01"/></svg>';
+function kjentArt(t) {
+  const q = norm(String(t || '').trim()).s; if (!q) return null;
+  const r = [...CARDS.filter(c => !c.ute && (!c.bonus || Object.values(ALIAS).includes(c.key))).map(c => [c.key, c.navn]), ...EKSTRA.map(e => [e.key, e.navn])].find(([, n]) => norm(n).s === q);
+  return r ? r[0] : null;
+}
+function leggTilEgen(forslag = '') {
+  sporsmal({
+    tittel: 'Art som ikke er i kortstokken',
+    tekst: `<label class="egen-felt">Navn<input class="felt-inp navn-inp" id="egNavn" value="${esc(forslag)}" maxlength="40" autocomplete="off" autocapitalize="sentences" enterkeyhint="next"></label>
+      <label class="egen-felt">Flest samtidig<input class="felt-inp" id="egAntall" type="number" inputmode="numeric" min="0" max="9999" value="1" enterkeyhint="done"></label>
+      <p class="navn-feil" id="egFeil" role="alert"></p>
+      <p class="cap">Kommer med i tellingen og oppsummeringen, men ikke i kortstokken eller livslisten.</p>`,
+    knapper: [{ tekst: 'Legg til', pri: true, sjekk: lagreEgen }, { tekst: 'Avbryt' }],
+  });
+  setTimeout(() => { const f = $('#egNavn'); if (f) { f.focus(); f.select(); } }, 60);
+}
+function lagreEgen() {
+  const navn = egetNavn($('#egNavn').value), n = Math.max(0, Math.min(9999, Math.floor(+$('#egAntall').value) || 0)), feil = $('#egFeil');
+  if (!navn) { feil.textContent = 'Skriv navnet på arten.'; $('#egNavn').focus(); return false; }
+  const k = kjentArt(navn);
+  if (k) {                                                   // in the deck: that species, with the higher number
+    if (n > Tell.antall(k)) Tell.settAntall(k, n);
+    setTimeout(() => { lq.value = NAVN[k]; renderListe(); const i = tlisteEl.querySelector(`li[data-k="${k}"] input`); if (i) i.focus(); }, 0);
+    si(`${NAVN[k]} er i kortstokken, og telles der.`); return true;
+  }
+  const egne = Tell.egne(), finnes = Object.keys(egne).find(x => norm(x).s === norm(navn).s);
+  if (!finnes && Object.keys(egne).length >= EGNE_MAKS) { feil.textContent = `Du kan ha høyst ${EGNE_MAKS} egne arter i en telling.`; return false; }
+  const brukt = finnes || navn;
+  Tell.settEgen(brukt, Math.max(n, egne[brukt] || 0));
+  setTimeout(() => { lq.value = ''; renderListe(); const li = [...tlisteEl.querySelectorAll('li[data-egen]')].find(x => x.dataset.egen === brukt); const i = li && li.querySelector('input'); if (i) i.focus(); }, 0);
+  si(`${brukt} er lagt til i tellingen.`);
+  return true;
+}
+$('#dlg').addEventListener('keydown', e => {                   // Enter in the name goes on to the number; in the number, adds
+  if (e.key !== 'Enter') return;
+  if (e.target.id === 'egNavn') { e.preventDefault(); const a = $('#egAntall'); a.focus(); a.select(); }
+  else if (e.target.id === 'egAntall') { e.preventDefault(); $('#dlgKnapper .btn.pri').click(); }
+});
 $('#closeListe').addEventListener('click', () => closeSheets());
 $('#tListe').addEventListener('click', openListe);
 
@@ -4015,7 +4113,7 @@ function renderSum() {
   const v = Tell.data[sumId];
   if (!v) { if (openSheet === sumSheet) closeSheets(); return; }
   const aktiv = !v.slutt, slutt = v.slutt || Date.now(), ms = slutt - v.start;
-  const { arter, ind } = sumAv(v), rader = sorterte(v);
+  const { arter, ind } = sumAv(v), rader = sorterte(v), egne = egneAv(v), noe = rader.length || egne.length;
   $('#sumTitle').textContent = aktiv ? 'Avslutte tellingen?' : 'Hagefugltelling';
   $('#sumBody').innerHTML = `
     <p class="sum-meta">${stor(datoLang(v.start))}, kl. ${klokke(v.start)}–${aktiv ? 'nå' : klokke(slutt)} (${varighet(ms)})${v.omrade ? `<br>Område: ${esc(v.omrade)}` : ''}</p>
@@ -4024,11 +4122,13 @@ function renderSum() {
     <div class="sum-tall"><div><b>${arter}</b><span>${arter === 1 ? 'art' : 'arter'}</span></div><div><b>${ind}</b><span>${ind === 1 ? 'individ' : 'individer'}</span></div></div>
     ${rader.length ? `<ul class="skjema">${rader.map(r => `<li><span>${esc(r.navn)}</span><b>${r.n}</b></li>`).join('')}</ul>
       <p class="cap">Samme rekkefølge som skjemaet på Fuglevennen.no, så du kan skrive av rett nedover. Arter som ikke står i skjemaet, legger du til under lista der. Hagefugltellingen arrangeres av BirdLife Norge hvert år siste helga i januar.</p>
-`
-      : `<p class="cap">Ingen arter er talt ennå.</p>`}
+` : ''}
+    ${egne.length ? `<h3 class="sum-h">Ikke i skjemaet</h3><ul class="skjema egne">${egne.map(r => `<li><span>${esc(r.navn)}</span><b>${r.n}</b></li>`).join('')}</ul>
+      <p class="cap">Arter du har skrevet inn selv. Legg dem til under lista på Fuglevennen.no.</p>` : ''}
+    ${noe ? '' : `<p class="cap">Ingen arter er talt ennå.</p>`}
     <div class="row">
-      ${aktiv ? `<button class="btn" id="sumFortsett">Fortsett tellingen</button>${rader.length ? `<button class="btn pri" id="sumAvslutt">Avslutt og lagre</button>` : `<button class="btn" id="sumAvbryt">Avbryt tellingen</button>`}` : ''}
-      ${rader.length ? `<button class="btn" id="sumKopier">Kopier som tekst</button>${navigator.share ? `<button class="btn" id="sumDel">Del</button>` : ''}` : ''}
+      ${aktiv ? `<button class="btn" id="sumFortsett">Fortsett tellingen</button>${noe ? `<button class="btn pri" id="sumAvslutt">Avslutt og lagre</button>` : `<button class="btn" id="sumAvbryt">Avbryt tellingen</button>`}` : ''}
+      ${noe ? `<button class="btn" id="sumKopier">Kopier som tekst</button>${navigator.share ? `<button class="btn" id="sumDel">Del</button>` : ''}` : ''}
       ${aktiv ? '' : `<a class="btn" href="https://www.fuglevennen.no/" target="_blank" rel="noopener">Åpne Fuglevennen.no</a><button class="btn" id="sumSlett">Slett tellingen</button>`}
     </div>
     <div class="restore" id="sumTekstBoks" hidden><textarea id="sumTekst" readonly></textarea></div>`;
@@ -4049,6 +4149,7 @@ function somTekst(v) {
   return [`Hagefugltelling ${datoLang(v.start)}, kl. ${klokke(v.start)}–${klokke(slutt)} (${varighet(slutt - v.start)})`,
     ...(v.omrade ? [`Område: ${v.omrade}`] : []), '',
     ...sorterte(v).map(r => `${r.navn}: ${r.n}`), '',
+    ...(egneAv(v).length ? ['Ikke i skjemaet:', ...egneAv(v).map(r => `${r.navn}: ${r.n}`), ''] : []),
     `${flertall(arter, 'art', 'arter')}, ${flertall(ind, 'individ', 'individer')}`].join('\n');
 }
 async function kopierTekst(txt) {
@@ -5450,7 +5551,7 @@ function lagSpeil(s, tabell, konflikt, tilRad) {
 }
 const isoTid = ms => new Date(ms).toISOString();
 lagSpeil(Store, 'sett', 'user_id,art', (id, v) => ({ art: id, dager: v.dager }));
-lagSpeil(Tell, 'tellinger', 'user_id,id', (id, v) => ({ id, start: isoTid(v.start), slutt: v.slutt ? isoTid(v.slutt) : null, omrade: v.omrade || null, arter: v.arter }));
+lagSpeil(Tell, 'tellinger', 'user_id,id', (id, v) => ({ id, start: isoTid(v.start), slutt: v.slutt ? isoTid(v.slutt) : null, omrade: v.omrade || null, arter: v.arter, egne: v.egne || {} }));
 lagSpeil(Kjop, 'kjop', 'user_id,id', (id, v) => ({ id, pris: v.pris, dato: v.dato, faktor: v.faktor || null, kort: v.kort || null }));
 
 /* ---- the username: free text with rules, or a suggestion made of a word, a bird and a number («Rask Kjøttmeis 42»).

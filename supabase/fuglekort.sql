@@ -5,7 +5,7 @@
 --   ledertavle   brukernavn, oppsummering og profilbilde    alle kan lese, bare eieren kan skrive
 --   profil       postnummer (valgfritt), appversjon …      bare eieren
 --   sett         observasjonsdagene, én rad per art        bare eieren
---   tellinger    hagefugltellingene                        bare eieren
+--   tellinger    hagefugltellingene (og egne arter)         bare eieren
 --   kjop         kjøp i Frøbutikken                        bare eieren
 --   rapporter    navn andre har rapportert                 alle kan rapportere, bare du kan lese
 --   stengte_ord  ord som ikke kan stå i et brukernavn      bare du (Table Editor)
@@ -86,6 +86,9 @@ create table if not exists public.tellinger (
   oppdatert timestamptz not null default now(),
   primary key (user_id, id)
 );
+-- arter som ikke er i kortstokken, skrevet inn i Telleliste (16. november 2026): navn → høyeste antall
+alter table public.tellinger add column if not exists egne jsonb not null default '{}'::jsonb
+  constraint tellinger_egne_form check (jsonb_typeof(egne) = 'object' and pg_column_size(egne) <= 4000);
 
 -- ---------- kjop (privat) ----------
 create table if not exists public.kjop (
@@ -1048,3 +1051,6 @@ end $$;
 -- Tellinger: høyeste antall per art og telling:
 --   select t.user_id, t.start, a.key as art, a.value::int as antall
 --   from public.tellinger t cross join lateral jsonb_each_text(t.arter) a;
+-- Tellinger: arter skrevet inn selv (ikke i kortstokken):
+--   select t.user_id, t.start, e.key as navn, e.value::int as antall
+--   from public.tellinger t cross join lateral jsonb_each_text(t.egne) e order by navn;
